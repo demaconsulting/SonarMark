@@ -1,0 +1,196 @@
+---
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        required: true
+
+jobs:
+  quality-checks:
+    name: Quality Checks
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Run markdown linter
+        uses: DavidAnson/markdownlint-cli2-action@v22
+        with:
+          globs: '**/*.md'
+
+      - name: Run spell checker
+        uses: streetsidesoftware/cspell-action@v8
+        with:
+          files: '**/*.{md,cs}'
+
+      - name: Run YAML linter
+        uses: ibiqlik/action-yamllint@v3
+        with:
+          config_file: .yamllint.yaml
+
+  build:
+    name: Build ${{ matrix.os }}
+    needs: quality-checks
+    permissions:
+      contents: read       # To read repository contents
+      pull-requests: write  # To write pull requests analysis results and artifacts
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
+      - name: Restore Dependencies
+        run: >
+          dotnet restore
+
+      - name: Start Sonar Scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          dotnet dotnet-sonarscanner
+          begin
+          /k:"demaconsulting_SonarMark"
+          /o:"demaconsulting"
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          /d:sonar.host.url="https://sonarcloud.io"
+          /d:sonar.cs.opencover.reportsPaths=**/*.opencover.xml
+          /d:sonar.scanner.scanAll=false
+
+      - name: Build
+        run: >
+          dotnet build
+          --no-restore
+          --configuration Release
+          --property:Version=${{ inputs.version }}
+
+      - name: Test
+        run: >
+          dotnet test
+          --no-build
+          --configuration Release
+          --property:Version=${{ inputs.version }}
+          --collect "XPlat Code Coverage;Format=opencover"
+          --logger "trx;LogFilePrefix=${{ matrix.os }}"
+          --results-directory test-results
+
+      - name: End Sonar Scanner
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >
+          dotnet dotnet-sonarscanner
+          end
+          /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Generate SBOM
+        run: >
+          dotnet sbom-tool generate
+          -b src/DemaConsulting.SonarMark/bin/Release
+          -bc src/DemaConsulting.SonarMark
+          -pn DemaConsulting.SonarMark
+          -pv ${{ inputs.version }}
+          -ps DemaConsulting
+          -nsb https://DemaConsulting.com/SonarMark
+          -pm true
+          -li true
+
+      - name: Generate Tests SBOM
+        run: >
+          dotnet sbom-tool generate
+          -b test/DemaConsulting.SonarMark.Tests/bin/Release
+          -bc test/DemaConsulting.SonarMark.Tests
+          -pn DemaConsulting.SonarMark.Tests
+          -pv ${{ inputs.version }}
+          -ps DemaConsulting
+          -nsb https://DemaConsulting.com/SonarMark.Tests
+          -pm true
+          -li true
+
+      - name: Create Dotnet Tool
+        run: >
+          dotnet pack
+          --no-build
+          --no-restore
+          --property:PackageVersion=${{ inputs.version }}
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-results-${{ matrix.os }}
+          path: test-results/*.trx
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: |
+            src/DemaConsulting.SonarMark/bin/Release/*.nupkg
+            src/DemaConsulting.SonarMark/bin/Release/*.snupkg
+            **/manifest.spdx.json
+            **/manifest.spdx.json.sha256
+
+  integration-test:
+    name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
+    runs-on: ${{ matrix.os }}
+    needs: build
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        dotnet-version: ['8.x', '9.x', '10.x']
+
+    steps:
+      - name: Download package
+        uses: actions/download-artifact@v7
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: packages
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Install tool from package
+        shell: bash
+        run: |
+          echo "Installing package version ${{ inputs.version }} from: packages/"
+          dotnet tool install --global \
+            --add-source packages/src/DemaConsulting.SonarMark/bin/Release \
+            --version ${{ inputs.version }} \
+            DemaConsulting.SonarMark
+
+      - name: Test version display
+        shell: bash
+        run: |
+          echo "Testing sonarmark command..."
+          sonarmark || { echo "✗ Command failed"; exit 1; }
+          echo "✓ Command succeeded"

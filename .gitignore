@@ -1,0 +1,27 @@
+.vs
+*.bak
+*.user
+
+bin/
+obj/
+TestResults/
+
+# Code coverage reports
+coverage/
+*.coverage
+*.coveragexml
+*.opencover.xml
+
+# Test results
+*.trx
+
+# Temporary files
+*.tmp
+.DS_Store
+
+# Node.js dependencies
+node_modules/
+
+# Generated documentation
+docs/guide/*.html
+docs/guide/*.pdf
