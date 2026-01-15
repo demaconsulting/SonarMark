@@ -35,9 +35,9 @@ internal sealed class SonarQubeClient : IDisposable
     private static readonly TimeSpan DefaultPollingTimeout = TimeSpan.FromMinutes(5);
 
     /// <summary>
-    ///     Default polling interval in milliseconds
+    ///     Default polling interval
     /// </summary>
-    private const int DefaultPollingIntervalMs = 10000; // 10 seconds
+    private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(10);
 
     /// <summary>
     ///     HTTP client for making API requests
@@ -122,7 +122,7 @@ internal sealed class SonarQubeClient : IDisposable
             }
 
             // Wait before polling again
-            await Task.Delay(DefaultPollingIntervalMs, cancellationToken).ConfigureAwait(false);
+            await Task.Delay(DefaultPollingInterval, cancellationToken).ConfigureAwait(false);
         }
     }
 
