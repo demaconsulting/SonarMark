@@ -21,17 +21,17 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-/// Parser for SonarQube report-task.txt files
+///  Parser for SonarQube report-task.txt files
 /// </summary>
 internal static class ReportTaskParser
 {
     /// <summary>
-    /// Report task file name
+    ///  Report task file name
     /// </summary>
     private const string ReportTaskFileName = "report-task.txt";
 
     /// <summary>
-    /// Finds the report-task.txt file in the specified directory or its subdirectories
+    ///  Finds the report-task.txt file in the specified directory or its subdirectories
     /// </summary>
     /// <param name="searchDirectory">Directory to search in</param>
     /// <returns>Full path to the report-task.txt file if found, null otherwise</returns>
@@ -54,20 +54,21 @@ internal static class ReportTaskParser
     }
 
     /// <summary>
-    /// Parses a report-task.txt file
+    ///  Parses a report-task.txt file
     /// </summary>
     /// <param name="filePath">Path to the report-task.txt file</param>
     /// <returns>Parsed ReportTask object</returns>
     /// <exception cref="ArgumentException">Thrown when file doesn't exist or required fields are missing</exception>
     public static ReportTask Parse(string filePath)
     {
+        // Verify the file exists
         if (!File.Exists(filePath))
         {
             throw new ArgumentException($"File not found: {filePath}", nameof(filePath));
         }
 
+        // Parse all key-value pairs from the file
         var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-
         foreach (var line in File.ReadLines(filePath))
         {
             var trimmedLine = line.Trim();
@@ -85,26 +86,25 @@ internal static class ReportTaskParser
             }
         }
 
+        // Validate projectKey field is present
         if (!properties.TryGetValue("projectKey", out var projectKey) || string.IsNullOrWhiteSpace(projectKey))
         {
             throw new ArgumentException("Missing required field: projectKey", nameof(filePath));
         }
 
+        // Validate serverUrl field is present
         if (!properties.TryGetValue("serverUrl", out var serverUrl) || string.IsNullOrWhiteSpace(serverUrl))
         {
             throw new ArgumentException("Missing required field: serverUrl", nameof(filePath));
         }
 
+        // Validate ceTaskId field is present
         if (!properties.TryGetValue("ceTaskId", out var ceTaskId) || string.IsNullOrWhiteSpace(ceTaskId))
         {
             throw new ArgumentException("Missing required field: ceTaskId", nameof(filePath));
         }
 
-        return new ReportTask
-        {
-            ProjectKey = projectKey,
-            ServerUrl = serverUrl,
-            CeTaskId = ceTaskId
-        };
+        // Create and return the report task
+        return new ReportTask(projectKey, serverUrl, ceTaskId);
     }
 }

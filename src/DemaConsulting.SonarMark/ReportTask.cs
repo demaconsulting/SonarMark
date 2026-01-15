@@ -21,22 +21,12 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-/// Represents parsed data from a SonarQube report-task.txt file
+///  Represents parsed data from a SonarQube report-task.txt file
 /// </summary>
-internal sealed class ReportTask
-{
-    /// <summary>
-    /// Gets the project key
-    /// </summary>
-    public required string ProjectKey { get; init; }
-
-    /// <summary>
-    /// Gets the server URL
-    /// </summary>
-    public required string ServerUrl { get; init; }
-
-    /// <summary>
-    /// Gets the compute engine task ID
-    /// </summary>
-    public required string CeTaskId { get; init; }
-}
+/// <param name="ProjectKey">Project key</param>
+/// <param name="ServerUrl">Server URL</param>
+/// <param name="CeTaskId">Compute engine task ID</param>
+internal sealed record ReportTask(
+    string ProjectKey,
+    string ServerUrl,
+    string CeTaskId);
