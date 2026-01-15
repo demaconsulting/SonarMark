@@ -37,11 +37,13 @@ internal static class ReportTaskParser
     /// <returns>Full path to the report-task.txt file if found, null otherwise</returns>
     public static string? FindReportTask(string searchDirectory)
     {
+        // Return null if the search directory doesn't exist
         if (!Directory.Exists(searchDirectory))
         {
             return null;
         }
 
+        // Search recursively for the report-task.txt file
         try
         {
             var files = Directory.GetFiles(searchDirectory, ReportTaskFileName, SearchOption.AllDirectories);
@@ -49,6 +51,7 @@ internal static class ReportTaskParser
         }
         catch (UnauthorizedAccessException)
         {
+            // Return null if we don't have permission to access directories
             return null;
         }
     }
@@ -71,12 +74,14 @@ internal static class ReportTaskParser
         var properties = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var line in File.ReadLines(filePath))
         {
+            // Skip empty lines and comments
             var trimmedLine = line.Trim();
             if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith('#'))
             {
                 continue;
             }
 
+            // Extract key-value pairs separated by '='
             var separatorIndex = trimmedLine.IndexOf('=');
             if (separatorIndex > 0)
             {
