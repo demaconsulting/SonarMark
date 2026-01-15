@@ -21,7 +21,7 @@ Ensures all changes meet quality gates before merging.
    - Verify new features have comprehensive unit tests
    - Ensure tests follow AAA (Arrange, Act, Assert) pattern
    - Check tests are isolated and don't depend on execution order
-   - Validate test names are descriptive (TestMethod_Scenario_ExpectedBehavior)
+   - Validate test names are descriptive (ClassName_MethodUnderTest_Scenario_ExpectedBehavior)
    - Confirm both success and failure scenarios are tested
 
 3. **Code Review**

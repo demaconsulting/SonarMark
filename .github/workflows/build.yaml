@@ -150,7 +150,44 @@ jobs:
         with:
           name: artifacts-${{ matrix.os }}
           path: |
-            **/*.nupkg
-            **/*.snupkg
+            src/DemaConsulting.SonarMark/bin/Release/*.nupkg
+            src/DemaConsulting.SonarMark/bin/Release/*.snupkg
             **/manifest.spdx.json
             **/manifest.spdx.json.sha256
+
+  integration-test:
+    name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
+    runs-on: ${{ matrix.os }}
+    needs: build
+    permissions:
+      contents: read
+
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        dotnet-version: ['8.x', '9.x', '10.x']
+
+    steps:
+      - name: Download package
+        uses: actions/download-artifact@v7
+        with:
+          name: artifacts-${{ matrix.os }}
+          path: packages
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Install tool from package
+        shell: bash
+        run: |
+          echo "Installing package version ${{ inputs.version }} from: packages/"
+          dotnet tool install --global --add-source packages/src/DemaConsulting.SonarMark/bin/Release --version ${{ inputs.version }} DemaConsulting.SonarMark
+
+      - name: Test version display
+        shell: bash
+        run: |
+          echo "Testing sonarmark command..."
+          sonarmark || { echo "✗ Command failed"; exit 1; }
+          echo "✓ Command succeeded"
