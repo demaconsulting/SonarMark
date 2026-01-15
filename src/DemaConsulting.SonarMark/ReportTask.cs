@@ -21,7 +21,7 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///  Represents parsed data from a SonarQube report-task.txt file
+///     Represents parsed data from a SonarQube report-task.txt file
 /// </summary>
 /// <param name="ProjectKey">Project key</param>
 /// <param name="ServerUrl">Server URL</param>

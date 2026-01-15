@@ -21,18 +21,18 @@
 namespace DemaConsulting.SonarMark.Tests;
 
 /// <summary>
-///  Tests for ReportTaskParser class
+///     Tests for ReportTaskParser class
 /// </summary>
 [TestClass]
 public class ReportTaskParserTests
 {
     /// <summary>
-    ///  Gets the test directory path
+    ///     Gets the test directory path
     /// </summary>
     private static string TestDirectory => Path.Combine(Path.GetTempPath(), "SonarMarkTests", Guid.NewGuid().ToString());
 
     /// <summary>
-    ///  Test that FindReportTask returns null for non-existent directory
+    ///     Test that FindReportTask returns null for non-existent directory
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_FindReportTask_NonExistentDirectory_ReturnsNull()
@@ -48,7 +48,7 @@ public class ReportTaskParserTests
     }
 
     /// <summary>
-    ///  Test that FindReportTask returns null when file doesn't exist
+    ///     Test that FindReportTask returns null when file doesn't exist
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_FindReportTask_FileDoesNotExist_ReturnsNull()
@@ -72,7 +72,7 @@ public class ReportTaskParserTests
     }
 
     /// <summary>
-    ///  Test that FindReportTask finds file in root directory
+    ///     Test that FindReportTask finds file in root directory
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_FindReportTask_FileInRootDirectory_ReturnsPath()
@@ -99,7 +99,7 @@ public class ReportTaskParserTests
     }
 
     /// <summary>
-    ///  Test that FindReportTask finds file in subdirectory
+    ///     Test that FindReportTask finds file in subdirectory
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_FindReportTask_FileInSubdirectory_ReturnsPath()
@@ -127,7 +127,7 @@ public class ReportTaskParserTests
     }
 
     /// <summary>
-    ///  Test that Parse throws for non-existent file
+    ///     Test that Parse throws for non-existent file
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_NonExistentFile_ThrowsArgumentException()
@@ -141,7 +141,7 @@ public class ReportTaskParserTests
     }
 
     /// <summary>
-    ///  Test that Parse throws when projectKey is missing
+    ///     Test that Parse throws when projectKey is missing
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_MissingProjectKey_ThrowsArgumentException()
@@ -166,7 +166,7 @@ ceTaskId=task123");
     }
 
     /// <summary>
-    ///  Test that Parse throws when serverUrl is missing
+    ///     Test that Parse throws when serverUrl is missing
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_MissingServerUrl_ThrowsArgumentException()
@@ -191,7 +191,7 @@ ceTaskId=task123");
     }
 
     /// <summary>
-    ///  Test that Parse throws when ceTaskId is missing
+    ///     Test that Parse throws when ceTaskId is missing
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_MissingCeTaskId_ThrowsArgumentException()
@@ -216,7 +216,7 @@ serverUrl=https://sonarcloud.io/");
     }
 
     /// <summary>
-    ///  Test that Parse successfully parses valid file
+    ///     Test that Parse successfully parses valid file
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_ValidFile_ReturnsReportTask()
@@ -250,7 +250,7 @@ ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZvC9TxNj4Ttv7fX4CVs");
     }
 
     /// <summary>
-    ///  Test that Parse ignores empty lines and comments
+    ///     Test that Parse ignores empty lines and comments
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_FileWithCommentsAndEmptyLines_ParsesCorrectly()
@@ -286,7 +286,7 @@ ceTaskId=task123
     }
 
     /// <summary>
-    ///  Test that Parse handles whitespace around values
+    ///     Test that Parse handles whitespace around values
     /// </summary>
     [TestMethod]
     public void ReportTaskParser_Parse_FileWithWhitespace_TrimsValues()

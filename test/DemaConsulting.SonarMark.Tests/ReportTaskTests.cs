@@ -21,13 +21,13 @@
 namespace DemaConsulting.SonarMark.Tests;
 
 /// <summary>
-///  Tests for ReportTask class
+///     Tests for ReportTask class
 /// </summary>
 [TestClass]
 public class ReportTaskTests
 {
     /// <summary>
-    ///  Test that ReportTask can be created with all required properties
+    ///     Test that ReportTask can be created with all required properties
     /// </summary>
     [TestMethod]
     public void ReportTask_Constructor_AllProperties_CreatesInstance()

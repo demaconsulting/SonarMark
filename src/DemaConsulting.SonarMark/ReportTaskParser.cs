@@ -21,17 +21,17 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///  Parser for SonarQube report-task.txt files
+///     Parser for SonarQube report-task.txt files
 /// </summary>
 internal static class ReportTaskParser
 {
     /// <summary>
-    ///  Report task file name
+    ///     Report task file name
     /// </summary>
     private const string ReportTaskFileName = "report-task.txt";
 
     /// <summary>
-    ///  Finds the report-task.txt file in the specified directory or its subdirectories
+    ///     Finds the report-task.txt file in the specified directory or its subdirectories
     /// </summary>
     /// <param name="searchDirectory">Directory to search in</param>
     /// <returns>Full path to the report-task.txt file if found, null otherwise</returns>
@@ -54,7 +54,7 @@ internal static class ReportTaskParser
     }
 
     /// <summary>
-    ///  Parses a report-task.txt file
+    ///     Parses a report-task.txt file
     /// </summary>
     /// <param name="filePath">Path to the report-task.txt file</param>
     /// <returns>Parsed ReportTask object</returns>
