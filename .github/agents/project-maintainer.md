@@ -87,22 +87,6 @@ Located in `.github/workflows/`:
 - Create and tag releases appropriately
 - Generate release notes
 
-### Pre-Release Checklist
-
-- All tests passing on all platforms
-- Documentation updated
-- CHANGELOG updated (if applicable)
-- Version numbers updated
-- Build artifacts verified
-- NuGet package validated
-
-### Post-Release Tasks
-
-- Verify package published successfully
-- Update documentation with version-specific information
-- Monitor for issues reported against the new version
-- Communicate release to users
-
 ## Quality Checks
 
 Before merging changes:
