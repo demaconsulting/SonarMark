@@ -229,7 +229,7 @@ public class SonarQubeClientTests
         var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
 
         // Act - get results with polling
-        var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(10));
+        var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(30));
 
         // Assert - verify success after polling
         Assert.IsNotNull(result);

@@ -37,7 +37,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <summary>
     ///     Default polling interval in milliseconds
     /// </summary>
-    private const int DefaultPollingIntervalMs = 1000; // 1 second
+    private const int DefaultPollingIntervalMs = 10000; // 10 seconds
 
     /// <summary>
     ///     HTTP client for making API requests
