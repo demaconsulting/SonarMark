@@ -183,7 +183,10 @@ jobs:
         shell: bash
         run: |
           echo "Installing package version ${{ inputs.version }} from: packages/"
-          dotnet tool install --global --add-source packages/src/DemaConsulting.SonarMark/bin/Release --version ${{ inputs.version }} DemaConsulting.SonarMark
+          dotnet tool install --global \
+            --add-source packages/src/DemaConsulting.SonarMark/bin/Release \
+            --version ${{ inputs.version }} \
+            DemaConsulting.SonarMark
 
       - name: Test version display
         shell: bash
