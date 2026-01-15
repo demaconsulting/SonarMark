@@ -81,7 +81,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for zero timeout
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 0));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.Zero));
         Assert.Contains("timeout", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -97,7 +97,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for negative timeout
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: -1));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(-1)));
         Assert.Contains("timeout", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -128,7 +128,7 @@ public class SonarQubeClientTests
         var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
 
         // Act - get results
-        var result = await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5);
+        var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
 
         // Assert - verify success status and analysis ID
         Assert.IsNotNull(result);
@@ -163,7 +163,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for failed task
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
         Assert.Contains("failed", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -194,7 +194,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for canceled task
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
         Assert.Contains("canceled", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -229,7 +229,7 @@ public class SonarQubeClientTests
         var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
 
         // Act - get results with polling
-        var result = await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 10);
+        var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(10));
 
         // Assert - verify success after polling
         Assert.IsNotNull(result);
@@ -265,7 +265,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify timeout exception is thrown
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 2));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(2)));
         Assert.Contains("timed out", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -291,7 +291,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for invalid JSON
         await Assert.ThrowsAsync<JsonException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
     }
 
     /// <summary>
@@ -316,7 +316,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for missing task property
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
         Assert.Contains("task", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -342,7 +342,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for missing status
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
         Assert.Contains("status", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -373,7 +373,7 @@ public class SonarQubeClientTests
 
         // Act & Assert - verify exception is thrown for unknown status
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5));
+            async () => await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
         Assert.Contains("unknown", exception.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -406,7 +406,7 @@ public class SonarQubeClientTests
         var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
 
         // Act - get results
-        await client.GetResultsAsync(reportTask, pollingTimeoutSeconds: 5);
+        await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
 
         // Assert - verify correct URL was constructed
         Assert.IsNotNull(requestUrl);

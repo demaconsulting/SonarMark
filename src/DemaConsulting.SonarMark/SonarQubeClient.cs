@@ -30,9 +30,9 @@ namespace DemaConsulting.SonarMark;
 internal sealed class SonarQubeClient : IDisposable
 {
     /// <summary>
-    ///     Default polling timeout in seconds
+    ///     Default polling timeout
     /// </summary>
-    private const int DefaultPollingTimeoutSeconds = 300; // 5 minutes
+    private static readonly TimeSpan DefaultPollingTimeout = TimeSpan.FromMinutes(5);
 
     /// <summary>
     ///     Default polling interval in milliseconds
@@ -73,24 +73,25 @@ internal sealed class SonarQubeClient : IDisposable
     ///     Gets the results of a SonarQube analysis from a report task
     /// </summary>
     /// <param name="reportTask">Report task containing server and task information</param>
-    /// <param name="pollingTimeoutSeconds">Maximum time to wait for task completion in seconds (default: 300)</param>
+    /// <param name="pollingTimeout">Maximum time to wait for task completion (default: 5 minutes)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Task result with analysis information</returns>
     /// <exception cref="InvalidOperationException">Thrown when task fails or times out</exception>
     public async Task<CeTaskResult> GetResultsAsync(
         ReportTask reportTask,
-        int pollingTimeoutSeconds = DefaultPollingTimeoutSeconds,
+        TimeSpan? pollingTimeout = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(reportTask);
 
-        if (pollingTimeoutSeconds <= 0)
+        var timeout = pollingTimeout ?? DefaultPollingTimeout;
+
+        if (timeout <= TimeSpan.Zero)
         {
-            throw new ArgumentException("Polling timeout must be positive", nameof(pollingTimeoutSeconds));
+            throw new ArgumentException("Polling timeout must be positive", nameof(pollingTimeout));
         }
 
         var startTime = DateTime.UtcNow;
-        var timeout = TimeSpan.FromSeconds(pollingTimeoutSeconds);
 
         while (true)
         {
@@ -98,7 +99,7 @@ internal sealed class SonarQubeClient : IDisposable
             if (DateTime.UtcNow - startTime > timeout)
             {
                 throw new InvalidOperationException(
-                    $"Timed out waiting for task {reportTask.CeTaskId} to complete after {pollingTimeoutSeconds} seconds");
+                    $"Timed out waiting for task {reportTask.CeTaskId} to complete after {timeout.TotalSeconds} seconds");
             }
 
             // Query the CE task status
