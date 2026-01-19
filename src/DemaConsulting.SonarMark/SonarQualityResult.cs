@@ -31,7 +31,61 @@ internal sealed record SonarQualityResult(
     string ProjectKey,
     string AnalysisId,
     string QualityGateStatus,
-    IReadOnlyList<SonarQualityCondition> Conditions);
+    IReadOnlyList<SonarQualityCondition> Conditions)
+{
+    /// <summary>
+    ///     Converts the quality result to markdown format
+    /// </summary>
+    /// <param name="depth">The heading depth level (1-6) for the report title</param>
+    /// <returns>Markdown representation of the quality result</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when depth is not between 1 and 6</exception>
+    public string ToMarkdown(int depth)
+    {
+        if (depth < 1 || depth > 6)
+        {
+            throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be between 1 and 6");
+        }
+
+        var heading = new string('#', depth);
+        var subHeading = new string('#', depth + 1);
+        var sb = new System.Text.StringBuilder();
+
+        // Add quality gate status heading
+        sb.AppendLine($"{heading} Quality Gate Status: {QualityGateStatus}");
+        sb.AppendLine();
+
+        // Add project information
+        sb.AppendLine($"**Project Key:** {ProjectKey}");
+        sb.AppendLine();
+        sb.AppendLine($"**Analysis ID:** {AnalysisId}");
+        sb.AppendLine();
+
+        // Add conditions section if there are any
+        if (Conditions.Count > 0)
+        {
+            sb.AppendLine($"{subHeading} Conditions");
+            sb.AppendLine();
+
+            foreach (var condition in Conditions)
+            {
+                sb.AppendLine($"- **{condition.Metric}**: {condition.Status}");
+                sb.AppendLine($"  - Comparator: {condition.Comparator}");
+                
+                if (condition.ErrorThreshold != null)
+                {
+                    sb.AppendLine($"  - Threshold: {condition.ErrorThreshold}");
+                }
+                
+                if (condition.ActualValue != null)
+                {
+                    sb.AppendLine($"  - Actual: {condition.ActualValue}");
+                }
+            }
+        }
+
+        return sb.ToString();
+    }
+}
 
 /// <summary>
 ///     Represents a single quality gate condition
