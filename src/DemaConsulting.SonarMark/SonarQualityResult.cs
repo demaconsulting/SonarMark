@@ -47,7 +47,8 @@ internal sealed record SonarQualityResult(
         }
 
         var heading = new string('#', depth);
-        var subHeading = new string('#', depth + 1);
+        var subHeadingDepth = Math.Min(depth + 1, 6);
+        var subHeading = new string('#', subHeadingDepth);
         var sb = new System.Text.StringBuilder();
 
         // Add quality gate status heading

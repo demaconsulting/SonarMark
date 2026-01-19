@@ -239,9 +239,9 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(6);
 
-        // Assert - verify heading levels (note: markdown doesn't support depth 7, so subheading would still be ######)
+        // Assert - verify heading levels (subheading is capped at 6)
         Assert.Contains("###### Quality Gate Status: ERROR", markdown);
-        Assert.Contains("####### Conditions", markdown);
+        Assert.Contains("###### Conditions", markdown);
     }
 
     /// <summary>
