@@ -25,8 +25,13 @@ using System.Text.Json;
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Client for interacting with SonarQube/SonarCloud APIs
+///     Client for fetching quality information from SonarQube/SonarCloud analysis
 /// </summary>
+/// <remarks>
+///     This client's primary responsibility is to retrieve analysis quality results
+///     including quality gate status and conditions. It handles waiting for tasks
+///     to complete and fetching associated quality data.
+/// </remarks>
 internal sealed class SonarQubeClient : IDisposable
 {
     /// <summary>
@@ -124,6 +129,111 @@ internal sealed class SonarQubeClient : IDisposable
             // Wait before polling again
             await Task.Delay(DefaultPollingInterval, cancellationToken).ConfigureAwait(false);
         }
+    }
+
+    /// <summary>
+    ///     Gets the quality analysis results from SonarQube/SonarCloud
+    /// </summary>
+    /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="pollingTimeout">Maximum time to wait for task completion (default: 5 minutes)</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Quality analysis results including quality gate status and conditions</returns>
+    /// <exception cref="InvalidOperationException">Thrown when task fails or times out</exception>
+    public async Task<SonarQualityResult> GetQualityResultAsync(
+        ReportTask reportTask,
+        TimeSpan? pollingTimeout = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(reportTask);
+
+        // Wait for the task to complete and get the analysis ID
+        var taskResult = await GetResultsAsync(reportTask, pollingTimeout, cancellationToken).ConfigureAwait(false);
+
+        if (string.IsNullOrEmpty(taskResult.AnalysisId))
+        {
+            throw new InvalidOperationException("Task completed successfully but no analysis ID was returned");
+        }
+
+        // Fetch the quality gate status for the analysis
+        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, cancellationToken)
+            .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Gets the quality gate status for an analysis
+    /// </summary>
+    /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="analysisId">Analysis ID</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Quality analysis results</returns>
+    private async Task<SonarQualityResult> GetQualityGateStatusAsync(
+        ReportTask reportTask,
+        string analysisId,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/qualitygates/project_status?analysisId={analysisId}";
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        if (!root.TryGetProperty("projectStatus", out var projectStatus))
+        {
+            throw new InvalidOperationException("Invalid quality gate response: missing 'projectStatus' property");
+        }
+
+        // Parse quality gate status
+        if (!projectStatus.TryGetProperty("status", out var statusElement))
+        {
+            throw new InvalidOperationException("Invalid quality gate response: missing 'status' property");
+        }
+
+        var qualityGateStatus = statusElement.GetString() ?? "NONE";
+
+        // Parse conditions
+        var conditions = new List<SonarQualityCondition>();
+        if (projectStatus.TryGetProperty("conditions", out var conditionsElement) &&
+            conditionsElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var condition in conditionsElement.EnumerateArray())
+            {
+                var metric = condition.TryGetProperty("metricKey", out var metricElement)
+                    ? metricElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var comparator = condition.TryGetProperty("comparator", out var comparatorElement)
+                    ? comparatorElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var errorThreshold = condition.TryGetProperty("errorThreshold", out var errorThresholdElement)
+                    ? errorThresholdElement.GetString()
+                    : null;
+
+                var actualValue = condition.TryGetProperty("actualValue", out var actualValueElement)
+                    ? actualValueElement.GetString()
+                    : null;
+
+                var conditionStatus = condition.TryGetProperty("status", out var conditionStatusElement)
+                    ? conditionStatusElement.GetString() ?? "NONE"
+                    : "NONE";
+
+                conditions.Add(new SonarQualityCondition(
+                    metric,
+                    comparator,
+                    errorThreshold,
+                    actualValue,
+                    conditionStatus));
+            }
+        }
+
+        return new SonarQualityResult(
+            reportTask.ProjectKey,
+            analysisId,
+            qualityGateStatus,
+            conditions);
     }
 
     /// <summary>
