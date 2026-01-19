@@ -414,6 +414,309 @@ public class SonarQubeClientTests
     }
 
     /// <summary>
+    ///     Test that GetQualityResultAsync returns quality gate information
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_SuccessfulTask_ReturnsQualityResult()
+    {
+        // Arrange - create mock HTTP handler that returns task completion and quality gate data
+        var handler = new MockHttpMessageHandler(request =>
+        {
+            var requestUrl = request.RequestUri?.ToString() ?? string.Empty;
+
+            // Handle CE task status request
+            if (requestUrl.Contains("/api/ce/task"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""task"": {
+                            ""id"": ""task123"",
+                            ""status"": ""SUCCESS"",
+                            ""analysisId"": ""analysis456""
+                        }
+                    }")
+                });
+            }
+
+            // Handle quality gate status request
+            if (requestUrl.Contains("/api/qualitygates/project_status"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""projectStatus"": {
+                            ""status"": ""OK"",
+                            ""conditions"": [
+                                {
+                                    ""metricKey"": ""new_coverage"",
+                                    ""comparator"": ""LT"",
+                                    ""errorThreshold"": ""80"",
+                                    ""actualValue"": ""85.5"",
+                                    ""status"": ""OK""
+                                },
+                                {
+                                    ""metricKey"": ""new_bugs"",
+                                    ""comparator"": ""GT"",
+                                    ""errorThreshold"": ""0"",
+                                    ""actualValue"": ""0"",
+                                    ""status"": ""OK""
+                                }
+                            ]
+                        }
+                    }")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        });
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient);
+        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+
+        // Act - get quality results
+        var result = await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
+
+        // Assert - verify quality gate information
+        Assert.IsNotNull(result);
+        Assert.AreEqual("project", result.ProjectKey);
+        Assert.AreEqual("analysis456", result.AnalysisId);
+        Assert.AreEqual("OK", result.QualityGateStatus);
+        Assert.HasCount(2, result.Conditions);
+
+        var coverageCondition = result.Conditions[0];
+        Assert.AreEqual("new_coverage", coverageCondition.Metric);
+        Assert.AreEqual("LT", coverageCondition.Comparator);
+        Assert.AreEqual("80", coverageCondition.ErrorThreshold);
+        Assert.AreEqual("85.5", coverageCondition.ActualValue);
+        Assert.AreEqual("OK", coverageCondition.Status);
+
+        var bugsCondition = result.Conditions[1];
+        Assert.AreEqual("new_bugs", bugsCondition.Metric);
+        Assert.AreEqual("GT", bugsCondition.Comparator);
+        Assert.AreEqual("0", bugsCondition.ErrorThreshold);
+        Assert.AreEqual("0", bugsCondition.ActualValue);
+        Assert.AreEqual("OK", bugsCondition.Status);
+    }
+
+    /// <summary>
+    ///     Test that GetQualityResultAsync throws for null report task
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_NullReportTask_ThrowsArgumentNullException()
+    {
+        // Arrange - create client
+        using var client = new SonarQubeClient();
+
+        // Act & Assert - verify exception is thrown for null report task
+        await Assert.ThrowsAsync<ArgumentNullException>(
+            async () => await client.GetQualityResultAsync(null!));
+    }
+
+    /// <summary>
+    ///     Test that GetQualityResultAsync throws when task has no analysis ID
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_NoAnalysisId_ThrowsInvalidOperationException()
+    {
+        // Arrange - create mock HTTP handler that returns success without analysis ID
+        var handler = new MockHttpMessageHandler(request =>
+        {
+            var response = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                Content = new StringContent(@"{
+                    ""task"": {
+                        ""id"": ""task123"",
+                        ""status"": ""SUCCESS""
+                    }
+                }")
+            };
+            return Task.FromResult(response);
+        });
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient);
+        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+
+        // Act & Assert - verify exception is thrown when no analysis ID
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
+        Assert.Contains("analysis", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    ///     Test that GetQualityResultAsync throws when quality gate response is invalid
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_InvalidQualityGateResponse_ThrowsInvalidOperationException()
+    {
+        // Arrange - create mock HTTP handler that returns invalid quality gate response
+        var handler = new MockHttpMessageHandler(request =>
+        {
+            var requestUrl = request.RequestUri?.ToString() ?? string.Empty;
+
+            // Handle CE task status request
+            if (requestUrl.Contains("/api/ce/task"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""task"": {
+                            ""id"": ""task123"",
+                            ""status"": ""SUCCESS"",
+                            ""analysisId"": ""analysis456""
+                        }
+                    }")
+                });
+            }
+
+            // Handle quality gate status request with invalid response
+            if (requestUrl.Contains("/api/qualitygates/project_status"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{""invalid"": ""response""}")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        });
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient);
+        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+
+        // Act & Assert - verify exception is thrown for invalid response
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5)));
+        Assert.Contains("projectStatus", exception.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    /// <summary>
+    ///     Test that GetQualityResultAsync constructs correct API URLs
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_ValidRequest_ConstructsCorrectUrls()
+    {
+        // Arrange - create mock HTTP handler to capture request URLs
+        var requestUrls = new List<string>();
+        var handler = new MockHttpMessageHandler(request =>
+        {
+            var requestUrl = request.RequestUri?.ToString() ?? string.Empty;
+            requestUrls.Add(requestUrl);
+
+            // Handle CE task status request
+            if (requestUrl.Contains("/api/ce/task"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""task"": {
+                            ""id"": ""task123"",
+                            ""status"": ""SUCCESS"",
+                            ""analysisId"": ""analysis456""
+                        }
+                    }")
+                });
+            }
+
+            // Handle quality gate status request
+            if (requestUrl.Contains("/api/qualitygates/project_status"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""projectStatus"": {
+                            ""status"": ""OK"",
+                            ""conditions"": []
+                        }
+                    }")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        });
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient);
+        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+
+        // Act - get quality results
+        await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
+
+        // Assert - verify correct URLs were constructed
+        Assert.HasCount(2, requestUrls);
+        Assert.AreEqual("https://sonarcloud.io/api/ce/task?id=task123", requestUrls[0]);
+        Assert.AreEqual("https://sonarcloud.io/api/qualitygates/project_status?analysisId=analysis456", requestUrls[1]);
+    }
+
+    /// <summary>
+    ///     Test that GetQualityResultAsync handles ERROR quality gate status
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultAsync_ErrorStatus_ReturnsErrorResult()
+    {
+        // Arrange - create mock HTTP handler that returns error quality gate status
+        var handler = new MockHttpMessageHandler(request =>
+        {
+            var requestUrl = request.RequestUri?.ToString() ?? string.Empty;
+
+            // Handle CE task status request
+            if (requestUrl.Contains("/api/ce/task"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""task"": {
+                            ""id"": ""task123"",
+                            ""status"": ""SUCCESS"",
+                            ""analysisId"": ""analysis456""
+                        }
+                    }")
+                });
+            }
+
+            // Handle quality gate status request with ERROR status
+            if (requestUrl.Contains("/api/qualitygates/project_status"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""projectStatus"": {
+                            ""status"": ""ERROR"",
+                            ""conditions"": [
+                                {
+                                    ""metricKey"": ""new_coverage"",
+                                    ""comparator"": ""LT"",
+                                    ""errorThreshold"": ""80"",
+                                    ""actualValue"": ""50"",
+                                    ""status"": ""ERROR""
+                                }
+                            ]
+                        }
+                    }")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        });
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient);
+        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+
+        // Act - get quality results
+        var result = await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
+
+        // Assert - verify error status is returned
+        Assert.IsNotNull(result);
+        Assert.AreEqual("ERROR", result.QualityGateStatus);
+        Assert.HasCount(1, result.Conditions);
+        Assert.AreEqual("ERROR", result.Conditions[0].Status);
+    }
+
+    /// <summary>
     ///     Mock HTTP message handler for testing
     /// </summary>
     private sealed class MockHttpMessageHandler : HttpMessageHandler
