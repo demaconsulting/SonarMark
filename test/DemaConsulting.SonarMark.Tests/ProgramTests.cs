@@ -45,11 +45,25 @@ public class ProgramTests
     [TestMethod]
     public void Program_Run_HelpFlag_OutputsBannerAndHelp()
     {
-        using var context = Context.Create(["--help"]);
-        Program.Run(context);
+        var originalOut = Console.Out;
+        var output = new StringWriter();
+        Console.SetOut(output);
 
-        // Just verify it doesn't throw - actual output is verified by Context tests
-        Assert.AreEqual(0, context.ExitCode);
+        try
+        {
+            using var context = Context.Create(["--help"]);
+            Program.Run(context);
+
+            var outputText = output.ToString();
+            Assert.Contains("SonarMark version", outputText);
+            Assert.Contains("Usage: sonarmark", outputText);
+            Assert.Contains("Options:", outputText);
+            Assert.AreEqual(0, context.ExitCode);
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+        }
     }
 
     /// <summary>
