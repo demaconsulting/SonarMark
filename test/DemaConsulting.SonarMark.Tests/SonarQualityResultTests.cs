@@ -79,14 +79,10 @@ public class SonarQualityResultTests
         Assert.Contains("**Project Key:** test_project", markdown);
         Assert.Contains("**Analysis ID:** analysis_123", markdown);
         Assert.Contains("## Conditions", markdown);
-        Assert.Contains("- **new_coverage**: ERROR", markdown);
-        Assert.Contains("  - Comparator: LT", markdown);
-        Assert.Contains("  - Threshold: 80", markdown);
-        Assert.Contains("  - Actual: 75.5", markdown);
-        Assert.Contains("- **new_bugs**: ERROR", markdown);
-        Assert.Contains("  - Comparator: GT", markdown);
-        Assert.Contains("  - Threshold: 0", markdown);
-        Assert.Contains("  - Actual: 2", markdown);
+        Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
+        Assert.Contains("|:-------|:------:|:----------:|----------:|-------:|", markdown);
+        Assert.Contains("| new_coverage | ERROR | LT | 80 | 75.5 |", markdown);
+        Assert.Contains("| new_bugs | ERROR | GT | 0 | 2 |", markdown);
     }
 
     /// <summary>
@@ -159,11 +155,9 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify null values are not present
-        Assert.Contains("- **new_coverage**: OK", markdown);
-        Assert.Contains("  - Comparator: LT", markdown);
-        Assert.DoesNotContain("  - Threshold:", markdown);
-        Assert.DoesNotContain("  - Actual:", markdown);
+        // Assert - verify null values are shown as empty in table
+        Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
+        Assert.Contains("| new_coverage | OK | LT |  |  |", markdown);
     }
 
     /// <summary>
@@ -267,7 +261,7 @@ public class SonarQualityResultTests
 
         // Assert
         Assert.Contains("# Quality Gate Status: WARN", markdown);
-        Assert.Contains("- **new_coverage**: WARN", markdown);
+        Assert.Contains("| new_coverage | WARN | LT | 80 | 78.5 |", markdown);
     }
 
     /// <summary>

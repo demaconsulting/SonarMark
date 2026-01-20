@@ -67,20 +67,18 @@ internal sealed record SonarQualityResult(
             sb.AppendLine($"{subHeading} Conditions");
             sb.AppendLine();
 
+            // Add table header with alignment and appropriate column widths
+            sb.AppendLine("| Metric | Status | Comparator | Threshold | Actual |");
+            sb.AppendLine("|:-------|:------:|:----------:|----------:|-------:|");
+
+            // Add table rows
             foreach (var condition in Conditions)
             {
-                sb.AppendLine($"- **{condition.Metric}**: {condition.Status}");
-                sb.AppendLine($"  - Comparator: {condition.Comparator}");
-                
-                if (condition.ErrorThreshold != null)
-                {
-                    sb.AppendLine($"  - Threshold: {condition.ErrorThreshold}");
-                }
-                
-                if (condition.ActualValue != null)
-                {
-                    sb.AppendLine($"  - Actual: {condition.ActualValue}");
-                }
+                sb.Append($"| {condition.Metric} ");
+                sb.Append($"| {condition.Status} ");
+                sb.Append($"| {condition.Comparator} ");
+                sb.Append($"| {condition.ErrorThreshold ?? ""} ");
+                sb.AppendLine($"| {condition.ActualValue ?? ""} |");
             }
         }
 
