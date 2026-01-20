@@ -76,9 +76,19 @@ internal sealed class Context : IDisposable
     public string? Token { get; private init; }
 
     /// <summary>
-    ///     Gets the SonarQube working directory to search for report-task.txt file.
+    ///     Gets the SonarQube/SonarCloud server URL.
     /// </summary>
-    public string? WorkingDirectory { get; private init; }
+    public string? Server { get; private init; }
+
+    /// <summary>
+    ///     Gets the SonarQube/SonarCloud project key.
+    /// </summary>
+    public string? ProjectKey { get; private init; }
+
+    /// <summary>
+    ///     Gets the branch name to query.
+    /// </summary>
+    public string? Branch { get; private init; }
 
     /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
@@ -111,7 +121,9 @@ internal sealed class Context : IDisposable
         string? reportFile = null;
         var reportDepth = 1;
         string? token = null;
-        string? workingDirectory = null;
+        string? server = null;
+        string? projectKey = null;
+        string? branch = null;
         string? logFile = null;
 
         // Parse command-line arguments
@@ -191,14 +203,34 @@ internal sealed class Context : IDisposable
                     token = args[i++];
                     break;
 
-                case "--working-directory":
+                case "--server":
                     // Ensure argument has a value
                     if (i >= args.Length)
                     {
-                        throw new ArgumentException($"{arg} requires a directory argument", nameof(args));
+                        throw new ArgumentException($"{arg} requires a server URL argument", nameof(args));
                     }
 
-                    workingDirectory = args[i++];
+                    server = args[i++];
+                    break;
+
+                case "--project-key":
+                    // Ensure argument has a value
+                    if (i >= args.Length)
+                    {
+                        throw new ArgumentException($"{arg} requires a project key argument", nameof(args));
+                    }
+
+                    projectKey = args[i++];
+                    break;
+
+                case "--branch":
+                    // Ensure argument has a value
+                    if (i >= args.Length)
+                    {
+                        throw new ArgumentException($"{arg} requires a branch name argument", nameof(args));
+                    }
+
+                    branch = args[i++];
                     break;
 
                 default:
@@ -217,7 +249,9 @@ internal sealed class Context : IDisposable
             ReportFile = reportFile,
             ReportDepth = reportDepth,
             Token = token,
-            WorkingDirectory = workingDirectory
+            Server = server,
+            ProjectKey = projectKey,
+            Branch = branch
         };
 
         // Open log file if specified

@@ -18,40 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Net;
-using System.Text.Json;
-
-namespace DemaConsulting.SonarMark.Tests;
+namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Tests for SonarQubeClient class
+///     Represents a SonarQube security hot-spot
 /// </summary>
-[TestClass]
-public class SonarQubeClientTests
-{
-    /// <summary>
-    ///     Test that constructor with auth token creates instance
-    /// </summary>
-    [TestMethod]
-    public void SonarQubeClient_Constructor_WithAuthToken_CreatesInstance()
-    {
-        // Act - create client with authentication token
-        using var client = new SonarQubeClient("test-token");
-
-        // Assert - verify client was created
-        Assert.IsNotNull(client);
-    }
-
-    /// <summary>
-    ///     Test that constructor without auth token creates instance
-    /// </summary>
-    [TestMethod]
-    public void SonarQubeClient_Constructor_WithoutAuthToken_CreatesInstance()
-    {
-        // Act - create client without authentication token
-        using var client = new SonarQubeClient();
-
-        // Assert - verify client was created
-        Assert.IsNotNull(client);
-    }
-}
+/// <param name="Key">Hot-spot key</param>
+/// <param name="Component">Component key</param>
+/// <param name="Line">Line number (if applicable)</param>
+/// <param name="Message">Hot-spot message</param>
+/// <param name="SecurityCategory">Security category</param>
+/// <param name="VulnerabilityProbability">Vulnerability probability (e.g., HIGH, MEDIUM, LOW)</param>
+internal sealed record SonarHotSpot(
+    string Key,
+    string Component,
+    int? Line,
+    string Message,
+    string SecurityCategory,
+    string VulnerabilityProbability);

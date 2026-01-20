@@ -132,47 +132,67 @@ internal sealed class SonarQubeClient : IDisposable
     }
 
     /// <summary>
-    ///     Gets the quality analysis results from SonarQube/SonarCloud
+    ///     Gets the quality analysis results from SonarQube/SonarCloud using project key and branch
     /// </summary>
-    /// <param name="reportTask">Report task containing server and project information</param>
-    /// <param name="pollingTimeout">Maximum time to wait for task completion (default: 5 minutes)</param>
+    /// <param name="serverUrl">Server URL</param>
+    /// <param name="projectKey">Project key</param>
+    /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Quality analysis results including quality gate status and conditions</returns>
-    /// <exception cref="InvalidOperationException">Thrown when task fails or times out</exception>
-    public async Task<SonarQualityResult> GetQualityResultAsync(
-        ReportTask reportTask,
-        TimeSpan? pollingTimeout = null,
+    /// <returns>Quality analysis results including quality gate status, conditions, issues, and hot-spots</returns>
+    /// <exception cref="InvalidOperationException">Thrown when request fails</exception>
+    public async Task<SonarQualityResult> GetQualityResultByBranchAsync(
+        string serverUrl,
+        string projectKey,
+        string? branch = null,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(reportTask);
-
-        // Wait for the task to complete and get the analysis ID
-        var taskResult = await GetResultsAsync(reportTask, pollingTimeout, cancellationToken).ConfigureAwait(false);
-
-        if (string.IsNullOrEmpty(taskResult.AnalysisId))
-        {
-            throw new InvalidOperationException("Task completed successfully but no analysis ID was returned");
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(serverUrl);
+        ArgumentException.ThrowIfNullOrWhiteSpace(projectKey);
 
         // Fetch the project name
-        var projectName = await GetProjectNameAsync(reportTask, cancellationToken).ConfigureAwait(false);
-
-        // Fetch the quality gate status for the analysis
-        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, projectName, cancellationToken)
+        var projectName = await GetProjectNameByKeyAsync(serverUrl, projectKey, cancellationToken)
             .ConfigureAwait(false);
+
+        // Fetch the quality gate status for the branch
+        var (qualityGateStatus, conditions) = await GetQualityGateStatusByBranchAsync(
+            serverUrl,
+            projectKey,
+            branch,
+            cancellationToken).ConfigureAwait(false);
+
+        // Fetch metric names to provide friendly names in the report
+        var metricNames = await GetMetricNamesByServerAsync(serverUrl, cancellationToken).ConfigureAwait(false);
+
+        // Fetch issues
+        var issues = await GetIssuesAsync(serverUrl, projectKey, branch, cancellationToken).ConfigureAwait(false);
+
+        // Fetch hot-spots
+        var hotSpots = await GetHotSpotsAsync(serverUrl, projectKey, branch, cancellationToken)
+            .ConfigureAwait(false);
+
+        return new SonarQualityResult(
+            projectKey,
+            projectName,
+            qualityGateStatus,
+            conditions,
+            metricNames,
+            issues,
+            hotSpots);
     }
 
     /// <summary>
     ///     Gets the project name from SonarQube/SonarCloud
     /// </summary>
-    /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="serverUrl">Server URL</param>
+    /// <param name="projectKey">Project key</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Project name</returns>
-    private async Task<string> GetProjectNameAsync(
-        ReportTask reportTask,
+    private async Task<string> GetProjectNameByKeyAsync(
+        string serverUrl,
+        string projectKey,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/components/show?component={reportTask.ProjectKey}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={projectKey}";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -192,24 +212,29 @@ internal sealed class SonarQubeClient : IDisposable
         }
 
         // Return project name, or fallback to project key if name is null/empty
-        return nameElement.GetString() ?? reportTask.ProjectKey;
+        return nameElement.GetString() ?? projectKey;
     }
 
     /// <summary>
-    ///     Gets the quality gate status for an analysis
+    ///     Gets the quality gate status for a branch
     /// </summary>
-    /// <param name="reportTask">Report task containing server and project information</param>
-    /// <param name="analysisId">Analysis ID</param>
-    /// <param name="projectName">Project name</param>
+    /// <param name="serverUrl">Server URL</param>
+    /// <param name="projectKey">Project key</param>
+    /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Quality analysis results</returns>
-    private async Task<SonarQualityResult> GetQualityGateStatusAsync(
-        ReportTask reportTask,
-        string analysisId,
-        string projectName,
-        CancellationToken cancellationToken)
+    /// <returns>Quality gate status and conditions</returns>
+    private async Task<(string QualityGateStatus, List<SonarQualityCondition> Conditions)>
+        GetQualityGateStatusByBranchAsync(
+            string serverUrl,
+            string projectKey,
+            string? branch,
+            CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/qualitygates/project_status?analysisId={analysisId}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={projectKey}";
+        if (!string.IsNullOrWhiteSpace(branch))
+        {
+            url += $"&branch={branch}";
+        }
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -267,28 +292,168 @@ internal sealed class SonarQubeClient : IDisposable
             }
         }
 
-        // Fetch metric names to provide friendly names in the report
-        var metricNames = await GetMetricNamesAsync(reportTask, cancellationToken).ConfigureAwait(false);
+        return (qualityGateStatus, conditions);
+    }
 
-        return new SonarQualityResult(
-            reportTask.ProjectKey,
-            projectName,
-            qualityGateStatus,
-            conditions,
-            metricNames);
+    /// <summary>
+    ///     Gets issues from SonarQube/SonarCloud
+    /// </summary>
+    /// <param name="serverUrl">Server URL</param>
+    /// <param name="projectKey">Project key</param>
+    /// <param name="branch">Branch name (optional)</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of issues</returns>
+    private async Task<List<SonarIssue>> GetIssuesAsync(
+        string serverUrl,
+        string projectKey,
+        string? branch,
+        CancellationToken cancellationToken)
+    {
+        var url =
+            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=500";
+        if (!string.IsNullOrWhiteSpace(branch))
+        {
+            url += $"&branch={branch}";
+        }
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        if (!root.TryGetProperty("issues", out var issuesElement))
+        {
+            throw new InvalidOperationException("Invalid issues response: missing 'issues' property");
+        }
+
+        var issues = new List<SonarIssue>();
+        if (issuesElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var issue in issuesElement.EnumerateArray())
+            {
+                var key = issue.TryGetProperty("key", out var keyElement)
+                    ? keyElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var rule = issue.TryGetProperty("rule", out var ruleElement)
+                    ? ruleElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var severity = issue.TryGetProperty("severity", out var severityElement)
+                    ? severityElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var component = issue.TryGetProperty("component", out var componentElement)
+                    ? componentElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                int? line = null;
+                if (issue.TryGetProperty("line", out var lineElement) && lineElement.ValueKind == JsonValueKind.Number)
+                {
+                    line = lineElement.GetInt32();
+                }
+
+                var message = issue.TryGetProperty("message", out var messageElement)
+                    ? messageElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var type = issue.TryGetProperty("type", out var typeElement)
+                    ? typeElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                issues.Add(new SonarIssue(key, rule, severity, component, line, message, type));
+            }
+        }
+
+        return issues;
+    }
+
+    /// <summary>
+    ///     Gets security hot-spots from SonarQube/SonarCloud
+    /// </summary>
+    /// <param name="serverUrl">Server URL</param>
+    /// <param name="projectKey">Project key</param>
+    /// <param name="branch">Branch name (optional)</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of hot-spots</returns>
+    private async Task<List<SonarHotSpot>> GetHotSpotsAsync(
+        string serverUrl,
+        string projectKey,
+        string? branch,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=500";
+        if (!string.IsNullOrWhiteSpace(branch))
+        {
+            url += $"&branch={branch}";
+        }
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        if (!root.TryGetProperty("hotspots", out var hotSpotsElement))
+        {
+            throw new InvalidOperationException("Invalid hot-spots response: missing 'hotspots' property");
+        }
+
+        var hotSpots = new List<SonarHotSpot>();
+        if (hotSpotsElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var hotSpot in hotSpotsElement.EnumerateArray())
+            {
+                var key = hotSpot.TryGetProperty("key", out var keyElement)
+                    ? keyElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var component = hotSpot.TryGetProperty("component", out var componentElement)
+                    ? componentElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                int? line = null;
+                if (hotSpot.TryGetProperty("line", out var lineElement) &&
+                    lineElement.ValueKind == JsonValueKind.Number)
+                {
+                    line = lineElement.GetInt32();
+                }
+
+                var message = hotSpot.TryGetProperty("message", out var messageElement)
+                    ? messageElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var securityCategory = hotSpot.TryGetProperty("securityCategory", out var securityCategoryElement)
+                    ? securityCategoryElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var vulnerabilityProbability =
+                    hotSpot.TryGetProperty("vulnerabilityProbability", out var vulnerabilityProbabilityElement)
+                        ? vulnerabilityProbabilityElement.GetString() ?? string.Empty
+                        : string.Empty;
+
+                hotSpots.Add(new SonarHotSpot(key, component, line, message, securityCategory,
+                    vulnerabilityProbability));
+            }
+        }
+
+        return hotSpots;
     }
 
     /// <summary>
     ///     Gets metric names from the SonarQube/SonarCloud API
     /// </summary>
-    /// <param name="reportTask">Report task containing server information</param>
+    /// <param name="serverUrl">Server URL</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Dictionary mapping metric keys to friendly names</returns>
-    private async Task<IReadOnlyDictionary<string, string>> GetMetricNamesAsync(
-        ReportTask reportTask,
+    private async Task<IReadOnlyDictionary<string, string>> GetMetricNamesByServerAsync(
+        string serverUrl,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/metrics/search";
+        var url = $"{serverUrl.TrimEnd('/')}/api/metrics/search";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();

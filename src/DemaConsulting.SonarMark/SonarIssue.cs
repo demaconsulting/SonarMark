@@ -18,40 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Net;
-using System.Text.Json;
-
-namespace DemaConsulting.SonarMark.Tests;
+namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Tests for SonarQubeClient class
+///     Represents a SonarQube issue
 /// </summary>
-[TestClass]
-public class SonarQubeClientTests
-{
-    /// <summary>
-    ///     Test that constructor with auth token creates instance
-    /// </summary>
-    [TestMethod]
-    public void SonarQubeClient_Constructor_WithAuthToken_CreatesInstance()
-    {
-        // Act - create client with authentication token
-        using var client = new SonarQubeClient("test-token");
-
-        // Assert - verify client was created
-        Assert.IsNotNull(client);
-    }
-
-    /// <summary>
-    ///     Test that constructor without auth token creates instance
-    /// </summary>
-    [TestMethod]
-    public void SonarQubeClient_Constructor_WithoutAuthToken_CreatesInstance()
-    {
-        // Act - create client without authentication token
-        using var client = new SonarQubeClient();
-
-        // Assert - verify client was created
-        Assert.IsNotNull(client);
-    }
-}
+/// <param name="Key">Issue key</param>
+/// <param name="Rule">Rule key</param>
+/// <param name="Severity">Issue severity (e.g., BLOCKER, CRITICAL, MAJOR, MINOR, INFO)</param>
+/// <param name="Component">Component key</param>
+/// <param name="Line">Line number (if applicable)</param>
+/// <param name="Message">Issue message</param>
+/// <param name="Type">Issue type (e.g., BUG, VULNERABILITY, CODE_SMELL)</param>
+internal sealed record SonarIssue(
+    string Key,
+    string Rule,
+    string Severity,
+    string Component,
+    int? Line,
+    string Message,
+    string Type);

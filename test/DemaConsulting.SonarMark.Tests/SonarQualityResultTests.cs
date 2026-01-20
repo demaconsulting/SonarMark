@@ -48,7 +48,9 @@ public class SonarQualityResultTests
             "Test Project Name",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -82,7 +84,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -117,7 +121,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -141,7 +147,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -171,7 +179,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -195,7 +205,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act & Assert
         try
@@ -224,7 +236,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act & Assert
         try
@@ -258,7 +272,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -287,7 +303,9 @@ public class SonarQualityResultTests
             "Test Project",
             "WARN",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -322,7 +340,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
