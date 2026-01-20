@@ -4,7 +4,9 @@ Tool to create a code quality report from a SonarQube/SonarCloud analysis
 
 ## Overview
 
-SonarMark is a .NET command-line tool that generates markdown reports from SonarQube/SonarCloud analysis results. It fetches quality gate status, issues, and security hot-spots directly from the SonarQube/SonarCloud API and generates comprehensive markdown reports.
+SonarMark is a .NET command-line tool that generates markdown reports from SonarQube/SonarCloud analysis
+results. It fetches quality gate status, issues, and security hot-spots directly from the SonarQube/SonarCloud
+API and generates comprehensive markdown reports.
 
 ## Installation
 
