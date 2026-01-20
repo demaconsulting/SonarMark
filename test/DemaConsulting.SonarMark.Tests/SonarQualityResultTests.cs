@@ -44,6 +44,7 @@ public class SonarQualityResultTests
         };
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project Name",
             "ERROR",
@@ -53,6 +54,7 @@ public class SonarQualityResultTests
             new List<SonarHotSpot>());
 
         // Assert - verify all properties are set correctly
+        Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
         Assert.AreEqual("test_project", result.ProjectKey);
         Assert.AreEqual("Test Project Name", result.ProjectName);
         Assert.AreEqual("ERROR", result.QualityGateStatus);
@@ -80,6 +82,7 @@ public class SonarQualityResultTests
         };
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "ERROR",
@@ -94,12 +97,16 @@ public class SonarQualityResultTests
         // Assert - verify the markdown contains expected elements
         Assert.IsNotNull(markdown);
         Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Dashboard:**", markdown);
+        Assert.Contains("https://sonarcloud.io/dashboard?id=test_project", markdown);
         Assert.Contains("**Quality Gate Status:** ERROR", markdown);
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
         Assert.Contains("| Coverage on New Code | ERROR | LT | 80 | 75.5 |", markdown);
         Assert.Contains("| New Bugs | ERROR | GT | 0 | 2 |", markdown);
+        Assert.Contains("Found 0 issues", markdown);
+        Assert.Contains("Found 0 security hot-spots", markdown);
     }
 
     /// <summary>
@@ -117,6 +124,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "ERROR",
@@ -143,6 +151,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "OK",
@@ -160,7 +169,8 @@ public class SonarQualityResultTests
         Assert.DoesNotContain("## Conditions", markdown);
         Assert.Contains("## Issues", markdown);
         Assert.Contains("## Security Hot-Spots", markdown);
-        Assert.Contains("| N/A | N/A | N/A | N/A | N/A | N/A |", markdown);
+        Assert.Contains("Found 0 issues", markdown);
+        Assert.Contains("Found 0 security hot-spots", markdown);
     }
 
     /// <summary>
@@ -178,6 +188,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "OK",
@@ -204,6 +215,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "OK",
@@ -235,6 +247,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "OK",
@@ -271,6 +284,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "ERROR",
@@ -302,6 +316,7 @@ public class SonarQualityResultTests
         var metricNames = new Dictionary<string, string>();
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "WARN",
@@ -339,6 +354,7 @@ public class SonarQualityResultTests
         };
 
         var result = new SonarQualityResult(
+            "https://sonarcloud.io",
             "test_project",
             "Test Project",
             "ERROR",
@@ -353,6 +369,72 @@ public class SonarQualityResultTests
         // Assert - verify friendly name is used when available, key used as fallback
         Assert.Contains("| Coverage on New Code | ERROR | LT | 80 | 75.5 |", markdown);
         Assert.Contains("| unknown_metric | ERROR | GT | 0 | 5 |", markdown);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with issues produces compiler-style output and cleans component paths
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput()
+    {
+        // Arrange
+        var issues = new List<SonarIssue>
+        {
+            new("key1", "csharpsquid:S1234", "MAJOR", "test_project:src/File.cs", 42, "Issue message", "BUG"),
+            new("key2", "csharpsquid:S5678", "MINOR", "test_project:src/Another.cs", null, "Another issue", "CODE_SMELL")
+        };
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            new List<SonarQualityCondition>(),
+            new Dictionary<string, string>(),
+            issues,
+            new List<SonarHotSpot>());
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify compiler-style output and cleaned component paths
+        Assert.Contains("Found 2 issues", markdown);
+        Assert.Contains("src/File.cs(42): MAJOR BUG [csharpsquid:S1234] Issue message", markdown);
+        Assert.Contains("src/Another.cs: MINOR CODE_SMELL [csharpsquid:S5678] Another issue", markdown);
+        Assert.DoesNotContain("test_project:", markdown.Replace("test_project</", "")); // Exclude URL
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with hot-spots produces compiler-style output and cleans component paths
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput()
+    {
+        // Arrange
+        var hotSpots = new List<SonarHotSpot>
+        {
+            new("key1", "test_project:src/Secure.cs", 10, "Security issue", "sql-injection", "HIGH"),
+            new("key2", "test_project:src/Auth.cs", null, "Auth issue", "weak-cryptography", "MEDIUM")
+        };
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            new List<SonarQualityCondition>(),
+            new Dictionary<string, string>(),
+            new List<SonarIssue>(),
+            hotSpots);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify compiler-style output and cleaned component paths
+        Assert.Contains("Found 2 security hot-spots", markdown);
+        Assert.Contains("src/Secure.cs(10): HIGH [sql-injection] Security issue", markdown);
+        Assert.Contains("src/Auth.cs: MEDIUM [weak-cryptography] Auth issue", markdown);
+        Assert.DoesNotContain("test_project:", markdown.Replace("test_project</", "")); // Exclude URL
     }
 
     /// <summary>

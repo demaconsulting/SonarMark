@@ -23,6 +23,7 @@ namespace DemaConsulting.SonarMark;
 /// <summary>
 ///     Represents quality analysis results from SonarQube/SonarCloud
 /// </summary>
+/// <param name="ServerUrl">Server URL</param>
 /// <param name="ProjectKey">Project key</param>
 /// <param name="ProjectName">Project name</param>
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
@@ -31,6 +32,7 @@ namespace DemaConsulting.SonarMark;
 /// <param name="Issues">List of issues found in the project</param>
 /// <param name="HotSpots">List of security hot-spots found in the project</param>
 internal sealed record SonarQualityResult(
+    string ServerUrl,
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
@@ -59,6 +61,11 @@ internal sealed record SonarQualityResult(
 
         // Add project name as main heading
         sb.AppendLine($"{heading} {ProjectName} Sonar Analysis");
+        sb.AppendLine();
+
+        // Add dashboard link
+        var dashboardUrl = $"{ServerUrl.TrimEnd('/')}/dashboard?id={Uri.EscapeDataString(ProjectKey)}";
+        sb.AppendLine($"**Dashboard:** <{dashboardUrl}>");
         sb.AppendLine();
 
         // Add quality gate status as text content
@@ -100,55 +107,57 @@ internal sealed record SonarQualityResult(
         // Add issues section (always present)
         sb.AppendLine($"{subHeading} Issues");
         sb.AppendLine();
-
-        sb.AppendLine("| Type | Severity | Rule | Component | Line | Message |");
-        sb.AppendLine("|:------------|:---------|:-----|:----------|-----:|:--------|");
+        sb.AppendLine($"Found {Issues.Count} issue{(Issues.Count == 1 ? "" : "s")}");
+        sb.AppendLine();
 
         if (Issues.Count > 0)
         {
             foreach (var issue in Issues)
             {
-                sb.Append($"| {issue.Type} ");
-                sb.Append($"| {issue.Severity} ");
-                sb.Append($"| {issue.Rule} ");
-                sb.Append($"| {issue.Component} ");
-                sb.Append($"| {issue.Line?.ToString() ?? ""} ");
-                sb.AppendLine($"| {issue.Message} |");
+                var component = CleanComponent(issue.Component);
+                var lineInfo = issue.Line.HasValue ? $"({issue.Line})" : "";
+                sb.AppendLine($"{component}{lineInfo}: {issue.Severity} {issue.Type} [{issue.Rule}] {issue.Message}");
             }
-        }
-        else
-        {
-            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A | N/A |");
-        }
 
-        sb.AppendLine();
+            sb.AppendLine();
+        }
 
         // Add hot-spots section (always present)
         sb.AppendLine($"{subHeading} Security Hot-Spots");
         sb.AppendLine();
-
-        sb.AppendLine("| Probability | Category | Component | Line | Message |");
-        sb.AppendLine("|:------------|:---------|:----------|-----:|:--------|");
+        sb.AppendLine($"Found {HotSpots.Count} security hot-spot{(HotSpots.Count == 1 ? "" : "s")}");
+        sb.AppendLine();
 
         if (HotSpots.Count > 0)
         {
             foreach (var hotSpot in HotSpots)
             {
-                sb.Append($"| {hotSpot.VulnerabilityProbability} ");
-                sb.Append($"| {hotSpot.SecurityCategory} ");
-                sb.Append($"| {hotSpot.Component} ");
-                sb.Append($"| {hotSpot.Line?.ToString() ?? ""} ");
-                sb.AppendLine($"| {hotSpot.Message} |");
+                var component = CleanComponent(hotSpot.Component);
+                var lineInfo = hotSpot.Line.HasValue ? $"({hotSpot.Line})" : "";
+                sb.AppendLine(
+                    $"{component}{lineInfo}: {hotSpot.VulnerabilityProbability} [{hotSpot.SecurityCategory}] {hotSpot.Message}");
             }
-        }
-        else
-        {
-            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A |");
-        }
 
-        sb.AppendLine();
+            sb.AppendLine();
+        }
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    ///     Cleans the component path by removing the project key prefix
+    /// </summary>
+    /// <param name="component">Component path from SonarQube</param>
+    /// <returns>Cleaned component path</returns>
+    private string CleanComponent(string component)
+    {
+        var prefix = $"{ProjectKey}:";
+        if (component.StartsWith(prefix, StringComparison.Ordinal))
+        {
+            return component.Substring(prefix.Length);
+        }
+
+        return component;
     }
 }
 
