@@ -129,6 +129,18 @@ public class ContextTests
     }
 
     /// <summary>
+    ///     Test creating a context with enforce flag.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_EnforceFlag_SetsEnforceProperty()
+    {
+        using var context = Context.Create(["--enforce"]);
+
+        Assert.IsTrue(context.Enforce);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
     ///     Test creating a context with report file.
     /// </summary>
     [TestMethod]

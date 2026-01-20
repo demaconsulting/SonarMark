@@ -40,13 +40,13 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project Name",
             "ERROR",
             conditions);
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
-        Assert.AreEqual("analysis_123", result.AnalysisId);
+        Assert.AreEqual("Test Project Name", result.ProjectName);
         Assert.AreEqual("ERROR", result.QualityGateStatus);
         Assert.HasCount(1, result.Conditions);
     }
@@ -66,7 +66,7 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "ERROR",
             conditions);
 
@@ -76,8 +76,7 @@ public class SonarQualityResultTests
         // Assert - verify the markdown contains expected elements
         Assert.IsNotNull(markdown);
         Assert.Contains("# Quality Gate Status: ERROR", markdown);
-        Assert.Contains("**Project Key:** test_project", markdown);
-        Assert.Contains("**Analysis ID:** analysis_123", markdown);
+        Assert.Contains("**Project:** Test Project", markdown);
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
@@ -99,7 +98,7 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "ERROR",
             conditions);
 
@@ -120,7 +119,7 @@ public class SonarQualityResultTests
         // Arrange
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "OK",
             new List<SonarQualityCondition>());
 
@@ -129,8 +128,7 @@ public class SonarQualityResultTests
 
         // Assert - verify conditions section is not present
         Assert.Contains("# Quality Gate Status: OK", markdown);
-        Assert.Contains("**Project Key:** test_project", markdown);
-        Assert.Contains("**Analysis ID:** analysis_123", markdown);
+        Assert.Contains("**Project:** Test Project", markdown);
         Assert.DoesNotContain("## Conditions", markdown);
     }
 
@@ -148,7 +146,7 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "OK",
             conditions);
 
@@ -169,7 +167,7 @@ public class SonarQualityResultTests
         // Arrange
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "OK",
             new List<SonarQualityCondition>());
 
@@ -195,7 +193,7 @@ public class SonarQualityResultTests
         // Arrange
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "OK",
             new List<SonarQualityCondition>());
 
@@ -226,7 +224,7 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "ERROR",
             conditions);
 
@@ -252,7 +250,7 @@ public class SonarQualityResultTests
 
         var result = new SonarQualityResult(
             "test_project",
-            "analysis_123",
+            "Test Project",
             "WARN",
             conditions);
 

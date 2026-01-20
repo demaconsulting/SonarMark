@@ -56,6 +56,11 @@ internal sealed class Context : IDisposable
     public bool Validate { get; private init; }
 
     /// <summary>
+    ///     Gets a value indicating whether the enforce flag was specified.
+    /// </summary>
+    public bool Enforce { get; private init; }
+
+    /// <summary>
     ///     Gets the report file path.
     /// </summary>
     public string? ReportFile { get; private init; }
@@ -100,6 +105,7 @@ internal sealed class Context : IDisposable
         var help = false;
         var silent = false;
         var validate = false;
+        var enforce = false;
 
         // Initialize optional parameters
         string? reportFile = null;
@@ -134,6 +140,10 @@ internal sealed class Context : IDisposable
 
                 case "--validate":
                     validate = true;
+                    break;
+
+                case "--enforce":
+                    enforce = true;
                     break;
 
                 case "--log":
@@ -203,6 +213,7 @@ internal sealed class Context : IDisposable
             Help = help,
             Silent = silent,
             Validate = validate,
+            Enforce = enforce,
             ReportFile = reportFile,
             ReportDepth = reportDepth,
             Token = token,

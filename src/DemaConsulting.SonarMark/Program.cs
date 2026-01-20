@@ -137,6 +137,7 @@ internal static class Program
         context.WriteLine("  -?, -h, --help             Display this help message");
         context.WriteLine("  --silent                   Suppress console output");
         context.WriteLine("  --validate                 Run self-validation");
+        context.WriteLine("  --enforce                  Return non-zero exit code if quality gate fails");
         context.WriteLine("  --log <file>               Write output to log file");
         context.WriteLine("  --working-directory <dir>  Directory to search for report-task.txt file");
         context.WriteLine("  --token <token>            Personal access token for SonarQube/SonarCloud");
@@ -194,6 +195,12 @@ internal static class Program
         {
             context.WriteError($"Error: Failed to get quality results: {ex.Message}");
             return;
+        }
+
+        // Check enforcement if requested
+        if (context.Enforce && qualityResult.QualityGateStatus == "ERROR")
+        {
+            context.WriteError("Error: Quality gate failed");
         }
 
         // Export quality report if requested

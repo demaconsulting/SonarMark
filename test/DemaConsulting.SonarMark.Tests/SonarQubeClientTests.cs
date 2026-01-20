@@ -439,6 +439,20 @@ public class SonarQubeClientTests
                 });
             }
 
+            // Handle component show request
+            if (requestUrl.Contains("/api/components/show"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""component"": {
+                            ""key"": ""project"",
+                            ""name"": ""Test Project""
+                        }
+                    }")
+                });
+            }
+
             // Handle quality gate status request
             if (requestUrl.Contains("/api/qualitygates/project_status"))
             {
@@ -481,7 +495,7 @@ public class SonarQubeClientTests
         // Assert - verify quality gate information
         Assert.IsNotNull(result);
         Assert.AreEqual("project", result.ProjectKey);
-        Assert.AreEqual("analysis456", result.AnalysisId);
+        Assert.AreEqual("Test Project", result.ProjectName);
         Assert.AreEqual("OK", result.QualityGateStatus);
         Assert.HasCount(2, result.Conditions);
 
@@ -571,6 +585,20 @@ public class SonarQubeClientTests
                 });
             }
 
+            // Handle component show request
+            if (requestUrl.Contains("/api/components/show"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""component"": {
+                            ""key"": ""project"",
+                            ""name"": ""Test Project""
+                        }
+                    }")
+                });
+            }
+
             // Handle quality gate status request with invalid response
             if (requestUrl.Contains("/api/qualitygates/project_status"))
             {
@@ -621,6 +649,20 @@ public class SonarQubeClientTests
                 });
             }
 
+            // Handle component show request
+            if (requestUrl.Contains("/api/components/show"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""component"": {
+                            ""key"": ""project"",
+                            ""name"": ""Test Project""
+                        }
+                    }")
+                });
+            }
+
             // Handle quality gate status request
             if (requestUrl.Contains("/api/qualitygates/project_status"))
             {
@@ -646,9 +688,10 @@ public class SonarQubeClientTests
         await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
 
         // Assert - verify correct URLs were constructed
-        Assert.HasCount(2, requestUrls);
+        Assert.HasCount(3, requestUrls);
         Assert.AreEqual("https://sonarcloud.io/api/ce/task?id=task123", requestUrls[0]);
-        Assert.AreEqual("https://sonarcloud.io/api/qualitygates/project_status?analysisId=analysis456", requestUrls[1]);
+        Assert.AreEqual("https://sonarcloud.io/api/components/show?component=project", requestUrls[1]);
+        Assert.AreEqual("https://sonarcloud.io/api/qualitygates/project_status?analysisId=analysis456", requestUrls[2]);
     }
 
     /// <summary>
@@ -672,6 +715,20 @@ public class SonarQubeClientTests
                             ""id"": ""task123"",
                             ""status"": ""SUCCESS"",
                             ""analysisId"": ""analysis456""
+                        }
+                    }")
+                });
+            }
+
+            // Handle component show request
+            if (requestUrl.Contains("/api/components/show"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""component"": {
+                            ""key"": ""project"",
+                            ""name"": ""Test Project""
                         }
                     }")
                 });

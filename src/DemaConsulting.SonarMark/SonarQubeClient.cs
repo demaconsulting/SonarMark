@@ -154,9 +154,44 @@ internal sealed class SonarQubeClient : IDisposable
             throw new InvalidOperationException("Task completed successfully but no analysis ID was returned");
         }
 
+        // Fetch the project name
+        var projectName = await GetProjectNameAsync(reportTask, cancellationToken).ConfigureAwait(false);
+
         // Fetch the quality gate status for the analysis
-        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, cancellationToken)
+        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, projectName, cancellationToken)
             .ConfigureAwait(false);
+    }
+
+    /// <summary>
+    ///     Gets the project name from SonarQube/SonarCloud
+    /// </summary>
+    /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Project name</returns>
+    private async Task<string> GetProjectNameAsync(
+        ReportTask reportTask,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/components/show?component={reportTask.ProjectKey}";
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        if (!root.TryGetProperty("component", out var component))
+        {
+            throw new InvalidOperationException("Invalid component response: missing 'component' property");
+        }
+
+        if (!component.TryGetProperty("name", out var nameElement))
+        {
+            throw new InvalidOperationException("Invalid component response: missing 'name' property");
+        }
+
+        return nameElement.GetString() ?? reportTask.ProjectKey;
     }
 
     /// <summary>
@@ -164,11 +199,13 @@ internal sealed class SonarQubeClient : IDisposable
     /// </summary>
     /// <param name="reportTask">Report task containing server and project information</param>
     /// <param name="analysisId">Analysis ID</param>
+    /// <param name="projectName">Project name</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality analysis results</returns>
     private async Task<SonarQualityResult> GetQualityGateStatusAsync(
         ReportTask reportTask,
         string analysisId,
+        string projectName,
         CancellationToken cancellationToken)
     {
         var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/qualitygates/project_status?analysisId={analysisId}";
@@ -231,7 +268,7 @@ internal sealed class SonarQubeClient : IDisposable
 
         return new SonarQualityResult(
             reportTask.ProjectKey,
-            analysisId,
+            projectName,
             qualityGateStatus,
             conditions);
     }
