@@ -236,12 +236,17 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of issues</returns>
+    /// <remarks>
+    ///     Page size is limited to 500 as per requirements. For projects with more than 500 issues,
+    ///     only the first 500 will be returned. Future enhancements could implement pagination.
+    /// </remarks>
     private async Task<List<SonarIssue>> GetIssuesAsync(
         string serverUrl,
         string projectKey,
         string? branch,
         CancellationToken cancellationToken)
     {
+        // Note: Page size is limited to 500 as per requirements
         var url =
             $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=500";
         if (!string.IsNullOrWhiteSpace(branch))
@@ -311,12 +316,17 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of hot-spots</returns>
+    /// <remarks>
+    ///     Page size is limited to 500 as per requirements. For projects with more than 500 hot-spots,
+    ///     only the first 500 will be returned. Future enhancements could implement pagination.
+    /// </remarks>
     private async Task<List<SonarHotSpot>> GetHotSpotsAsync(
         string serverUrl,
         string projectKey,
         string? branch,
         CancellationToken cancellationToken)
     {
+        // Note: Page size is limited to 500 as per requirements
         var url = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=500";
         if (!string.IsNullOrWhiteSpace(branch))
         {

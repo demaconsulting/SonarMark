@@ -49,8 +49,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -85,8 +85,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -122,8 +122,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -148,8 +148,8 @@ public class SonarQualityResultTests
             "OK",
             new List<SonarQualityCondition>(),
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -180,8 +180,8 @@ public class SonarQualityResultTests
             "OK",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -206,8 +206,8 @@ public class SonarQualityResultTests
             "OK",
             new List<SonarQualityCondition>(),
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act & Assert
         try
@@ -237,8 +237,8 @@ public class SonarQualityResultTests
             "OK",
             new List<SonarQualityCondition>(),
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act & Assert
         try
@@ -273,8 +273,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -304,8 +304,8 @@ public class SonarQualityResultTests
             "WARN",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -341,8 +341,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            [],
-            []);
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
