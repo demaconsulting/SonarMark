@@ -135,12 +135,14 @@ internal sealed class SonarQubeClient : IDisposable
     ///     Gets the quality analysis results from SonarQube/SonarCloud
     /// </summary>
     /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="branch">Optional branch name for filtering issues</param>
     /// <param name="pollingTimeout">Maximum time to wait for task completion (default: 5 minutes)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality analysis results including quality gate status and conditions</returns>
     /// <exception cref="InvalidOperationException">Thrown when task fails or times out</exception>
     public async Task<SonarQualityResult> GetQualityResultAsync(
         ReportTask reportTask,
+        string? branch = null,
         TimeSpan? pollingTimeout = null,
         CancellationToken cancellationToken = default)
     {
@@ -157,8 +159,16 @@ internal sealed class SonarQubeClient : IDisposable
         // Fetch the project name
         var projectName = await GetProjectNameAsync(reportTask, cancellationToken).ConfigureAwait(false);
 
+        // Fetch issues if updatedAfter timestamp is available
+        var issues = new List<SonarIssue>();
+        if (!string.IsNullOrEmpty(taskResult.SubmittedAt))
+        {
+            issues = await GetIssuesAsync(reportTask, branch, taskResult.SubmittedAt, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
         // Fetch the quality gate status for the analysis
-        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, projectName, cancellationToken)
+        return await GetQualityGateStatusAsync(reportTask, taskResult.AnalysisId, projectName, issues, cancellationToken)
             .ConfigureAwait(false);
     }
 
@@ -201,12 +211,14 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="reportTask">Report task containing server and project information</param>
     /// <param name="analysisId">Analysis ID</param>
     /// <param name="projectName">Project name</param>
+    /// <param name="issues">List of issues</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality analysis results</returns>
     private async Task<SonarQualityResult> GetQualityGateStatusAsync(
         ReportTask reportTask,
         string analysisId,
         string projectName,
+        List<SonarIssue> issues,
         CancellationToken cancellationToken)
     {
         var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/qualitygates/project_status?analysisId={analysisId}";
@@ -275,7 +287,70 @@ internal sealed class SonarQubeClient : IDisposable
             projectName,
             qualityGateStatus,
             conditions,
-            metricNames);
+            metricNames,
+            issues);
+    }
+
+    /// <summary>
+    ///     Gets issues from the SonarQube/SonarCloud API
+    /// </summary>
+    /// <param name="reportTask">Report task containing server and project information</param>
+    /// <param name="branch">Optional branch name for filtering issues</param>
+    /// <param name="updatedAfter">Timestamp to filter issues updated after this time</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of issues</returns>
+    private async Task<List<SonarIssue>> GetIssuesAsync(
+        ReportTask reportTask,
+        string? branch,
+        string updatedAfter,
+        CancellationToken cancellationToken)
+    {
+        // Build the URL with query parameters
+        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/issues/search?componentKeys={reportTask.ProjectKey}&ps=500&issueStatuses=OPEN,CONFIRMED&updatedAfter={updatedAfter}";
+
+        // Add branch parameter if specified
+        if (!string.IsNullOrEmpty(branch))
+        {
+            url += $"&branch={branch}";
+        }
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        var issues = new List<SonarIssue>();
+
+        if (root.TryGetProperty("issues", out var issuesElement) &&
+            issuesElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var issue in issuesElement.EnumerateArray())
+            {
+                var severity = issue.TryGetProperty("severity", out var severityElement)
+                    ? severityElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var type = issue.TryGetProperty("type", out var typeElement)
+                    ? typeElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                var component = issue.TryGetProperty("component", out var componentElement)
+                    ? componentElement.GetString() ?? string.Empty
+                    : string.Empty;
+
+                // Remove project key prefix from component path
+                if (component.StartsWith(reportTask.ProjectKey + ":"))
+                {
+                    component = component.Substring(reportTask.ProjectKey.Length + 1);
+                }
+
+                issues.Add(new SonarIssue(severity, type, component));
+            }
+        }
+
+        return issues;
     }
 
     /// <summary>
@@ -373,7 +448,26 @@ internal sealed class SonarQubeClient : IDisposable
             analysisId = analysisIdElement.GetString();
         }
 
-        return new CeTaskResult(status, analysisId);
+        // Extract timestamps
+        string? submittedAt = null;
+        if (taskElement.TryGetProperty("submittedAt", out var submittedAtElement))
+        {
+            submittedAt = submittedAtElement.GetString();
+        }
+
+        string? startedAt = null;
+        if (taskElement.TryGetProperty("startedAt", out var startedAtElement))
+        {
+            startedAt = startedAtElement.GetString();
+        }
+
+        string? executedAt = null;
+        if (taskElement.TryGetProperty("executedAt", out var executedAtElement))
+        {
+            executedAt = executedAtElement.GetString();
+        }
+
+        return new CeTaskResult(status, analysisId, submittedAt, startedAt, executedAt);
     }
 
     /// <summary>

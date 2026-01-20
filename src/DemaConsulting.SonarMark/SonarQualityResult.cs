@@ -28,12 +28,14 @@ namespace DemaConsulting.SonarMark;
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
 /// <param name="MetricNames">Dictionary mapping metric keys to friendly names</param>
+/// <param name="Issues">List of issues found in the analysis</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
     IReadOnlyList<SonarQualityCondition> Conditions,
-    IReadOnlyDictionary<string, string> MetricNames)
+    IReadOnlyDictionary<string, string> MetricNames,
+    IReadOnlyList<SonarIssue> Issues)
 {
     /// <summary>
     ///     Converts the quality result to markdown format
@@ -88,6 +90,26 @@ internal sealed record SonarQualityResult(
                 sb.Append($"| {condition.Comparator} ");
                 sb.Append($"| {condition.ErrorThreshold ?? ""} ");
                 sb.AppendLine($"| {condition.ActualValue ?? ""} |");
+            }
+        }
+
+        // Add issues section if there are any
+        if (Issues.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine($"{subHeading} Issues");
+            sb.AppendLine();
+
+            // Add table header with alignment
+            sb.AppendLine("| Severity | Type | Component |");
+            sb.AppendLine("|:---------|:-----|:----------|");
+
+            // Add table rows
+            foreach (var issue in Issues)
+            {
+                sb.Append($"| {issue.Severity} ");
+                sb.Append($"| {issue.Type} ");
+                sb.AppendLine($"| {issue.Component} |");
             }
         }
 

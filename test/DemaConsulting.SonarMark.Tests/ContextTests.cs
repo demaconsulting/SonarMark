@@ -294,6 +294,35 @@ public class ContextTests
     }
 
     /// <summary>
+    ///     Test creating a context with branch.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_Branch_SetsBranchProperty()
+    {
+        using var context = Context.Create(["--branch", "main"]);
+
+        Assert.AreEqual("main", context.Branch);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test creating a context with missing branch.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingBranch_ThrowsException()
+    {
+        try
+        {
+            Context.Create(["--branch"]);
+            Assert.Fail("Expected ArgumentException was not thrown");
+        }
+        catch (ArgumentException ex)
+        {
+            Assert.Contains("--branch requires a branch argument", ex.Message);
+        }
+    }
+
+    /// <summary>
     ///     Test creating a context with missing log filename.
     /// </summary>
     [TestMethod]

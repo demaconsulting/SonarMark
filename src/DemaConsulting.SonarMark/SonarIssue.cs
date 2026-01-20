@@ -21,16 +21,12 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Represents the result of a SonarQube Compute Engine task
+///     Represents a single SonarQube issue
 /// </summary>
-/// <param name="Status">Task status</param>
-/// <param name="AnalysisId">Analysis ID (available when task is successful)</param>
-/// <param name="SubmittedAt">Timestamp when task was submitted</param>
-/// <param name="StartedAt">Timestamp when task was started</param>
-/// <param name="ExecutedAt">Timestamp when task was executed</param>
-internal sealed record CeTaskResult(
-    CeTaskStatus Status,
-    string? AnalysisId,
-    string? SubmittedAt,
-    string? StartedAt,
-    string? ExecutedAt);
+/// <param name="Severity">Issue severity (e.g., BLOCKER, CRITICAL, MAJOR, MINOR, INFO)</param>
+/// <param name="Type">Issue type (e.g., BUG, VULNERABILITY, CODE_SMELL)</param>
+/// <param name="Component">Component path (file path relative to project)</param>
+internal sealed record SonarIssue(
+    string Severity,
+    string Type,
+    string Component);

@@ -48,7 +48,8 @@ public class SonarQualityResultTests
             "Test Project Name",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -82,7 +83,8 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -117,7 +119,8 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -141,7 +144,8 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -171,7 +175,8 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -195,7 +200,8 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act & Assert
         try
@@ -224,7 +230,8 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act & Assert
         try
@@ -258,7 +265,8 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -287,7 +295,8 @@ public class SonarQualityResultTests
             "Test Project",
             "WARN",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -322,7 +331,8 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -352,5 +362,87 @@ public class SonarQualityResultTests
         Assert.AreEqual("80", condition.ErrorThreshold);
         Assert.AreEqual("75.5", condition.ActualValue);
         Assert.AreEqual("ERROR", condition.Status);
+    }
+
+    /// <summary>
+    ///     Test SonarIssue can be created with all properties
+    /// </summary>
+    [TestMethod]
+    public void SonarIssue_Constructor_AllProperties_CreatesInstance()
+    {
+        // Arrange & Act
+        var issue = new SonarIssue(
+            "MAJOR",
+            "BUG",
+            "src/Program.cs");
+
+        // Assert
+        Assert.AreEqual("MAJOR", issue.Severity);
+        Assert.AreEqual("BUG", issue.Type);
+        Assert.AreEqual("src/Program.cs", issue.Component);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with issues produces correct output
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithIssues_IncludesIssuesSection()
+    {
+        // Arrange
+        var conditions = new List<SonarQualityCondition>();
+        var metricNames = new Dictionary<string, string>();
+        var issues = new List<SonarIssue>
+        {
+            new("MAJOR", "BUG", "src/Program.cs"),
+            new("MINOR", "CODE_SMELL", "src/Utils.cs")
+        };
+
+        var result = new SonarQualityResult(
+            "test_project",
+            "Test Project",
+            "ERROR",
+            conditions,
+            metricNames,
+            issues);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert
+        Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Quality Gate Status:** ERROR", markdown);
+        Assert.Contains("## Issues", markdown);
+        Assert.Contains("| Severity | Type | Component |", markdown);
+        Assert.Contains("|:---------|:-----|:----------|", markdown);
+        Assert.Contains("| MAJOR | BUG | src/Program.cs |", markdown);
+        Assert.Contains("| MINOR | CODE_SMELL | src/Utils.cs |", markdown);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with no issues excludes issues section
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_NoIssues_ExcludesIssuesSection()
+    {
+        // Arrange
+        var conditions = new List<SonarQualityCondition>();
+        var metricNames = new Dictionary<string, string>();
+        var issues = new List<SonarIssue>();
+
+        var result = new SonarQualityResult(
+            "test_project",
+            "Test Project",
+            "OK",
+            conditions,
+            metricNames,
+            issues);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert
+        Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Quality Gate Status:** OK", markdown);
+        Assert.DoesNotContain("## Issues", markdown);
     }
 }

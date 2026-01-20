@@ -81,6 +81,11 @@ internal sealed class Context : IDisposable
     public string? WorkingDirectory { get; private init; }
 
     /// <summary>
+    ///     Gets the branch name for filtering issues.
+    /// </summary>
+    public string? Branch { get; private init; }
+
+    /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
     /// </summary>
     public int ExitCode => _hasErrors ? 1 : 0;
@@ -112,6 +117,7 @@ internal sealed class Context : IDisposable
         var reportDepth = 1;
         string? token = null;
         string? workingDirectory = null;
+        string? branch = null;
         string? logFile = null;
 
         // Parse command-line arguments
@@ -201,8 +207,28 @@ internal sealed class Context : IDisposable
                     workingDirectory = args[i++];
                     break;
 
+                case "--branch":
+                    // Ensure argument has a value
+                    if (i >= args.Length)
+                    {
+                        throw new ArgumentException($"{arg} requires a branch argument", nameof(args));
+                    }
+
+                    branch = args[i++];
+                    break;
+
                 default:
                     throw new ArgumentException($"Unsupported argument '{arg}'", nameof(args));
+            }
+        }
+
+        // If branch is not specified, try to get it from GITHUB_REF environment variable
+        if (string.IsNullOrEmpty(branch))
+        {
+            var githubRef = Environment.GetEnvironmentVariable("GITHUB_REF");
+            if (!string.IsNullOrEmpty(githubRef) && githubRef.StartsWith("refs/heads/"))
+            {
+                branch = githubRef.Substring("refs/heads/".Length);
             }
         }
 
@@ -217,7 +243,8 @@ internal sealed class Context : IDisposable
             ReportFile = reportFile,
             ReportDepth = reportDepth,
             Token = token,
-            WorkingDirectory = workingDirectory
+            WorkingDirectory = workingDirectory,
+            Branch = branch
         };
 
         // Open log file if specified

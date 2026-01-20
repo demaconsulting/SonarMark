@@ -141,6 +141,7 @@ internal static class Program
         context.WriteLine("  --log <file>               Write output to log file");
         context.WriteLine("  --working-directory <dir>  Directory to search for report-task.txt file");
         context.WriteLine("  --token <token>            Personal access token for SonarQube/SonarCloud");
+        context.WriteLine("  --branch <branch>          Branch name for filtering issues");
         context.WriteLine("  --report <file>            Export quality results to markdown file");
         context.WriteLine("  --report-depth <depth>     Markdown header depth for report (default: 1)");
     }
@@ -188,7 +189,7 @@ internal static class Program
         SonarQualityResult qualityResult;
         try
         {
-            qualityResult = client.GetQualityResultAsync(reportTask).GetAwaiter().GetResult();
+            qualityResult = client.GetQualityResultAsync(reportTask, context.Branch).GetAwaiter().GetResult();
             context.WriteLine($"Quality Gate Status: {qualityResult.QualityGateStatus}");
         }
         catch (InvalidOperationException ex)
