@@ -40,6 +40,7 @@ sonarmark --server <url> --project-key <key> [options]
 ### Examples
 
 **Generate a report for the main branch:**
+
 ```bash
 sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
@@ -48,6 +49,7 @@ sonarmark --server https://sonarcloud.io \
 ```
 
 **Generate a report for a specific branch:**
+
 ```bash
 sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
@@ -57,6 +59,7 @@ sonarmark --server https://sonarcloud.io \
 ```
 
 **Enforce quality gate and fail on errors:**
+
 ```bash
 sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
@@ -88,4 +91,3 @@ For private projects or SonarCloud, you'll need a personal access token:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
