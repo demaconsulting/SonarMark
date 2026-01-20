@@ -267,11 +267,62 @@ internal sealed class SonarQubeClient : IDisposable
             }
         }
 
+        // Fetch metric names to provide friendly names in the report
+        var metricNames = await GetMetricNamesAsync(reportTask, cancellationToken).ConfigureAwait(false);
+
         return new SonarQualityResult(
             reportTask.ProjectKey,
             projectName,
             qualityGateStatus,
-            conditions);
+            conditions,
+            metricNames);
+    }
+
+    /// <summary>
+    ///     Gets metric names from the SonarQube/SonarCloud API
+    /// </summary>
+    /// <param name="reportTask">Report task containing server information</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>Dictionary mapping metric keys to friendly names</returns>
+    private async Task<IReadOnlyDictionary<string, string>> GetMetricNamesAsync(
+        ReportTask reportTask,
+        CancellationToken cancellationToken)
+    {
+        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/metrics/search";
+
+        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var jsonDoc = JsonDocument.Parse(content);
+
+        var root = jsonDoc.RootElement;
+        if (!root.TryGetProperty("metrics", out var metricsElement))
+        {
+            throw new InvalidOperationException("Invalid metrics response: missing 'metrics' property");
+        }
+
+        var metricNames = new Dictionary<string, string>();
+        if (metricsElement.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var metric in metricsElement.EnumerateArray())
+            {
+                var key = metric.TryGetProperty("key", out var keyElement)
+                    ? keyElement.GetString()
+                    : null;
+
+                var name = metric.TryGetProperty("name", out var nameElement)
+                    ? nameElement.GetString()
+                    : null;
+
+                if (!string.IsNullOrEmpty(key) && !string.IsNullOrEmpty(name))
+                {
+                    metricNames[key] = name;
+                }
+            }
+        }
+
+        return metricNames;
     }
 
     /// <summary>

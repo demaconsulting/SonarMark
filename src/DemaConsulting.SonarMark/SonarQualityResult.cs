@@ -27,11 +27,13 @@ namespace DemaConsulting.SonarMark;
 /// <param name="ProjectName">Project name</param>
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
+/// <param name="MetricNames">Dictionary mapping metric keys to friendly names</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
-    IReadOnlyList<SonarQualityCondition> Conditions)
+    IReadOnlyList<SonarQualityCondition> Conditions,
+    IReadOnlyDictionary<string, string> MetricNames)
 {
     /// <summary>
     ///     Converts the quality result to markdown format
@@ -51,12 +53,12 @@ internal sealed record SonarQualityResult(
         var subHeading = new string('#', subHeadingDepth);
         var sb = new System.Text.StringBuilder();
 
-        // Add quality gate status heading
-        sb.AppendLine($"{heading} Quality Gate Status: {QualityGateStatus}");
+        // Add project name as main heading
+        sb.AppendLine($"{heading} {ProjectName} Sonar Analysis");
         sb.AppendLine();
 
-        // Add project information
-        sb.AppendLine($"**Project:** {ProjectName}");
+        // Add quality gate status as text content
+        sb.AppendLine($"**Quality Gate Status:** {QualityGateStatus}");
         sb.AppendLine();
 
         // Add conditions section if there are any
@@ -76,7 +78,12 @@ internal sealed record SonarQualityResult(
             // Add table rows
             foreach (var condition in Conditions)
             {
-                sb.Append($"| {condition.Metric} ");
+                // Use friendly name if available, otherwise fall back to metric key
+                var metricName = MetricNames.TryGetValue(condition.Metric, out var friendlyName)
+                    ? friendlyName
+                    : condition.Metric;
+
+                sb.Append($"| {metricName} ");
                 sb.Append($"| {condition.Status} ");
                 sb.Append($"| {condition.Comparator} ");
                 sb.Append($"| {condition.ErrorThreshold ?? ""} ");

@@ -482,6 +482,26 @@ public class SonarQubeClientTests
                 });
             }
 
+            // Handle metrics search request
+            if (requestUrl.Contains("/api/metrics/search"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""metrics"": [
+                            {
+                                ""key"": ""new_coverage"",
+                                ""name"": ""Coverage on New Code""
+                            },
+                            {
+                                ""key"": ""new_bugs"",
+                                ""name"": ""New Bugs""
+                            }
+                        ]
+                    }")
+                });
+            }
+
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         });
 
@@ -677,6 +697,17 @@ public class SonarQubeClientTests
                 });
             }
 
+            // Handle metrics search request
+            if (requestUrl.Contains("/api/metrics/search"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""metrics"": []
+                    }")
+                });
+            }
+
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         });
 
@@ -688,10 +719,11 @@ public class SonarQubeClientTests
         await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
 
         // Assert - verify correct URLs were constructed
-        Assert.HasCount(3, requestUrls);
+        Assert.HasCount(4, requestUrls);
         Assert.AreEqual("https://sonarcloud.io/api/ce/task?id=task123", requestUrls[0]);
         Assert.AreEqual("https://sonarcloud.io/api/components/show?component=project", requestUrls[1]);
         Assert.AreEqual("https://sonarcloud.io/api/qualitygates/project_status?analysisId=analysis456", requestUrls[2]);
+        Assert.AreEqual("https://sonarcloud.io/api/metrics/search", requestUrls[3]);
     }
 
     /// <summary>
@@ -752,6 +784,22 @@ public class SonarQubeClientTests
                                 }
                             ]
                         }
+                    }")
+                });
+            }
+
+            // Handle metrics search request
+            if (requestUrl.Contains("/api/metrics/search"))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(@"{
+                        ""metrics"": [
+                            {
+                                ""key"": ""new_coverage"",
+                                ""name"": ""Coverage on New Code""
+                            }
+                        ]
                     }")
                 });
             }
