@@ -45,6 +45,11 @@ internal sealed class SonarQubeClient : IDisposable
     private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(10);
 
     /// <summary>
+    ///     Maximum number of issues to fetch per API call
+    /// </summary>
+    private const int MaxIssuesPageSize = 500;
+
+    /// <summary>
     ///     HTTP client for making API requests
     /// </summary>
     private readonly HttpClient _httpClient;
@@ -306,12 +311,12 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build the URL with query parameters
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/issues/search?componentKeys={reportTask.ProjectKey}&ps=500&issueStatuses=OPEN,CONFIRMED&updatedAfter={updatedAfter}";
+        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/issues/search?componentKeys={Uri.EscapeDataString(reportTask.ProjectKey)}&ps={MaxIssuesPageSize}&issueStatuses=OPEN,CONFIRMED&updatedAfter={Uri.EscapeDataString(updatedAfter)}";
 
         // Add branch parameter if specified
         if (!string.IsNullOrEmpty(branch))
         {
-            url += $"&branch={branch}";
+            url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
