@@ -21,12 +21,20 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Represents parsed data from a SonarQube report-task.txt file
+///     Represents a SonarQube issue
 /// </summary>
-/// <param name="ProjectKey">Project key</param>
-/// <param name="ServerUrl">Server URL</param>
-/// <param name="CeTaskId">Compute engine task ID</param>
-internal sealed record ReportTask(
-    string ProjectKey,
-    string ServerUrl,
-    string CeTaskId);
+/// <param name="Key">Issue key</param>
+/// <param name="Rule">Rule key</param>
+/// <param name="Severity">Issue severity (e.g., BLOCKER, CRITICAL, MAJOR, MINOR, INFO)</param>
+/// <param name="Component">Component key</param>
+/// <param name="Line">Line number (if applicable)</param>
+/// <param name="Message">Issue message</param>
+/// <param name="Type">Issue type (e.g., BUG, VULNERABILITY, CODE_SMELL)</param>
+internal sealed record SonarIssue(
+    string Key,
+    string Rule,
+    string Severity,
+    string Component,
+    int? Line,
+    string Message,
+    string Type);

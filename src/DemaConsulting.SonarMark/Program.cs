@@ -139,7 +139,9 @@ internal static class Program
         context.WriteLine("  --validate                 Run self-validation");
         context.WriteLine("  --enforce                  Return non-zero exit code if quality gate fails");
         context.WriteLine("  --log <file>               Write output to log file");
-        context.WriteLine("  --working-directory <dir>  Directory to search for report-task.txt file");
+        context.WriteLine("  --server <url>             SonarQube/SonarCloud server URL");
+        context.WriteLine("  --project-key <key>        SonarQube/SonarCloud project key");
+        context.WriteLine("  --branch <name>            Branch name to query (default: main branch)");
         context.WriteLine("  --token <token>            Personal access token for SonarQube/SonarCloud");
         context.WriteLine("  --report <file>            Export quality results to markdown file");
         context.WriteLine("  --report-depth <depth>     Markdown header depth for report (default: 1)");
@@ -151,34 +153,24 @@ internal static class Program
     /// <param name="context">The context containing command line arguments and program state.</param>
     private static void ProcessSonarAnalysis(Context context)
     {
-        // Determine the working directory
-        var workingDirectory = context.WorkingDirectory ?? Directory.GetCurrentDirectory();
-
-        // Find the report-task.txt file
-        context.WriteLine($"Searching for report-task.txt in {workingDirectory}...");
-        var reportTaskFile = ReportTaskParser.FindReportTask(workingDirectory);
-
-        if (reportTaskFile == null)
+        // Validate required parameters
+        if (string.IsNullOrWhiteSpace(context.Server))
         {
-            context.WriteError($"Error: Could not find report-task.txt in {workingDirectory}");
+            context.WriteError("Error: --server parameter is required");
             return;
         }
 
-        context.WriteLine($"Found report-task.txt at {reportTaskFile}");
-
-        // Parse the report task file
-        ReportTask reportTask;
-        try
+        if (string.IsNullOrWhiteSpace(context.ProjectKey))
         {
-            reportTask = ReportTaskParser.Parse(reportTaskFile);
-            context.WriteLine($"Project: {reportTask.ProjectKey}");
-            context.WriteLine($"Server: {reportTask.ServerUrl}");
-            context.WriteLine($"Task ID: {reportTask.CeTaskId}");
-        }
-        catch (ArgumentException ex)
-        {
-            context.WriteError($"Error: Failed to parse report-task.txt: {ex.Message}");
+            context.WriteError("Error: --project-key parameter is required");
             return;
+        }
+
+        context.WriteLine($"Server: {context.Server}");
+        context.WriteLine($"Project Key: {context.ProjectKey}");
+        if (!string.IsNullOrWhiteSpace(context.Branch))
+        {
+            context.WriteLine($"Branch: {context.Branch}");
         }
 
         // Get quality results from SonarQube/SonarCloud
@@ -188,8 +180,13 @@ internal static class Program
         SonarQualityResult qualityResult;
         try
         {
-            qualityResult = client.GetQualityResultAsync(reportTask).GetAwaiter().GetResult();
+            qualityResult = client.GetQualityResultByBranchAsync(
+                context.Server,
+                context.ProjectKey,
+                context.Branch).GetAwaiter().GetResult();
             context.WriteLine($"Quality Gate Status: {qualityResult.QualityGateStatus}");
+            context.WriteLine($"Issues: {qualityResult.Issues.Count}");
+            context.WriteLine($"Hot-Spots: {qualityResult.HotSpots.Count}");
         }
         catch (InvalidOperationException ex)
         {

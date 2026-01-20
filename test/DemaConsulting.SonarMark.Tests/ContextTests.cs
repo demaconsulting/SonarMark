@@ -66,7 +66,9 @@ public class ContextTests
         Assert.IsNull(context.ReportFile);
         Assert.AreEqual(1, context.ReportDepth);
         Assert.IsNull(context.Token);
-        Assert.IsNull(context.WorkingDirectory);
+        Assert.IsNull(context.Server);
+        Assert.IsNull(context.ProjectKey);
+        Assert.IsNull(context.Branch);
         Assert.AreEqual(0, context.ExitCode);
     }
 
@@ -265,31 +267,89 @@ public class ContextTests
     }
 
     /// <summary>
-    ///     Test creating a context with working directory.
+    ///     Test creating a context with server URL.
     /// </summary>
     [TestMethod]
-    public void Context_Create_WorkingDirectory_SetsWorkingDirectoryProperty()
+    public void Context_Create_Server_SetsServerProperty()
     {
-        using var context = Context.Create(["--working-directory", "/path/to/dir"]);
+        using var context = Context.Create(["--server", "https://sonarcloud.io"]);
 
-        Assert.AreEqual("/path/to/dir", context.WorkingDirectory);
+        Assert.AreEqual("https://sonarcloud.io", context.Server);
         Assert.AreEqual(0, context.ExitCode);
     }
 
     /// <summary>
-    ///     Test creating a context with missing working directory.
+    ///     Test creating a context with missing server URL.
     /// </summary>
     [TestMethod]
-    public void Context_Create_MissingWorkingDirectory_ThrowsException()
+    public void Context_Create_MissingServer_ThrowsException()
     {
         try
         {
-            Context.Create(["--working-directory"]);
+            Context.Create(["--server"]);
             Assert.Fail("Expected ArgumentException was not thrown");
         }
         catch (ArgumentException ex)
         {
-            Assert.Contains("--working-directory requires a directory argument", ex.Message);
+            Assert.Contains("--server requires a server URL argument", ex.Message);
+        }
+    }
+
+    /// <summary>
+    ///     Test creating a context with project key.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_ProjectKey_SetsProjectKeyProperty()
+    {
+        using var context = Context.Create(["--project-key", "my-project"]);
+
+        Assert.AreEqual("my-project", context.ProjectKey);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test creating a context with missing project key.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingProjectKey_ThrowsException()
+    {
+        try
+        {
+            Context.Create(["--project-key"]);
+            Assert.Fail("Expected ArgumentException was not thrown");
+        }
+        catch (ArgumentException ex)
+        {
+            Assert.Contains("--project-key requires a project key argument", ex.Message);
+        }
+    }
+
+    /// <summary>
+    ///     Test creating a context with branch.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_Branch_SetsBranchProperty()
+    {
+        using var context = Context.Create(["--branch", "main"]);
+
+        Assert.AreEqual("main", context.Branch);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test creating a context with missing branch.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingBranch_ThrowsException()
+    {
+        try
+        {
+            Context.Create(["--branch"]);
+            Assert.Fail("Expected ArgumentException was not thrown");
+        }
+        catch (ArgumentException ex)
+        {
+            Assert.Contains("--branch requires a branch name argument", ex.Message);
         }
     }
 

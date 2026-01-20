@@ -21,32 +21,18 @@
 namespace DemaConsulting.SonarMark;
 
 /// <summary>
-///     Represents the status of a SonarQube Compute Engine task
+///     Represents a SonarQube security hot-spot
 /// </summary>
-internal enum CeTaskStatus
-{
-    /// <summary>
-    ///     Task is pending execution
-    /// </summary>
-    Pending,
-
-    /// <summary>
-    ///     Task is currently in progress
-    /// </summary>
-    InProgress,
-
-    /// <summary>
-    ///     Task completed successfully
-    /// </summary>
-    Success,
-
-    /// <summary>
-    ///     Task failed
-    /// </summary>
-    Failed,
-
-    /// <summary>
-    ///     Task was canceled
-    /// </summary>
-    Canceled
-}
+/// <param name="Key">Hot-spot key</param>
+/// <param name="Component">Component key</param>
+/// <param name="Line">Line number (if applicable)</param>
+/// <param name="Message">Hot-spot message</param>
+/// <param name="SecurityCategory">Security category</param>
+/// <param name="VulnerabilityProbability">Vulnerability probability (e.g., HIGH, MEDIUM, LOW)</param>
+internal sealed record SonarHotSpot(
+    string Key,
+    string Component,
+    int? Line,
+    string Message,
+    string SecurityCategory,
+    string VulnerabilityProbability);

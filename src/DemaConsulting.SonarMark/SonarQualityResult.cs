@@ -28,12 +28,16 @@ namespace DemaConsulting.SonarMark;
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
 /// <param name="MetricNames">Dictionary mapping metric keys to friendly names</param>
+/// <param name="Issues">List of issues found in the project</param>
+/// <param name="HotSpots">List of security hot-spots found in the project</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
     IReadOnlyList<SonarQualityCondition> Conditions,
-    IReadOnlyDictionary<string, string> MetricNames)
+    IReadOnlyDictionary<string, string> MetricNames,
+    IReadOnlyList<SonarIssue> Issues,
+    IReadOnlyList<SonarHotSpot> HotSpots)
 {
     /// <summary>
     ///     Converts the quality result to markdown format
@@ -89,7 +93,60 @@ internal sealed record SonarQualityResult(
                 sb.Append($"| {condition.ErrorThreshold ?? ""} ");
                 sb.AppendLine($"| {condition.ActualValue ?? ""} |");
             }
+
+            sb.AppendLine();
         }
+
+        // Add issues section (always present)
+        sb.AppendLine($"{subHeading} Issues");
+        sb.AppendLine();
+
+        sb.AppendLine("| Type | Severity | Rule | Component | Line | Message |");
+        sb.AppendLine("|:------------|:---------|:-----|:----------|-----:|:--------|");
+
+        if (Issues.Count > 0)
+        {
+            foreach (var issue in Issues)
+            {
+                sb.Append($"| {issue.Type} ");
+                sb.Append($"| {issue.Severity} ");
+                sb.Append($"| {issue.Rule} ");
+                sb.Append($"| {issue.Component} ");
+                sb.Append($"| {issue.Line?.ToString() ?? ""} ");
+                sb.AppendLine($"| {issue.Message} |");
+            }
+        }
+        else
+        {
+            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A | N/A |");
+        }
+
+        sb.AppendLine();
+
+        // Add hot-spots section (always present)
+        sb.AppendLine($"{subHeading} Security Hot-Spots");
+        sb.AppendLine();
+
+        sb.AppendLine("| Probability | Category | Component | Line | Message |");
+        sb.AppendLine("|:------------|:---------|:----------|-----:|:--------|");
+
+        if (HotSpots.Count > 0)
+        {
+            foreach (var hotSpot in HotSpots)
+            {
+                sb.Append($"| {hotSpot.VulnerabilityProbability} ");
+                sb.Append($"| {hotSpot.SecurityCategory} ");
+                sb.Append($"| {hotSpot.Component} ");
+                sb.Append($"| {hotSpot.Line?.ToString() ?? ""} ");
+                sb.AppendLine($"| {hotSpot.Message} |");
+            }
+        }
+        else
+        {
+            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A |");
+        }
+
+        sb.AppendLine();
 
         return sb.ToString();
     }

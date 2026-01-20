@@ -48,7 +48,9 @@ public class SonarQualityResultTests
             "Test Project Name",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -82,7 +84,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -117,7 +121,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -141,15 +147,20 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify conditions section is not present
+        // Assert - verify conditions section is not present but Issues and Hot-Spots are
         Assert.Contains("# Test Project Sonar Analysis", markdown);
         Assert.Contains("**Quality Gate Status:** OK", markdown);
         Assert.DoesNotContain("## Conditions", markdown);
+        Assert.Contains("## Issues", markdown);
+        Assert.Contains("## Security Hot-Spots", markdown);
+        Assert.Contains("| N/A | N/A | N/A | N/A | N/A | N/A |", markdown);
     }
 
     /// <summary>
@@ -171,7 +182,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -195,7 +208,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act & Assert
         try
@@ -224,7 +239,9 @@ public class SonarQualityResultTests
             "Test Project",
             "OK",
             new List<SonarQualityCondition>(),
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act & Assert
         try
@@ -258,7 +275,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -287,7 +306,9 @@ public class SonarQualityResultTests
             "Test Project",
             "WARN",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -322,7 +343,9 @@ public class SonarQualityResultTests
             "Test Project",
             "ERROR",
             conditions,
-            metricNames);
+            metricNames,
+            new List<SonarIssue>(),
+            new List<SonarHotSpot>());
 
         // Act
         var markdown = result.ToMarkdown(1);

@@ -108,17 +108,6 @@ jobs:
           end
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Run SonarMark Analysis
-        run: >
-          dotnet run
-          --project src/DemaConsulting.SonarMark/DemaConsulting.SonarMark.csproj
-          --framework net10.0
-          --no-build
-          --configuration Release
-          --
-          --token ${{ secrets.SONAR_TOKEN }}
-          --report analysis-sonar-${{ matrix.os }}.md
-
       - name: Generate SBOM
         run: >
           dotnet sbom-tool generate
@@ -165,7 +154,6 @@ jobs:
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
             **/manifest.spdx.json
             **/manifest.spdx.json.sha256
-            analysis-sonar-${{ matrix.os }}.md
 
   integration-test:
     name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
@@ -213,3 +201,29 @@ jobs:
           echo "Testing sonarmark --help..."
           sonarmark --help || { echo "✗ Help command failed"; exit 1; }
           echo "✓ Help command succeeded"
+
+      - name: Test SonarMark analysis generation
+        shell: bash
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          echo "Testing sonarmark analysis generation..."
+          sonarmark \
+            --server https://sonarcloud.io \
+            --project-key demaconsulting_SonarMark \
+            --branch ${{ github.ref_name }} \
+            --token "$SONAR_TOKEN" \
+            --report analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md \
+            || { echo "✗ Analysis generation failed"; exit 1; }
+          echo "✓ Analysis generation succeeded"
+
+          # Verify report file was created
+          if [ ! -f "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md" ]; then
+            echo "✗ Report file was not created"
+            exit 1
+          fi
+          echo "✓ Report file exists"
+
+          # Display report summary
+          echo "Report summary:"
+          cat "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md"
