@@ -108,6 +108,17 @@ jobs:
           end
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
+      - name: Run SonarMark Analysis
+        run: >
+          dotnet run
+          --project src/DemaConsulting.SonarMark/DemaConsulting.SonarMark.csproj
+          --framework net10.0
+          --no-build
+          --configuration Release
+          --
+          --token ${{ secrets.SONAR_TOKEN }}
+          --report analysis-sonar-${{ matrix.os }}.md
+
       - name: Generate SBOM
         run: >
           dotnet sbom-tool generate
@@ -154,6 +165,7 @@ jobs:
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
             **/manifest.spdx.json
             **/manifest.spdx.json.sha256
+            analysis-sonar-${{ matrix.os }}.md
 
   integration-test:
     name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
