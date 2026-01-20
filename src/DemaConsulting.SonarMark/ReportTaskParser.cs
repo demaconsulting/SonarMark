@@ -109,6 +109,9 @@ internal static class ReportTaskParser
             throw new ArgumentException("Missing required field: ceTaskId", nameof(filePath));
         }
 
+        // Trim trailing slashes from server URL to normalize it
+        serverUrl = serverUrl.TrimEnd('/');
+
         // Create and return the report task
         return new ReportTask(projectKey, serverUrl, ceTaskId);
     }

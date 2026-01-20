@@ -240,7 +240,7 @@ ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZvC9TxNj4Ttv7fX4CVs");
             // Assert - verify all fields are correctly parsed
             Assert.IsNotNull(result);
             Assert.AreEqual("demaconsulting_SonarMark", result.ProjectKey);
-            Assert.AreEqual("https://sonarcloud.io/", result.ServerUrl);
+            Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
             Assert.AreEqual("AZvC9TxNj4Ttv7fX4CVs", result.CeTaskId);
         }
         finally
@@ -276,7 +276,7 @@ ceTaskId=task123
             // Assert - verify fields are correctly parsed despite comments
             Assert.IsNotNull(result);
             Assert.AreEqual("test_project", result.ProjectKey);
-            Assert.AreEqual("https://sonarcloud.io/", result.ServerUrl);
+            Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
             Assert.AreEqual("task123", result.CeTaskId);
         }
         finally
@@ -307,7 +307,7 @@ ceTaskId = task123 ");
             // Assert - verify values are trimmed correctly
             Assert.IsNotNull(result);
             Assert.AreEqual("test_project", result.ProjectKey);
-            Assert.AreEqual("https://sonarcloud.io/", result.ServerUrl);
+            Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
             Assert.AreEqual("task123", result.CeTaskId);
         }
         finally

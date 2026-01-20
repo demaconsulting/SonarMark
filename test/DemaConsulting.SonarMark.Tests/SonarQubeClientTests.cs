@@ -77,7 +77,7 @@ public class SonarQubeClientTests
     {
         // Arrange - create client and report task
         using var client = new SonarQubeClient();
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for zero timeout
         var exception = await Assert.ThrowsAsync<ArgumentException>(
@@ -93,7 +93,7 @@ public class SonarQubeClientTests
     {
         // Arrange - create client and report task
         using var client = new SonarQubeClient();
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for negative timeout
         var exception = await Assert.ThrowsAsync<ArgumentException>(
@@ -125,7 +125,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get results
         var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
@@ -159,7 +159,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for failed task
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -190,7 +190,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for canceled task
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -226,7 +226,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get results with polling
         var result = await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(30));
@@ -261,7 +261,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify timeout exception is thrown
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -287,7 +287,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for invalid JSON
         await Assert.ThrowsAsync<JsonException>(
@@ -312,7 +312,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for missing task property
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -338,7 +338,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for missing status
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -369,7 +369,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for unknown status
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -403,7 +403,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get results
         await client.GetResultsAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
@@ -507,7 +507,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get quality results
         var result = await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
@@ -571,7 +571,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown when no analysis ID
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -633,7 +633,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act & Assert - verify exception is thrown for invalid response
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(
@@ -713,7 +713,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get quality results
         await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));
@@ -809,7 +809,7 @@ public class SonarQubeClientTests
 
         using var httpClient = new HttpClient(handler);
         using var client = new SonarQubeClient(httpClient);
-        var reportTask = new ReportTask("project", "https://sonarcloud.io/", "task123");
+        var reportTask = new ReportTask("project", "https://sonarcloud.io", "task123");
 
         // Act - get quality results
         var result = await client.GetQualityResultAsync(reportTask, pollingTimeout: TimeSpan.FromSeconds(5));

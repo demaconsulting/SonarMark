@@ -187,7 +187,7 @@ internal sealed class SonarQubeClient : IDisposable
         ReportTask reportTask,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/components/show?component={reportTask.ProjectKey}";
+        var url = $"{reportTask.ServerUrl}/api/components/show?component={reportTask.ProjectKey}";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -226,7 +226,7 @@ internal sealed class SonarQubeClient : IDisposable
         List<SonarIssue> issues,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/qualitygates/project_status?analysisId={analysisId}";
+        var url = $"{reportTask.ServerUrl}/api/qualitygates/project_status?analysisId={analysisId}";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -311,7 +311,7 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build the URL with query parameters
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/issues/search?componentKeys={Uri.EscapeDataString(reportTask.ProjectKey)}&ps={MaxIssuesPageSize}&issueStatuses=OPEN,CONFIRMED&updatedAfter={Uri.EscapeDataString(updatedAfter)}";
+        var url = $"{reportTask.ServerUrl}/api/issues/search?componentKeys={Uri.EscapeDataString(reportTask.ProjectKey)}&ps={MaxIssuesPageSize}&issueStatuses=OPEN,CONFIRMED&updatedAfter={Uri.EscapeDataString(updatedAfter)}";
 
         // Add branch parameter if specified
         if (!string.IsNullOrEmpty(branch))
@@ -368,7 +368,7 @@ internal sealed class SonarQubeClient : IDisposable
         ReportTask reportTask,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/metrics/search";
+        var url = $"{reportTask.ServerUrl}/api/metrics/search";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -415,7 +415,7 @@ internal sealed class SonarQubeClient : IDisposable
         ReportTask reportTask,
         CancellationToken cancellationToken)
     {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/ce/task?id={reportTask.CeTaskId}";
+        var url = $"{reportTask.ServerUrl}/api/ce/task?id={reportTask.CeTaskId}";
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
