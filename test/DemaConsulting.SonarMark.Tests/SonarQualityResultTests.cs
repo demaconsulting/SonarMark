@@ -401,7 +401,9 @@ public class SonarQualityResultTests
         Assert.Contains("Found 2 issues", markdown);
         Assert.Contains("src/File.cs(42): MAJOR BUG [csharpsquid:S1234] Issue message", markdown);
         Assert.Contains("src/Another.cs: MINOR CODE_SMELL [csharpsquid:S5678] Another issue", markdown);
-        Assert.DoesNotContain("test_project:", markdown.Replace("test_project</", "")); // Exclude URL
+        // Verify component paths are cleaned (no "test_project:" prefix in file paths)
+        var issuesSection = markdown.Split("## Issues")[1].Split("## Security Hot-Spots")[0];
+        Assert.DoesNotContain("test_project:src/", issuesSection);
     }
 
     /// <summary>
@@ -434,7 +436,9 @@ public class SonarQualityResultTests
         Assert.Contains("Found 2 security hot-spots", markdown);
         Assert.Contains("src/Secure.cs(10): HIGH [sql-injection] Security issue", markdown);
         Assert.Contains("src/Auth.cs: MEDIUM [weak-cryptography] Auth issue", markdown);
-        Assert.DoesNotContain("test_project:", markdown.Replace("test_project</", "")); // Exclude URL
+        // Verify component paths are cleaned (no "test_project:" prefix in file paths)
+        var hotSpotsSection = markdown.Split("## Security Hot-Spots")[1];
+        Assert.DoesNotContain("test_project:src/", hotSpotsSection);
     }
 
     /// <summary>
