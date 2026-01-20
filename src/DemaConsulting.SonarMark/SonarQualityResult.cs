@@ -27,11 +27,13 @@ namespace DemaConsulting.SonarMark;
 /// <param name="ProjectName">Project name</param>
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
+/// <param name="MetricNames">Dictionary mapping metric keys to friendly names</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
-    IReadOnlyList<SonarQualityCondition> Conditions)
+    IReadOnlyList<SonarQualityCondition> Conditions,
+    IReadOnlyDictionary<string, string> MetricNames)
 {
     /// <summary>
     ///     Converts the quality result to markdown format
@@ -76,7 +78,12 @@ internal sealed record SonarQualityResult(
             // Add table rows
             foreach (var condition in Conditions)
             {
-                sb.Append($"| {condition.Metric} ");
+                // Use friendly name if available, otherwise fall back to metric key
+                var metricName = MetricNames.TryGetValue(condition.Metric, out var friendlyName)
+                    ? friendlyName
+                    : condition.Metric;
+
+                sb.Append($"| {metricName} ");
                 sb.Append($"| {condition.Status} ");
                 sb.Append($"| {condition.Comparator} ");
                 sb.Append($"| {condition.ErrorThreshold ?? ""} ");

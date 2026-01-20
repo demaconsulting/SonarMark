@@ -38,17 +38,24 @@ public class SonarQualityResultTests
             new("new_coverage", "LT", "80", "75.5", "ERROR")
         };
 
+        var metricNames = new Dictionary<string, string>
+        {
+            { "new_coverage", "Coverage on New Code" }
+        };
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project Name",
             "ERROR",
-            conditions);
+            conditions,
+            metricNames);
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
         Assert.AreEqual("Test Project Name", result.ProjectName);
         Assert.AreEqual("ERROR", result.QualityGateStatus);
         Assert.HasCount(1, result.Conditions);
+        Assert.HasCount(1, result.MetricNames);
     }
 
     /// <summary>
@@ -64,11 +71,18 @@ public class SonarQualityResultTests
             new("new_bugs", "GT", "0", "2", "ERROR")
         };
 
+        var metricNames = new Dictionary<string, string>
+        {
+            { "new_coverage", "Coverage on New Code" },
+            { "new_bugs", "New Bugs" }
+        };
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -80,8 +94,8 @@ public class SonarQualityResultTests
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
-        Assert.Contains("| new_coverage | ERROR | LT | 80 | 75.5 |", markdown);
-        Assert.Contains("| new_bugs | ERROR | GT | 0 | 2 |", markdown);
+        Assert.Contains("| Coverage on New Code | ERROR | LT | 80 | 75.5 |", markdown);
+        Assert.Contains("| New Bugs | ERROR | GT | 0 | 2 |", markdown);
     }
 
     /// <summary>
@@ -96,11 +110,14 @@ public class SonarQualityResultTests
             new("new_coverage", "LT", "80", "75.5", "ERROR")
         };
 
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -117,11 +134,14 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_NoConditions_ExcludesConditionsSection()
     {
         // Arrange
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -144,11 +164,14 @@ public class SonarQualityResultTests
             new("new_coverage", "LT", null, null, "OK")
         };
 
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "OK",
-            conditions);
+            conditions,
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -165,11 +188,14 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_DepthLessThan1_ThrowsArgumentOutOfRangeException()
     {
         // Arrange
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            metricNames);
 
         // Act & Assert
         try
@@ -191,11 +217,14 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_DepthGreaterThan6_ThrowsArgumentOutOfRangeException()
     {
         // Arrange
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            metricNames);
 
         // Act & Assert
         try
@@ -222,11 +251,14 @@ public class SonarQualityResultTests
             new("new_coverage", "LT", "80", "75.5", "ERROR")
         };
 
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -248,11 +280,14 @@ public class SonarQualityResultTests
             new("new_coverage", "LT", "80", "78.5", "WARN")
         };
 
+        var metricNames = new Dictionary<string, string>();
+
         var result = new SonarQualityResult(
             "test_project",
             "Test Project",
             "WARN",
-            conditions);
+            conditions,
+            metricNames);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -260,6 +295,40 @@ public class SonarQualityResultTests
         // Assert
         Assert.Contains("# Quality Gate Status: WARN", markdown);
         Assert.Contains("| new_coverage | WARN | LT | 80 | 78.5 |", markdown);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown uses friendly metric names when available
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames()
+    {
+        // Arrange
+        var conditions = new List<SonarQualityCondition>
+        {
+            new("new_coverage", "LT", "80", "75.5", "ERROR"),
+            new("unknown_metric", "GT", "0", "5", "ERROR")
+        };
+
+        var metricNames = new Dictionary<string, string>
+        {
+            { "new_coverage", "Coverage on New Code" }
+            // unknown_metric not in dictionary - should fall back to key
+        };
+
+        var result = new SonarQualityResult(
+            "test_project",
+            "Test Project",
+            "ERROR",
+            conditions,
+            metricNames);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify friendly name is used when available, key used as fallback
+        Assert.Contains("| Coverage on New Code | ERROR | LT | 80 | 75.5 |", markdown);
+        Assert.Contains("| unknown_metric | ERROR | GT | 0 | 5 |", markdown);
     }
 
     /// <summary>
