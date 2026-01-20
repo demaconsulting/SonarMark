@@ -191,6 +191,13 @@ jobs:
       - name: Test version display
         shell: bash
         run: |
-          echo "Testing sonarmark command..."
-          sonarmark || { echo "✗ Command failed"; exit 1; }
-          echo "✓ Command succeeded"
+          echo "Testing sonarmark --version..."
+          sonarmark --version || { echo "✗ Version command failed"; exit 1; }
+          echo "✓ Version command succeeded"
+
+      - name: Test help display
+        shell: bash
+        run: |
+          echo "Testing sonarmark --help..."
+          sonarmark --help || { echo "✗ Help command failed"; exit 1; }
+          echo "✓ Help command succeeded"
