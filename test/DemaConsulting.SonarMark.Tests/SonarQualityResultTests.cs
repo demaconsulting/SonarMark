@@ -42,7 +42,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project Name",
             "ERROR",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Assert - verify all properties are set correctly
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -68,7 +69,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -77,6 +79,7 @@ public class SonarQualityResultTests
         Assert.IsNotNull(markdown);
         Assert.Contains("# Quality Gate Status: ERROR", markdown);
         Assert.Contains("**Project:** Test Project", markdown);
+        Assert.Contains("**Dashboard:** https://sonarcloud.io/dashboard?id=test_project", markdown);
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
@@ -100,7 +103,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -121,7 +125,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -129,6 +134,7 @@ public class SonarQualityResultTests
         // Assert - verify conditions section is not present
         Assert.Contains("# Quality Gate Status: OK", markdown);
         Assert.Contains("**Project:** Test Project", markdown);
+        Assert.Contains("**Dashboard:** https://sonarcloud.io/dashboard?id=test_project", markdown);
         Assert.DoesNotContain("## Conditions", markdown);
     }
 
@@ -148,7 +154,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -169,7 +176,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            "https://sonarcloud.io");
 
         // Act & Assert
         try
@@ -195,7 +203,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>());
+            new List<SonarQualityCondition>(),
+            "https://sonarcloud.io");
 
         // Act & Assert
         try
@@ -226,7 +235,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "ERROR",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -252,7 +262,8 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "WARN",
-            conditions);
+            conditions,
+            "https://sonarcloud.io");
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -260,6 +271,27 @@ public class SonarQualityResultTests
         // Assert
         Assert.Contains("# Quality Gate Status: WARN", markdown);
         Assert.Contains("| new_coverage | WARN | LT | 80 | 78.5 |", markdown);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown includes dashboard link with trailing slash in server URL
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_ServerUrlWithTrailingSlash_ProducesDashboardLink()
+    {
+        // Arrange
+        var result = new SonarQualityResult(
+            "my-project-key",
+            "My Project",
+            "OK",
+            new List<SonarQualityCondition>(),
+            "https://sonarqube.example.com/");
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify trailing slash is handled correctly
+        Assert.Contains("**Dashboard:** https://sonarqube.example.com/dashboard?id=my-project-key", markdown);
     }
 
     /// <summary>
