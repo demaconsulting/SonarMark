@@ -191,6 +191,7 @@ internal sealed class SonarQubeClient : IDisposable
             throw new InvalidOperationException("Invalid component response: missing 'name' property");
         }
 
+        // Return project name, or fallback to project key if name is null/empty
         return nameElement.GetString() ?? reportTask.ProjectKey;
     }
 
