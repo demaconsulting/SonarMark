@@ -53,12 +53,12 @@ internal sealed record SonarQualityResult(
         var subHeading = new string('#', subHeadingDepth);
         var sb = new System.Text.StringBuilder();
 
-        // Add quality gate status heading
-        sb.AppendLine($"{heading} Quality Gate Status: {QualityGateStatus}");
+        // Add project name as main heading
+        sb.AppendLine($"{heading} {ProjectName} Sonar Analysis");
         sb.AppendLine();
 
-        // Add project information
-        sb.AppendLine($"**Project:** {ProjectName}");
+        // Add quality gate status as text content
+        sb.AppendLine($"**Quality Gate Status:** {QualityGateStatus}");
         sb.AppendLine();
 
         // Add conditions section if there are any

@@ -89,8 +89,8 @@ public class SonarQualityResultTests
 
         // Assert - verify the markdown contains expected elements
         Assert.IsNotNull(markdown);
-        Assert.Contains("# Quality Gate Status: ERROR", markdown);
-        Assert.Contains("**Project:** Test Project", markdown);
+        Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Quality Gate Status:** ERROR", markdown);
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
@@ -123,7 +123,7 @@ public class SonarQualityResultTests
         var markdown = result.ToMarkdown(3);
 
         // Assert - verify heading levels
-        Assert.Contains("### Quality Gate Status: ERROR", markdown);
+        Assert.Contains("### Test Project Sonar Analysis", markdown);
         Assert.Contains("#### Conditions", markdown);
     }
 
@@ -147,8 +147,8 @@ public class SonarQualityResultTests
         var markdown = result.ToMarkdown(1);
 
         // Assert - verify conditions section is not present
-        Assert.Contains("# Quality Gate Status: OK", markdown);
-        Assert.Contains("**Project:** Test Project", markdown);
+        Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Quality Gate Status:** OK", markdown);
         Assert.DoesNotContain("## Conditions", markdown);
     }
 
@@ -264,7 +264,7 @@ public class SonarQualityResultTests
         var markdown = result.ToMarkdown(6);
 
         // Assert - verify heading levels (subheading is capped at 6)
-        Assert.Contains("###### Quality Gate Status: ERROR", markdown);
+        Assert.Contains("###### Test Project Sonar Analysis", markdown);
         Assert.Contains("###### Conditions", markdown);
     }
 
@@ -293,7 +293,8 @@ public class SonarQualityResultTests
         var markdown = result.ToMarkdown(1);
 
         // Assert
-        Assert.Contains("# Quality Gate Status: WARN", markdown);
+        Assert.Contains("# Test Project Sonar Analysis", markdown);
+        Assert.Contains("**Quality Gate Status:** WARN", markdown);
         Assert.Contains("| new_coverage | WARN | LT | 80 | 78.5 |", markdown);
     }
 
