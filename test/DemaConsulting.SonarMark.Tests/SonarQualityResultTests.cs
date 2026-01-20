@@ -154,10 +154,13 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify conditions section is not present
+        // Assert - verify conditions section is not present but Issues and Hot-Spots are
         Assert.Contains("# Test Project Sonar Analysis", markdown);
         Assert.Contains("**Quality Gate Status:** OK", markdown);
         Assert.DoesNotContain("## Conditions", markdown);
+        Assert.Contains("## Issues", markdown);
+        Assert.Contains("## Security Hot-Spots", markdown);
+        Assert.Contains("| N/A | N/A | N/A | N/A | N/A | N/A |", markdown);
     }
 
     /// <summary>

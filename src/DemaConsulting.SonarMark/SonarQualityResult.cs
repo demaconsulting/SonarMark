@@ -97,15 +97,15 @@ internal sealed record SonarQualityResult(
             sb.AppendLine();
         }
 
-        // Add issues section if there are any
+        // Add issues section (always present)
+        sb.AppendLine($"{subHeading} Issues");
+        sb.AppendLine();
+
+        sb.AppendLine("| Type | Severity | Rule | Component | Line | Message |");
+        sb.AppendLine("|:------------|:---------|:-----|:----------|-----:|:--------|");
+
         if (Issues.Count > 0)
         {
-            sb.AppendLine($"{subHeading} Issues ({Issues.Count})");
-            sb.AppendLine();
-
-            sb.AppendLine("| Type | Severity | Rule | Component | Line | Message |");
-            sb.AppendLine("|:------------|:---------|:-----|:----------|-----:|:--------|");
-
             foreach (var issue in Issues)
             {
                 sb.Append($"| {issue.Type} ");
@@ -115,19 +115,23 @@ internal sealed record SonarQualityResult(
                 sb.Append($"| {issue.Line?.ToString() ?? ""} ");
                 sb.AppendLine($"| {issue.Message} |");
             }
-
-            sb.AppendLine();
+        }
+        else
+        {
+            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A | N/A |");
         }
 
-        // Add hot-spots section if there are any
+        sb.AppendLine();
+
+        // Add hot-spots section (always present)
+        sb.AppendLine($"{subHeading} Security Hot-Spots");
+        sb.AppendLine();
+
+        sb.AppendLine("| Probability | Category | Component | Line | Message |");
+        sb.AppendLine("|:------------|:---------|:----------|-----:|:--------|");
+
         if (HotSpots.Count > 0)
         {
-            sb.AppendLine($"{subHeading} Security Hot-Spots ({HotSpots.Count})");
-            sb.AppendLine();
-
-            sb.AppendLine("| Probability | Category | Component | Line | Message |");
-            sb.AppendLine("|:------------|:---------|:----------|-----:|:--------|");
-
             foreach (var hotSpot in HotSpots)
             {
                 sb.Append($"| {hotSpot.VulnerabilityProbability} ");
@@ -136,9 +140,13 @@ internal sealed record SonarQualityResult(
                 sb.Append($"| {hotSpot.Line?.ToString() ?? ""} ");
                 sb.AppendLine($"| {hotSpot.Message} |");
             }
-
-            sb.AppendLine();
         }
+        else
+        {
+            sb.AppendLine("| N/A | N/A | N/A | N/A | N/A |");
+        }
+
+        sb.AppendLine();
 
         return sb.ToString();
     }
