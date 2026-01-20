@@ -24,12 +24,12 @@ namespace DemaConsulting.SonarMark;
 ///     Represents quality analysis results from SonarQube/SonarCloud
 /// </summary>
 /// <param name="ProjectKey">Project key</param>
-/// <param name="AnalysisId">Analysis ID</param>
+/// <param name="ProjectName">Project name</param>
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
-    string AnalysisId,
+    string ProjectName,
     string QualityGateStatus,
     IReadOnlyList<SonarQualityCondition> Conditions)
 {
@@ -56,9 +56,7 @@ internal sealed record SonarQualityResult(
         sb.AppendLine();
 
         // Add project information
-        sb.AppendLine($"**Project Key:** {ProjectKey}");
-        sb.AppendLine();
-        sb.AppendLine($"**Analysis ID:** {AnalysisId}");
+        sb.AppendLine($"**Project:** {ProjectName}");
         sb.AppendLine();
 
         // Add conditions section if there are any
