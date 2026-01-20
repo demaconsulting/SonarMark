@@ -31,7 +31,64 @@ internal sealed record SonarQualityResult(
     string ProjectKey,
     string AnalysisId,
     string QualityGateStatus,
-    IReadOnlyList<SonarQualityCondition> Conditions);
+    IReadOnlyList<SonarQualityCondition> Conditions)
+{
+    /// <summary>
+    ///     Converts the quality result to markdown format
+    /// </summary>
+    /// <param name="depth">The heading depth level (1-6) for the report title</param>
+    /// <returns>Markdown representation of the quality result</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when depth is not between 1 and 6</exception>
+    public string ToMarkdown(int depth)
+    {
+        if (depth < 1 || depth > 6)
+        {
+            throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be between 1 and 6");
+        }
+
+        var heading = new string('#', depth);
+        var subHeadingDepth = Math.Min(depth + 1, 6);
+        var subHeading = new string('#', subHeadingDepth);
+        var sb = new System.Text.StringBuilder();
+
+        // Add quality gate status heading
+        sb.AppendLine($"{heading} Quality Gate Status: {QualityGateStatus}");
+        sb.AppendLine();
+
+        // Add project information
+        sb.AppendLine($"**Project Key:** {ProjectKey}");
+        sb.AppendLine();
+        sb.AppendLine($"**Analysis ID:** {AnalysisId}");
+        sb.AppendLine();
+
+        // Add conditions section if there are any
+        if (Conditions.Count > 0)
+        {
+            sb.AppendLine($"{subHeading} Conditions");
+            sb.AppendLine();
+
+            // Add table header with alignment and appropriate column widths
+            // Metric: wide (30) for variable-length names like "new_duplicated_lines_density"
+            // Status: short (5) for fixed values "OK", "WARN", "ERROR"
+            // Comparator: minimal (2) for fixed 2-char values "LT", "GT", etc.
+            // Threshold/Actual: medium (8) for numeric values including decimals
+            sb.AppendLine("| Metric | Status | Comparator | Threshold | Actual |");
+            sb.AppendLine("|:-------------------------------|:-----:|:--:|--------:|-------:|");
+
+            // Add table rows
+            foreach (var condition in Conditions)
+            {
+                sb.Append($"| {condition.Metric} ");
+                sb.Append($"| {condition.Status} ");
+                sb.Append($"| {condition.Comparator} ");
+                sb.Append($"| {condition.ErrorThreshold ?? ""} ");
+                sb.AppendLine($"| {condition.ActualValue ?? ""} |");
+            }
+        }
+
+        return sb.ToString();
+    }
+}
 
 /// <summary>
 ///     Represents a single quality gate condition
