@@ -68,8 +68,12 @@ internal sealed record SonarQualityResult(
             sb.AppendLine();
 
             // Add table header with alignment and appropriate column widths
+            // Metric: wide (30) for variable-length names like "new_duplicated_lines_density"
+            // Status: short (5) for fixed values "OK", "WARN", "ERROR"
+            // Comparator: minimal (2) for fixed 2-char values "LT", "GT", etc.
+            // Threshold/Actual: medium (8) for numeric values including decimals
             sb.AppendLine("| Metric | Status | Comparator | Threshold | Actual |");
-            sb.AppendLine("|:-------|:------:|:----------:|----------:|-------:|");
+            sb.AppendLine("|:-------------------------------|:-----:|:--:|--------:|-------:|");
 
             // Add table rows
             foreach (var condition in Conditions)

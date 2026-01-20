@@ -80,7 +80,7 @@ public class SonarQualityResultTests
         Assert.Contains("**Analysis ID:** analysis_123", markdown);
         Assert.Contains("## Conditions", markdown);
         Assert.Contains("| Metric | Status | Comparator | Threshold | Actual |", markdown);
-        Assert.Contains("|:-------|:------:|:----------:|----------:|-------:|", markdown);
+        Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
         Assert.Contains("| new_coverage | ERROR | LT | 80 | 75.5 |", markdown);
         Assert.Contains("| new_bugs | ERROR | GT | 0 | 2 |", markdown);
     }
