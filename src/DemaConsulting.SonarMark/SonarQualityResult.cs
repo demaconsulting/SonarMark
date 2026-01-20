@@ -27,13 +27,11 @@ namespace DemaConsulting.SonarMark;
 /// <param name="ProjectName">Project name</param>
 /// <param name="QualityGateStatus">Quality gate status (OK, WARN, ERROR, or NONE)</param>
 /// <param name="Conditions">Quality gate conditions and their statuses</param>
-/// <param name="ServerUrl">Server URL for the SonarQube/SonarCloud instance</param>
 internal sealed record SonarQualityResult(
     string ProjectKey,
     string ProjectName,
     string QualityGateStatus,
-    IReadOnlyList<SonarQualityCondition> Conditions,
-    string ServerUrl)
+    IReadOnlyList<SonarQualityCondition> Conditions)
 {
     /// <summary>
     ///     Converts the quality result to markdown format
@@ -57,11 +55,8 @@ internal sealed record SonarQualityResult(
         sb.AppendLine($"{heading} Quality Gate Status: {QualityGateStatus}");
         sb.AppendLine();
 
-        // Add project information with dashboard link
-        var dashboardUrl = $"{ServerUrl.TrimEnd('/')}/dashboard?id={Uri.EscapeDataString(ProjectKey)}";
+        // Add project information
         sb.AppendLine($"**Project:** {ProjectName}");
-        sb.AppendLine();
-        sb.AppendLine($"**Dashboard:** {dashboardUrl}");
         sb.AppendLine();
 
         // Add conditions section if there are any

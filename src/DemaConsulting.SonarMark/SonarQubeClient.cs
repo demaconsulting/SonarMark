@@ -271,8 +271,7 @@ internal sealed class SonarQubeClient : IDisposable
             reportTask.ProjectKey,
             projectName,
             qualityGateStatus,
-            conditions,
-            reportTask.ServerUrl);
+            conditions);
     }
 
     /// <summary>
