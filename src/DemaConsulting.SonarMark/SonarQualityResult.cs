@@ -58,7 +58,7 @@ internal sealed record SonarQualityResult(
         sb.AppendLine();
 
         // Add project information with dashboard link
-        var dashboardUrl = $"{ServerUrl.TrimEnd('/')}/dashboard?id={ProjectKey}";
+        var dashboardUrl = $"{ServerUrl.TrimEnd('/')}/dashboard?id={Uri.EscapeDataString(ProjectKey)}";
         sb.AppendLine($"**Project:** {ProjectName}");
         sb.AppendLine();
         sb.AppendLine($"**Dashboard:** {dashboardUrl}");

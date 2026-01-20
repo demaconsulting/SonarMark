@@ -295,6 +295,27 @@ public class SonarQualityResultTests
     }
 
     /// <summary>
+    ///     Test ToMarkdown URL-encodes project key with special characters
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_ProjectKeyWithSpecialCharacters_UrlEncodesProjectKey()
+    {
+        // Arrange
+        var result = new SonarQualityResult(
+            "my project:key&test",
+            "My Project",
+            "OK",
+            new List<SonarQualityCondition>(),
+            "https://sonarqube.example.com");
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify project key is URL-encoded
+        Assert.Contains("**Dashboard:** https://sonarqube.example.com/dashboard?id=my%20project%3Akey%26test", markdown);
+    }
+
+    /// <summary>
     ///     Test SonarQualityCondition can be created with all properties
     /// </summary>
     [TestMethod]
