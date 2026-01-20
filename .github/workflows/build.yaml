@@ -226,4 +226,4 @@ jobs:
 
           # Display report summary
           echo "Report summary:"
-          head -n 10 "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md"
+          cat "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md"
