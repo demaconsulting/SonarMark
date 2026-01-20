@@ -166,7 +166,7 @@ internal sealed class SonarQubeClient : IDisposable
         var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={projectKey}";
         if (!string.IsNullOrWhiteSpace(branch))
         {
-            url += $"&branch={branch}";
+            url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
@@ -251,7 +251,7 @@ internal sealed class SonarQubeClient : IDisposable
             $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=500";
         if (!string.IsNullOrWhiteSpace(branch))
         {
-            url += $"&branch={branch}";
+            url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
@@ -330,7 +330,7 @@ internal sealed class SonarQubeClient : IDisposable
         var url = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=500";
         if (!string.IsNullOrWhiteSpace(branch))
         {
-            url += $"&branch={branch}";
+            url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
