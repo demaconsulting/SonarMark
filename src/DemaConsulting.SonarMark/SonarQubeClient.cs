@@ -35,16 +35,6 @@ namespace DemaConsulting.SonarMark;
 internal sealed class SonarQubeClient : IDisposable
 {
     /// <summary>
-    ///     Default polling timeout
-    /// </summary>
-    private static readonly TimeSpan DefaultPollingTimeout = TimeSpan.FromMinutes(5);
-
-    /// <summary>
-    ///     Default polling interval
-    /// </summary>
-    private static readonly TimeSpan DefaultPollingInterval = TimeSpan.FromSeconds(10);
-
-    /// <summary>
     ///     HTTP client for making API requests
     /// </summary>
     private readonly HttpClient _httpClient;
@@ -72,63 +62,6 @@ internal sealed class SonarQubeClient : IDisposable
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
         _ownsHttpClient = ownsHttpClient;
-    }
-
-    /// <summary>
-    ///     Gets the results of a SonarQube analysis from a report task
-    /// </summary>
-    /// <param name="reportTask">Report task containing server and task information</param>
-    /// <param name="pollingTimeout">Maximum time to wait for task completion (default: 5 minutes)</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task result with analysis information</returns>
-    /// <exception cref="InvalidOperationException">Thrown when task fails or times out</exception>
-    public async Task<CeTaskResult> GetResultsAsync(
-        ReportTask reportTask,
-        TimeSpan? pollingTimeout = null,
-        CancellationToken cancellationToken = default)
-    {
-        ArgumentNullException.ThrowIfNull(reportTask);
-
-        var timeout = pollingTimeout ?? DefaultPollingTimeout;
-
-        if (timeout <= TimeSpan.Zero)
-        {
-            throw new ArgumentException("Polling timeout must be positive", nameof(pollingTimeout));
-        }
-
-        var startTime = DateTime.UtcNow;
-
-        while (true)
-        {
-            // Check for timeout
-            if (DateTime.UtcNow - startTime > timeout)
-            {
-                throw new InvalidOperationException(
-                    $"Timed out waiting for task {reportTask.CeTaskId} to complete after {timeout.TotalSeconds} seconds");
-            }
-
-            // Query the CE task status
-            var result = await GetCeTaskStatusAsync(reportTask, cancellationToken).ConfigureAwait(false);
-
-            // Return if task is in a terminal state
-            if (result.Status is CeTaskStatus.Success or CeTaskStatus.Failed or CeTaskStatus.Canceled)
-            {
-                if (result.Status == CeTaskStatus.Failed)
-                {
-                    throw new InvalidOperationException($"Task {reportTask.CeTaskId} failed");
-                }
-
-                if (result.Status == CeTaskStatus.Canceled)
-                {
-                    throw new InvalidOperationException($"Task {reportTask.CeTaskId} was canceled");
-                }
-
-                return result;
-            }
-
-            // Wait before polling again
-            await Task.Delay(DefaultPollingInterval, cancellationToken).ConfigureAwait(false);
-        }
     }
 
     /// <summary>
@@ -488,57 +421,6 @@ internal sealed class SonarQubeClient : IDisposable
         }
 
         return metricNames;
-    }
-
-    /// <summary>
-    ///     Gets the current status of a Compute Engine task
-    /// </summary>
-    /// <param name="reportTask">Report task containing server and task information</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Task result with current status</returns>
-    private async Task<CeTaskResult> GetCeTaskStatusAsync(
-        ReportTask reportTask,
-        CancellationToken cancellationToken)
-    {
-        var url = $"{reportTask.ServerUrl.TrimEnd('/')}/api/ce/task?id={reportTask.CeTaskId}";
-
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
-
-        var root = jsonDoc.RootElement;
-        if (!root.TryGetProperty("task", out var taskElement))
-        {
-            throw new InvalidOperationException("Invalid CE task response: missing 'task' property");
-        }
-
-        // Parse the status
-        if (!taskElement.TryGetProperty("status", out var statusElement))
-        {
-            throw new InvalidOperationException("Invalid CE task response: missing 'status' property");
-        }
-
-        var statusString = statusElement.GetString();
-        var status = statusString?.ToUpperInvariant() switch
-        {
-            "PENDING" => CeTaskStatus.Pending,
-            "IN_PROGRESS" => CeTaskStatus.InProgress,
-            "SUCCESS" => CeTaskStatus.Success,
-            "FAILED" => CeTaskStatus.Failed,
-            "CANCELED" => CeTaskStatus.Canceled,
-            _ => throw new InvalidOperationException($"Unknown task status: {statusString}")
-        };
-
-        // Extract analysis ID if available
-        string? analysisId = null;
-        if (taskElement.TryGetProperty("analysisId", out var analysisIdElement))
-        {
-            analysisId = analysisIdElement.GetString();
-        }
-
-        return new CeTaskResult(status, analysisId);
     }
 
     /// <summary>
