@@ -149,7 +149,7 @@ internal sealed class Context : IDisposable
         }
         catch (Exception ex)
         {
-            throw new ArgumentException($"Failed to open log file '{logFile}': {ex.Message}", ex);
+            throw new InvalidOperationException($"Failed to open log file '{logFile}': {ex.Message}", ex);
         }
     }
 
