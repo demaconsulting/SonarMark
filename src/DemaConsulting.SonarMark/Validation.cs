@@ -634,7 +634,15 @@ internal static class Validation
         public TemporaryDirectory()
         {
             DirectoryPath = Path.Combine(Path.GetTempPath(), $"sonarmark_validation_{Guid.NewGuid()}");
-            Directory.CreateDirectory(DirectoryPath);
+            
+            try
+            {
+                Directory.CreateDirectory(DirectoryPath);
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+            {
+                throw new InvalidOperationException($"Failed to create temporary directory: {ex.Message}", ex);
+            }
         }
 
         /// <summary>
@@ -642,9 +650,16 @@ internal static class Validation
         /// </summary>
         public void Dispose()
         {
-            if (Directory.Exists(DirectoryPath))
+            try
             {
-                Directory.Delete(DirectoryPath, true);
+                if (Directory.Exists(DirectoryPath))
+                {
+                    Directory.Delete(DirectoryPath, true);
+                }
+            }
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            {
+                // Ignore cleanup errors during disposal
             }
         }
     }
