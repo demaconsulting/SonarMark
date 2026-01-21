@@ -32,6 +32,8 @@ sonarmark --server <url> --project-key <key> [options]
 - `--report <file>` - Export quality results to markdown file
 - `--report-depth <depth>` - Markdown header depth for report (default: 1)
 - `--enforce` - Return non-zero exit code if quality gate fails
+- `--validate` - Run self-validation tests
+- `--results <file>` - Write validation results to TRX or JUnit XML file (requires `--validate`)
 - `--silent` - Suppress console output
 - `--log <file>` - Write output to log file
 - `-v, --version` - Display version information
@@ -65,6 +67,46 @@ sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
   --token $SONAR_TOKEN \
   --enforce
+```
+
+**Run self-validation:**
+
+```bash
+sonarmark --validate
+```
+
+**Run self-validation with TRX output:**
+
+```bash
+sonarmark --validate --results validation-results.trx
+```
+
+## Self-Validation
+
+SonarMark includes built-in self-validation tests to verify basic functionality. The validation runs without
+requiring access to a real SonarQube/SonarCloud server by using mock data.
+
+The self-validation tests include:
+
+1. **Quality Gate Status Retrieval** - Verifies the tool can retrieve and parse quality gate status
+2. **Issues Retrieval** - Tests issue fetching and parsing
+3. **Hot-Spots Retrieval** - Tests security hot-spot fetching and parsing
+4. **Markdown Report Generation** - Verifies markdown report generation
+
+Run validation with:
+
+```bash
+sonarmark --validate
+```
+
+Optionally save results to TRX or JUnit XML format:
+
+```bash
+# Save as TRX format
+sonarmark --validate --results validation-results.trx
+
+# Save as JUnit XML format
+sonarmark --validate --results validation-results.xml
 ```
 
 ## Report Contents
