@@ -104,6 +104,7 @@ internal sealed class SonarQubeClient : IDisposable
             .ConfigureAwait(false);
 
         return new SonarQualityResult(
+            serverUrl,
             projectKey,
             projectName,
             qualityGateStatus,
