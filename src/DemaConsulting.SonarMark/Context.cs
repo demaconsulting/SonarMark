@@ -96,6 +96,11 @@ internal sealed class Context : IDisposable
     public string? ResultsFile { get; private init; }
 
     /// <summary>
+    ///     Gets the HTTP client factory for creating SonarQube clients (for testing).
+    /// </summary>
+    internal Func<string?, SonarQubeClient>? HttpClientFactory { get; private init; }
+
+    /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
     /// </summary>
     public int ExitCode => _hasErrors ? 1 : 0;
@@ -115,6 +120,18 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args)
     {
+        return Create(args, null);
+    }
+
+    /// <summary>
+    ///     Creates a Context instance from command-line arguments with optional HTTP client factory.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
+    /// <param name="httpClientFactory">Optional HTTP client factory for testing.</param>
+    /// <returns>A new Context instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
+    public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
+    {
         var parser = new ArgumentParser();
         parser.ParseArguments(args);
 
@@ -131,7 +148,8 @@ internal sealed class Context : IDisposable
             Server = parser.Server,
             ProjectKey = parser.ProjectKey,
             Branch = parser.Branch,
-            ResultsFile = parser.ResultsFile
+            ResultsFile = parser.ResultsFile,
+            HttpClientFactory = httpClientFactory
         };
 
         // Open log file if specified

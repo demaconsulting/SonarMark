@@ -28,11 +28,6 @@ namespace DemaConsulting.SonarMark;
 internal static class Program
 {
     /// <summary>
-    ///     Gets or sets the HTTP client factory for creating SonarQube clients (for testing).
-    /// </summary>
-    internal static Func<string?, SonarQubeClient>? HttpClientFactory { get; set; }
-
-    /// <summary>
     ///     Gets the application version string.
     /// </summary>
     public static string Version
@@ -181,7 +176,7 @@ internal static class Program
 
         // Get quality results from SonarQube/SonarCloud
         context.WriteLine("Fetching quality results from server...");
-        using var client = HttpClientFactory?.Invoke(context.Token) ?? new SonarQubeClient(context.Token);
+        using var client = context.HttpClientFactory?.Invoke(context.Token) ?? new SonarQubeClient(context.Token);
 
         SonarQualityResult qualityResult;
         try

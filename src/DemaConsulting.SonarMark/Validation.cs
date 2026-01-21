@@ -57,23 +57,14 @@ internal static class Validation
             Name = "SonarMark Self-Validation"
         };
 
-        // Set up mock HTTP client factory
-        var originalFactory = Program.HttpClientFactory;
-        try
-        {
-            Program.HttpClientFactory = _ => new SonarQubeClient(CreateMockHttpClient(), false);
+        // Create mock HTTP client factory
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockHttpClient(), false);
 
-            // Run core functionality tests
-            RunQualityGateRetrievalTest(context, testResults);
-            RunIssuesRetrievalTest(context, testResults);
-            RunHotSpotsRetrievalTest(context, testResults);
-            RunMarkdownReportGenerationTest(context, testResults);
-        }
-        finally
-        {
-            // Restore original factory
-            Program.HttpClientFactory = originalFactory;
-        }
+        // Run core functionality tests
+        RunQualityGateRetrievalTest(context, testResults, mockFactory);
+        RunIssuesRetrievalTest(context, testResults, mockFactory);
+        RunHotSpotsRetrievalTest(context, testResults, mockFactory);
+        RunMarkdownReportGenerationTest(context, testResults, mockFactory);
 
         // Calculate totals
         var totalTests = testResults.Results.Count;
@@ -123,7 +114,11 @@ internal static class Validation
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
-    private static void RunQualityGateRetrievalTest(Context context, DemaConsulting.TestResults.TestResults testResults)
+    /// <param name="mockFactory">The mock HTTP client factory.</param>
+    private static void RunQualityGateRetrievalTest(
+        Context context,
+        DemaConsulting.TestResults.TestResults testResults,
+        Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
         var test = CreateTestResult("QualityGateRetrieval");
@@ -140,7 +135,7 @@ internal static class Validation
                 "--log", logFile,
                 "--server", MockServerUrl,
                 "--project-key", MockProjectKey
-            ]))
+            ], mockFactory))
             {
                 Program.Run(testContext);
                 exitCode = testContext.ExitCode;
@@ -186,7 +181,11 @@ internal static class Validation
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
-    private static void RunIssuesRetrievalTest(Context context, DemaConsulting.TestResults.TestResults testResults)
+    /// <param name="mockFactory">The mock HTTP client factory.</param>
+    private static void RunIssuesRetrievalTest(
+        Context context,
+        DemaConsulting.TestResults.TestResults testResults,
+        Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
         var test = CreateTestResult("IssuesRetrieval");
@@ -203,7 +202,7 @@ internal static class Validation
                 "--log", logFile,
                 "--server", MockServerUrl,
                 "--project-key", MockProjectKey
-            ]))
+            ], mockFactory))
             {
                 Program.Run(testContext);
                 exitCode = testContext.ExitCode;
@@ -247,7 +246,11 @@ internal static class Validation
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
-    private static void RunHotSpotsRetrievalTest(Context context, DemaConsulting.TestResults.TestResults testResults)
+    /// <param name="mockFactory">The mock HTTP client factory.</param>
+    private static void RunHotSpotsRetrievalTest(
+        Context context,
+        DemaConsulting.TestResults.TestResults testResults,
+        Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
         var test = CreateTestResult("HotSpotsRetrieval");
@@ -264,7 +267,7 @@ internal static class Validation
                 "--log", logFile,
                 "--server", MockServerUrl,
                 "--project-key", MockProjectKey
-            ]))
+            ], mockFactory))
             {
                 Program.Run(testContext);
                 exitCode = testContext.ExitCode;
@@ -308,7 +311,11 @@ internal static class Validation
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
-    private static void RunMarkdownReportGenerationTest(Context context, DemaConsulting.TestResults.TestResults testResults)
+    /// <param name="mockFactory">The mock HTTP client factory.</param>
+    private static void RunMarkdownReportGenerationTest(
+        Context context,
+        DemaConsulting.TestResults.TestResults testResults,
+        Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
         var test = CreateTestResult("MarkdownReportGeneration");
@@ -327,7 +334,7 @@ internal static class Validation
                 "--server", MockServerUrl,
                 "--project-key", MockProjectKey,
                 "--report", reportFile
-            ]))
+            ], mockFactory))
             {
                 Program.Run(testContext);
                 exitCode = testContext.ExitCode;
