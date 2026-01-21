@@ -237,6 +237,7 @@ jobs:
           echo "✓ Self-validation succeeded"
 
       - name: Upload integration test results
+        if: always()
         uses: actions/upload-artifact@v6
         with:
           name: integration-test-results-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
