@@ -126,7 +126,7 @@ internal static class Validation
         try
         {
             using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "qualitygate-test.log");
+            var logFile = Path.Combine(tempDir.DirectoryPath, "quality-gate-test.log");
 
             // Run the program to fetch quality gate status
             int exitCode;
@@ -258,7 +258,7 @@ internal static class Validation
         try
         {
             using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "hotspots-test.log");
+            var logFile = Path.Combine(tempDir.DirectoryPath, "hot-spots-test.log");
 
             // Run the program to fetch hot-spots
             int exitCode;
@@ -581,7 +581,7 @@ internal static class Validation
                     {
                         "hotspots": [
                             {
-                                "key": "hotspot1",
+                                "key": "hot-spot-1",
                                 "component": "SonarMarkMockProject:src/Database.cs",
                                 "line": 88,
                                 "message": "Make sure using this SQL query is safe",
