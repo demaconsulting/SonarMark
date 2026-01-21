@@ -105,8 +105,8 @@ public class SonarQualityResultTests
         Assert.Contains("|:-------------------------------|:-----:|:--:|--------:|-------:|", markdown);
         Assert.Contains("| Coverage on New Code | ERROR | LT | 80 | 75.5 |", markdown);
         Assert.Contains("| New Bugs | ERROR | GT | 0 | 2 |", markdown);
-        Assert.Contains("Found 0 issues", markdown);
-        Assert.Contains("Found 0 security hot-spots", markdown);
+        Assert.Contains("Found no issues", markdown);
+        Assert.Contains("Found no security hot-spots", markdown);
     }
 
     /// <summary>
@@ -169,8 +169,8 @@ public class SonarQualityResultTests
         Assert.DoesNotContain("## Conditions", markdown);
         Assert.Contains("## Issues", markdown);
         Assert.Contains("## Security Hot-Spots", markdown);
-        Assert.Contains("Found 0 issues", markdown);
-        Assert.Contains("Found 0 security hot-spots", markdown);
+        Assert.Contains("Found no issues", markdown);
+        Assert.Contains("Found no security hot-spots", markdown);
     }
 
     /// <summary>
@@ -439,6 +439,43 @@ public class SonarQualityResultTests
         // Verify component paths are cleaned (no "test_project:" prefix in file paths)
         var hotSpotsSection = markdown.Split("## Security Hot-Spots")[1];
         Assert.DoesNotContain("test_project:src/", hotSpotsSection);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with singular counts shows correct text
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText()
+    {
+        // Arrange
+        var issues = new List<SonarIssue>
+        {
+            new("key1", "csharpsquid:S1234", "MAJOR", "test_project:src/File.cs", 42, "Issue message", "BUG")
+        };
+
+        var hotSpots = new List<SonarHotSpot>
+        {
+            new("hs1", "test_project:src/Secure.cs", 10, "Security issue", "sql-injection", "HIGH")
+        };
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            new List<SonarQualityCondition>(),
+            new Dictionary<string, string>(),
+            issues,
+            hotSpots);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify singular forms are used
+        Assert.Contains("Found 1 issue", markdown);
+        Assert.Contains("Found 1 security hot-spot", markdown);
+        Assert.DoesNotContain("Found 1 issues", markdown);
+        Assert.DoesNotContain("Found 1 security hot-spots", markdown);
     }
 
     /// <summary>

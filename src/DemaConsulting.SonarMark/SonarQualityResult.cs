@@ -107,7 +107,21 @@ internal sealed record SonarQualityResult(
         // Add issues section (always present)
         sb.AppendLine($"{subHeading} Issues");
         sb.AppendLine();
-        sb.AppendLine($"Found {Issues.Count} issue{(Issues.Count == 1 ? "" : "s")}");
+        string issuesText;
+        if (Issues.Count == 0)
+        {
+            issuesText = "no issues";
+        }
+        else if (Issues.Count == 1)
+        {
+            issuesText = "1 issue";
+        }
+        else
+        {
+            issuesText = $"{Issues.Count} issues";
+        }
+
+        sb.AppendLine($"Found {issuesText}");
         sb.AppendLine();
 
         if (Issues.Count > 0)
@@ -125,7 +139,21 @@ internal sealed record SonarQualityResult(
         // Add hot-spots section (always present)
         sb.AppendLine($"{subHeading} Security Hot-Spots");
         sb.AppendLine();
-        sb.AppendLine($"Found {HotSpots.Count} security hot-spot{(HotSpots.Count == 1 ? "" : "s")}");
+        string hotSpotsText;
+        if (HotSpots.Count == 0)
+        {
+            hotSpotsText = "no security hot-spots";
+        }
+        else if (HotSpots.Count == 1)
+        {
+            hotSpotsText = "1 security hot-spot";
+        }
+        else
+        {
+            hotSpotsText = $"{HotSpots.Count} security hot-spots";
+        }
+
+        sb.AppendLine($"Found {hotSpotsText}");
         sb.AppendLine();
 
         if (HotSpots.Count > 0)
