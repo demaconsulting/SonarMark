@@ -104,8 +104,9 @@ public class IntegrationTests
         // Verify success
         Assert.AreEqual(0, exitCode);
 
-        // Verify not implemented message
-        Assert.Contains("Self-validation not yet implemented", output);
+        // Verify validation runs successfully
+        Assert.Contains("# DEMA Consulting SonarMark", output);
+        Assert.Contains("Total Tests:", output);
     }
 
     /// <summary>

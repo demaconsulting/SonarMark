@@ -91,6 +91,16 @@ internal sealed class Context : IDisposable
     public string? Branch { get; private init; }
 
     /// <summary>
+    ///     Gets the validation results file path.
+    /// </summary>
+    public string? ResultsFile { get; private init; }
+
+    /// <summary>
+    ///     Gets the HTTP client factory for creating SonarQube clients (for testing).
+    /// </summary>
+    internal Func<string?, SonarQubeClient>? HttpClientFactory { get; private init; }
+
+    /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
     /// </summary>
     public int ExitCode => _hasErrors ? 1 : 0;
@@ -110,6 +120,18 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args)
     {
+        return Create(args, null);
+    }
+
+    /// <summary>
+    ///     Creates a Context instance from command-line arguments with optional HTTP client factory.
+    /// </summary>
+    /// <param name="args">Command-line arguments.</param>
+    /// <param name="httpClientFactory">Optional HTTP client factory for testing.</param>
+    /// <returns>A new Context instance.</returns>
+    /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
+    public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
+    {
         var parser = new ArgumentParser();
         parser.ParseArguments(args);
 
@@ -125,7 +147,9 @@ internal sealed class Context : IDisposable
             Token = parser.Token,
             Server = parser.Server,
             ProjectKey = parser.ProjectKey,
-            Branch = parser.Branch
+            Branch = parser.Branch,
+            ResultsFile = parser.ResultsFile,
+            HttpClientFactory = httpClientFactory
         };
 
         // Open log file if specified
@@ -170,6 +194,7 @@ internal sealed class Context : IDisposable
         public string? ProjectKey { get; private set; }
         public string? Branch { get; private set; }
         public string? LogFile { get; private set; }
+        public string? ResultsFile { get; private set; }
 
         /// <summary>
         ///     Parses command-line arguments
@@ -244,6 +269,10 @@ internal sealed class Context : IDisposable
 
                 case "--branch":
                     Branch = GetRequiredStringArgument(arg, args, index, "a branch name argument");
+                    return index + 1;
+
+                case "--results":
+                    ResultsFile = GetRequiredStringArgument(arg, args, index, "a results filename argument");
                     return index + 1;
 
                 default:

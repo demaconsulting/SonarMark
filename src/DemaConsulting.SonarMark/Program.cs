@@ -105,7 +105,7 @@ internal static class Program
         // Priority 3: Self-Validation
         if (context.Validate)
         {
-            context.WriteLine("Self-validation not yet implemented");
+            Validation.Run(context);
             return;
         }
 
@@ -137,6 +137,7 @@ internal static class Program
         context.WriteLine("  -?, -h, --help             Display this help message");
         context.WriteLine("  --silent                   Suppress console output");
         context.WriteLine("  --validate                 Run self-validation");
+        context.WriteLine("  --results <file>           Write validation results to file (.trx or .xml)");
         context.WriteLine("  --enforce                  Return non-zero exit code if quality gate fails");
         context.WriteLine("  --log <file>               Write output to log file");
         context.WriteLine("  --server <url>             SonarQube/SonarCloud server URL");
@@ -175,7 +176,7 @@ internal static class Program
 
         // Get quality results from SonarQube/SonarCloud
         context.WriteLine("Fetching quality results from server...");
-        using var client = new SonarQubeClient(context.Token);
+        using var client = context.HttpClientFactory?.Invoke(context.Token) ?? new SonarQubeClient(context.Token);
 
         SonarQualityResult qualityResult;
         try
