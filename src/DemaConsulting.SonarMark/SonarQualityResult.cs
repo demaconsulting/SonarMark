@@ -137,8 +137,7 @@ internal sealed record SonarQualityResult(
         sb.AppendLine($"{subHeading} Issues");
         sb.AppendLine();
 
-        var issuesText = FormatCountText(Issues.Count, "issue");
-        sb.AppendLine($"Found {issuesText}");
+        sb.AppendLine(FormatFoundText(Issues.Count, "issue"));
         sb.AppendLine();
 
         if (Issues.Count > 0)
@@ -162,8 +161,7 @@ internal sealed record SonarQualityResult(
         sb.AppendLine($"{subHeading} Security Hot-Spots");
         sb.AppendLine();
 
-        var hotSpotsText = FormatCountText(HotSpots.Count, "security hot-spot");
-        sb.AppendLine($"Found {hotSpotsText}");
+        sb.AppendLine(FormatFoundText(HotSpots.Count, "security hot-spot"));
         sb.AppendLine();
 
         if (HotSpots.Count > 0)
@@ -181,18 +179,18 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Formats a count with proper pluralization
+    ///     Formats a count with proper pluralization and "Found" prefix
     /// </summary>
     /// <param name="count">The count value</param>
     /// <param name="singularNoun">The singular form of the noun</param>
-    /// <returns>Formatted text like "no issues", "1 issue", or "5 issues"</returns>
-    private static string FormatCountText(int count, string singularNoun)
+    /// <returns>Formatted text like "Found no issues", "Found 1 issue", or "Found 5 issues"</returns>
+    private static string FormatFoundText(int count, string singularNoun)
     {
         return count switch
         {
-            0 => $"no {singularNoun}s",
-            1 => $"1 {singularNoun}",
-            _ => $"{count} {singularNoun}s"
+            0 => $"Found no {singularNoun}s",
+            1 => $"Found 1 {singularNoun}",
+            _ => $"Found {count} {singularNoun}s"
         };
     }
 
