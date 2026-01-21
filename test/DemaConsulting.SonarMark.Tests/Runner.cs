@@ -53,15 +53,19 @@ internal static class Runner
         }
 
         // Start the process
-        var process = Process.Start(startInfo) ??
-                      throw new InvalidOperationException("Failed to start process");
+        using var process = Process.Start(startInfo) ??
+                            throw new InvalidOperationException("Failed to start process");
+
+        // Read output asynchronously to avoid buffer overflow
+        var outputTask = process.StandardOutput.ReadToEndAsync();
+        var errorTask = process.StandardError.ReadToEndAsync();
 
         // Wait for the process to exit
         process.WaitForExit();
 
         // Combine stdout and stderr, save the output and return the exit code
-        var stdout = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
+        var stdout = outputTask.GetAwaiter().GetResult();
+        var stderr = errorTask.GetAwaiter().GetResult();
         output = stdout + stderr;
         return process.ExitCode;
     }
