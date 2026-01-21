@@ -57,11 +57,23 @@ internal static class Validation
             Name = "SonarMark Self-Validation"
         };
 
-        // Run core functionality tests
-        RunQualityGateStatusTest(context, testResults);
-        RunIssuesRetrievalTest(context, testResults);
-        RunHotSpotsRetrievalTest(context, testResults);
-        RunMarkdownReportGenerationTest(context, testResults);
+        // Set up mock HTTP client factory
+        var originalFactory = Program.HttpClientFactory;
+        try
+        {
+            Program.HttpClientFactory = _ => new SonarQubeClient(CreateMockHttpClient(), false);
+
+            // Run core functionality tests
+            RunQualityGateRetrievalTest(context, testResults);
+            RunIssuesRetrievalTest(context, testResults);
+            RunHotSpotsRetrievalTest(context, testResults);
+            RunMarkdownReportGenerationTest(context, testResults);
+        }
+        finally
+        {
+            // Restore original factory
+            Program.HttpClientFactory = originalFactory;
+        }
 
         // Calculate totals
         var totalTests = testResults.Results.Count;
@@ -107,52 +119,70 @@ internal static class Validation
     }
 
     /// <summary>
-    ///     Runs a test for quality gate status retrieval.
+    ///     Runs a test for quality gate retrieval functionality.
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
-    private static void RunQualityGateStatusTest(Context context, DemaConsulting.TestResults.TestResults testResults)
+    private static void RunQualityGateRetrievalTest(Context context, DemaConsulting.TestResults.TestResults testResults)
     {
         var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("QualityGateStatusRetrieval");
+        var test = CreateTestResult("QualityGateRetrieval");
 
         try
         {
-            // Create a mock HTTP client
-            using var mockClient = CreateMockHttpClient();
-            using var client = new SonarQubeClient(mockClient, false);
+            using var tempDir = new TemporaryDirectory();
+            var logFile = Path.Combine(tempDir.DirectoryPath, "qualitygate-test.log");
 
-            // Fetch quality results with mock data
-            var result = client.GetQualityResultByBranchAsync(
-                MockServerUrl,
-                MockProjectKey,
-                null).GetAwaiter().GetResult();
-
-            // Verify the results
-            if (result.QualityGateStatus == "ERROR" &&
-                result.Conditions.Count == 2 &&
-                result.ProjectName == "Mock SonarMark Project")
+            // Run the program to fetch quality gate status
+            int exitCode;
+            using (var testContext = Context.Create([
+                "--silent",
+                "--log", logFile,
+                "--server", MockServerUrl,
+                "--project-key", MockProjectKey
+            ]))
             {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                context.WriteLine("✓ Quality Gate Status Retrieval Test - PASSED");
+                Program.Run(testContext);
+                exitCode = testContext.ExitCode;
+            }
+
+            // Check if execution succeeded
+            if (exitCode == 0)
+            {
+                // Verify log contains expected output
+                var logContent = File.ReadAllText(logFile);
+
+                if (logContent.Contains("Quality Gate Status: ERROR") &&
+                    logContent.Contains("Issues: 2") &&
+                    logContent.Contains("Hot-Spots: 1"))
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
+                    context.WriteLine("✓ Quality Gate Retrieval Test - PASSED");
+                }
+                else
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
+                    test.ErrorMessage = "Expected output not found in log";
+                    context.WriteError("✗ Quality Gate Retrieval Test - FAILED: Expected output not found");
+                }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = "Quality gate status or conditions mismatch";
-                context.WriteError("✗ Quality Gate Status Retrieval Test - FAILED: Quality gate status or conditions mismatch");
+                test.ErrorMessage = $"Program exited with code {exitCode}";
+                context.WriteError($"✗ Quality Gate Retrieval Test - FAILED: Exit code {exitCode}");
             }
         }
         catch (Exception ex)
         {
-            HandleTestException(test, context, "Quality Gate Status Retrieval Test", ex);
+            HandleTestException(test, context, "Quality Gate Retrieval Test", ex);
         }
 
         FinalizeTestResult(test, startTime, testResults);
     }
 
     /// <summary>
-    ///     Runs a test for issues retrieval.
+    ///     Runs a test for issues retrieval functionality.
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
@@ -163,29 +193,45 @@ internal static class Validation
 
         try
         {
-            // Create a mock HTTP client
-            using var mockClient = CreateMockHttpClient();
-            using var client = new SonarQubeClient(mockClient, false);
+            using var tempDir = new TemporaryDirectory();
+            var logFile = Path.Combine(tempDir.DirectoryPath, "issues-test.log");
 
-            // Fetch quality results with mock data
-            var result = client.GetQualityResultByBranchAsync(
-                MockServerUrl,
-                MockProjectKey,
-                null).GetAwaiter().GetResult();
-
-            // Verify the results
-            if (result.Issues.Count == 2 &&
-                result.Issues[0].Rule == "csharpsquid:S1234" &&
-                result.Issues[1].Severity == "MINOR")
+            // Run the program to fetch issues
+            int exitCode;
+            using (var testContext = Context.Create([
+                "--silent",
+                "--log", logFile,
+                "--server", MockServerUrl,
+                "--project-key", MockProjectKey
+            ]))
             {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                context.WriteLine("✓ Issues Retrieval Test - PASSED");
+                Program.Run(testContext);
+                exitCode = testContext.ExitCode;
+            }
+
+            // Check if execution succeeded
+            if (exitCode == 0)
+            {
+                // Verify log contains expected output
+                var logContent = File.ReadAllText(logFile);
+
+                if (logContent.Contains("Issues: 2"))
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
+                    context.WriteLine("✓ Issues Retrieval Test - PASSED");
+                }
+                else
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
+                    test.ErrorMessage = "Expected issues count not found in log";
+                    context.WriteError("✗ Issues Retrieval Test - FAILED: Expected issues count not found");
+                }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = "Issues count or content mismatch";
-                context.WriteError("✗ Issues Retrieval Test - FAILED: Issues count or content mismatch");
+                test.ErrorMessage = $"Program exited with code {exitCode}";
+                context.WriteError($"✗ Issues Retrieval Test - FAILED: Exit code {exitCode}");
             }
         }
         catch (Exception ex)
@@ -197,7 +243,7 @@ internal static class Validation
     }
 
     /// <summary>
-    ///     Runs a test for security hot-spots retrieval.
+    ///     Runs a test for security hot-spots retrieval functionality.
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
@@ -208,29 +254,45 @@ internal static class Validation
 
         try
         {
-            // Create a mock HTTP client
-            using var mockClient = CreateMockHttpClient();
-            using var client = new SonarQubeClient(mockClient, false);
+            using var tempDir = new TemporaryDirectory();
+            var logFile = Path.Combine(tempDir.DirectoryPath, "hotspots-test.log");
 
-            // Fetch quality results with mock data
-            var result = client.GetQualityResultByBranchAsync(
-                MockServerUrl,
-                MockProjectKey,
-                null).GetAwaiter().GetResult();
-
-            // Verify the results
-            if (result.HotSpots.Count == 1 &&
-                result.HotSpots[0].SecurityCategory == "sql-injection" &&
-                result.HotSpots[0].VulnerabilityProbability == "HIGH")
+            // Run the program to fetch hot-spots
+            int exitCode;
+            using (var testContext = Context.Create([
+                "--silent",
+                "--log", logFile,
+                "--server", MockServerUrl,
+                "--project-key", MockProjectKey
+            ]))
             {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                context.WriteLine("✓ Hot-Spots Retrieval Test - PASSED");
+                Program.Run(testContext);
+                exitCode = testContext.ExitCode;
+            }
+
+            // Check if execution succeeded
+            if (exitCode == 0)
+            {
+                // Verify log contains expected output
+                var logContent = File.ReadAllText(logFile);
+
+                if (logContent.Contains("Hot-Spots: 1"))
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
+                    context.WriteLine("✓ Hot-Spots Retrieval Test - PASSED");
+                }
+                else
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
+                    test.ErrorMessage = "Expected hot-spots count not found in log";
+                    context.WriteError("✗ Hot-Spots Retrieval Test - FAILED: Expected hot-spots count not found");
+                }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = "Hot-spots count or content mismatch";
-                context.WriteError("✗ Hot-Spots Retrieval Test - FAILED: Hot-spots count or content mismatch");
+                test.ErrorMessage = $"Program exited with code {exitCode}";
+                context.WriteError($"✗ Hot-Spots Retrieval Test - FAILED: Exit code {exitCode}");
             }
         }
         catch (Exception ex)
@@ -242,7 +304,7 @@ internal static class Validation
     }
 
     /// <summary>
-    ///     Runs a test for markdown report generation.
+    ///     Runs a test for markdown report generation functionality.
     /// </summary>
     /// <param name="context">The context for output.</param>
     /// <param name="testResults">The test results collection.</param>
@@ -253,35 +315,52 @@ internal static class Validation
 
         try
         {
-            // Create a mock HTTP client
-            using var mockClient = CreateMockHttpClient();
-            using var client = new SonarQubeClient(mockClient, false);
+            using var tempDir = new TemporaryDirectory();
+            var logFile = Path.Combine(tempDir.DirectoryPath, "report-test.log");
+            var reportFile = Path.Combine(tempDir.DirectoryPath, "quality-report.md");
 
-            // Fetch quality results with mock data
-            var result = client.GetQualityResultByBranchAsync(
-                MockServerUrl,
-                MockProjectKey,
-                null).GetAwaiter().GetResult();
-
-            // Generate markdown report
-            var markdown = result.ToMarkdown(1);
-
-            // Verify the report contains expected content
-            var hasMockProject = markdown.Contains("Mock SonarMark Project");
-            var hasQualityGate = markdown.Contains("**Quality Gate Status:** ERROR");
-            var hasIssues = markdown.Contains("Found 2 issues");
-            var hasHotSpots = markdown.Contains("Found 1 security hot-spot");
-
-            if (hasMockProject && hasQualityGate && hasIssues && hasHotSpots)
+            // Run the program to generate markdown report
+            int exitCode;
+            using (var testContext = Context.Create([
+                "--silent",
+                "--log", logFile,
+                "--server", MockServerUrl,
+                "--project-key", MockProjectKey,
+                "--report", reportFile
+            ]))
             {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                context.WriteLine("✓ Markdown Report Generation Test - PASSED");
+                Program.Run(testContext);
+                exitCode = testContext.ExitCode;
+            }
+
+            // Check if execution succeeded and report file was created
+            if (exitCode == 0 && File.Exists(reportFile))
+            {
+                // Verify report contains expected content
+                var reportContent = File.ReadAllText(reportFile);
+
+                if (reportContent.Contains("Mock SonarMark Project") &&
+                    reportContent.Contains("**Quality Gate Status:** ERROR") &&
+                    reportContent.Contains("Found 2 issues") &&
+                    reportContent.Contains("Found 1 security hot-spot"))
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
+                    context.WriteLine("✓ Markdown Report Generation Test - PASSED");
+                }
+                else
+                {
+                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
+                    test.ErrorMessage = "Report file missing expected content";
+                    context.WriteError("✗ Markdown Report Generation Test - FAILED: Report file missing expected content");
+                }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = "Markdown report missing expected content";
-                context.WriteError("✗ Markdown Report Generation Test - FAILED: Markdown report missing expected content");
+                test.ErrorMessage = exitCode != 0
+                    ? $"Program exited with code {exitCode}"
+                    : "Report file not created";
+                context.WriteError($"✗ Markdown Report Generation Test - FAILED: {test.ErrorMessage}");
             }
         }
         catch (Exception ex)
@@ -536,6 +615,37 @@ internal static class Validation
 
             // Default response for unknown URLs
             return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        }
+    }
+
+    /// <summary>
+    ///     Represents a temporary directory that is automatically deleted when disposed.
+    /// </summary>
+    private sealed class TemporaryDirectory : IDisposable
+    {
+        /// <summary>
+        ///     Gets the path to the temporary directory.
+        /// </summary>
+        public string DirectoryPath { get; }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="TemporaryDirectory"/> class.
+        /// </summary>
+        public TemporaryDirectory()
+        {
+            DirectoryPath = Path.Combine(Path.GetTempPath(), $"sonarmark_validation_{Guid.NewGuid()}");
+            Directory.CreateDirectory(DirectoryPath);
+        }
+
+        /// <summary>
+        ///     Deletes the temporary directory and all its contents.
+        /// </summary>
+        public void Dispose()
+        {
+            if (Directory.Exists(DirectoryPath))
+            {
+                Directory.Delete(DirectoryPath, true);
+            }
         }
     }
 }
