@@ -110,164 +110,181 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args)
     {
-        // Initialize flag variables
-        var version = false;
-        var help = false;
-        var silent = false;
-        var validate = false;
-        var enforce = false;
+        var parser = new ArgumentParser();
+        parser.ParseArguments(args);
 
-        // Initialize optional parameters
-        string? reportFile = null;
-        var reportDepth = 1;
-        string? token = null;
-        string? server = null;
-        string? projectKey = null;
-        string? branch = null;
-        string? logFile = null;
-
-        // Parse command-line arguments
-        int i = 0;
-        while (i < args.Length)
+        var result = new Context
         {
-            // Get current argument and advance index
-            var arg = args[i++];
+            Version = parser.Version,
+            Help = parser.Help,
+            Silent = parser.Silent,
+            Validate = parser.Validate,
+            Enforce = parser.Enforce,
+            ReportFile = parser.ReportFile,
+            ReportDepth = parser.ReportDepth,
+            Token = parser.Token,
+            Server = parser.Server,
+            ProjectKey = parser.ProjectKey,
+            Branch = parser.Branch
+        };
 
+        // Open log file if specified
+        if (parser.LogFile != null)
+        {
+            result.OpenLogFile(parser.LogFile);
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    ///     Opens the log file for writing
+    /// </summary>
+    /// <param name="logFile">Log file path</param>
+    private void OpenLogFile(string logFile)
+    {
+        try
+        {
+            _logWriter = new StreamWriter(logFile, append: false);
+        }
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException($"Failed to open log file '{logFile}': {ex.Message}", ex);
+        }
+    }
+
+    /// <summary>
+    ///     Helper class for parsing command-line arguments
+    /// </summary>
+    private sealed class ArgumentParser
+    {
+        public bool Version { get; private set; }
+        public bool Help { get; private set; }
+        public bool Silent { get; private set; }
+        public bool Validate { get; private set; }
+        public bool Enforce { get; private set; }
+        public string? ReportFile { get; private set; }
+        public int ReportDepth { get; private set; } = 1;
+        public string? Token { get; private set; }
+        public string? Server { get; private set; }
+        public string? ProjectKey { get; private set; }
+        public string? Branch { get; private set; }
+        public string? LogFile { get; private set; }
+
+        /// <summary>
+        ///     Parses command-line arguments
+        /// </summary>
+        public void ParseArguments(string[] args)
+        {
+            int i = 0;
+            while (i < args.Length)
+            {
+                var arg = args[i++];
+                i = ParseArgument(arg, args, i);
+            }
+        }
+
+        /// <summary>
+        ///     Parses a single argument
+        /// </summary>
+        /// <param name="arg">Argument to parse</param>
+        /// <param name="args">All arguments</param>
+        /// <param name="index">Current index</param>
+        /// <returns>Updated index</returns>
+        private int ParseArgument(string arg, string[] args, int index)
+        {
             switch (arg)
             {
                 case "-v":
                 case "--version":
-                    version = true;
-                    break;
+                    Version = true;
+                    return index;
 
                 case "-?":
                 case "-h":
                 case "--help":
-                    help = true;
-                    break;
+                    Help = true;
+                    return index;
 
                 case "--silent":
-                    silent = true;
-                    break;
+                    Silent = true;
+                    return index;
 
                 case "--validate":
-                    validate = true;
-                    break;
+                    Validate = true;
+                    return index;
 
                 case "--enforce":
-                    enforce = true;
-                    break;
+                    Enforce = true;
+                    return index;
 
                 case "--log":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a filename argument", nameof(args));
-                    }
-
-                    logFile = args[i++];
-                    break;
+                    LogFile = GetRequiredStringArgument(arg, args, index, "a filename argument");
+                    return index + 1;
 
                 case "--report":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a filename argument", nameof(args));
-                    }
-
-                    reportFile = args[i++];
-                    break;
+                    ReportFile = GetRequiredStringArgument(arg, args, index, "a filename argument");
+                    return index + 1;
 
                 case "--report-depth":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a depth argument", nameof(args));
-                    }
-
-                    // Parse and validate depth value
-                    if (!int.TryParse(args[i++], out reportDepth) || reportDepth < 1)
-                    {
-                        throw new ArgumentException($"{arg} requires a positive integer", nameof(args));
-                    }
-
-                    break;
+                    ReportDepth = GetRequiredIntArgument(arg, args, index);
+                    return index + 1;
 
                 case "--token":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a token argument", nameof(args));
-                    }
-
-                    token = args[i++];
-                    break;
+                    Token = GetRequiredStringArgument(arg, args, index, "a token argument");
+                    return index + 1;
 
                 case "--server":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a server URL argument", nameof(args));
-                    }
-
-                    server = args[i++];
-                    break;
+                    Server = GetRequiredStringArgument(arg, args, index, "a server URL argument");
+                    return index + 1;
 
                 case "--project-key":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a project key argument", nameof(args));
-                    }
-
-                    projectKey = args[i++];
-                    break;
+                    ProjectKey = GetRequiredStringArgument(arg, args, index, "a project key argument");
+                    return index + 1;
 
                 case "--branch":
-                    // Ensure argument has a value
-                    if (i >= args.Length)
-                    {
-                        throw new ArgumentException($"{arg} requires a branch name argument", nameof(args));
-                    }
-
-                    branch = args[i++];
-                    break;
+                    Branch = GetRequiredStringArgument(arg, args, index, "a branch name argument");
+                    return index + 1;
 
                 default:
                     throw new ArgumentException($"Unsupported argument '{arg}'", nameof(args));
             }
         }
 
-        // Create the context with parsed values
-        var result = new Context
+        /// <summary>
+        ///     Gets a required string argument value
+        /// </summary>
+        /// <param name="arg">Argument name</param>
+        /// <param name="args">All arguments</param>
+        /// <param name="index">Current index</param>
+        /// <param name="description">Description of what's required</param>
+        private static string GetRequiredStringArgument(string arg, string[] args, int index, string description)
         {
-            Version = version,
-            Help = help,
-            Silent = silent,
-            Validate = validate,
-            Enforce = enforce,
-            ReportFile = reportFile,
-            ReportDepth = reportDepth,
-            Token = token,
-            Server = server,
-            ProjectKey = projectKey,
-            Branch = branch
-        };
+            if (index >= args.Length)
+            {
+                throw new ArgumentException($"{arg} requires {description}", nameof(args));
+            }
 
-        // Open log file if specified
-        if (logFile != null)
-        {
-            try
-            {
-                result._logWriter = new StreamWriter(logFile, append: false);
-            }
-            catch (Exception ex)
-            {
-                throw new ArgumentException($"Failed to open log file '{logFile}': {ex.Message}", nameof(args), ex);
-            }
+            return args[index];
         }
 
-        return result;
+        /// <summary>
+        ///     Gets a required positive integer argument value
+        /// </summary>
+        private static int GetRequiredIntArgument(string arg, string[] args, int index)
+        {
+            if (index >= args.Length)
+            {
+                throw new ArgumentException($"{arg} requires a depth argument", nameof(args));
+            }
+
+            if (!int.TryParse(args[index], out var value) || value < 1)
+            {
+                throw new ArgumentException($"{arg} requires a positive integer", nameof(args));
+            }
+
+            return value;
+        }
     }
 
     /// <summary>

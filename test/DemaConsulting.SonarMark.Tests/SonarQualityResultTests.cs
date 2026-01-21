@@ -33,10 +33,7 @@ public class SonarQualityResultTests
     public void SonarQualityResult_Constructor_AllProperties_CreatesInstance()
     {
         // Arrange & Act - create quality result with primary constructor
-        var conditions = new List<SonarQualityCondition>
-        {
-            new("new_coverage", "LT", "80", "75.5", "ERROR")
-        };
+        IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", "80", "75.5", "ERROR")];
 
         var metricNames = new Dictionary<string, string>
         {
@@ -50,9 +47,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
-
+            [],
+            []);
         // Assert - verify all properties are set correctly
         Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
         Assert.AreEqual("test_project", result.ProjectKey);
@@ -69,11 +65,11 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
+        IReadOnlyList<SonarQualityCondition> conditions =
+        [
             new("new_coverage", "LT", "80", "75.5", "ERROR"),
             new("new_bugs", "GT", "0", "2", "ERROR")
-        };
+        ];
 
         var metricNames = new Dictionary<string, string>
         {
@@ -88,8 +84,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -116,10 +112,7 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_Depth3_UsesCorrectHeadingLevels()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
-            new("new_coverage", "LT", "80", "75.5", "ERROR")
-        };
+        IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", "80", "75.5", "ERROR")];
 
         var metricNames = new Dictionary<string, string>();
 
@@ -130,8 +123,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(3);
@@ -155,10 +148,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -180,10 +173,7 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_NullThresholdAndActual_ExcludesNullValues()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
-            new("new_coverage", "LT", null, null, "OK")
-        };
+        IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", null, null, "OK")];
 
         var metricNames = new Dictionary<string, string>();
 
@@ -194,8 +184,8 @@ public class SonarQualityResultTests
             "OK",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -219,10 +209,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act & Assert
         try
@@ -251,10 +241,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act & Assert
         try
@@ -276,10 +266,7 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_Depth6_ProducesCorrectOutput()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
-            new("new_coverage", "LT", "80", "75.5", "ERROR")
-        };
+        IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", "80", "75.5", "ERROR")];
 
         var metricNames = new Dictionary<string, string>();
 
@@ -290,8 +277,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(6);
@@ -308,10 +295,7 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
-            new("new_coverage", "LT", "80", "78.5", "WARN")
-        };
+        IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", "80", "78.5", "WARN")];
 
         var metricNames = new Dictionary<string, string>();
 
@@ -322,8 +306,8 @@ public class SonarQualityResultTests
             "WARN",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -341,11 +325,11 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames()
     {
         // Arrange
-        var conditions = new List<SonarQualityCondition>
-        {
+        IReadOnlyList<SonarQualityCondition> conditions =
+        [
             new("new_coverage", "LT", "80", "75.5", "ERROR"),
             new("unknown_metric", "GT", "0", "5", "ERROR")
-        };
+        ];
 
         var metricNames = new Dictionary<string, string>
         {
@@ -360,8 +344,8 @@ public class SonarQualityResultTests
             "ERROR",
             conditions,
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -378,11 +362,11 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput()
     {
         // Arrange
-        var issues = new List<SonarIssue>
-        {
+        IReadOnlyList<SonarIssue> issues =
+        [
             new("key1", "csharpsquid:S1234", "MAJOR", "test_project:src/File.cs", 42, "Issue message", "BUG"),
             new("key2", "csharpsquid:S5678", "MINOR", "test_project:src/Another.cs", null, "Another issue", "CODE_SMELL")
-        };
+        ];
 
         var result = new SonarQualityResult(
             "https://sonarcloud.io",
@@ -413,11 +397,11 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput()
     {
         // Arrange
-        var hotSpots = new List<SonarHotSpot>
-        {
+        IReadOnlyList<SonarHotSpot> hotSpots =
+        [
             new("key1", "test_project:src/Secure.cs", 10, "Security issue", "sql-injection", "HIGH"),
             new("key2", "test_project:src/Auth.cs", null, "Auth issue", "weak-cryptography", "MEDIUM")
-        };
+        ];
 
         var result = new SonarQualityResult(
             "https://sonarcloud.io",
@@ -448,15 +432,15 @@ public class SonarQualityResultTests
     public void SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText()
     {
         // Arrange
-        var issues = new List<SonarIssue>
-        {
+        IReadOnlyList<SonarIssue> issues =
+        [
             new("key1", "csharpsquid:S1234", "MAJOR", "test_project:src/File.cs", 42, "Issue message", "BUG")
-        };
+        ];
 
-        var hotSpots = new List<SonarHotSpot>
-        {
+        IReadOnlyList<SonarHotSpot> hotSpots =
+        [
             new("hs1", "test_project:src/Secure.cs", 10, "Security issue", "sql-injection", "HIGH")
-        };
+        ];
 
         var result = new SonarQualityResult(
             "https://sonarcloud.io",

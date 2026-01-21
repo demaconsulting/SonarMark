@@ -191,42 +191,49 @@ internal sealed class SonarQubeClient : IDisposable
         var qualityGateStatus = statusElement.GetString() ?? "NONE";
 
         // Parse conditions
-        var conditions = new List<SonarQualityCondition>();
-        if (projectStatus.TryGetProperty("conditions", out var conditionsElement) &&
-            conditionsElement.ValueKind == JsonValueKind.Array)
-        {
-            foreach (var condition in conditionsElement.EnumerateArray())
-            {
-                var metric = condition.TryGetProperty("metricKey", out var metricElement)
-                    ? metricElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var comparator = condition.TryGetProperty("comparator", out var comparatorElement)
-                    ? comparatorElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var errorThreshold = condition.TryGetProperty("errorThreshold", out var errorThresholdElement)
-                    ? errorThresholdElement.GetString()
-                    : null;
-
-                var actualValue = condition.TryGetProperty("actualValue", out var actualValueElement)
-                    ? actualValueElement.GetString()
-                    : null;
-
-                var conditionStatus = condition.TryGetProperty("status", out var conditionStatusElement)
-                    ? conditionStatusElement.GetString() ?? "NONE"
-                    : "NONE";
-
-                conditions.Add(new SonarQualityCondition(
-                    metric,
-                    comparator,
-                    errorThreshold,
-                    actualValue,
-                    conditionStatus));
-            }
-        }
+        var conditions = ParseQualityGateConditions(projectStatus);
 
         return (qualityGateStatus, conditions);
+    }
+
+    /// <summary>
+    ///     Parses quality gate conditions from a JSON element
+    /// </summary>
+    /// <param name="projectStatus">Project status JSON element</param>
+    /// <returns>List of quality gate conditions</returns>
+    private static List<SonarQualityCondition> ParseQualityGateConditions(JsonElement projectStatus)
+    {
+        var conditions = new List<SonarQualityCondition>();
+
+        if (!projectStatus.TryGetProperty("conditions", out var conditionsElement) ||
+            conditionsElement.ValueKind != JsonValueKind.Array)
+        {
+            return conditions;
+        }
+
+        foreach (var condition in conditionsElement.EnumerateArray())
+        {
+            var parsedCondition = ParseQualityGateCondition(condition);
+            conditions.Add(parsedCondition);
+        }
+
+        return conditions;
+    }
+
+    /// <summary>
+    ///     Parses a single quality gate condition from a JSON element
+    /// </summary>
+    /// <param name="condition">Condition JSON element</param>
+    /// <returns>Parsed quality gate condition</returns>
+    private static SonarQualityCondition ParseQualityGateCondition(JsonElement condition)
+    {
+        var metric = GetStringProperty(condition, "metricKey", string.Empty);
+        var comparator = GetStringProperty(condition, "comparator", string.Empty);
+        var errorThreshold = GetNullableStringProperty(condition, "errorThreshold");
+        var actualValue = GetNullableStringProperty(condition, "actualValue");
+        var conditionStatus = GetStringProperty(condition, "status", "NONE");
+
+        return new SonarQualityCondition(metric, comparator, errorThreshold, actualValue, conditionStatus);
     }
 
     /// <summary>
@@ -267,46 +274,48 @@ internal sealed class SonarQubeClient : IDisposable
             throw new InvalidOperationException("Invalid issues response: missing 'issues' property");
         }
 
+        return ParseIssues(issuesElement);
+    }
+
+    /// <summary>
+    ///     Parses issues from a JSON array element
+    /// </summary>
+    /// <param name="issuesElement">Issues JSON array element</param>
+    /// <returns>List of parsed issues</returns>
+    private static List<SonarIssue> ParseIssues(JsonElement issuesElement)
+    {
         var issues = new List<SonarIssue>();
-        if (issuesElement.ValueKind == JsonValueKind.Array)
+
+        if (issuesElement.ValueKind != JsonValueKind.Array)
         {
-            foreach (var issue in issuesElement.EnumerateArray())
-            {
-                var key = issue.TryGetProperty("key", out var keyElement)
-                    ? keyElement.GetString() ?? string.Empty
-                    : string.Empty;
+            return issues;
+        }
 
-                var rule = issue.TryGetProperty("rule", out var ruleElement)
-                    ? ruleElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var severity = issue.TryGetProperty("severity", out var severityElement)
-                    ? severityElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var component = issue.TryGetProperty("component", out var componentElement)
-                    ? componentElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                int? line = null;
-                if (issue.TryGetProperty("line", out var lineElement) && lineElement.ValueKind == JsonValueKind.Number)
-                {
-                    line = lineElement.GetInt32();
-                }
-
-                var message = issue.TryGetProperty("message", out var messageElement)
-                    ? messageElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var type = issue.TryGetProperty("type", out var typeElement)
-                    ? typeElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                issues.Add(new SonarIssue(key, rule, severity, component, line, message, type));
-            }
+        foreach (var issue in issuesElement.EnumerateArray())
+        {
+            var parsedIssue = ParseIssue(issue);
+            issues.Add(parsedIssue);
         }
 
         return issues;
+    }
+
+    /// <summary>
+    ///     Parses a single issue from a JSON element
+    /// </summary>
+    /// <param name="issue">Issue JSON element</param>
+    /// <returns>Parsed issue</returns>
+    private static SonarIssue ParseIssue(JsonElement issue)
+    {
+        var key = GetStringProperty(issue, "key", string.Empty);
+        var rule = GetStringProperty(issue, "rule", string.Empty);
+        var severity = GetStringProperty(issue, "severity", string.Empty);
+        var component = GetStringProperty(issue, "component", string.Empty);
+        var line = GetIntProperty(issue, "line");
+        var message = GetStringProperty(issue, "message", string.Empty);
+        var type = GetStringProperty(issue, "type", string.Empty);
+
+        return new SonarIssue(key, rule, severity, component, line, message, type);
     }
 
     /// <summary>
@@ -346,45 +355,47 @@ internal sealed class SonarQubeClient : IDisposable
             throw new InvalidOperationException("Invalid hot-spots response: missing 'hotspots' property");
         }
 
+        return ParseHotSpots(hotSpotsElement);
+    }
+
+    /// <summary>
+    ///     Parses hot-spots from a JSON array element
+    /// </summary>
+    /// <param name="hotSpotsElement">Hot-spots JSON array element</param>
+    /// <returns>List of parsed hot-spots</returns>
+    private static List<SonarHotSpot> ParseHotSpots(JsonElement hotSpotsElement)
+    {
         var hotSpots = new List<SonarHotSpot>();
-        if (hotSpotsElement.ValueKind == JsonValueKind.Array)
+
+        if (hotSpotsElement.ValueKind != JsonValueKind.Array)
         {
-            foreach (var hotSpot in hotSpotsElement.EnumerateArray())
-            {
-                var key = hotSpot.TryGetProperty("key", out var keyElement)
-                    ? keyElement.GetString() ?? string.Empty
-                    : string.Empty;
+            return hotSpots;
+        }
 
-                var component = hotSpot.TryGetProperty("component", out var componentElement)
-                    ? componentElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                int? line = null;
-                if (hotSpot.TryGetProperty("line", out var lineElement) &&
-                    lineElement.ValueKind == JsonValueKind.Number)
-                {
-                    line = lineElement.GetInt32();
-                }
-
-                var message = hotSpot.TryGetProperty("message", out var messageElement)
-                    ? messageElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var securityCategory = hotSpot.TryGetProperty("securityCategory", out var securityCategoryElement)
-                    ? securityCategoryElement.GetString() ?? string.Empty
-                    : string.Empty;
-
-                var vulnerabilityProbability =
-                    hotSpot.TryGetProperty("vulnerabilityProbability", out var vulnerabilityProbabilityElement)
-                        ? vulnerabilityProbabilityElement.GetString() ?? string.Empty
-                        : string.Empty;
-
-                hotSpots.Add(new SonarHotSpot(key, component, line, message, securityCategory,
-                    vulnerabilityProbability));
-            }
+        foreach (var hotSpot in hotSpotsElement.EnumerateArray())
+        {
+            var parsedHotSpot = ParseHotSpot(hotSpot);
+            hotSpots.Add(parsedHotSpot);
         }
 
         return hotSpots;
+    }
+
+    /// <summary>
+    ///     Parses a single hot-spot from a JSON element
+    /// </summary>
+    /// <param name="hotSpot">Hot-spot JSON element</param>
+    /// <returns>Parsed hot-spot</returns>
+    private static SonarHotSpot ParseHotSpot(JsonElement hotSpot)
+    {
+        var key = GetStringProperty(hotSpot, "key", string.Empty);
+        var component = GetStringProperty(hotSpot, "component", string.Empty);
+        var line = GetIntProperty(hotSpot, "line");
+        var message = GetStringProperty(hotSpot, "message", string.Empty);
+        var securityCategory = GetStringProperty(hotSpot, "securityCategory", string.Empty);
+        var vulnerabilityProbability = GetStringProperty(hotSpot, "vulnerabilityProbability", string.Empty);
+
+        return new SonarHotSpot(key, component, line, message, securityCategory, vulnerabilityProbability);
     }
 
     /// <summary>
@@ -432,6 +443,48 @@ internal sealed class SonarQubeClient : IDisposable
         }
 
         return metricNames;
+    }
+
+    /// <summary>
+    ///     Gets a string property from a JSON element with a default value
+    /// </summary>
+    /// <param name="element">JSON element</param>
+    /// <param name="propertyName">Property name</param>
+    /// <param name="defaultValue">Default value if property is missing</param>
+    /// <returns>Property value or default</returns>
+    private static string GetStringProperty(JsonElement element, string propertyName, string defaultValue)
+    {
+        return element.TryGetProperty(propertyName, out var property)
+            ? property.GetString() ?? defaultValue
+            : defaultValue;
+    }
+
+    /// <summary>
+    ///     Gets a nullable string property from a JSON element
+    /// </summary>
+    /// <param name="element">JSON element</param>
+    /// <param name="propertyName">Property name</param>
+    /// <returns>Property value or null</returns>
+    private static string? GetNullableStringProperty(JsonElement element, string propertyName)
+    {
+        return element.TryGetProperty(propertyName, out var property) ? property.GetString() : null;
+    }
+
+    /// <summary>
+    ///     Gets an integer property from a JSON element
+    /// </summary>
+    /// <param name="element">JSON element</param>
+    /// <param name="propertyName">Property name</param>
+    /// <returns>Property value or null if missing or not a number</returns>
+    private static int? GetIntProperty(JsonElement element, string propertyName)
+    {
+        if (element.TryGetProperty(propertyName, out var property) &&
+            property.ValueKind == JsonValueKind.Number)
+        {
+            return property.GetInt32();
+        }
+
+        return null;
     }
 
     /// <summary>

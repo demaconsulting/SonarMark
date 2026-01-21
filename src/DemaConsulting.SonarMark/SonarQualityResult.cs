@@ -59,6 +59,19 @@ internal sealed record SonarQualityResult(
         var subHeading = new string('#', subHeadingDepth);
         var sb = new System.Text.StringBuilder();
 
+        AppendHeader(sb, heading);
+        AppendConditionsSection(sb, subHeading);
+        AppendIssuesSection(sb, subHeading);
+        AppendHotSpotsSection(sb, subHeading);
+
+        return sb.ToString();
+    }
+
+    /// <summary>
+    ///     Appends the header section with project name, dashboard link, and quality gate status
+    /// </summary>
+    private void AppendHeader(System.Text.StringBuilder sb, string heading)
+    {
         // Add project name as main heading
         sb.AppendLine($"{heading} {ProjectName} Sonar Analysis");
         sb.AppendLine();
@@ -71,57 +84,60 @@ internal sealed record SonarQualityResult(
         // Add quality gate status as text content
         sb.AppendLine($"**Quality Gate Status:** {QualityGateStatus}");
         sb.AppendLine();
+    }
 
-        // Add conditions section if there are any
-        if (Conditions.Count > 0)
+    /// <summary>
+    ///     Appends the conditions section if there are any conditions
+    /// </summary>
+    private void AppendConditionsSection(System.Text.StringBuilder sb, string subHeading)
+    {
+        if (Conditions.Count == 0)
         {
-            sb.AppendLine($"{subHeading} Conditions");
-            sb.AppendLine();
-
-            // Add table header with alignment and appropriate column widths
-            // Metric: wide (30) for variable-length names like "new_duplicated_lines_density"
-            // Status: short (5) for fixed values "OK", "WARN", "ERROR"
-            // Comparator: minimal (2) for fixed 2-char values "LT", "GT", etc.
-            // Threshold/Actual: medium (8) for numeric values including decimals
-            sb.AppendLine("| Metric | Status | Comparator | Threshold | Actual |");
-            sb.AppendLine("|:-------------------------------|:-----:|:--:|--------:|-------:|");
-
-            // Add table rows
-            foreach (var condition in Conditions)
-            {
-                // Use friendly name if available, otherwise fall back to metric key
-                var metricName = MetricNames.TryGetValue(condition.Metric, out var friendlyName)
-                    ? friendlyName
-                    : condition.Metric;
-
-                sb.Append($"| {metricName} ");
-                sb.Append($"| {condition.Status} ");
-                sb.Append($"| {condition.Comparator} ");
-                sb.Append($"| {condition.ErrorThreshold ?? ""} ");
-                sb.AppendLine($"| {condition.ActualValue ?? ""} |");
-            }
-
-            sb.AppendLine();
+            return;
         }
 
-        // Add issues section (always present)
+        sb.AppendLine($"{subHeading} Conditions");
+        sb.AppendLine();
+
+        // Add table header with alignment and appropriate column widths
+        sb.AppendLine("| Metric | Status | Comparator | Threshold | Actual |");
+        sb.AppendLine("|:-------------------------------|:-----:|:--:|--------:|-------:|");
+
+        // Add table rows
+        foreach (var condition in Conditions)
+        {
+            AppendConditionRow(sb, condition);
+        }
+
+        sb.AppendLine();
+    }
+
+    /// <summary>
+    ///     Appends a single condition row to the table
+    /// </summary>
+    private void AppendConditionRow(System.Text.StringBuilder sb, SonarQualityCondition condition)
+    {
+        // Use friendly name if available, otherwise fall back to metric key
+        var metricName = MetricNames.TryGetValue(condition.Metric, out var friendlyName)
+            ? friendlyName
+            : condition.Metric;
+
+        sb.Append($"| {metricName} ");
+        sb.Append($"| {condition.Status} ");
+        sb.Append($"| {condition.Comparator} ");
+        sb.Append($"| {condition.ErrorThreshold ?? ""} ");
+        sb.AppendLine($"| {condition.ActualValue ?? ""} |");
+    }
+
+    /// <summary>
+    ///     Appends the issues section with count and details
+    /// </summary>
+    private void AppendIssuesSection(System.Text.StringBuilder sb, string subHeading)
+    {
         sb.AppendLine($"{subHeading} Issues");
         sb.AppendLine();
-        string issuesText;
-        if (Issues.Count == 0)
-        {
-            issuesText = "no issues";
-        }
-        else if (Issues.Count == 1)
-        {
-            issuesText = "1 issue";
-        }
-        else
-        {
-            issuesText = $"{Issues.Count} issues";
-        }
 
-        sb.AppendLine($"Found {issuesText}");
+        sb.AppendLine(FormatFoundText(Issues.Count, "issue"));
         sb.AppendLine();
 
         if (Issues.Count > 0)
@@ -135,25 +151,17 @@ internal sealed record SonarQualityResult(
 
             sb.AppendLine();
         }
+    }
 
-        // Add hot-spots section (always present)
+    /// <summary>
+    ///     Appends the security hot-spots section with count and details
+    /// </summary>
+    private void AppendHotSpotsSection(System.Text.StringBuilder sb, string subHeading)
+    {
         sb.AppendLine($"{subHeading} Security Hot-Spots");
         sb.AppendLine();
-        string hotSpotsText;
-        if (HotSpots.Count == 0)
-        {
-            hotSpotsText = "no security hot-spots";
-        }
-        else if (HotSpots.Count == 1)
-        {
-            hotSpotsText = "1 security hot-spot";
-        }
-        else
-        {
-            hotSpotsText = $"{HotSpots.Count} security hot-spots";
-        }
 
-        sb.AppendLine($"Found {hotSpotsText}");
+        sb.AppendLine(FormatFoundText(HotSpots.Count, "security hot-spot"));
         sb.AppendLine();
 
         if (HotSpots.Count > 0)
@@ -168,8 +176,22 @@ internal sealed record SonarQualityResult(
 
             sb.AppendLine();
         }
+    }
 
-        return sb.ToString();
+    /// <summary>
+    ///     Formats a count with proper pluralization and "Found" prefix
+    /// </summary>
+    /// <param name="count">The count value</param>
+    /// <param name="singularNoun">The singular form of the noun</param>
+    /// <returns>Formatted text like "Found no issues", "Found 1 issue", or "Found 5 issues"</returns>
+    private static string FormatFoundText(int count, string singularNoun)
+    {
+        return count switch
+        {
+            0 => $"Found no {singularNoun}s",
+            1 => $"Found 1 {singularNoun}",
+            _ => $"Found {count} {singularNoun}s"
+        };
     }
 
     /// <summary>
