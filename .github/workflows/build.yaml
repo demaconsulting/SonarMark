@@ -227,3 +227,17 @@ jobs:
           # Display report summary
           echo "Report summary:"
           cat "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md"
+
+      - name: Run SonarMark self-validation
+        shell: bash
+        run: |
+          echo "Running SonarMark self-validation..."
+          sonarmark --validate --results integration-test-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx \
+            || { echo "✗ Self-validation failed"; exit 1; }
+          echo "✓ Self-validation succeeded"
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v6
+        with:
+          name: integration-test-results-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
+          path: integration-test-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx
