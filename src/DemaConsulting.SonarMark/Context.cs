@@ -91,6 +91,11 @@ internal sealed class Context : IDisposable
     public string? Branch { get; private init; }
 
     /// <summary>
+    ///     Gets the validation results file path.
+    /// </summary>
+    public string? ResultsFile { get; private init; }
+
+    /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
     /// </summary>
     public int ExitCode => _hasErrors ? 1 : 0;
@@ -125,7 +130,8 @@ internal sealed class Context : IDisposable
             Token = parser.Token,
             Server = parser.Server,
             ProjectKey = parser.ProjectKey,
-            Branch = parser.Branch
+            Branch = parser.Branch,
+            ResultsFile = parser.ResultsFile
         };
 
         // Open log file if specified
@@ -170,6 +176,7 @@ internal sealed class Context : IDisposable
         public string? ProjectKey { get; private set; }
         public string? Branch { get; private set; }
         public string? LogFile { get; private set; }
+        public string? ResultsFile { get; private set; }
 
         /// <summary>
         ///     Parses command-line arguments
@@ -244,6 +251,10 @@ internal sealed class Context : IDisposable
 
                 case "--branch":
                     Branch = GetRequiredStringArgument(arg, args, index, "a branch name argument");
+                    return index + 1;
+
+                case "--results":
+                    ResultsFile = GetRequiredStringArgument(arg, args, index, "a results filename argument");
                     return index + 1;
 
                 default:
