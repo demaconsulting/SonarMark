@@ -389,10 +389,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             new Dictionary<string, string>(),
             issues,
-            new List<SonarHotSpot>());
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -424,9 +424,9 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             new Dictionary<string, string>(),
-            new List<SonarIssue>(),
+            [],
             hotSpots);
 
         // Act
@@ -463,7 +463,7 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             new Dictionary<string, string>(),
             issues,
             hotSpots);
