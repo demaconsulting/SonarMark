@@ -148,10 +148,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -209,10 +209,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act & Assert
         try
@@ -241,10 +241,10 @@ public class SonarQualityResultTests
             "test_project",
             "Test Project",
             "OK",
-            new List<SonarQualityCondition>(),
+            [],
             metricNames,
-            new List<SonarIssue>(),
-            new List<SonarHotSpot>());
+            [],
+            []);
 
         // Act & Assert
         try
@@ -280,7 +280,6 @@ public class SonarQualityResultTests
             [],
             []);
 
-
         // Act
         var markdown = result.ToMarkdown(6);
 
@@ -309,7 +308,6 @@ public class SonarQualityResultTests
             metricNames,
             [],
             []);
-
 
         // Act
         var markdown = result.ToMarkdown(1);
@@ -348,7 +346,6 @@ public class SonarQualityResultTests
             metricNames,
             [],
             []);
-
 
         // Act
         var markdown = result.ToMarkdown(1);
