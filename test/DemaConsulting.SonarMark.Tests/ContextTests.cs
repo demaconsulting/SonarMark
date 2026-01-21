@@ -500,4 +500,24 @@ public class ContextTests
         Assert.Contains("Normal message", logContent);
         Assert.Contains("Error message", logContent);
     }
+
+    /// <summary>
+    ///     Test that creating context with invalid log file path throws exception
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_InvalidLogFilePath_ThrowsException()
+    {
+        // Use an invalid path that will fail to create
+        var invalidPath = Path.Combine("/invalid/directory/that/does/not/exist", "test.log");
+
+        try
+        {
+            Context.Create(["--log", invalidPath]);
+            Assert.Fail("Expected InvalidOperationException was not thrown");
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.Contains("Failed to open log file", ex.Message);
+        }
+    }
 }
