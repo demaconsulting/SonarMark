@@ -261,10 +261,24 @@ jobs:
           pattern: '*test-results*'
         continue-on-error: true
 
+      - name: Download SonarMark package
+        uses: actions/download-artifact@v7
+        with:
+          name: artifacts-windows-latest
+          path: packages
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 10.x
+
+      - name: Install SonarMark from package
+        run: |
+          echo "Installing SonarMark version ${{ inputs.version }}"
+          dotnet tool install --global `
+            --add-source packages/src/DemaConsulting.SonarMark/bin/Release `
+            --version ${{ inputs.version }} `
+            DemaConsulting.SonarMark
 
       - name: Restore Tools
         run: dotnet tool restore
@@ -316,6 +330,31 @@ jobs:
           --pdf-variant pdf/a-3u
           docs/tracematrix/tracematrix.html
           "docs/SonarMark Trace Matrix.pdf"
+
+      - name: Generate Code Quality Report with SonarMark
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          sonarmark
+          --server https://sonarcloud.io
+          --project-key demaconsulting_SonarMark
+          --branch ${{ github.ref_name }}
+          --token "$env:SONAR_TOKEN"
+          --report docs/quality/sonar-quality.md
+          --report-depth 1
+
+      - name: Generate Code Quality HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/quality/definition.yaml
+          --output docs/quality/quality.html
+
+      - name: Generate Code Quality PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/quality/quality.html
+          "docs/SonarMark Code Quality.pdf"
 
       - name: Upload documentation
         uses: actions/upload-artifact@v6

@@ -31,3 +31,6 @@ docs/requirements/*.pdf
 docs/tracematrix/tracematrix.md
 docs/tracematrix/*.html
 docs/tracematrix/*.pdf
+docs/quality/sonar-quality.md
+docs/quality/*.html
+docs/quality/*.pdf
