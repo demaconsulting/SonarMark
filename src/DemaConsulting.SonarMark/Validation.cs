@@ -120,60 +120,19 @@ internal static class Validation
         DemaConsulting.TestResults.TestResults testResults,
         Func<string?, SonarQubeClient> mockFactory)
     {
-        var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("SonarMark_QualityGateRetrieval");
-
-        try
-        {
-            using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "quality-gate-test.log");
-
-            // Run the program to fetch quality gate status
-            int exitCode;
-            using (var testContext = Context.Create([
-                "--silent",
-                "--log", logFile,
-                "--server", MockServerUrl,
-                "--project-key", MockProjectKey
-            ], mockFactory))
-            {
-                Program.Run(testContext);
-                exitCode = testContext.ExitCode;
-            }
-
-            // Check if execution succeeded
-            if (exitCode == 0)
-            {
-                // Verify log contains expected output
-                var logContent = File.ReadAllText(logFile);
-
-                if (logContent.Contains("Quality Gate Status: ERROR") &&
-                    logContent.Contains("Issues: 2") &&
-                    logContent.Contains("Hot-Spots: 1"))
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                    context.WriteLine("✓ Quality Gate Retrieval Test - PASSED");
-                }
-                else
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                    test.ErrorMessage = "Expected output not found in log";
-                    context.WriteError("✗ Quality Gate Retrieval Test - FAILED: Expected output not found");
-                }
-            }
-            else
-            {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = $"Program exited with code {exitCode}";
-                context.WriteError($"✗ Quality Gate Retrieval Test - FAILED: Exit code {exitCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            HandleTestException(test, context, "Quality Gate Retrieval Test", ex);
-        }
-
-        FinalizeTestResult(test, startTime, testResults);
+        RunValidationTest(
+            context,
+            testResults,
+            mockFactory,
+            "SonarMark_QualityGateRetrieval",
+            "Quality Gate Retrieval Test",
+            null,
+            (logContent, _) =>
+                logContent.Contains("Quality Gate Status: ERROR") &&
+                logContent.Contains("Issues: 2") &&
+                logContent.Contains("Hot-Spots: 1")
+                    ? null
+                    : "Expected output not found in log");
     }
 
     /// <summary>
@@ -187,58 +146,17 @@ internal static class Validation
         DemaConsulting.TestResults.TestResults testResults,
         Func<string?, SonarQubeClient> mockFactory)
     {
-        var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("SonarMark_IssuesRetrieval");
-
-        try
-        {
-            using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "issues-test.log");
-
-            // Run the program to fetch issues
-            int exitCode;
-            using (var testContext = Context.Create([
-                "--silent",
-                "--log", logFile,
-                "--server", MockServerUrl,
-                "--project-key", MockProjectKey
-            ], mockFactory))
-            {
-                Program.Run(testContext);
-                exitCode = testContext.ExitCode;
-            }
-
-            // Check if execution succeeded
-            if (exitCode == 0)
-            {
-                // Verify log contains expected output
-                var logContent = File.ReadAllText(logFile);
-
-                if (logContent.Contains("Issues: 2"))
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                    context.WriteLine("✓ Issues Retrieval Test - PASSED");
-                }
-                else
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                    test.ErrorMessage = "Expected issues count not found in log";
-                    context.WriteError("✗ Issues Retrieval Test - FAILED: Expected issues count not found");
-                }
-            }
-            else
-            {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = $"Program exited with code {exitCode}";
-                context.WriteError($"✗ Issues Retrieval Test - FAILED: Exit code {exitCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            HandleTestException(test, context, "Issues Retrieval Test", ex);
-        }
-
-        FinalizeTestResult(test, startTime, testResults);
+        RunValidationTest(
+            context,
+            testResults,
+            mockFactory,
+            "SonarMark_IssuesRetrieval",
+            "Issues Retrieval Test",
+            null,
+            (logContent, _) =>
+                logContent.Contains("Issues: 2")
+                    ? null
+                    : "Expected issues count not found in log");
     }
 
     /// <summary>
@@ -252,58 +170,17 @@ internal static class Validation
         DemaConsulting.TestResults.TestResults testResults,
         Func<string?, SonarQubeClient> mockFactory)
     {
-        var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("SonarMark_HotSpotsRetrieval");
-
-        try
-        {
-            using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "hot-spots-test.log");
-
-            // Run the program to fetch hot-spots
-            int exitCode;
-            using (var testContext = Context.Create([
-                "--silent",
-                "--log", logFile,
-                "--server", MockServerUrl,
-                "--project-key", MockProjectKey
-            ], mockFactory))
-            {
-                Program.Run(testContext);
-                exitCode = testContext.ExitCode;
-            }
-
-            // Check if execution succeeded
-            if (exitCode == 0)
-            {
-                // Verify log contains expected output
-                var logContent = File.ReadAllText(logFile);
-
-                if (logContent.Contains("Hot-Spots: 1"))
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                    context.WriteLine("✓ Hot-Spots Retrieval Test - PASSED");
-                }
-                else
-                {
-                    test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                    test.ErrorMessage = "Expected hot-spots count not found in log";
-                    context.WriteError("✗ Hot-Spots Retrieval Test - FAILED: Expected hot-spots count not found");
-                }
-            }
-            else
-            {
-                test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = $"Program exited with code {exitCode}";
-                context.WriteError($"✗ Hot-Spots Retrieval Test - FAILED: Exit code {exitCode}");
-            }
-        }
-        catch (Exception ex)
-        {
-            HandleTestException(test, context, "Hot-Spots Retrieval Test", ex);
-        }
-
-        FinalizeTestResult(test, startTime, testResults);
+        RunValidationTest(
+            context,
+            testResults,
+            mockFactory,
+            "SonarMark_HotSpotsRetrieval",
+            "Hot-Spots Retrieval Test",
+            null,
+            (logContent, _) =>
+                logContent.Contains("Hot-Spots: 1")
+                    ? null
+                    : "Expected hot-spots count not found in log");
     }
 
     /// <summary>
@@ -317,62 +194,117 @@ internal static class Validation
         DemaConsulting.TestResults.TestResults testResults,
         Func<string?, SonarQubeClient> mockFactory)
     {
-        var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("SonarMark_MarkdownReportGeneration");
-
-        try
-        {
-            using var tempDir = new TemporaryDirectory();
-            var logFile = Path.Combine(tempDir.DirectoryPath, "report-test.log");
-            var reportFile = Path.Combine(tempDir.DirectoryPath, "quality-report.md");
-
-            // Run the program to generate markdown report
-            int exitCode;
-            using (var testContext = Context.Create([
-                "--silent",
-                "--log", logFile,
-                "--server", MockServerUrl,
-                "--project-key", MockProjectKey,
-                "--report", reportFile
-            ], mockFactory))
+        RunValidationTest(
+            context,
+            testResults,
+            mockFactory,
+            "SonarMark_MarkdownReportGeneration",
+            "Markdown Report Generation Test",
+            "quality-report.md",
+            (logContent, reportContent) =>
             {
-                Program.Run(testContext);
-                exitCode = testContext.ExitCode;
-            }
-
-            // Check if execution succeeded and report file was created
-            if (exitCode == 0 && File.Exists(reportFile))
-            {
-                // Verify report contains expected content
-                var reportContent = File.ReadAllText(reportFile);
+                if (reportContent == null)
+                {
+                    return "Report file not created";
+                }
 
                 if (reportContent.Contains("Mock SonarMark Project") &&
                     reportContent.Contains("**Quality Gate Status:** ERROR") &&
                     reportContent.Contains("Found 2 issues") &&
                     reportContent.Contains("Found 1 security hot-spot"))
                 {
+                    return null;
+                }
+
+                return "Report file missing expected content";
+            });
+    }
+
+    /// <summary>
+    ///     Runs a validation test with common test execution logic.
+    /// </summary>
+    /// <param name="context">The context for output.</param>
+    /// <param name="testResults">The test results collection.</param>
+    /// <param name="mockFactory">The mock HTTP client factory.</param>
+    /// <param name="testName">The name of the test.</param>
+    /// <param name="displayName">The display name for console output.</param>
+    /// <param name="reportFileName">Optional report file name to generate.</param>
+    /// <param name="validator">Function to validate test results. Returns null on success or error message on failure.</param>
+    private static void RunValidationTest(
+        Context context,
+        DemaConsulting.TestResults.TestResults testResults,
+        Func<string?, SonarQubeClient> mockFactory,
+        string testName,
+        string displayName,
+        string? reportFileName,
+        Func<string, string?, string?> validator)
+    {
+        var startTime = DateTime.UtcNow;
+        var test = CreateTestResult(testName);
+
+        try
+        {
+            using var tempDir = new TemporaryDirectory();
+            var logFile = Path.Combine(tempDir.DirectoryPath, $"{testName}.log");
+            var reportFile = reportFileName != null ? Path.Combine(tempDir.DirectoryPath, reportFileName) : null;
+
+            // Build command line arguments
+            var args = new List<string>
+            {
+                "--silent",
+                "--log", logFile,
+                "--server", MockServerUrl,
+                "--project-key", MockProjectKey
+            };
+
+            if (reportFile != null)
+            {
+                args.Add("--report");
+                args.Add(reportFile);
+            }
+
+            // Run the program
+            int exitCode;
+            using (var testContext = Context.Create([.. args], mockFactory))
+            {
+                Program.Run(testContext);
+                exitCode = testContext.ExitCode;
+            }
+
+            // Check if execution succeeded
+            if (exitCode == 0)
+            {
+                // Read log and report contents
+                var logContent = File.ReadAllText(logFile);
+                var reportContent = reportFile != null && File.Exists(reportFile)
+                    ? File.ReadAllText(reportFile)
+                    : null;
+
+                // Validate the results
+                var errorMessage = validator(logContent, reportContent);
+
+                if (errorMessage == null)
+                {
                     test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                    context.WriteLine("✓ Markdown Report Generation Test - PASSED");
+                    context.WriteLine($"✓ {displayName} - PASSED");
                 }
                 else
                 {
                     test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                    test.ErrorMessage = "Report file missing expected content";
-                    context.WriteError("✗ Markdown Report Generation Test - FAILED: Report file missing expected content");
+                    test.ErrorMessage = errorMessage;
+                    context.WriteError($"✗ {displayName} - FAILED: {errorMessage}");
                 }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
-                test.ErrorMessage = exitCode != 0
-                    ? $"Program exited with code {exitCode}"
-                    : "Report file not created";
-                context.WriteError($"✗ Markdown Report Generation Test - FAILED: {test.ErrorMessage}");
+                test.ErrorMessage = $"Program exited with code {exitCode}";
+                context.WriteError($"✗ {displayName} - FAILED: Exit code {exitCode}");
             }
         }
         catch (Exception ex)
         {
-            HandleTestException(test, context, "Markdown Report Generation Test", ex);
+            HandleTestException(test, context, displayName, ex);
         }
 
         FinalizeTestResult(test, startTime, testResults);
