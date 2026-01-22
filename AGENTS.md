@@ -33,8 +33,6 @@ SonarMark/
 │       ├── build.yaml            # Reusable build workflow
 │       └── build_on_push.yaml    # Main CI/CD pipeline
 ├── docs/                         # Documentation
-│   └── guide/                    # User guides
-│       └── guide.md              # Comprehensive usage guide
 ├── src/                          # Source code
 │   └── DemaConsulting.SonarMark/ # Main application project
 ├── test/                         # Test projects
