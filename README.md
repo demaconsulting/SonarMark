@@ -1,13 +1,13 @@
 # SonarMark
 
-[![GitHub forks](https://img.shields.io/github/forks/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/network/members)
-[![GitHub stars](https://img.shields.io/github/stars/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/graphs/contributors)
-[![License](https://img.shields.io/github/license/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE)
+[![GitHub forks](https://img.shields.io/github/forks/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/stargazers)
+[![GitHub contributors](https://img.shields.io/github/contributors/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/graphs/contributors)
+[![License](https://img.shields.io/github/license/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/demaconsulting/SonarMark/build_on_push.yaml)](https://github.com/demaconsulting/SonarMark/actions/workflows/build_on_push.yaml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=alert_status)](https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark)
 [![Security](https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=security_rating)](https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark)
-[![NuGet](https://img.shields.io/nuget/v/DemaConsulting.SonarMark)](https://www.nuget.org/packages/DemaConsulting.SonarMark)
+[![NuGet](https://img.shields.io/nuget/v/DemaConsulting.SonarMark?style=plastic)](https://www.nuget.org/packages/DemaConsulting.SonarMark)
 
 Code Quality Reporting Tool for SonarQube/SonarCloud
 
