@@ -30,6 +30,11 @@ sections:
             tests:
               - "Context_Create_WithLogFile_WritesToLogFile"
 
+          - id: "CLI-006"
+            title: "The tool shall support enforcing quality gate checks."
+            tests:
+              - "IntegrationTest_EnforceFlag_IsAccepted"
+
       - title: "SonarQube/SonarCloud Integration"
         requirements:
           - id: "SONAR-001"
@@ -45,20 +50,17 @@ sections:
           - id: "SONAR-003"
             title: "The tool shall fetch quality gate status from SonarQube/SonarCloud."
             tests:
-              - "windows-latest@SonarMark_QualityGateRetrieval"
-              - "ubuntu-latest@SonarMark_QualityGateRetrieval"
+              - "SonarMark_QualityGateRetrieval"
 
           - id: "SONAR-004"
             title: "The tool shall fetch issues from SonarQube/SonarCloud."
             tests:
-              - "windows-latest@SonarMark_IssuesRetrieval"
-              - "ubuntu-latest@SonarMark_IssuesRetrieval"
+              - "SonarMark_IssuesRetrieval"
 
           - id: "SONAR-005"
             title: "The tool shall fetch security hot-spots from SonarQube/SonarCloud."
             tests:
-              - "windows-latest@SonarMark_HotSpotsRetrieval"
-              - "ubuntu-latest@SonarMark_HotSpotsRetrieval"
+              - "SonarMark_HotSpotsRetrieval"
 
           - id: "SONAR-006"
             title: "The tool shall support filtering by project key."
@@ -76,8 +78,7 @@ sections:
             title: "The tool shall generate markdown reports."
             tests:
               - "IntegrationTest_ReportParameter_IsAccepted"
-              - "windows-latest@SonarMark_MarkdownReportGeneration"
-              - "ubuntu-latest@SonarMark_MarkdownReportGeneration"
+              - "SonarMark_MarkdownReportGeneration"
 
           - id: "RPT-002"
             title: "The tool shall support configurable report depth."
@@ -113,6 +114,10 @@ sections:
             title: "The tool shall support self-validation mode."
             tests:
               - "IntegrationTest_ValidateFlag_OutputsNotImplemented"
+              - "SonarMark_QualityGateRetrieval"
+              - "SonarMark_IssuesRetrieval"
+              - "SonarMark_HotSpotsRetrieval"
+              - "SonarMark_MarkdownReportGeneration"
 
           - id: "VAL-002"
             title: "The tool shall write validation results to test result files."
@@ -172,6 +177,10 @@ sections:
               - "dotnet8.x@IntegrationTest_VersionFlag_OutputsVersion"
               - "dotnet8.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
               - "dotnet8.x@IntegrationTest_ReportParameter_IsAccepted"
+              - "dotnet8.x@SonarMark_QualityGateRetrieval"
+              - "dotnet8.x@SonarMark_IssuesRetrieval"
+              - "dotnet8.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet8.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-004"
             title: "The tool shall support .NET 9.0 runtime."
@@ -179,6 +188,10 @@ sections:
               - "dotnet9.x@IntegrationTest_VersionFlag_OutputsVersion"
               - "dotnet9.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
               - "dotnet9.x@IntegrationTest_ReportParameter_IsAccepted"
+              - "dotnet9.x@SonarMark_QualityGateRetrieval"
+              - "dotnet9.x@SonarMark_IssuesRetrieval"
+              - "dotnet9.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet9.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-005"
             title: "The tool shall support .NET 10.0 runtime."
@@ -186,3 +199,7 @@ sections:
               - "dotnet10.x@IntegrationTest_VersionFlag_OutputsVersion"
               - "dotnet10.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
               - "dotnet10.x@IntegrationTest_ReportParameter_IsAccepted"
+              - "dotnet10.x@SonarMark_QualityGateRetrieval"
+              - "dotnet10.x@SonarMark_IssuesRetrieval"
+              - "dotnet10.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet10.x@SonarMark_MarkdownReportGeneration"
