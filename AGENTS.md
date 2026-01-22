@@ -209,3 +209,5 @@ responsibilities, and project-specific conventions.
   maintaining project documentation
 - **Project Maintainer** (`.github/agents/project-maintainer.md`) - Expert agent for overall project management,
   dependency updates, CI/CD maintenance, and release coordination
+- **Software Quality Enforcer** (`.github/agents/software-quality-enforcer.md`) - Expert agent for enforcing code
+  quality standards, testing requirements, and quality gates
