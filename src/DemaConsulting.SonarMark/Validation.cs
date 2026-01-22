@@ -128,11 +128,16 @@ internal static class Validation
             "Quality Gate Retrieval Test",
             null,
             (logContent, _) =>
-                logContent.Contains("Quality Gate Status: ERROR") &&
-                logContent.Contains("Issues: 2") &&
-                logContent.Contains("Hot-Spots: 1")
-                    ? null
-                    : "Expected output not found in log");
+            {
+                if (logContent.Contains("Quality Gate Status: ERROR") &&
+                    logContent.Contains("Issues: 2") &&
+                    logContent.Contains("Hot-Spots: 1"))
+                {
+                    return null;
+                }
+
+                return "Expected output not found in log";
+            });
     }
 
     /// <summary>
@@ -154,9 +159,14 @@ internal static class Validation
             "Issues Retrieval Test",
             null,
             (logContent, _) =>
-                logContent.Contains("Issues: 2")
-                    ? null
-                    : "Expected issues count not found in log");
+            {
+                if (logContent.Contains("Issues: 2"))
+                {
+                    return null;
+                }
+
+                return "Expected issues count not found in log";
+            });
     }
 
     /// <summary>
@@ -178,9 +188,14 @@ internal static class Validation
             "Hot-Spots Retrieval Test",
             null,
             (logContent, _) =>
-                logContent.Contains("Hot-Spots: 1")
-                    ? null
-                    : "Expected hot-spots count not found in log");
+            {
+                if (logContent.Contains("Hot-Spots: 1"))
+                {
+                    return null;
+                }
+
+                return "Expected hot-spots count not found in log";
+            });
     }
 
     /// <summary>
