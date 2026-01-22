@@ -254,6 +254,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Download all test results
+        uses: actions/download-artifact@v7
+        with:
+          path: test-results
+          pattern: '*test-results*'
+        continue-on-error: true
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
@@ -261,6 +268,15 @@ jobs:
 
       - name: Restore Tools
         run: dotnet tool restore
+
+      - name: Generate Requirements Report and Trace Matrix
+        run: >
+          dotnet reqstream
+          --requirements requirements.yaml
+          --tests "test-results/**/*.trx"
+          --report docs/requirements/requirements.md
+          --matrix docs/tracematrix/tracematrix.md
+          --enforce
 
       - name: Generate HTML with Pandoc
         run: >
@@ -274,6 +290,32 @@ jobs:
           --pdf-variant pdf/a-3u
           docs/guide/guide.html
           "docs/SonarMark User Guide.pdf"
+
+      - name: Generate Requirements HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements/definition.yaml
+          --output docs/requirements/requirements.html
+
+      - name: Generate Requirements PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements/requirements.html
+          "docs/SonarMark Requirements.pdf"
+
+      - name: Generate Trace Matrix HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/tracematrix/definition.yaml
+          --output docs/tracematrix/tracematrix.html
+
+      - name: Generate Trace Matrix PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/tracematrix/tracematrix.html
+          "docs/SonarMark Trace Matrix.pdf"
 
       - name: Upload documentation
         uses: actions/upload-artifact@v6

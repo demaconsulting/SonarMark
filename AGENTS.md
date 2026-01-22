@@ -33,6 +33,9 @@ SonarMark/
 │       ├── build.yaml            # Reusable build workflow
 │       └── build_on_push.yaml    # Main CI/CD pipeline
 ├── docs/                         # Documentation
+│   ├── guide/                    # User guide
+│   ├── requirements/             # Requirements documentation
+│   └── tracematrix/              # Trace matrix documentation
 ├── src/                          # Source code
 │   └── DemaConsulting.SonarMark/ # Main application project
 ├── test/                         # Test projects
@@ -45,6 +48,7 @@ SonarMark/
 ├── CODE_OF_CONDUCT.md            # Code of Conduct
 ├── LICENSE                       # MIT License
 ├── README.md                     # Project documentation
+├── requirements.yaml             # Requirements definitions
 └── SECURITY.md                   # Security policy
 ```
 
@@ -55,6 +59,7 @@ SonarMark/
 - **`.markdownlint.json`**: Markdown linting rules
 - **`.yamllint.yaml`**: YAML linting rules
 - **`DemaConsulting.SonarMark.sln`**: Solution file containing all projects
+- **`requirements.yaml`**: Requirements definitions with test mappings
 
 ## Testing Guidelines
 
@@ -63,6 +68,11 @@ SonarMark/
 - **Test Method Naming**: `ClassName_MethodUnderTest_Scenario_ExpectedBehavior` format
   - Example: `Program_Main_NoArguments_ReturnsSuccess` clearly indicates testing the `Program.Main` method
   - This pattern makes test intent clear for requirements traceability
+- **Requirements Traceability**: All tests should be linked to requirements in `requirements.yaml`
+  - Unit tests link directly to functional requirements
+  - Integration tests use Test Source Linking format (`filepart@testname`) for platform/runtime requirements
+  - Example: `windows-latest@IntegrationTest_VersionFlag_OutputsVersion` links a Windows-specific test
+  - Example: `dotnet8.x@IntegrationTest_ReportGeneration_CreatesMarkdownFile` links a .NET 8 test
 - **MSTest v4 APIs**: Use modern assertions:
   - `Assert.HasCount(collection, expectedCount)` instead of `Assert.AreEqual(count, collection.Count)`
   - `Assert.IsEmpty(collection)` instead of `Assert.AreEqual(0, collection.Count)`
@@ -77,6 +87,15 @@ SonarMark/
 
 - **All tests must pass** before merging changes
 - **No warnings allowed** in test builds
+
+## Requirements Management
+
+- **Requirements Tool**: DemaConsulting.ReqStream is used for requirements management
+- **Requirements File**: `requirements.yaml` defines all project requirements
+- **Trace Matrix**: Requirements are traced to tests using the ReqStream tool
+- **Documentation**: Requirements and trace matrix PDFs are generated as part of the build process
+- **Enforcement**: The `--enforce` flag ensures all requirements have test coverage
+- **Test Naming**: Tests must use the naming pattern that clearly indicates what they test for traceability
 
 ## Code Style and Conventions
 
