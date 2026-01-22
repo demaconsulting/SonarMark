@@ -20,9 +20,9 @@ This code quality report covers:
 
 ## Analysis Source
 
-The analysis is performed by SonarCloud on the main branch of the SonarMark repository.
-Results are fetched directly from SonarCloud using the SonarMark tool itself, demonstrating
-the tool's capability to analyze and report on code quality.
+The analysis is performed on the main branch of the SonarMark repository using various
+quality analysis tools. This report demonstrates the capability of these tools to provide
+comprehensive code quality insights.
 
 ## Audience
 
