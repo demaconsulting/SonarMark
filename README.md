@@ -1,7 +1,7 @@
 # SonarMark
 
-[![GitHub forks](https://img.shields.io/github/forks/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/network/members)
-[![GitHub stars](https://img.shields.io/github/stars/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/stargazers)
 [![GitHub contributors](https://img.shields.io/github/contributors/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/graphs/contributors)
 [![License](https://img.shields.io/github/license/demaconsulting/SonarMark)](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/demaconsulting/SonarMark/build_on_push.yaml)](https://github.com/demaconsulting/SonarMark/actions/workflows/build_on_push.yaml)
