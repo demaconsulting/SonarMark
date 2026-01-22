@@ -273,6 +273,7 @@ jobs:
           dotnet-version: 10.x
 
       - name: Install SonarMark from package
+        shell: pwsh
         run: |
           echo "Installing SonarMark version ${{ inputs.version }}"
           dotnet tool install --global `
@@ -332,6 +333,7 @@ jobs:
           "docs/SonarMark Trace Matrix.pdf"
 
       - name: Generate Code Quality Report with SonarMark
+        shell: pwsh
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >

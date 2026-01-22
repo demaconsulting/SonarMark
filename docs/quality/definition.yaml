@@ -9,4 +9,3 @@ input-files:
 template: template.html
 table-of-contents: true
 number-sections: true
----
