@@ -3,18 +3,6 @@
 This guide provides comprehensive documentation for using SonarMark to generate code quality reports from
 SonarQube/SonarCloud analysis results.
 
-## Table of Contents
-
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Getting Started](#getting-started)
-- [Command-Line Options](#command-line-options)
-- [Common Use Cases](#common-use-cases)
-- [Report Format](#report-format)
-- [Self-Validation](#self-validation)
-- [Best Practices](#best-practices)
-- [Troubleshooting](#troubleshooting)
-
 ## Introduction
 
 SonarMark is a .NET command-line tool that fetches quality gate status, issues, and security hot-spots from
