@@ -1,0 +1,9 @@
+---
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question
+    url: https://github.com/demaconsulting/SonarMark/discussions
+    about: Ask questions and discuss with the community
+  - name: 🔒 Security Issue
+    url: https://github.com/demaconsulting/SonarMark/security/advisories/new
+    about: Report a security vulnerability privately

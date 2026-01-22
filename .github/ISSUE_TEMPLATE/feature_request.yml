@@ -1,20 +1,21 @@
 ---
 name: ✨ Feature Request
-description: Suggest a new feature or enhancement for SonarMark
+description: Suggest a new feature or enhancement for the SonarMark tool
 title: "[Feature]: "
 labels: ["enhancement"]
+assignees: []
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to suggest a feature! Please fill out the information below.
+        Thanks for suggesting a feature! Please fill out the sections below to help us understand your request.
 
   - type: textarea
     id: problem
     attributes:
       label: Problem Statement
       description: Is your feature request related to a problem? Please describe.
-      placeholder: I'm frustrated when...
+      placeholder: I'm frustrated when... / I need to be able to...
     validations:
       required: true
 
@@ -22,8 +23,8 @@ body:
     id: solution
     attributes:
       label: Proposed Solution
-      description: Describe the solution you'd like to see.
-      placeholder: I would like to have...
+      description: Describe the solution you'd like to see
+      placeholder: A clear and concise description of what you want to happen
     validations:
       required: true
 
@@ -31,19 +32,29 @@ body:
     id: alternatives
     attributes:
       label: Alternatives Considered
-      description: Describe any alternative solutions or features you've considered.
-      placeholder: I've also thought about...
-    validations:
-      required: false
+      description: Describe any alternative solutions or features you've considered
+      placeholder: A clear and concise description of any alternative solutions or features
 
   - type: textarea
-    id: additional
+    id: examples
     attributes:
-      label: Additional Context
-      description: Add any other context, examples, or mockups about the feature request.
-      placeholder: Additional information, examples, screenshots, etc.
+      label: Usage Examples
+      description: If applicable, provide examples of how this feature would be used
+      placeholder: |
+        ```csharp
+        // Example usage
+        sonarmark --input report.json --output report.md --feature-flag
+        ```
+      render: csharp
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: Explain why this enhancement would be useful to SonarMark users
+      placeholder: This would be useful because...
     validations:
-      required: false
+      required: true
 
   - type: dropdown
     id: priority
@@ -52,24 +63,40 @@ body:
       description: How important is this feature to you?
       options:
         - Low - Nice to have
-        - Medium - Would improve workflow
-        - High - Blocking current work
+        - Medium - Would improve my workflow
+        - High - Blocking my use case
     validations:
-      required: false
+      required: true
+
+  - type: dropdown
+    id: willingness
+    attributes:
+      label: Willingness to Contribute
+      description: Would you be willing to contribute this feature?
+      options:
+        - "Yes, I can submit a pull request"
+        - "Yes, with guidance from maintainers"
+        - "No, but I can help test it"
+        - "No, I'm just suggesting"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, screenshots, or links about the feature request here
+      placeholder: Any additional information...
 
   - type: checkboxes
-    id: contribution
+    id: checklist
     attributes:
-      label: Contribution
-      description: Would you be willing to contribute to this feature?
+      label: Checklist
+      description: Please confirm the following
       options:
-        - label: I would be willing to submit a PR for this feature
-
-  - type: checkboxes
-    id: terms
-    attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our Code of Conduct
-      options:
-        - label: I agree to follow this project's Code of Conduct
+        - label: I have searched existing issues to ensure this is not a duplicate
+          required: true
+        - label: I have provided a clear description of the feature
+          required: true
+        - label: I have explained why this feature would be useful
           required: true
