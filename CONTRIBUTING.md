@@ -180,7 +180,7 @@ All files are spell-checked using cspell. Add project-specific terms to `.cspell
 ```json
 {
   "words": [
-    "yourterm"
+    "myterm"
   ]
 }
 ```
