@@ -1,0 +1,15 @@
+---
+title: SonarMark User Guide
+subtitle: A .NET Command-Line Tool for SonarQube/SonarCloud Reporting
+author: DEMA Consulting
+description: A .NET Command-Line Tool for SonarQube/SonarCloud Reporting
+lang: en-US
+keywords:
+  - SonarMark
+  - SonarQube
+  - SonarCloud
+  - Code Quality
+  - .NET
+  - Command-Line Tool
+  - Documentation
+---

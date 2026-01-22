@@ -242,3 +242,41 @@ jobs:
         with:
           name: integration-test-results-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
           path: integration-test-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx
+
+  build-docs:
+    name: Build Documentation
+    runs-on: windows-latest
+    needs: [build, integration-test]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Restore Tools
+        run: dotnet tool restore
+
+      - name: Generate HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/guide/definition.yaml
+          --output docs/guide/guide.html
+
+      - name: Generate PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/guide/guide.html
+          "docs/SonarMark User Guide.pdf"
+
+      - name: Upload documentation
+        uses: actions/upload-artifact@v6
+        with:
+          name: documentation
+          path: docs/*.pdf
