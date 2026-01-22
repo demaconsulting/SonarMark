@@ -1,0 +1,196 @@
+---
+sections:
+  - title: "SonarMark Requirements"
+    sections:
+      - title: "Command-Line Interface"
+        requirements:
+          - id: "CLI-001"
+            title: "The tool shall provide a command-line interface."
+            tests:
+              - "IntegrationTest_VersionFlag_OutputsVersion"
+              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
+
+          - id: "CLI-002"
+            title: "The tool shall display version information when requested."
+            tests:
+              - "IntegrationTest_VersionFlag_OutputsVersion"
+
+          - id: "CLI-003"
+            title: "The tool shall display help information when requested."
+            tests:
+              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
+
+          - id: "CLI-004"
+            title: "The tool shall support silent mode to suppress console output."
+            tests:
+              - "IntegrationTest_SilentFlag_SuppressesOutput"
+
+          - id: "CLI-005"
+            title: "The tool shall support writing output to a log file."
+            tests:
+              - "Context_Create_WithLogFile_WritesToLogFile"
+
+          - id: "CLI-006"
+            title: "The tool shall support enforcing quality gate checks."
+            tests:
+              - "IntegrationTest_EnforceFlag_IsAccepted"
+
+      - title: "SonarQube/SonarCloud Integration"
+        requirements:
+          - id: "SONAR-001"
+            title: "The tool shall connect to SonarQube/SonarCloud servers."
+            tests:
+              - "IntegrationTest_MissingServerParameter_ShowsError"
+
+          - id: "SONAR-002"
+            title: "The tool shall authenticate with SonarQube/SonarCloud using tokens."
+            tests:
+              - "IntegrationTest_TokenParameter_IsAccepted"
+
+          - id: "SONAR-003"
+            title: "The tool shall fetch quality gate status from SonarQube/SonarCloud."
+            tests:
+              - "SonarMark_QualityGateRetrieval"
+
+          - id: "SONAR-004"
+            title: "The tool shall fetch issues from SonarQube/SonarCloud."
+            tests:
+              - "SonarMark_IssuesRetrieval"
+
+          - id: "SONAR-005"
+            title: "The tool shall fetch security hot-spots from SonarQube/SonarCloud."
+            tests:
+              - "SonarMark_HotSpotsRetrieval"
+
+          - id: "SONAR-006"
+            title: "The tool shall support filtering by project key."
+            tests:
+              - "IntegrationTest_MissingProjectKeyParameter_ShowsError"
+
+          - id: "SONAR-007"
+            title: "The tool shall support filtering by branch."
+            tests:
+              - "IntegrationTest_BranchParameter_IsAccepted"
+
+      - title: "Report Generation"
+        requirements:
+          - id: "RPT-001"
+            title: "The tool shall generate markdown reports."
+            tests:
+              - "IntegrationTest_ReportParameter_IsAccepted"
+              - "SonarMark_MarkdownReportGeneration"
+
+          - id: "RPT-002"
+            title: "The tool shall support configurable report depth."
+            tests:
+              - "IntegrationTest_ReportDepthWithZero_ShowsError"
+              - "IntegrationTest_ReportDepthWithInvalidValue_ShowsError"
+              - "IntegrationTest_ReportDepthWithoutValue_ShowsError"
+
+          - id: "RPT-003"
+            title: "The tool shall include quality gate status in reports."
+            tests:
+              - "SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_Depth3_UsesCorrectHeadingLevels"
+              - "SonarQualityResult_ToMarkdown_Depth6_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_NoConditions_ExcludesConditionsSection"
+              - "SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames"
+
+          - id: "RPT-004"
+            title: "The tool shall categorize and report issues by type and severity."
+            tests:
+              - "SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput"
+              - "SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText"
+
+          - id: "RPT-005"
+            title: "The tool shall report security hot-spots requiring review."
+            tests:
+              - "SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput"
+
+      - title: "Validation and Testing"
+        requirements:
+          - id: "VAL-001"
+            title: "The tool shall support self-validation mode."
+            tests:
+              - "IntegrationTest_ValidateFlag_OutputsNotImplemented"
+              - "SonarMark_QualityGateRetrieval"
+              - "SonarMark_IssuesRetrieval"
+              - "SonarMark_HotSpotsRetrieval"
+              - "SonarMark_MarkdownReportGeneration"
+
+          - id: "VAL-002"
+            title: "The tool shall write validation results to test result files."
+            tests:
+              - "Context_Create_ResultsFile_SetsResultsProperty"
+              - "Context_Create_MissingResultsFilename_ThrowsException"
+
+          - id: "VAL-003"
+            title: "The tool shall support TRX format for test results."
+            tests:
+              - "Context_Create_ResultsFile_SetsResultsProperty"
+
+          - id: "VAL-004"
+            title: "The tool shall support JUnit format for test results."
+            tests:
+              - "Context_Create_ResultsFile_SetsResultsProperty"
+
+      - title: "Quality Enforcement"
+        requirements:
+          - id: "ENF-001"
+            title: "The tool shall support enforcement mode to fail on quality gate failures."
+            tests:
+              - "Context_Create_EnforceFlag_SetsEnforceProperty"
+
+          - id: "ENF-002"
+            title: "The tool shall return non-zero exit code when quality gate fails in enforcement mode."
+            tests:
+              - "IntegrationTest_EnforceFlag_IsAccepted"
+
+      - title: "Platform Support"
+        requirements:
+          - id: "PLT-001"
+            title: "The tool shall run on Windows operating systems."
+            tests:
+              - "windows-latest@IntegrationTest_VersionFlag_OutputsVersion"
+              - "windows-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "windows-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "windows-latest@SonarMark_QualityGateRetrieval"
+              - "windows-latest@SonarMark_IssuesRetrieval"
+              - "windows-latest@SonarMark_HotSpotsRetrieval"
+              - "windows-latest@SonarMark_MarkdownReportGeneration"
+
+          - id: "PLT-002"
+            title: "The tool shall run on Linux operating systems."
+            tests:
+              - "ubuntu-latest@IntegrationTest_VersionFlag_OutputsVersion"
+              - "ubuntu-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "ubuntu-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "ubuntu-latest@SonarMark_QualityGateRetrieval"
+              - "ubuntu-latest@SonarMark_IssuesRetrieval"
+              - "ubuntu-latest@SonarMark_HotSpotsRetrieval"
+              - "ubuntu-latest@SonarMark_MarkdownReportGeneration"
+
+          - id: "PLT-003"
+            title: "The tool shall support .NET 8.0 runtime."
+            tests:
+              - "dotnet8.x@SonarMark_QualityGateRetrieval"
+              - "dotnet8.x@SonarMark_IssuesRetrieval"
+              - "dotnet8.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet8.x@SonarMark_MarkdownReportGeneration"
+
+          - id: "PLT-004"
+            title: "The tool shall support .NET 9.0 runtime."
+            tests:
+              - "dotnet9.x@SonarMark_QualityGateRetrieval"
+              - "dotnet9.x@SonarMark_IssuesRetrieval"
+              - "dotnet9.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet9.x@SonarMark_MarkdownReportGeneration"
+
+          - id: "PLT-005"
+            title: "The tool shall support .NET 10.0 runtime."
+            tests:
+              - "dotnet10.x@SonarMark_QualityGateRetrieval"
+              - "dotnet10.x@SonarMark_IssuesRetrieval"
+              - "dotnet10.x@SonarMark_HotSpotsRetrieval"
+              - "dotnet10.x@SonarMark_MarkdownReportGeneration"

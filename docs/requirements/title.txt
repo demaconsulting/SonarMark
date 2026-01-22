@@ -1,0 +1,14 @@
+---
+title: SonarMark Requirements
+subtitle: Requirements Specification for the SonarMark Tool
+author: DEMA Consulting
+description: Requirements Specification for the SonarMark Tool
+lang: en-US
+keywords:
+  - SonarMark
+  - Requirements
+  - Specification
+  - .NET
+  - YAML
+  - Command-Line Tool
+---

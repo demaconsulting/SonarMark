@@ -121,7 +121,7 @@ internal static class Validation
         Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("QualityGateRetrieval");
+        var test = CreateTestResult("SonarMark_QualityGateRetrieval");
 
         try
         {
@@ -188,7 +188,7 @@ internal static class Validation
         Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("IssuesRetrieval");
+        var test = CreateTestResult("SonarMark_IssuesRetrieval");
 
         try
         {
@@ -253,7 +253,7 @@ internal static class Validation
         Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("HotSpotsRetrieval");
+        var test = CreateTestResult("SonarMark_HotSpotsRetrieval");
 
         try
         {
@@ -318,7 +318,7 @@ internal static class Validation
         Func<string?, SonarQubeClient> mockFactory)
     {
         var startTime = DateTime.UtcNow;
-        var test = CreateTestResult("MarkdownReportGeneration");
+        var test = CreateTestResult("SonarMark_MarkdownReportGeneration");
 
         try
         {

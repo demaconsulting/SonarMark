@@ -143,6 +143,33 @@ sonarmark --server https://sonarcloud.io \
 sonarmark --validate
 ```
 
+**Run self-validation with test results output:**
+
+```bash
+sonarmark --validate --results validation-results.trx
+```
+
+### Self-Validation Tests
+
+SonarMark includes built-in self-validation tests that verify the tool's functionality without requiring
+a live SonarQube/SonarCloud server. These tests use mock data to validate core features and generate test
+result files in TRX or JUnit format.
+
+The self-validation suite includes the following tests:
+
+| Test Name | Description |
+| :-------- | :---------- |
+| `SonarMark_QualityGateRetrieval` | Verifies fetching and processing quality gate status |
+| `SonarMark_IssuesRetrieval` | Verifies fetching and processing code issues |
+| `SonarMark_HotSpotsRetrieval` | Verifies fetching and processing security hot-spots |
+| `SonarMark_MarkdownReportGeneration` | Verifies generating markdown reports with quality metrics |
+
+These tests provide evidence of the tool's functionality and are particularly useful for:
+
+- Verifying the installation is working correctly
+- Running automated tests in CI/CD pipelines without requiring SonarQube access
+- Generating test evidence for compliance and traceability requirements
+
 For detailed usage instructions, command-line options, and examples, see the
 [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md).
 

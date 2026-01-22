@@ -23,6 +23,8 @@ Ensures all changes meet quality gates before merging.
    - Check tests are isolated and don't depend on execution order
    - Validate test names are descriptive (ClassName_MethodUnderTest_Scenario_ExpectedBehavior)
    - Confirm both success and failure scenarios are tested
+   - Verify all requirements in `requirements.yaml` are linked to tests
+   - Ensure requirements traceability is maintained for all changes
 
 3. **Code Review**
    - Review code for adherence to C# conventions
@@ -64,6 +66,9 @@ dotnet test --collect "XPlat Code Coverage"
 # Restore tools and dependencies
 dotnet tool restore
 dotnet restore
+
+# Validate requirements traceability
+dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
 ```
 
 ## Quality Gates
@@ -78,6 +83,7 @@ All changes must pass:
 - ✅ Code formatting per .editorconfig
 - ✅ Spell checking passes (cspell)
 - ✅ Markdown linting passes (markdownlint)
+- ✅ Requirements traceability (all requirements have tests, all tests pass)
 
 ## Review Checklist
 
@@ -85,6 +91,7 @@ For every code change, verify:
 
 - [ ] New code has unit tests
 - [ ] Tests follow AAA pattern
+- [ ] Tests are linked to requirements in `requirements.yaml`
 - [ ] Public APIs have XML documentation
 - [ ] No runtime dependencies added
 - [ ] Nullable reference types used correctly
@@ -94,6 +101,7 @@ For every code change, verify:
 - [ ] No code duplication (DRY principle)
 - [ ] Build succeeds with zero warnings
 - [ ] All tests pass
+- [ ] Requirements traceability is maintained
 
 ## Common Issues to Catch
 

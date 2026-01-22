@@ -31,6 +31,12 @@
       "commands": [
         "weasyprint"
       ]
+    },
+    "demaconsulting.reqstream": {
+      "version": "1.0.1",
+      "commands": [
+        "reqstream"
+      ]
     }
   }
 }
