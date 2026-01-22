@@ -1,0 +1,75 @@
+---
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (1.0.0)'
+        required: true
+        type: string
+      publish:
+        description: 'Publish type'
+        required: true
+        type: choice
+        options:
+          - none
+          - release
+          - publish
+
+jobs:
+  build:
+    name: Build
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: ./.github/workflows/build.yaml
+    with:
+      version: ${{ inputs.version }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+
+    steps:
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            8.x
+            9.x
+            10.x
+
+      - name: Download package artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: artifacts-ubuntu-latest
+          path: artifacts
+
+      - name: Download documentation artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: documentation
+          path: artifacts
+
+      - name: Create GitHub Release
+        if: inputs.publish == 'release' || inputs.publish == 'publish'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ inputs.version }}
+          artifacts: artifacts/*
+          generateReleaseNotes: true
+
+      - name: Publish to NuGet.org
+        if: inputs.publish == 'publish'
+        run: |
+          set -e
+          dotnet nuget push artifacts/*.nupkg \
+            --api-key ${{ secrets.DEMACONSULTINGNUGETKEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
