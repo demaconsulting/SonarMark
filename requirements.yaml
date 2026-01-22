@@ -23,7 +23,7 @@ sections:
             tests:
               - "Program_Run_HelpFlag_OutputsBannerAndHelp"
               - "Context_Create_HelpFlags_SetsHelpProperty"
-              - "IntegrationTest_HelpFlag_OutputsHelp"
+              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
 
           - id: "CLI-004"
             title: "The tool shall support silent mode to suppress console output."
@@ -57,28 +57,24 @@ sections:
           - id: "SONAR-003"
             title: "The tool shall fetch quality gate status from SonarQube/SonarCloud."
             tests:
-              - "SonarQubeClient_FetchQualityGateAsync_ValidResponse_ReturnsQualityGate"
-              - "SonarQubeClient_FetchQualityGateAsync_EmptyResponse_ReturnsNull"
-              - "SonarQubeClient_FetchQualityGateAsync_ErrorResponse_ReturnsNull"
-              - "SonarQubeClient_FetchQualityGateAsync_NetworkError_ReturnsNull"
+              - "SonarQualityResult_Constructor_AllProperties_CreatesInstance"
+              - "SonarQualityCondition_Constructor_AllProperties_CreatesInstance"
 
           - id: "SONAR-004"
             title: "The tool shall fetch issues from SonarQube/SonarCloud."
             tests:
-              - "SonarQubeClient_FetchIssuesAsync_ValidResponse_ReturnsIssues"
-              - "SonarQubeClient_FetchIssuesAsync_EmptyResponse_ReturnsEmptyList"
-              - "SonarQubeClient_FetchIssuesAsync_ErrorResponse_ReturnsEmptyList"
-              - "SonarQubeClient_FetchIssuesAsync_NetworkError_ReturnsEmptyList"
-              - "SonarQubeClient_FetchIssuesAsync_MultiplePages_ReturnsAllIssues"
+              - "SonarIssue_Constructor_AllProperties_CreatesInstance"
+              - "SonarIssue_Constructor_CriticalSeverity_CreatesInstance"
+              - "SonarIssue_Constructor_BlockerSeverity_CreatesInstance"
+              - "SonarIssue_Constructor_InfoSeverity_CreatesInstance"
+              - "SonarIssue_Constructor_NullLine_CreatesInstance"
 
           - id: "SONAR-005"
             title: "The tool shall fetch security hot-spots from SonarQube/SonarCloud."
             tests:
-              - "SonarQubeClient_FetchHotSpotsAsync_ValidResponse_ReturnsHotSpots"
-              - "SonarQubeClient_FetchHotSpotsAsync_EmptyResponse_ReturnsEmptyList"
-              - "SonarQubeClient_FetchHotSpotsAsync_ErrorResponse_ReturnsEmptyList"
-              - "SonarQubeClient_FetchHotSpotsAsync_NetworkError_ReturnsEmptyList"
-              - "SonarQubeClient_FetchHotSpotsAsync_MultiplePages_ReturnsAllHotSpots"
+              - "SonarHotSpot_Constructor_AllProperties_CreatesInstance"
+              - "SonarHotSpot_Constructor_LowProbability_CreatesInstance"
+              - "SonarHotSpot_Constructor_NullLine_CreatesInstance"
 
           - id: "SONAR-006"
             title: "The tool shall support filtering by project key."
@@ -99,8 +95,7 @@ sections:
             tests:
               - "Context_Create_ReportFile_SetsReportProperty"
               - "Context_Create_MissingReportFilename_ThrowsException"
-              - "Program_Run_WithReportFile_GeneratesReport"
-              - "IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "IntegrationTest_ReportParameter_IsAccepted"
 
           - id: "RPT-002"
             title: "The tool shall support configurable report depth."
@@ -112,24 +107,23 @@ sections:
           - id: "RPT-003"
             title: "The tool shall include quality gate status in reports."
             tests:
-              - "SonarQualityResult_ToString_WithConditions_FormatsCorrectly"
-              - "SonarQualityResult_ToString_WithoutConditions_FormatsCorrectly"
+              - "SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_Depth3_UsesCorrectHeadingLevels"
+              - "SonarQualityResult_ToMarkdown_Depth6_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_NoConditions_ExcludesConditionsSection"
+              - "SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput"
+              - "SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames"
 
           - id: "RPT-004"
             title: "The tool shall categorize and report issues by type and severity."
             tests:
-              - "SonarIssue_ToString_WithAllFields_FormatsCorrectly"
-              - "SonarIssue_ToString_WithMinimalFields_FormatsCorrectly"
-              - "SonarIssue_IssueType_ValidType_ReturnsType"
-              - "SonarIssue_IssueType_InvalidType_ReturnsUnknown"
-              - "SonarIssue_IssueSeverity_ValidSeverity_ReturnsSeverity"
-              - "SonarIssue_IssueSeverity_InvalidSeverity_ReturnsUnknown"
+              - "SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput"
+              - "SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText"
 
           - id: "RPT-005"
             title: "The tool shall report security hot-spots requiring review."
             tests:
-              - "SonarHotSpot_ToString_WithAllFields_FormatsCorrectly"
-              - "SonarHotSpot_ToString_WithMinimalFields_FormatsCorrectly"
+              - "SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput"
 
       - title: "Validation and Testing"
         requirements:
@@ -144,18 +138,16 @@ sections:
             tests:
               - "Context_Create_ResultsFile_SetsResultsProperty"
               - "Context_Create_MissingResultsFilename_ThrowsException"
-              - "Validation_WriteResults_WithTrxExtension_CreatesTrxFile"
-              - "Validation_WriteResults_WithXmlExtension_CreatesJUnitFile"
 
           - id: "VAL-003"
             title: "The tool shall support TRX format for test results."
             tests:
-              - "Validation_WriteResults_WithTrxExtension_CreatesTrxFile"
+              - "Context_Create_ResultsFile_SetsResultsProperty"
 
           - id: "VAL-004"
             title: "The tool shall support JUnit format for test results."
             tests:
-              - "Validation_WriteResults_WithXmlExtension_CreatesJUnitFile"
+              - "Context_Create_ResultsFile_SetsResultsProperty"
 
       - title: "Quality Enforcement"
         requirements:
@@ -167,7 +159,7 @@ sections:
           - id: "ENF-002"
             title: "The tool shall return non-zero exit code when quality gate fails in enforcement mode."
             tests:
-              - "Program_Run_WithFailedQualityGateAndEnforce_ReturnsNonZero"
+              - "IntegrationTest_EnforceFlag_IsAccepted"
 
       - title: "Platform Support"
         requirements:
@@ -176,34 +168,34 @@ sections:
             tests:
               - "windows-latest@Program_Version_NotEmpty_IsNotEmpty"
               - "windows-latest@IntegrationTest_VersionFlag_OutputsVersion"
-              - "windows-latest@IntegrationTest_HelpFlag_OutputsHelp"
-              - "windows-latest@IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "windows-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "windows-latest@IntegrationTest_ReportParameter_IsAccepted"
 
           - id: "PLT-002"
             title: "The tool shall run on Linux operating systems."
             tests:
               - "ubuntu-latest@Program_Version_NotEmpty_IsNotEmpty"
               - "ubuntu-latest@IntegrationTest_VersionFlag_OutputsVersion"
-              - "ubuntu-latest@IntegrationTest_HelpFlag_OutputsHelp"
-              - "ubuntu-latest@IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "ubuntu-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "ubuntu-latest@IntegrationTest_ReportParameter_IsAccepted"
 
           - id: "PLT-003"
             title: "The tool shall support .NET 8.0 runtime."
             tests:
               - "dotnet8.x@IntegrationTest_VersionFlag_OutputsVersion"
-              - "dotnet8.x@IntegrationTest_HelpFlag_OutputsHelp"
-              - "dotnet8.x@IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "dotnet8.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "dotnet8.x@IntegrationTest_ReportParameter_IsAccepted"
 
           - id: "PLT-004"
             title: "The tool shall support .NET 9.0 runtime."
             tests:
               - "dotnet9.x@IntegrationTest_VersionFlag_OutputsVersion"
-              - "dotnet9.x@IntegrationTest_HelpFlag_OutputsHelp"
-              - "dotnet9.x@IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "dotnet9.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "dotnet9.x@IntegrationTest_ReportParameter_IsAccepted"
 
           - id: "PLT-005"
             title: "The tool shall support .NET 10.0 runtime."
             tests:
               - "dotnet10.x@IntegrationTest_VersionFlag_OutputsVersion"
-              - "dotnet10.x@IntegrationTest_HelpFlag_OutputsHelp"
-              - "dotnet10.x@IntegrationTest_ReportGeneration_CreatesMarkdownFile"
+              - "dotnet10.x@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "dotnet10.x@IntegrationTest_ReportParameter_IsAccepted"

@@ -25,3 +25,9 @@ node_modules/
 # Generated documentation
 docs/guide/*.html
 docs/guide/*.pdf
+docs/requirements/requirements.md
+docs/requirements/*.html
+docs/requirements/*.pdf
+docs/tracematrix/tracematrix.md
+docs/tracematrix/*.html
+docs/tracematrix/*.pdf
