@@ -1,0 +1,14 @@
+---
+title: SonarMark Code Quality
+subtitle: Code Quality Report for the SonarMark Tool
+author: DEMA Consulting
+description: Code Quality Report for the SonarMark Tool
+lang: en-US
+keywords:
+  - SonarMark
+  - Code Quality
+  - SonarCloud
+  - Analysis
+  - .NET
+  - Command-Line Tool
+---
