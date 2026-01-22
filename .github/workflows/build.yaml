@@ -152,8 +152,8 @@ jobs:
           path: |
             src/DemaConsulting.SonarMark/bin/Release/*.nupkg
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
-            **/manifest.spdx.json
-            **/manifest.spdx.json.sha256
+            src/DemaConsulting.SonarMark/bin/Release/**/manifest.spdx.json
+            src/DemaConsulting.SonarMark/bin/Release/**/manifest.spdx.json.sha256
 
   integration-test:
     name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
@@ -184,7 +184,7 @@ jobs:
         run: |
           echo "Installing package version ${{ inputs.version }} from: packages/"
           dotnet tool install --global \
-            --add-source packages/src/DemaConsulting.SonarMark/bin/Release \
+            --add-source packages \
             --version ${{ inputs.version }} \
             DemaConsulting.SonarMark
 
@@ -277,7 +277,7 @@ jobs:
         run: |
           echo "Installing SonarMark version ${{ inputs.version }}"
           dotnet tool install --global `
-            --add-source packages/src/DemaConsulting.SonarMark/bin/Release `
+            --add-source packages `
             --version ${{ inputs.version }} `
             DemaConsulting.SonarMark
 
