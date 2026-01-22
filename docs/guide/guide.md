@@ -402,12 +402,24 @@ sonarmark --validate
 
 ### Validation Tests
 
-The self-validation includes the following tests:
+The self-validation suite includes the following tests that verify core functionality:
 
-1. **Quality Gate Status Retrieval**: Verifies the tool can retrieve and parse quality gate status
-2. **Issues Retrieval**: Tests issue fetching and parsing
-3. **Hot-Spots Retrieval**: Tests security hot-spot fetching and parsing
-4. **Markdown Report Generation**: Verifies markdown report generation
+| Test Name | Description |
+| :-------- | :---------- |
+| `SonarMark_QualityGateRetrieval` | Verifies fetching and processing quality gate status from SonarQube/SonarCloud |
+| `SonarMark_IssuesRetrieval` | Verifies fetching and processing code issues with severity classification |
+| `SonarMark_HotSpotsRetrieval` | Verifies fetching and processing security hot-spots and vulnerabilities |
+| `SonarMark_MarkdownReportGeneration` | Verifies generating markdown reports with quality metrics and findings |
+
+These tests provide evidence of the tool's functionality and are particularly useful for:
+
+- Verifying the installation is working correctly on different platforms and .NET versions
+- Running automated tests in CI/CD pipelines without requiring SonarQube access
+- Generating test evidence for compliance and traceability requirements
+- Validating tool functionality before deployment
+
+**Note**: The test names with the `SonarMark_` prefix are designed for clear identification in test
+result files (TRX/JUnit) when integrating with larger projects or test frameworks.
 
 ### Validation Output
 

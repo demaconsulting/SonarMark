@@ -68,8 +68,9 @@ SonarMark/
 - **Test Method Naming**: `ClassName_MethodUnderTest_Scenario_ExpectedBehavior` format
   - Example: `Program_Main_NoArguments_ReturnsSuccess` clearly indicates testing the `Program.Main` method
   - This pattern makes test intent clear for requirements traceability
-- **Requirements Traceability**: All tests should be linked to requirements in `requirements.yaml`
-  - Unit tests link directly to functional requirements
+- **Requirements Traceability**: All requirements in `requirements.yaml` should be linked to tests
+  - Integration tests are preferred for requirements evidence
+  - Unit tests may be used if no integration test provides appropriate evidence
   - Integration tests use Test Source Linking format (`filepart@testname`) for platform/runtime requirements
   - Example: `windows-latest@IntegrationTest_VersionFlag_OutputsVersion` links a Windows-specific test
   - Example: `dotnet8.x@IntegrationTest_ReportGeneration_CreatesMarkdownFile` links a .NET 8 test

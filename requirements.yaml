@@ -7,102 +7,84 @@ sections:
           - id: "CLI-001"
             title: "The tool shall provide a command-line interface."
             tests:
-              - "Context_Create_NoArguments_ReturnsDefaultContext"
-              - "Context_Create_UnsupportedArgument_ThrowsException"
+              - "IntegrationTest_VersionFlag_OutputsVersion"
+              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
 
           - id: "CLI-002"
             title: "The tool shall display version information when requested."
             tests:
-              - "Program_Version_NotEmpty_IsNotEmpty"
-              - "Program_Run_VersionFlag_OutputsVersion"
-              - "Context_Create_VersionFlag_SetsVersionProperty"
               - "IntegrationTest_VersionFlag_OutputsVersion"
 
           - id: "CLI-003"
             title: "The tool shall display help information when requested."
             tests:
-              - "Program_Run_HelpFlag_OutputsBannerAndHelp"
-              - "Context_Create_HelpFlags_SetsHelpProperty"
               - "IntegrationTest_HelpFlag_OutputsUsageInformation"
 
           - id: "CLI-004"
             title: "The tool shall support silent mode to suppress console output."
             tests:
-              - "Context_Create_SilentFlag_SetsSilentProperty"
-              - "Context_WriteLine_SilentMode_DoesNotWriteToConsole"
-              - "Context_WriteError_SilentMode_DoesNotWriteToConsole"
+              - "IntegrationTest_SilentFlag_SuppressesOutput"
 
           - id: "CLI-005"
             title: "The tool shall support writing output to a log file."
             tests:
               - "Context_Create_WithLogFile_WritesToLogFile"
-              - "Context_Create_MissingLogFilename_ThrowsException"
-              - "Context_Create_InvalidLogFilePath_ThrowsException"
 
       - title: "SonarQube/SonarCloud Integration"
         requirements:
           - id: "SONAR-001"
             title: "The tool shall connect to SonarQube/SonarCloud servers."
             tests:
-              - "Context_Create_Server_SetsServerProperty"
-              - "Context_Create_MissingServer_ThrowsException"
-              - "Program_Run_NoFlags_OutputsBannerAndRequiresServer"
+              - "IntegrationTest_MissingServerParameter_ShowsError"
 
           - id: "SONAR-002"
             title: "The tool shall authenticate with SonarQube/SonarCloud using tokens."
             tests:
-              - "Context_Create_Token_SetsTokenProperty"
-              - "Context_Create_MissingToken_ThrowsException"
+              - "IntegrationTest_TokenParameter_IsAccepted"
 
           - id: "SONAR-003"
             title: "The tool shall fetch quality gate status from SonarQube/SonarCloud."
             tests:
-              - "SonarQualityResult_Constructor_AllProperties_CreatesInstance"
-              - "SonarQualityCondition_Constructor_AllProperties_CreatesInstance"
+              - "windows-latest@SonarMark_QualityGateRetrieval"
+              - "ubuntu-latest@SonarMark_QualityGateRetrieval"
 
           - id: "SONAR-004"
             title: "The tool shall fetch issues from SonarQube/SonarCloud."
             tests:
-              - "SonarIssue_Constructor_AllProperties_CreatesInstance"
-              - "SonarIssue_Constructor_CriticalSeverity_CreatesInstance"
-              - "SonarIssue_Constructor_BlockerSeverity_CreatesInstance"
-              - "SonarIssue_Constructor_InfoSeverity_CreatesInstance"
-              - "SonarIssue_Constructor_NullLine_CreatesInstance"
+              - "windows-latest@SonarMark_IssuesRetrieval"
+              - "ubuntu-latest@SonarMark_IssuesRetrieval"
 
           - id: "SONAR-005"
             title: "The tool shall fetch security hot-spots from SonarQube/SonarCloud."
             tests:
-              - "SonarHotSpot_Constructor_AllProperties_CreatesInstance"
-              - "SonarHotSpot_Constructor_LowProbability_CreatesInstance"
-              - "SonarHotSpot_Constructor_NullLine_CreatesInstance"
+              - "windows-latest@SonarMark_HotSpotsRetrieval"
+              - "ubuntu-latest@SonarMark_HotSpotsRetrieval"
 
           - id: "SONAR-006"
             title: "The tool shall support filtering by project key."
             tests:
-              - "Context_Create_ProjectKey_SetsProjectKeyProperty"
-              - "Context_Create_MissingProjectKey_ThrowsException"
+              - "IntegrationTest_MissingProjectKeyParameter_ShowsError"
 
           - id: "SONAR-007"
             title: "The tool shall support filtering by branch."
             tests:
-              - "Context_Create_Branch_SetsBranchProperty"
-              - "Context_Create_MissingBranch_ThrowsException"
+              - "IntegrationTest_BranchParameter_IsAccepted"
 
       - title: "Report Generation"
         requirements:
           - id: "RPT-001"
             title: "The tool shall generate markdown reports."
             tests:
-              - "Context_Create_ReportFile_SetsReportProperty"
-              - "Context_Create_MissingReportFilename_ThrowsException"
               - "IntegrationTest_ReportParameter_IsAccepted"
+              - "windows-latest@SonarMark_MarkdownReportGeneration"
+              - "ubuntu-latest@SonarMark_MarkdownReportGeneration"
 
           - id: "RPT-002"
             title: "The tool shall support configurable report depth."
             tests:
-              - "Context_Create_ReportDepth_SetsReportDepthProperty"
-              - "Context_Create_MissingReportDepth_ThrowsException"
-              - "Context_Create_InvalidReportDepth_ThrowsException"
+              - "IntegrationTest_ReportDepthWithZero_ShowsError"
+              - "IntegrationTest_ReportDepthWithInvalidValue_ShowsError"
+              - "IntegrationTest_ReportDepthWithoutValue_ShowsError"
 
           - id: "RPT-003"
             title: "The tool shall include quality gate status in reports."
@@ -130,8 +112,7 @@ sections:
           - id: "VAL-001"
             title: "The tool shall support self-validation mode."
             tests:
-              - "Program_Run_ValidateFlag_OutputsNotImplemented"
-              - "Context_Create_ValidateFlag_SetsValidateProperty"
+              - "IntegrationTest_ValidateFlag_OutputsNotImplemented"
 
           - id: "VAL-002"
             title: "The tool shall write validation results to test result files."
@@ -166,18 +147,24 @@ sections:
           - id: "PLT-001"
             title: "The tool shall run on Windows operating systems."
             tests:
-              - "windows-latest@Program_Version_NotEmpty_IsNotEmpty"
               - "windows-latest@IntegrationTest_VersionFlag_OutputsVersion"
               - "windows-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
               - "windows-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "windows-latest@SonarMark_QualityGateRetrieval"
+              - "windows-latest@SonarMark_IssuesRetrieval"
+              - "windows-latest@SonarMark_HotSpotsRetrieval"
+              - "windows-latest@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-002"
             title: "The tool shall run on Linux operating systems."
             tests:
-              - "ubuntu-latest@Program_Version_NotEmpty_IsNotEmpty"
               - "ubuntu-latest@IntegrationTest_VersionFlag_OutputsVersion"
               - "ubuntu-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
               - "ubuntu-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "ubuntu-latest@SonarMark_QualityGateRetrieval"
+              - "ubuntu-latest@SonarMark_IssuesRetrieval"
+              - "ubuntu-latest@SonarMark_HotSpotsRetrieval"
+              - "ubuntu-latest@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-003"
             title: "The tool shall support .NET 8.0 runtime."

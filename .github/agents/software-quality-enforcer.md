@@ -23,7 +23,7 @@ Ensures all changes meet quality gates before merging.
    - Check tests are isolated and don't depend on execution order
    - Validate test names are descriptive (ClassName_MethodUnderTest_Scenario_ExpectedBehavior)
    - Confirm both success and failure scenarios are tested
-   - Verify all tests are linked to requirements in `requirements.yaml`
+   - Verify all requirements in `requirements.yaml` are linked to tests
    - Ensure requirements traceability is maintained for all changes
 
 3. **Code Review**
