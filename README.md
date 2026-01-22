@@ -64,18 +64,6 @@ Run the tool:
 dotnet sonarmark --version
 ```
 
-### Update
-
-To update to the latest version:
-
-```bash
-# For global tools
-dotnet tool update --global DemaConsulting.SonarMark
-
-# For local tools
-dotnet tool update DemaConsulting.SonarMark
-```
-
 ## Usage
 
 ### Basic Usage
@@ -170,7 +158,7 @@ These tests provide evidence of the tool's functionality and are particularly us
 - Running automated tests in CI/CD pipelines without requiring SonarQube access
 - Generating test evidence for compliance and traceability requirements
 
-For detailed usage instructions, command-line options, and examples, see the
+For detailed usage instructions, command-line options, and examples, including tool update instructions, see the
 [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md).
 
 ## Report Format
@@ -206,70 +194,6 @@ Example report structure:
 - **Major**: 15
 - **Minor**: 32
 ```
-
-## Self-Validation
-
-SonarMark includes built-in self-validation tests to verify functionality without requiring access to a real
-SonarQube/SonarCloud server. The validation uses mock data to test core features.
-
-Run validation with:
-
-```bash
-sonarmark --validate
-```
-
-Optionally save results to TRX or JUnit XML format:
-
-```bash
-# Save as TRX format
-sonarmark --validate --results validation-results.trx
-
-# Save as JUnit XML format
-sonarmark --validate --results validation-results.xml
-```
-
-The validation tests include:
-
-- Quality gate status retrieval and parsing
-- Issues fetching and parsing
-- Security hot-spots fetching and parsing
-- Markdown report generation
-
-## Development
-
-### Development Prerequisites
-
-- [.NET SDK](https://dotnet.microsoft.com/download) 8.0, 9.0, or 10.0
-- Git
-
-### Building
-
-Clone the repository and build the solution:
-
-```bash
-git clone https://github.com/demaconsulting/SonarMark.git
-cd SonarMark
-dotnet restore
-dotnet build --configuration Release
-```
-
-### Testing
-
-Run all tests:
-
-```bash
-dotnet test --configuration Release
-```
-
-### Packaging
-
-Create NuGet packages:
-
-```bash
-dotnet pack --configuration Release --no-build
-```
-
-The packages will be created in `src/DemaConsulting.SonarMark/bin/Release/`.
 
 ## Contributing
 
