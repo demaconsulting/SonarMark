@@ -232,10 +232,9 @@ Examples:
 1. **Update Documentation**: Update relevant documentation for your changes
 2. **Add Tests**: Include tests that cover your changes
 3. **Run Quality Checks**: Ensure all linters, tests, and builds pass
-4. **Update CHANGELOG**: Add an entry describing your changes (if applicable)
-5. **Submit PR**: Create a pull request with a clear description
-6. **Code Review**: Address feedback from maintainers
-7. **Merge**: Once approved, a maintainer will merge your PR
+4. **Submit PR**: Create a pull request with a clear description
+5. **Code Review**: Address feedback from maintainers
+6. **Merge**: Once approved, a maintainer will merge your PR
 
 ### Pull Request Template
 
@@ -266,11 +265,10 @@ SonarMark uses [DemaConsulting.ReqStream][reqstream] for requirements traceabili
 Releases are managed by project maintainers. The process includes:
 
 1. Version bump in project files
-2. Update CHANGELOG with release notes
-3. Tag the release in Git
-4. Build and test across all supported platforms
-5. Publish NuGet package
-6. Create GitHub release with artifacts
+2. Tag the release in Git
+3. Build and test across all supported platforms
+4. Publish NuGet package
+5. Create GitHub release with artifacts and release notes
 
 ## Getting Help
 
