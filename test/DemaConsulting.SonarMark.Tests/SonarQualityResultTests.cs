@@ -489,10 +489,10 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify each issue ends with two spaces (hard line break)
-        Assert.Contains("src/File1.cs(10): MAJOR BUG [rule1] First issue  ", markdown);
-        Assert.Contains("src/File2.cs(20): MINOR CODE_SMELL [rule2] Second issue  ", markdown);
-        Assert.Contains("src/File3.cs(30): CRITICAL VULNERABILITY [rule3] Third issue  ", markdown);
+        // Assert - verify each issue ends with two spaces immediately before line ending
+        Assert.Contains($"src/File1.cs(10): MAJOR BUG [rule1] First issue  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/File2.cs(20): MINOR CODE_SMELL [rule2] Second issue  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/File3.cs(30): CRITICAL VULNERABILITY [rule3] Third issue  {Environment.NewLine}", markdown);
     }
 
     /// <summary>
@@ -522,10 +522,10 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify each hot-spot ends with two spaces (hard line break)
-        Assert.Contains("src/Secure1.cs(10): HIGH [sql-injection] First hot-spot  ", markdown);
-        Assert.Contains("src/Secure2.cs(20): MEDIUM [weak-cryptography] Second hot-spot  ", markdown);
-        Assert.Contains("src/Secure3.cs(30): LOW [xss] Third hot-spot  ", markdown);
+        // Assert - verify each hot-spot ends with two spaces immediately before line ending
+        Assert.Contains($"src/Secure1.cs(10): HIGH [sql-injection] First hot-spot  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/Secure2.cs(20): MEDIUM [weak-cryptography] Second hot-spot  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/Secure3.cs(30): LOW [xss] Third hot-spot  {Environment.NewLine}", markdown);
     }
 
     /// <summary>
