@@ -463,7 +463,7 @@ public class SonarQualityResultTests
     }
 
     /// <summary>
-    ///     Test ToMarkdown with multiple issues includes blank lines between items
+    ///     Test ToMarkdown with multiple issues includes line breaks between items
     /// </summary>
     [TestMethod]
     public void SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesBlankLinesBetweenItems()
@@ -489,14 +489,14 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify each issue is followed by a blank line
-        Assert.Contains("src/File1.cs(10): MAJOR BUG [rule1] First issue\n\n", markdown);
-        Assert.Contains("src/File2.cs(20): MINOR CODE_SMELL [rule2] Second issue\n\n", markdown);
-        Assert.Contains("src/File3.cs(30): CRITICAL VULNERABILITY [rule3] Third issue\n\n", markdown);
+        // Assert - verify each issue ends with two spaces (hard line break)
+        Assert.Contains("src/File1.cs(10): MAJOR BUG [rule1] First issue  ", markdown);
+        Assert.Contains("src/File2.cs(20): MINOR CODE_SMELL [rule2] Second issue  ", markdown);
+        Assert.Contains("src/File3.cs(30): CRITICAL VULNERABILITY [rule3] Third issue  ", markdown);
     }
 
     /// <summary>
-    ///     Test ToMarkdown with multiple hot-spots includes blank lines between items
+    ///     Test ToMarkdown with multiple hot-spots includes line breaks between items
     /// </summary>
     [TestMethod]
     public void SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesBlankLinesBetweenItems()
@@ -522,10 +522,10 @@ public class SonarQualityResultTests
         // Act
         var markdown = result.ToMarkdown(1);
 
-        // Assert - verify each hot-spot is followed by a blank line
-        Assert.Contains("src/Secure1.cs(10): HIGH [sql-injection] First hot-spot\n\n", markdown);
-        Assert.Contains("src/Secure2.cs(20): MEDIUM [weak-cryptography] Second hot-spot\n\n", markdown);
-        Assert.Contains("src/Secure3.cs(30): LOW [xss] Third hot-spot\n\n", markdown);
+        // Assert - verify each hot-spot ends with two spaces (hard line break)
+        Assert.Contains("src/Secure1.cs(10): HIGH [sql-injection] First hot-spot  ", markdown);
+        Assert.Contains("src/Secure2.cs(20): MEDIUM [weak-cryptography] Second hot-spot  ", markdown);
+        Assert.Contains("src/Secure3.cs(30): LOW [xss] Third hot-spot  ", markdown);
     }
 
     /// <summary>
