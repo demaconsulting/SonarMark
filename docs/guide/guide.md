@@ -323,70 +323,106 @@ sonarmark --server https://sonarcloud.io \
 
 The generated markdown report includes the following sections:
 
-### Quality Gate Status
+### Project Header
 
-Shows whether the project passed or failed the quality gate:
+The report begins with the project name and a link to the SonarQube/SonarCloud dashboard:
 
 ```markdown
-# Quality Gate Status
+# Example Project Sonar Analysis
 
-**Status**: PASSED
+**Dashboard:** <https://sonarcloud.io/dashboard?id=my_project>
+```
+
+### Quality Gate Status
+
+Shows whether the project passed or failed the quality gate. Possible values are OK, ERROR, WARN, or NONE:
+
+```markdown
+**Quality Gate Status:** OK
 ```
 
 or
 
 ```markdown
-# Quality Gate Status
-
-**Status**: ERROR
+**Quality Gate Status:** ERROR
 ```
 
-### Quality Gate Conditions
+### Conditions
 
-Details of each quality gate condition with actual values and thresholds:
+If quality gate conditions exist, they are displayed in a table with the following columns:
+
+- **Metric**: The friendly name of the metric being measured (e.g., "Coverage on New Code")
+- **Status**: The condition status (OK, ERROR, or WARN)
+- **Comparator**: The comparison operator (LT for less than, GT for greater than)
+- **Threshold**: The threshold value that was set
+- **Actual**: The actual measured value
 
 ```markdown
-## Quality Gate Conditions
+## Conditions
 
-| Condition | Status | Actual | Threshold |
-|-----------|--------|--------|-----------|
-| Coverage | OK | 85.2% | > 80% |
-| Duplications | OK | 2.1% | < 3% |
-| Security Rating | ERROR | E | A |
+| Metric | Status | Comparator | Threshold | Actual |
+|:-------------------------------|:-----:|:--:|--------:|-------:|
+| Coverage on New Code | ERROR | LT | 80 | 65.5 |
+| New Bugs | ERROR | GT | 0 | 3 |
+| Duplications | OK | LT | 3 | 2.1 |
 ```
 
 ### Issues
 
-Issues are grouped by type and severity:
+The issues section shows a count of issues found and lists each issue in compiler-style format:
 
 ```markdown
 ## Issues
 
-### Bugs
-- **Critical**: 0
-- **Major**: 2
-- **Minor**: 5
+Found 3 issues
 
-### Code Smells
-- **Major**: 15
-- **Minor**: 32
+src/Program.cs(42): MAJOR CODE_SMELL [csharpsquid:S1234] Remove this unused variable
+src/Helper.cs(15): MINOR CODE_SMELL [csharpsquid:S5678] Refactor this method to reduce complexity
+src/Service.cs(88): MAJOR BUG [csharpsquid:S9012] Fix this potential null reference
+```
 
-### Vulnerabilities
-- **High**: 1
-- **Medium**: 3
+Each issue line includes:
+
+- **File path and line number**: `src/Program.cs(42)` or just `src/Program.cs` if no line number
+- **Severity**: BLOCKER, CRITICAL, MAJOR, MINOR, or INFO
+- **Type**: BUG, VULNERABILITY, or CODE_SMELL
+- **Rule**: The SonarQube rule identifier in brackets
+- **Message**: Description of the issue
+
+If no issues are found:
+
+```markdown
+## Issues
+
+Found no issues
 ```
 
 ### Security Hot-Spots
 
-Security vulnerabilities requiring review:
+The security hot-spots section shows a count and lists each hot-spot in compiler-style format:
 
 ```markdown
 ## Security Hot-Spots
 
-| Priority | File | Line | Message |
-|----------|------|------|---------|
-| HIGH | src/Auth.cs | 42 | Make sure this authentication is safe |
-| MEDIUM | src/Database.cs | 156 | Make sure this SQL query is safe |
+Found 2 security hot-spots
+
+src/Database.cs(88): HIGH [sql-injection] Make sure using this SQL query is safe
+src/Auth.cs(42): MEDIUM [weak-cryptography] Use a stronger encryption algorithm
+```
+
+Each hot-spot line includes:
+
+- **File path and line number**: `src/Database.cs(88)` or just `src/Database.cs` if no line number
+- **Vulnerability Probability**: HIGH, MEDIUM, or LOW
+- **Security Category**: The type of security issue in brackets (e.g., sql-injection, weak-cryptography)
+- **Message**: Description of the security concern
+
+If no security hot-spots are found:
+
+```markdown
+## Security Hot-Spots
+
+Found no security hot-spots
 ```
 
 ## Running Self-Validation

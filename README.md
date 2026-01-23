@@ -165,34 +165,40 @@ For detailed usage instructions, command-line options, and examples, including t
 
 The generated markdown report includes:
 
-1. **Quality Gate Status** - Overall pass/fail status
-2. **Quality Gate Conditions** - Detailed conditions with thresholds and actual values
-3. **Issues** - Open and confirmed issues grouped by type (bugs, code smells, vulnerabilities) and severity
-4. **Security Hot-Spots** - Security vulnerabilities requiring review
+1. **Project Header** - Project name and dashboard link
+2. **Quality Gate Status** - Overall pass/fail status (OK, ERROR, WARN, or NONE)
+3. **Conditions** - Detailed quality gate conditions with metrics, comparators, thresholds, and actual values
+4. **Issues** - Count and list of issues in compiler-style format with file, line, severity, type, rule, and message
+5. **Security Hot-Spots** - Count and list of security vulnerabilities requiring review in compiler-style format
 
 Example report structure:
 
 ```markdown
-# Quality Gate Status
+# Example Project Sonar Analysis
 
-**Status**: PASSED
+**Dashboard:** <https://sonarcloud.io/dashboard?id=my_project>
 
-## Quality Gate Conditions
+**Quality Gate Status:** ERROR
 
-| Condition | Status | Actual | Threshold |
-|-----------|--------|--------|-----------|
-| Coverage | OK | 85.2% | > 80% |
-| Duplications | OK | 2.1% | < 3% |
+## Conditions
+
+| Metric | Status | Comparator | Threshold | Actual |
+|:-------------------------------|:-----:|:--:|--------:|-------:|
+| Coverage on New Code | ERROR | LT | 80 | 65.5 |
+| New Bugs | ERROR | GT | 0 | 3 |
 
 ## Issues
 
-### Bugs
-- **Major**: 2
-- **Minor**: 5
+Found 2 issues
 
-### Code Smells
-- **Major**: 15
-- **Minor**: 32
+src/Program.cs(42): MAJOR CODE_SMELL [csharpsquid:S1234] Remove this unused variable
+src/Helper.cs(15): MINOR CODE_SMELL [csharpsquid:S5678] Refactor this method
+
+## Security Hot-Spots
+
+Found 1 security hot-spot
+
+src/Database.cs(88): HIGH [sql-injection] Make sure using this SQL query is safe
 ```
 
 ## Contributing
