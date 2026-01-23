@@ -147,9 +147,8 @@ internal sealed record SonarQualityResult(
                 var component = CleanComponent(issue.Component);
                 var lineInfo = issue.Line.HasValue ? $"({issue.Line})" : "";
                 sb.AppendLine($"{component}{lineInfo}: {issue.Severity} {issue.Type} [{issue.Rule}] {issue.Message}");
+                sb.AppendLine();
             }
-
-            sb.AppendLine();
         }
     }
 
@@ -172,9 +171,8 @@ internal sealed record SonarQualityResult(
                 var lineInfo = hotSpot.Line.HasValue ? $"({hotSpot.Line})" : "";
                 sb.AppendLine(
                     $"{component}{lineInfo}: {hotSpot.VulnerabilityProbability} [{hotSpot.SecurityCategory}] {hotSpot.Message}");
+                sb.AppendLine();
             }
-
-            sb.AppendLine();
         }
     }
 
