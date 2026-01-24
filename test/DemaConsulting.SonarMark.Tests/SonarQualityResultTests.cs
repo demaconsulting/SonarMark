@@ -463,6 +463,72 @@ public class SonarQualityResultTests
     }
 
     /// <summary>
+    ///     Test ToMarkdown with multiple issues includes line breaks between items
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesBlankLinesBetweenItems()
+    {
+        // Arrange
+        IReadOnlyList<SonarIssue> issues =
+        [
+            new("key1", "rule1", "MAJOR", "test_project:src/File1.cs", 10, "First issue", "BUG"),
+            new("key2", "rule2", "MINOR", "test_project:src/File2.cs", 20, "Second issue", "CODE_SMELL"),
+            new("key3", "rule3", "CRITICAL", "test_project:src/File3.cs", 30, "Third issue", "VULNERABILITY")
+        ];
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            [],
+            new Dictionary<string, string>(),
+            issues,
+            []);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify each issue ends with two spaces immediately before line ending
+        Assert.Contains($"src/File1.cs(10): MAJOR BUG [rule1] First issue  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/File2.cs(20): MINOR CODE_SMELL [rule2] Second issue  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/File3.cs(30): CRITICAL VULNERABILITY [rule3] Third issue  {Environment.NewLine}", markdown);
+    }
+
+    /// <summary>
+    ///     Test ToMarkdown with multiple hot-spots includes line breaks between items
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesBlankLinesBetweenItems()
+    {
+        // Arrange
+        IReadOnlyList<SonarHotSpot> hotSpots =
+        [
+            new("hs1", "test_project:src/Secure1.cs", 10, "First hot-spot", "sql-injection", "HIGH"),
+            new("hs2", "test_project:src/Secure2.cs", 20, "Second hot-spot", "weak-cryptography", "MEDIUM"),
+            new("hs3", "test_project:src/Secure3.cs", 30, "Third hot-spot", "xss", "LOW")
+        ];
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            [],
+            new Dictionary<string, string>(),
+            [],
+            hotSpots);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - verify each hot-spot ends with two spaces immediately before line ending
+        Assert.Contains($"src/Secure1.cs(10): HIGH [sql-injection] First hot-spot  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/Secure2.cs(20): MEDIUM [weak-cryptography] Second hot-spot  {Environment.NewLine}", markdown);
+        Assert.Contains($"src/Secure3.cs(30): LOW [xss] Third hot-spot  {Environment.NewLine}", markdown);
+    }
+
+    /// <summary>
     ///     Test SonarQualityCondition can be created with all properties
     /// </summary>
     [TestMethod]
