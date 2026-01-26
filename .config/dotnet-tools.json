@@ -27,7 +27,7 @@
       ]
     },
     "demaconsulting.weasyprinttool": {
-      "version": "67.0.0",
+      "version": "68.0.0",
       "commands": [
         "weasyprint"
       ]
