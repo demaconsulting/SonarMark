@@ -21,8 +21,10 @@ jobs:
   build:
     name: Build
     permissions:
-      contents: read
-      pull-requests: write
+      actions: read             # To read workflow artifacts
+      contents: read            # To read repository contents
+      pull-requests: write      # To write pull requests analysis results and artifacts
+      security-events: write    # To upload CodeQL results
     uses: ./.github/workflows/build.yaml
     with:
       version: ${{ inputs.version }}

@@ -1,0 +1,12 @@
+---
+# CodeQL configuration for SonarMark
+# Excludes test code from path-combine security analysis
+
+name: "SonarMark CodeQL Config"
+
+# Query filters to disable specific queries for certain paths
+query-filters:
+  - exclude:
+      id: cs/path-combine
+    paths:
+      - test/**/*.cs

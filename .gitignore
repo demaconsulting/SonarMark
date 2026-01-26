@@ -31,4 +31,5 @@ docs/requirements/*.html
 docs/tracematrix/tracematrix.md
 docs/tracematrix/*.html
 docs/quality/sonar-quality.md
+docs/quality/codeql-quality.md
 docs/quality/*.html
