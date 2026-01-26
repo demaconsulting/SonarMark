@@ -23,7 +23,7 @@ public class ProgramTests
     public void Program_Run_VersionFlag_OutputsVersion()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -46,7 +46,7 @@ public class ProgramTests
     public void Program_Run_HelpFlag_OutputsBannerAndHelp()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -86,7 +86,7 @@ public class ProgramTests
     public void Program_Run_NoFlags_OutputsBannerAndRequiresServer()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -112,7 +112,7 @@ public class ProgramTests
     public void Program_Run_ServerWithoutProjectKey_OutputsError()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -137,7 +137,7 @@ public class ProgramTests
     public void Program_Run_SilentFlag_SuppressesBanner()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try

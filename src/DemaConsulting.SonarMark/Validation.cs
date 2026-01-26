@@ -317,6 +317,7 @@ internal static class Validation
                 context.WriteError($"✗ {displayName} - FAILED: Exit code {exitCode}");
             }
         }
+        // Generic catch is justified here to handle any exception during test execution
         catch (Exception ex)
         {
             HandleTestException(test, context, displayName, ex);
@@ -370,6 +371,7 @@ internal static class Validation
             File.WriteAllText(context.ResultsFile, content);
             context.WriteLine($"Results written to {context.ResultsFile}");
         }
+        // Generic catch is justified here as a top-level handler to log file write errors
         catch (Exception ex)
         {
             context.WriteError($"Error: Failed to write results file: {ex.Message}");
@@ -427,6 +429,11 @@ internal static class Validation
     /// <summary>
     ///     Mock HTTP message handler that returns predefined responses for validation testing.
     /// </summary>
+    /// <remarks>
+    ///     HttpResponseMessage objects returned from SendAsync are owned by the HttpClient
+    ///     and will be disposed by the framework. CodeQL warnings about non-disposal here
+    ///     are false positives as this follows the standard HttpMessageHandler pattern.
+    /// </remarks>
     private sealed class MockHttpMessageHandler : HttpMessageHandler
     {
         /// <summary>

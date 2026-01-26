@@ -394,7 +394,7 @@ public class ContextTests
     public void Context_WriteLine_NormalMode_WritesToConsole()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -417,7 +417,7 @@ public class ContextTests
     public void Context_WriteLine_SilentMode_DoesNotWriteToConsole()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -440,7 +440,7 @@ public class ContextTests
     public void Context_WriteError_NormalMode_WritesToConsole()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try
@@ -464,7 +464,7 @@ public class ContextTests
     public void Context_WriteError_SilentMode_DoesNotWriteToConsole()
     {
         var originalOut = Console.Out;
-        var output = new StringWriter();
+        using var output = new StringWriter();
         Console.SetOut(output);
 
         try

@@ -1,6 +1,8 @@
 ---
 # CodeQL configuration for SonarMark
 # Excludes test code from path-combine security analysis
+# Excludes justified generic exception handlers
+# Excludes HttpResponseMessage disposal warnings in HttpMessageHandler implementations
 
 name: "SonarMark CodeQL Config"
 
@@ -10,3 +12,13 @@ query-filters:
       id: cs/path-combine
     paths:
       - test/**/*.cs
+  - exclude:
+      id: cs/catch-of-all-exceptions
+    paths:
+      - src/DemaConsulting.SonarMark/Context.cs
+      - src/DemaConsulting.SonarMark/Program.cs
+      - src/DemaConsulting.SonarMark/Validation.cs
+  - exclude:
+      id: cs/local-not-disposed
+    paths:
+      - src/DemaConsulting.SonarMark/Validation.cs
