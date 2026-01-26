@@ -371,6 +371,12 @@ jobs:
             --heading "SonarMark CodeQL Analysis" `
             --report-depth 1
 
+      - name: Display CodeQL Quality Report
+        shell: pwsh
+        run: |
+          echo "=== CodeQL Quality Report ==="
+          Get-Content docs/quality/codeql-quality.md
+
       - name: Generate HTML with Pandoc
         run: >
           dotnet pandoc
@@ -425,6 +431,12 @@ jobs:
           --token "$env:SONAR_TOKEN"
           --report docs/quality/sonar-quality.md
           --report-depth 1
+
+      - name: Display SonarCloud Quality Report
+        shell: pwsh
+        run: |
+          echo "=== SonarCloud Quality Report ==="
+          Get-Content docs/quality/sonar-quality.md
 
       - name: Generate Code Quality HTML with Pandoc
         run: >
