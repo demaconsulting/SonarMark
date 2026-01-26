@@ -6,6 +6,7 @@ input-files:
   - docs/quality/title.txt
   - docs/quality/introduction.md
   - docs/quality/sonar-quality.md
+  - docs/quality/codeql-quality.md
 template: template.html
 table-of-contents: true
 number-sections: true

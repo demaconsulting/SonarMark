@@ -37,6 +37,12 @@
       "commands": [
         "reqstream"
       ]
+    },
+    "demaconsulting.sarifmark": {
+      "version": "1.0.1",
+      "commands": [
+        "sarifmark"
+      ]
     }
   }
 }
