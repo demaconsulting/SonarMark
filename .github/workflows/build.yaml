@@ -108,30 +108,6 @@ jobs:
           end
           /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
-      - name: Generate SBOM
-        run: >
-          dotnet sbom-tool generate
-          -b src/DemaConsulting.SonarMark/bin/Release
-          -bc src/DemaConsulting.SonarMark
-          -pn DemaConsulting.SonarMark
-          -pv ${{ inputs.version }}
-          -ps DemaConsulting
-          -nsb https://DemaConsulting.com/SonarMark
-          -pm true
-          -li true
-
-      - name: Generate Tests SBOM
-        run: >
-          dotnet sbom-tool generate
-          -b test/DemaConsulting.SonarMark.Tests/bin/Release
-          -bc test/DemaConsulting.SonarMark.Tests
-          -pn DemaConsulting.SonarMark.Tests
-          -pv ${{ inputs.version }}
-          -ps DemaConsulting
-          -nsb https://DemaConsulting.com/SonarMark.Tests
-          -pm true
-          -li true
-
       - name: Create Dotnet Tool
         run: >
           dotnet pack
@@ -152,8 +128,6 @@ jobs:
           path: |
             src/DemaConsulting.SonarMark/bin/Release/*.nupkg
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
-            src/DemaConsulting.SonarMark/bin/Release/**/manifest.spdx.json
-            src/DemaConsulting.SonarMark/bin/Release/**/manifest.spdx.json.sha256
 
   codeql:
     name: CodeQL Analysis
