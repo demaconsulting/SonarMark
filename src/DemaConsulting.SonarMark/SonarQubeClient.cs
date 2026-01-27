@@ -203,21 +203,15 @@ internal sealed class SonarQubeClient : IDisposable
     /// <returns>List of quality gate conditions</returns>
     private static List<SonarQualityCondition> ParseQualityGateConditions(JsonElement projectStatus)
     {
-        var conditions = new List<SonarQualityCondition>();
-
         if (!projectStatus.TryGetProperty("conditions", out var conditionsElement) ||
             conditionsElement.ValueKind != JsonValueKind.Array)
         {
-            return conditions;
+            return [];
         }
 
-        foreach (var condition in conditionsElement.EnumerateArray())
-        {
-            var parsedCondition = ParseQualityGateCondition(condition);
-            conditions.Add(parsedCondition);
-        }
-
-        return conditions;
+        return conditionsElement.EnumerateArray()
+            .Select(ParseQualityGateCondition)
+            .ToList();
     }
 
     /// <summary>
@@ -284,20 +278,14 @@ internal sealed class SonarQubeClient : IDisposable
     /// <returns>List of parsed issues</returns>
     private static List<SonarIssue> ParseIssues(JsonElement issuesElement)
     {
-        var issues = new List<SonarIssue>();
-
         if (issuesElement.ValueKind != JsonValueKind.Array)
         {
-            return issues;
+            return [];
         }
 
-        foreach (var issue in issuesElement.EnumerateArray())
-        {
-            var parsedIssue = ParseIssue(issue);
-            issues.Add(parsedIssue);
-        }
-
-        return issues;
+        return issuesElement.EnumerateArray()
+            .Select(ParseIssue)
+            .ToList();
     }
 
     /// <summary>
@@ -365,20 +353,14 @@ internal sealed class SonarQubeClient : IDisposable
     /// <returns>List of parsed hot-spots</returns>
     private static List<SonarHotSpot> ParseHotSpots(JsonElement hotSpotsElement)
     {
-        var hotSpots = new List<SonarHotSpot>();
-
         if (hotSpotsElement.ValueKind != JsonValueKind.Array)
         {
-            return hotSpots;
+            return [];
         }
 
-        foreach (var hotSpot in hotSpotsElement.EnumerateArray())
-        {
-            var parsedHotSpot = ParseHotSpot(hotSpot);
-            hotSpots.Add(parsedHotSpot);
-        }
-
-        return hotSpots;
+        return hotSpotsElement.EnumerateArray()
+            .Select(ParseHotSpot)
+            .ToList();
     }
 
     /// <summary>

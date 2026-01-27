@@ -171,6 +171,7 @@ internal sealed class Context : IDisposable
         {
             _logWriter = new StreamWriter(logFile, append: false);
         }
+        // Generic catch is justified here to wrap any file system exception with context
         catch (Exception ex)
         {
             throw new InvalidOperationException($"Failed to open log file '{logFile}': {ex.Message}", ex);
