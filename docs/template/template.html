@@ -56,6 +56,13 @@ body {
   margin-bottom: 1rem;
 }
 
+.version {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
 .author, .date {
   font-size: 1rem;
   color: #888;
@@ -153,7 +160,7 @@ pre {
   border: 1px solid #ddd;
   border-radius: 4px;
   padding: 1rem;
-  overflow-x: auto;
+  overflow: auto;
   margin-bottom: 1rem;
   page-break-inside: avoid;
 }
@@ -250,26 +257,32 @@ img {
   size: letter;
   margin: 1in 0.75in;
   
-  @top-center {
+  @top-left {
     content: string(doctitle);
     font-size: 10pt;
     color: #666;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 0.25in;
+  }
+  
+  @top-right {
+    content: string(docversion);
+    font-size: 10pt;
+    color: #666;
   }
   
   @bottom-center {
     content: "Page " counter(page) " of " counter(pages);
     font-size: 10pt;
     color: #666;
-    border-top: 1px solid #e0e0e0;
-    padding-top: 0.25in;
   }
 }
 
 /* Don't show header/footer on title page */
 @page :first {
-  @top-center {
+  @top-left {
+    content: none;
+  }
+  
+  @top-right {
     content: none;
   }
   
@@ -281,6 +294,11 @@ img {
 /* Set the document title for the header */
 .title {
   string-set: doctitle content();
+}
+
+/* Set the document version for the header */
+.version {
+  string-set: docversion content();
 }
 
 /* Add page numbers to TOC entries using target-counter */
@@ -308,6 +326,9 @@ $if(title)$
 <h1 class="title">$title$</h1>
 $if(subtitle)$
 <p class="subtitle">$subtitle$</p>
+$endif$
+$if(version)$
+<p class="version">Version $version$</p>
 $endif$
 $for(author)$
 <p class="author">$author$</p>

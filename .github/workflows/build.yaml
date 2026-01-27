@@ -352,10 +352,13 @@ jobs:
           Get-Content docs/quality/codeql-quality.md
 
       - name: Generate HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/guide/definition.yaml
           --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
           --output docs/guide/guide.html
 
       - name: Generate PDF with Weasyprint
@@ -366,10 +369,13 @@ jobs:
           "docs/SonarMark User Guide.pdf"
 
       - name: Generate Requirements HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/requirements/definition.yaml
           --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
           --output docs/requirements/requirements.html
 
       - name: Generate Requirements PDF with Weasyprint
@@ -380,10 +386,13 @@ jobs:
           "docs/SonarMark Requirements.pdf"
 
       - name: Generate Trace Matrix HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/tracematrix/definition.yaml
           --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
           --output docs/tracematrix/tracematrix.html
 
       - name: Generate Trace Matrix PDF with Weasyprint
@@ -413,10 +422,13 @@ jobs:
           Get-Content docs/quality/sonar-quality.md
 
       - name: Generate Code Quality HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/quality/definition.yaml
           --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
           --output docs/quality/quality.html
 
       - name: Generate Code Quality PDF with Weasyprint
