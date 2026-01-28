@@ -73,8 +73,8 @@
       "type": "shell",
       "args": [
         "markdownlint-cli2",
-        "\"**/*.md\"",
-        "\"#node_modules\""
+        "**/*.md",
+        "#node_modules"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -88,7 +88,7 @@
       "type": "shell",
       "args": [
         "cspell",
-        "\"**/*.{cs,md,json,yaml,yml}\"",
+        "**/*.{cs,md,json,yaml,yml}",
         "--no-progress"
       ],
       "problemMatcher": [],
@@ -153,7 +153,7 @@
         "--requirements",
         "requirements.yaml",
         "--tests",
-        "\"test-results/**/*.trx\"",
+        "test-results/**/*.trx",
         "--enforce"
       ],
       "problemMatcher": [],
