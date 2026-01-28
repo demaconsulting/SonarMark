@@ -338,7 +338,7 @@ jobs:
       - name: Generate CodeQL Quality Report with SarifMark
         shell: bash
         run: >
-          sarifmark
+          dotnet sarifmark
           --sarif codeql-results/csharp.sarif
           --report docs/quality/codeql-quality.md
           --heading "SonarMark CodeQL Analysis"
