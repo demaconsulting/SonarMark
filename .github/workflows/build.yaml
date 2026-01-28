@@ -336,6 +336,7 @@ jobs:
           --enforce
 
       - name: Generate CodeQL Quality Report with SarifMark
+        shell: bash
         run: >
           sarifmark
           --sarif codeql-results/csharp.sarif
