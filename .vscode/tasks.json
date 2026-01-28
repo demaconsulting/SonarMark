@@ -161,6 +161,53 @@
         "reveal": "always",
         "panel": "shared"
       }
+    },
+    {
+      "label": "check dependencies",
+      "command": "dotnet",
+      "type": "shell",
+      "args": [
+        "list",
+        "package",
+        "--outdated"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "check vulnerabilities",
+      "command": "dotnet",
+      "type": "shell",
+      "args": [
+        "list",
+        "package",
+        "--vulnerable",
+        "--include-transitive"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "maintenance check",
+      "dependsOn": [
+        "check dependencies",
+        "check vulnerabilities",
+        "lint all",
+        "build and test",
+        "verify requirements"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
     }
   ]
 }

@@ -200,12 +200,23 @@ All tests must pass with zero warnings.
 
 ### 2. Linting
 
+Run all linters to ensure code quality and consistency:
+
 ```bash
-# These commands run in CI - verify locally if tools are installed
-markdownlint-cli2 "**/*.md"
-cspell "**/*.{md,cs}"
-yamllint -c .yamllint.yaml .
+# Markdown linting
+npx markdownlint-cli2 "**/*.md" "#node_modules"
+
+# Spell checking
+npx cspell "**/*.{md,cs}" --no-progress
+
+# YAML linting
+yamllint .
+
+# Code formatting
+dotnet format --verify-no-changes
 ```
+
+All linters must pass with no errors or warnings.
 
 ### 3. Code Coverage
 
