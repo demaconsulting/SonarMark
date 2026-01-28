@@ -1,0 +1,166 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "build",
+        "--configuration",
+        "Release",
+        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "test",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "test",
+        "--configuration",
+        "Release",
+        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+      ],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "build and test",
+      "dependsOn": [
+        "build",
+        "test"
+      ],
+      "dependsOrder": "sequence",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "format",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "format"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "lint markdown",
+      "command": "npx",
+      "type": "shell",
+      "args": [
+        "markdownlint-cli2",
+        "\"**/*.md\"",
+        "\"#node_modules\""
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "spell check",
+      "command": "npx",
+      "type": "shell",
+      "args": [
+        "cspell",
+        "\"**/*.{cs,md,json,yaml,yml}\"",
+        "--no-progress"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "lint yaml",
+      "command": "npx",
+      "type": "shell",
+      "args": [
+        "yamllint",
+        "."
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "lint all",
+      "dependsOn": [
+        "format",
+        "lint markdown",
+        "spell check",
+        "lint yaml"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "test with coverage",
+      "command": "dotnet",
+      "type": "process",
+      "args": [
+        "test",
+        "--configuration",
+        "Release",
+        "--collect",
+        "XPlat Code Coverage",
+        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+      ],
+      "problemMatcher": "$msCompile",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "verify requirements",
+      "command": "dotnet",
+      "type": "shell",
+      "args": [
+        "reqstream",
+        "--requirements",
+        "requirements.yaml",
+        "--tests",
+        "\"test-results/**/*.trx\"",
+        "--enforce"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
