@@ -151,46 +151,56 @@ sections:
         requirements:
           - id: "PLT-001"
             title: "The tool shall run on Windows operating systems."
+            # Test source pattern "windows-latest@" ensures these tests ran on Windows.
+            # This filtering is necessary to prove Windows OS functionality.
             tests:
-              - "IntegrationTest_VersionFlag_OutputsVersion"
-              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
-              - "IntegrationTest_ReportParameter_IsAccepted"
-              - "SonarMark_QualityGateRetrieval"
-              - "SonarMark_IssuesRetrieval"
-              - "SonarMark_HotSpotsRetrieval"
-              - "SonarMark_MarkdownReportGeneration"
+              - "windows-latest@IntegrationTest_VersionFlag_OutputsVersion"
+              - "windows-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "windows-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_QualityGateRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_IssuesRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_HotSpotsRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-002"
             title: "The tool shall run on Linux operating systems."
+            # Test source pattern "ubuntu-latest@" ensures these tests ran on Linux.
+            # This filtering is necessary to prove Linux OS functionality.
             tests:
-              - "IntegrationTest_VersionFlag_OutputsVersion"
-              - "IntegrationTest_HelpFlag_OutputsUsageInformation"
-              - "IntegrationTest_ReportParameter_IsAccepted"
-              - "SonarMark_QualityGateRetrieval"
-              - "SonarMark_IssuesRetrieval"
-              - "SonarMark_HotSpotsRetrieval"
-              - "SonarMark_MarkdownReportGeneration"
+              - "ubuntu-latest@IntegrationTest_VersionFlag_OutputsVersion"
+              - "ubuntu-latest@IntegrationTest_HelpFlag_OutputsUsageInformation"
+              - "ubuntu-latest@IntegrationTest_ReportParameter_IsAccepted"
+              - "integration-test-ubuntu-latest-dotnet8.x@SonarMark_QualityGateRetrieval"
+              - "integration-test-ubuntu-latest-dotnet8.x@SonarMark_IssuesRetrieval"
+              - "integration-test-ubuntu-latest-dotnet8.x@SonarMark_HotSpotsRetrieval"
+              - "integration-test-ubuntu-latest-dotnet8.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-003"
             title: "The tool shall support .NET 8.0 runtime."
+            # Test source pattern "dotnet8.x@" ensures these tests ran on .NET 8.0.
+            # This filtering is necessary to prove .NET 8.0 runtime support.
             tests:
-              - "SonarMark_QualityGateRetrieval"
-              - "SonarMark_IssuesRetrieval"
-              - "SonarMark_HotSpotsRetrieval"
-              - "SonarMark_MarkdownReportGeneration"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_QualityGateRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_IssuesRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_HotSpotsRetrieval"
+              - "integration-test-windows-latest-dotnet8.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-004"
             title: "The tool shall support .NET 9.0 runtime."
+            # Test source pattern "dotnet9.x@" ensures these tests ran on .NET 9.0.
+            # This filtering is necessary to prove .NET 9.0 runtime support.
             tests:
-              - "SonarMark_QualityGateRetrieval"
-              - "SonarMark_IssuesRetrieval"
-              - "SonarMark_HotSpotsRetrieval"
-              - "SonarMark_MarkdownReportGeneration"
+              - "integration-test-windows-latest-dotnet9.x@SonarMark_QualityGateRetrieval"
+              - "integration-test-windows-latest-dotnet9.x@SonarMark_IssuesRetrieval"
+              - "integration-test-windows-latest-dotnet9.x@SonarMark_HotSpotsRetrieval"
+              - "integration-test-windows-latest-dotnet9.x@SonarMark_MarkdownReportGeneration"
 
           - id: "PLT-005"
             title: "The tool shall support .NET 10.0 runtime."
+            # Test source pattern "dotnet10.x@" ensures these tests ran on .NET 10.0.
+            # This filtering is necessary to prove .NET 10.0 runtime support.
             tests:
-              - "SonarMark_QualityGateRetrieval"
-              - "SonarMark_IssuesRetrieval"
-              - "SonarMark_HotSpotsRetrieval"
-              - "SonarMark_MarkdownReportGeneration"
+              - "integration-test-windows-latest-dotnet10.x@SonarMark_QualityGateRetrieval"
+              - "integration-test-windows-latest-dotnet10.x@SonarMark_IssuesRetrieval"
+              - "integration-test-windows-latest-dotnet10.x@SonarMark_HotSpotsRetrieval"
+              - "integration-test-windows-latest-dotnet10.x@SonarMark_MarkdownReportGeneration"
