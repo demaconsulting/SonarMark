@@ -595,7 +595,7 @@ internal static class Validation
         public TemporaryDirectory()
         {
             DirectoryPath = Path.Combine(Path.GetTempPath(), $"sonarmark_validation_{Guid.NewGuid()}");
-            
+
             try
             {
                 Directory.CreateDirectory(DirectoryPath);
