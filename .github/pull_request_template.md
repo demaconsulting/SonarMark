@@ -36,13 +36,11 @@ Before submitting this pull request, ensure you have completed the following:
 - [ ] New code has appropriate XML documentation comments
 - [ ] Static analyzer warnings have been addressed
 
-### Quality Checks
+### Linting
 
-Please run the following checks before submitting:
-
-- [ ] **Spell checker passes**: `cspell "**/*.{md,cs}"`
-- [ ] **Markdown linter passes**: `markdownlint "**/*.md"`
-- [ ] **YAML linter passes**: `yamllint '**/*.{yml,yaml}'`
+- [ ] Markdown linter passes: `npx markdownlint-cli2 "**/*.md" "#node_modules"`
+- [ ] Spell checker passes: `npx cspell "**/*.{md,cs}" --no-progress`
+- [ ] YAML linter passes: `yamllint .`
 
 ### Testing
 
