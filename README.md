@@ -25,7 +25,7 @@ documentation workflows.
 - 🔒 **Security Hot-Spots** - Identify and report security vulnerabilities requiring review
 - 📝 **Markdown Output** - Generate human-readable markdown reports for easy sharing
 - 🚀 **CI/CD Integration** - Enforce quality gates and fail builds on quality issues
-- 🌐 **Multi-Platform** - Runs on Windows, Linux, and macOS with .NET 8, 9, and 10
+- 🌐 **Multi-Platform** - Support for .NET 8, 9, and 10 across Windows, Linux, and macOS
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
 
@@ -206,8 +206,7 @@ src/Database.cs(88): HIGH [sql-injection] Make sure using this SQL query is safe
 Contributions are welcome! We appreciate your interest in improving SonarMark.
 
 Please see our [Contributing Guide](https://github.com/demaconsulting/SonarMark/blob/main/CONTRIBUTING.md) for
-development setup, coding standards, and submission guidelines. For project maintenance, see the
-[Maintenance Guide](https://github.com/demaconsulting/SonarMark/blob/main/MAINTENANCE.md). Also review our
+development setup, coding standards, and submission guidelines. Also review our
 [Code of Conduct](https://github.com/demaconsulting/SonarMark/blob/main/CODE_OF_CONDUCT.md) for community guidelines.
 
 For bug reports, feature requests, and questions, please use [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues).
@@ -224,8 +223,6 @@ file for details.
 - ❓ **Ask Questions**: [GitHub Discussions](https://github.com/demaconsulting/SonarMark/discussions)
 - 📖 **Documentation**: [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md)
 - 🤝 **Contributing**: [Contributing Guide](https://github.com/demaconsulting/SonarMark/blob/main/CONTRIBUTING.md)
-- 🔧 **Maintenance**: [Maintenance Guide](https://github.com/demaconsulting/SonarMark/blob/main/MAINTENANCE.md)
-- 📋 **Changelog**: [CHANGELOG.md](https://github.com/demaconsulting/SonarMark/blob/main/CHANGELOG.md)
 
 ## Security
 
