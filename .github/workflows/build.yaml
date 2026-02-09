@@ -333,6 +333,7 @@ jobs:
           --tests "test-results/**/*.trx"
           --report docs/requirements/requirements.md
           --matrix docs/tracematrix/tracematrix.md
+          --justifications docs/justifications/justifications.md
           --enforce
 
       - name: Generate CodeQL Quality Report with SarifMark
@@ -397,6 +398,22 @@ jobs:
           --pdf-variant pdf/a-3u
           docs/tracematrix/tracematrix.html
           "docs/SonarMark Trace Matrix.pdf"
+
+      - name: Generate Justifications HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/justifications/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/justifications/justifications.html
+
+      - name: Generate Justifications PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/justifications/justifications.html
+          "docs/SonarMark Requirements Justifications.pdf"
 
       - name: Generate Code Quality Report with SonarMark
         shell: bash
