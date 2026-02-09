@@ -417,6 +417,44 @@ jobs:
           echo "=== SonarCloud Quality Report ==="
           cat docs/quality/sonar-quality.md
 
+      - name: Generate Build Notes with BuildMark
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: >
+          dotnet buildmark
+          --build-version ${{ inputs.version }}
+          --report docs/buildnotes.md
+          --report-depth 1
+
+      - name: Display Build Notes Report
+        shell: bash
+        run: |
+          echo "=== Build Notes Report ==="
+          cat docs/buildnotes.md
+          # Verify buildnotes.md was created
+          if [ ! -f "docs/buildnotes.md" ]; then
+            echo "Error: buildnotes.md was not created"
+            exit 1
+          fi
+
+      - name: Generate Build Notes HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/buildnotes/definition.yaml
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --output docs/buildnotes/buildnotes.html
+
+      - name: Convert Build Notes HTML to PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/buildnotes/buildnotes.html
+          "docs/SonarMark Build Notes.pdf"
+
       - name: Generate Code Quality HTML with Pandoc
         run: >
           dotnet pandoc
@@ -437,4 +475,6 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: documentation
-          path: docs/*.pdf
+          path: |
+            docs/*.pdf
+            docs/buildnotes.md
