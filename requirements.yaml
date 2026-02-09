@@ -188,10 +188,10 @@ sections:
           - id: VAL-001
             title: The tool shall support self-validation mode.
             justification: |
-              Self-validation mode allows the tool to verify its own functionality against a live Sonar
-              server, ensuring it works correctly and can retrieve and process data as expected. This
-              capability is essential for testing the tool itself and providing confidence in its operation
-              before using it in production pipelines.
+              Self-validation mode allows the tool to verify its own functionality without requiring
+              external dependencies or a live Sonar server. This capability is essential for testing
+              the tool itself and providing confidence in its operation before using it in production
+              pipelines.
             tests:
               - IntegrationTest_ValidateFlag_OutputsNotImplemented
               - SonarMark_QualityGateRetrieval
