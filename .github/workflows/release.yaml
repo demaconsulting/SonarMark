@@ -59,13 +59,19 @@ jobs:
           name: documentation
           path: artifacts
 
+      - name: Move buildnotes.md to root
+        run: |
+          set -e
+          mv artifacts/buildnotes.md buildnotes.md
+
       - name: Create GitHub Release
         if: inputs.publish == 'release' || inputs.publish == 'publish'
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ inputs.version }}
           artifacts: artifacts/*
-          generateReleaseNotes: true
+          bodyFile: buildnotes.md
+          generateReleaseNotes: false
 
       - name: Publish to NuGet.org
         if: inputs.publish == 'publish'
