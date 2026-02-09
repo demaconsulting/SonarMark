@@ -326,12 +326,6 @@ jobs:
       - name: Restore Tools
         run: dotnet tool restore
 
-      - name: Install BuildMark Tool
-        shell: bash
-        run: |
-          echo "Installing BuildMark tool"
-          dotnet tool install --global DemaConsulting.BuildMark --version 0.2.0
-
       - name: Generate Requirements Report and Trace Matrix
         run: >
           dotnet reqstream
@@ -428,7 +422,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: >
-          buildmark
+          dotnet buildmark
           --build-version ${{ inputs.version }}
           --report docs/buildnotes.md
           --report-depth 1
@@ -438,6 +432,11 @@ jobs:
         run: |
           echo "=== Build Notes Report ==="
           cat docs/buildnotes.md
+          # Verify buildnotes.md was created
+          if [ ! -f "docs/buildnotes.md" ]; then
+            echo "Error: buildnotes.md was not created"
+            exit 1
+          fi
 
       - name: Generate Build Notes HTML with Pandoc
         shell: bash
