@@ -336,6 +336,14 @@ jobs:
           --justifications docs/justifications/justifications.md
           --enforce
 
+      - name: Fix markdown linting in generated files
+        shell: bash
+        run: |
+          # Remove consecutive blank lines from auto-generated files
+          cat -s docs/justifications/justifications.md > /tmp/justifications.md
+          mv /tmp/justifications.md docs/justifications/justifications.md
+
+
       - name: Generate CodeQL Quality Report with SarifMark
         shell: bash
         run: >
