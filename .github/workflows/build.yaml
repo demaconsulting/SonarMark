@@ -28,6 +28,7 @@ jobs:
         uses: streetsidesoftware/cspell-action@v8
         with:
           files: '**/*.{md,cs}'
+          incremental_files_only: false
 
       - name: Run YAML linter
         uses: ibiqlik/action-yamllint@v3
