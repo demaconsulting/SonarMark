@@ -3,6 +3,15 @@
 Project-specific guidance for agents working on SonarMark - a .NET CLI tool for creating code quality reports from
 SonarQube/SonarCloud analysis results.
 
+## Available Specialized Agents
+
+- **Requirements Agent** - Develops requirements and ensures test coverage linkage
+- **Technical Writer** - Creates accurate documentation following regulatory best practices
+- **Software Developer** - Writes production code and self-validation tests in literate style
+- **Test Developer** - Creates unit and integration tests following AAA pattern
+- **Code Quality Agent** - Enforces linting, static analysis, and security standards
+- **Repo Consistency Agent** - Ensures SonarMark remains consistent with TemplateDotNetTool template patterns
+
 ## Tech Stack
 
 - C# 12, .NET 8.0/9.0/10.0, MSTest, dotnet CLI, NuGet
@@ -16,7 +25,8 @@ SonarQube/SonarCloud analysis results.
 
 ## Requirements (SonarMark-Specific)
 
-- Link ALL requirements to tests (prefer integration tests over unit tests)
+- All requirements MUST be linked to tests (prefer integration tests over unit tests)
+- Not all tests need to be linked to requirements (tests may exist for corner cases, design testing, failure-testing, etc.)
 - Enforced in CI: `dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce`
 - When adding features: add requirement + link to test
 
@@ -34,6 +44,7 @@ SonarQube/SonarCloud analysis results.
 
 ## Linting (SonarMark-Specific)
 
+- **AI agent markdown files** (`.github/agents/*.md`): Use inline links `[text](url)` so URLs are visible in agent context
 - **README.md**: Absolute URLs only (shipped in NuGet package)
 - **Other .md**: Reference-style links `[text][ref]` with `[ref]: url` at end
 - **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI workflows)
@@ -52,13 +63,14 @@ dotnet build --configuration Release && dotnet test --configuration Release
 # 5. Requirements: dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
 ```
 
-## Custom Agents
+## Agent Invocation Guidelines
 
 Delegate tasks to specialized agents for better results:
 
-- **documentation-writer** - Invoke for: documentation updates/reviews, requirements.yaml changes,
-  markdown/spell/YAML linting
-- **project-maintainer** - Invoke for: dependency updates, CI/CD maintenance, releases, requirements
-  traceability enforcement
-- **software-quality-enforcer** - Invoke for: code quality reviews, test coverage verification (>80%),
-  static analysis, zero-warning builds, requirements test quality
+- **requirements-agent** - For: developing requirements, ensuring test coverage linkage, determining test strategy
+- **technical-writer** - For: documentation updates/reviews, markdown/spell/YAML linting
+- **software-developer** - For: production code features, self-validation tests, refactoring for testability
+- **test-developer** - For: unit and integration tests, improving test coverage, test refactoring
+- **code-quality-agent** - For: code quality reviews, linting/static analysis issues, security verification,
+  requirements traceability enforcement
+- **repo-consistency-agent** - For: periodic reviews to ensure SonarMark follows TemplateDotNetTool patterns
