@@ -171,7 +171,7 @@ Unit tests run locally and provide rapid feedback during development:
 
 - **Scope**: Core functionality, argument parsing, report generation logic
 - **Execution**: `dotnet test --configuration Release`
-- **Requirements Coverage**: Validates 19 of 29 requirements locally
+- **Requirements Coverage**: Validates most requirements locally
 
 #### CI Integration Testing (Self-Validation Tests)
 
@@ -197,7 +197,7 @@ Full requirements traceability is validated in CI using ReqStream:
 dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
 ```
 
-**Note**: When running `dotnet reqstream --enforce` locally, you may see 10 unsatisfied requirements. This is expected
+**Note**: When running `dotnet reqstream --enforce` locally, you may see some unsatisfied requirements. This is expected
 because self-validation and platform-specific tests only execute in the CI pipeline. Full validation requires the
 complete CI workflow.
 
