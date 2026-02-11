@@ -11,6 +11,6 @@
   // Ignore patterns
   "ignores": [
     "node_modules",
-    "AGENT_REPORT_*.md"
+    "**/AGENT_REPORT_*.md"
   ]
 }

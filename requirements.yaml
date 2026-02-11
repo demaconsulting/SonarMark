@@ -1,4 +1,16 @@
 ---
+# SonarMark Requirements
+#
+# Test Execution Strategy:
+# This file links requirements to tests across multiple execution contexts:
+# - Unit tests: Run locally via 'dotnet test' (validates most requirements)
+# - Self-validation tests: Run via 'sonarmark --validate' in CI integration-test job
+#   (validates SONAR-003, SONAR-004, SONAR-005, RPT-001, VAL-001)
+# - Platform tests: Run across OS/runtime matrix in CI integration-test job
+#   (validates PLT-001 through PLT-005)
+#
+# Note: Running 'dotnet reqstream --enforce' locally will show some unsatisfied requirements.
+# This is expected - full validation requires the complete CI pipeline.
 sections:
   - title: SonarMark Requirements
     sections:

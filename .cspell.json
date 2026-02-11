@@ -82,6 +82,7 @@
     "*.trx",
     "*.spdx.json",
     "package-lock.json",
-    "yarn.lock"
+    "yarn.lock",
+    "AGENT_REPORT_*.md"
   ]
 }
