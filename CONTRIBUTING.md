@@ -161,6 +161,46 @@ dotnet test --filter "FullyQualifiedName~YourTestName"
 dotnet test --collect "XPlat Code Coverage"
 ```
 
+### Test Execution Strategy
+
+SonarMark uses a multi-stage test execution strategy to validate functionality across different contexts:
+
+#### Local Testing (Unit Tests)
+
+Unit tests run locally and provide rapid feedback during development:
+
+- **Scope**: Core functionality, argument parsing, report generation logic
+- **Execution**: `dotnet test --configuration Release`
+- **Requirements Coverage**: Validates 19 of 29 requirements locally
+
+#### CI Integration Testing (Self-Validation Tests)
+
+Self-validation tests execute in CI and validate the complete packaged tool:
+
+- **Scope**: End-to-end validation against real SonarCloud APIs
+- **Execution**: Runs via `sonarmark --validate` in the integration-test job
+- **Requirements Coverage**: Validates requirements SONAR-003, SONAR-004, SONAR-005, RPT-001, VAL-001
+
+#### CI Platform Testing (Matrix Tests)
+
+Platform-specific tests execute across multiple OS and .NET runtime combinations:
+
+- **Scope**: Windows/Linux compatibility, .NET 8/9/10 support
+- **Execution**: Runs in the integration-test job matrix
+- **Requirements Coverage**: Validates requirements PLT-001 through PLT-005
+
+#### Requirements Traceability
+
+Full requirements traceability is validated in CI using ReqStream:
+
+```bash
+dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
+```
+
+**Note**: When running `dotnet reqstream --enforce` locally, you may see 10 unsatisfied requirements. This is expected
+because self-validation and platform-specific tests only execute in the CI pipeline. Full validation requires the
+complete CI workflow.
+
 ## Documentation
 
 ### Markdown Guidelines

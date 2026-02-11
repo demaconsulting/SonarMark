@@ -10,6 +10,7 @@ on:
         required: true
 
 jobs:
+  # Run linting checks (markdown, spelling, YAML) to ensure code quality standards
   quality-checks:
     name: Quality Checks
     runs-on: ubuntu-latest
@@ -35,6 +36,7 @@ jobs:
         with:
           config_file: .yamllint.yaml
 
+  # Build and test on multiple operating systems with SonarCloud analysis
   build:
     name: Build ${{ matrix.os }}
     needs: quality-checks
@@ -130,6 +132,7 @@ jobs:
             src/DemaConsulting.SonarMark/bin/Release/*.nupkg
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
 
+  # Perform security analysis using CodeQL
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
@@ -184,6 +187,7 @@ jobs:
           name: codeql-sarif
           path: sarif-results/csharp.sarif
 
+  # Test the packaged tool on multiple OS and .NET versions
   integration-test:
     name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
     runs-on: ${{ matrix.os }}
@@ -272,6 +276,7 @@ jobs:
           name: integration-test-results-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
           path: integration-test-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx
 
+  # Generate all documentation including requirements, trace matrix, and build notes
   build-docs:
     name: Build Documentation
     runs-on: windows-latest
