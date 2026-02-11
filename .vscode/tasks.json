@@ -9,7 +9,7 @@
         "build",
         "--configuration",
         "Release",
-        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+        "${workspaceFolder}/DemaConsulting.SonarMark.slnx"
       ],
       "problemMatcher": "$msCompile",
       "group": {
@@ -29,7 +29,7 @@
         "test",
         "--configuration",
         "Release",
-        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+        "${workspaceFolder}/DemaConsulting.SonarMark.slnx"
       ],
       "problemMatcher": "$msCompile",
       "group": {
@@ -136,7 +136,7 @@
         "Release",
         "--collect",
         "XPlat Code Coverage",
-        "${workspaceFolder}/DemaConsulting.SonarMark.sln"
+        "${workspaceFolder}/DemaConsulting.SonarMark.slnx"
       ],
       "problemMatcher": "$msCompile",
       "presentation": {

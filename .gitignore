@@ -1,7 +1,23 @@
-.vs
-*.bak
+# Visual Studio
+.vs/
+*.suo
 *.user
+*.userosscache
+*.sln.docstates
+*.userprefs
 
+# Visual Studio Code
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains Rider
+.idea/
+*.sln.iml
+
+# Build results
 bin/
 obj/
 TestResults/
@@ -17,11 +33,16 @@ coverage/
 
 # Temporary files
 *.tmp
+*.bak
 .DS_Store
+*~
 
 # Node.js dependencies
 node_modules/
 package-lock.json
+
+# Agent communication files
+AGENT_REPORT_*.md
 
 # Generated documentation
 docs/*.pdf

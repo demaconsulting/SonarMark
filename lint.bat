@@ -2,7 +2,7 @@
 REM Run all linters for SonarMark (Windows)
 
 echo Checking markdown...
-call npx markdownlint-cli2 "**/*.md" "#node_modules"
+call npx markdownlint-cli2
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Checking spelling...

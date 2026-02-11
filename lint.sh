@@ -4,7 +4,7 @@
 set -e  # Exit on error
 
 echo "📝 Checking markdown..."
-npx markdownlint-cli2 "**/*.md" "#node_modules"
+npx markdownlint-cli2
 
 echo "🔤 Checking spelling..."
 npx cspell "**/*.{cs,md,json,yaml,yml}" --no-progress

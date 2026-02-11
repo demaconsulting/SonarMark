@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/DemaConsulting.SonarMark/DemaConsulting.SonarMark.csproj" />
+  <Project Path="test/DemaConsulting.SonarMark.Tests/DemaConsulting.SonarMark.Tests.csproj" />
+</Solution>
