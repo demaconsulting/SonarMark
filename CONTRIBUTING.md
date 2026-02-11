@@ -212,7 +212,7 @@ npx markdownlint-cli2
 npx cspell "**/*.{md,cs}" --no-progress
 
 # YAML linting
-npx yamllint .
+yamllint .
 
 # Code formatting
 dotnet format --verify-no-changes
