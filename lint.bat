@@ -10,7 +10,7 @@ call npx cspell "**/*.{cs,md,json,yaml,yml}" --no-progress
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Checking YAML...
-call npx yamllint .
+call yamllint .
 if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo Checking code formatting...

@@ -10,7 +10,7 @@ echo "🔤 Checking spelling..."
 npx cspell "**/*.{cs,md,json,yaml,yml}" --no-progress
 
 echo "📋 Checking YAML..."
-npx yamllint .
+yamllint .
 
 echo "🎨 Checking code formatting..."
 dotnet format --verify-no-changes
