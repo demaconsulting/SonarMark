@@ -27,7 +27,7 @@
       ]
     },
     "demaconsulting.reqstream": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "commands": [
         "reqstream"
       ]
@@ -42,6 +42,12 @@
       "version": "0.2.0",
       "commands": [
         "buildmark"
+      ]
+    },
+    "demaconsulting.versionmark": {
+      "version": "0.1.0",
+      "commands": [
+        "versionmark"
       ]
     }
   }

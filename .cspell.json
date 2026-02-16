@@ -66,6 +66,8 @@
     "trx",
     "vbproj",
     "vcxproj",
+    "versionmark",
+    "VersionMark",
     "Weasyprint",
     "weasyprinttool",
     "yamllint"
