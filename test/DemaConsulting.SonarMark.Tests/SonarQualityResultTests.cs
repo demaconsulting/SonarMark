@@ -215,16 +215,9 @@ public class SonarQualityResultTests
             []);
 
         // Act & Assert
-        try
-        {
-            result.ToMarkdown(0);
-            Assert.Fail("Expected ArgumentOutOfRangeException was not thrown");
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            Assert.AreEqual("depth", ex.ParamName);
-            Assert.Contains("Depth must be between 1 and 6", ex.Message);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
+        Assert.AreEqual("depth", ex.ParamName);
+        Assert.Contains("Depth must be between 1 and 6", ex.Message);
     }
 
     /// <summary>
@@ -247,16 +240,9 @@ public class SonarQualityResultTests
             []);
 
         // Act & Assert
-        try
-        {
-            result.ToMarkdown(7);
-            Assert.Fail("Expected ArgumentOutOfRangeException was not thrown");
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            Assert.AreEqual("depth", ex.ParamName);
-            Assert.Contains("Depth must be between 1 and 6", ex.Message);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
+        Assert.AreEqual("depth", ex.ParamName);
+        Assert.Contains("Depth must be between 1 and 6", ex.Message);
     }
 
     /// <summary>
