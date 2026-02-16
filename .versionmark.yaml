@@ -1,0 +1,66 @@
+---
+# VersionMark Configuration File
+# This file defines which tools to capture and how to extract their version information.
+
+tools:
+  # .NET SDK
+  # Note: .NET SDK versions include up to 4 components (e.g., 10.0.102, 8.0.404)
+  dotnet:
+    command: dotnet --version
+    regex: '(?<version>\d+\.\d+\.\d+(?:\.\d+)?)'
+
+  # Git
+  git:
+    command: git --version
+    regex: '(?i)git version (?<version>\d+\.\d+\.\d+)'
+
+  # Node.js
+  node:
+    command: node --version
+    regex: '(?i)v(?<version>\d+\.\d+\.\d+)'
+
+  # npm
+  npm:
+    command: npm --version
+    regex: '(?<version>\d+\.\d+\.\d+)'
+
+  # SonarScanner for .NET (from dotnet tool list)
+  dotnet-sonarscanner:
+    command: dotnet tool list
+    regex: '(?i)dotnet-sonarscanner\s+(?<version>\d+\.\d+\.\d+)'
+
+  # Pandoc (DemaConsulting.PandocTool from dotnet tool list)
+  pandoc:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.pandoctool\s+(?<version>\d+\.\d+\.\d+)'
+
+  # WeasyPrint (DemaConsulting.WeasyPrintTool from dotnet tool list)
+  weasyprint:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.weasyprinttool\s+(?<version>\d+\.\d+\.\d+)'
+
+  # SarifMark (DemaConsulting.SarifMark from dotnet tool list)
+  sarifmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.sarifmark\s+(?<version>\d+\.\d+\.\d+)'
+
+  # SonarMark - checks global installation since it installs itself globally
+  # Note: Different from template - uses --global flag like BuildMark
+  sonarmark:
+    command: dotnet tool list --global
+    regex: '(?i)demaconsulting\.sonarmark\s+(?<version>\d+\.\d+\.\d+)'
+
+  # ReqStream (DemaConsulting.ReqStream from dotnet tool list)
+  reqstream:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.reqstream\s+(?<version>\d+\.\d+\.\d+)'
+
+  # BuildMark (DemaConsulting.BuildMark from dotnet tool list)
+  buildmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.buildmark\s+(?<version>\d+\.\d+\.\d+)'
+
+  # VersionMark (DemaConsulting.VersionMark from dotnet tool list)
+  versionmark:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.versionmark\s+(?<version>\d+\.\d+\.\d+)'

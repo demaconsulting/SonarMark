@@ -20,6 +20,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.x
+
+      - name: Restore Tools
+        run: dotnet tool restore
+
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          echo "Capturing tool versions..."
+          dotnet versionmark --capture --job-id "quality" -- dotnet git versionmark
+          echo "✓ Tool versions captured"
+
+      - name: Upload version capture
+        uses: actions/upload-artifact@v6
+        with:
+          name: version-capture-quality
+          path: versionmark-quality.json
+
       - name: Run markdown linter
         uses: DavidAnson/markdownlint-cli2-action@v22
         with:
@@ -118,6 +139,23 @@ jobs:
           --no-restore
           --property:PackageVersion=${{ inputs.version }}
 
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          echo "Capturing tool versions..."
+          # Create short job ID: build-win, build-ubuntu
+          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/windows-latest/win/;s/ubuntu-latest/ubuntu/')
+          JOB_ID="build-${OS_SHORT}"
+          dotnet versionmark --capture --job-id "${JOB_ID}" -- \
+            dotnet git dotnet-sonarscanner versionmark
+          echo "✓ Tool versions captured"
+
+      - name: Upload version capture
+        uses: actions/upload-artifact@v6
+        with:
+          name: version-capture-${{ matrix.os }}
+          path: versionmark-build-*.json
+
       - name: Upload Test Results
         uses: actions/upload-artifact@v6
         with:
@@ -201,6 +239,13 @@ jobs:
         dotnet-version: ['8.x', '9.x', '10.x']
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            .versionmark.yaml
+            .config/dotnet-tools.json
+
       - name: Download package
         uses: actions/download-artifact@v7
         with:
@@ -211,6 +256,10 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
 
       - name: Install tool from package
         shell: bash
@@ -269,6 +318,23 @@ jobs:
             || { echo "✗ Self-validation failed"; exit 1; }
           echo "✓ Self-validation succeeded"
 
+      - name: Capture tool versions
+        shell: bash
+        run: |
+          echo "Capturing tool versions..."
+          # Create short job ID: int-win-8, int-win-9, int-ubuntu-8, etc.
+          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/windows-latest/win/;s/ubuntu-latest/ubuntu/')
+          DOTNET_SHORT=$(echo "${{ matrix.dotnet-version }}" | sed 's/\.x$//')
+          JOB_ID="int-${OS_SHORT}-${DOTNET_SHORT}"
+          dotnet versionmark --capture --job-id "${JOB_ID}" -- dotnet git versionmark
+          echo "✓ Tool versions captured"
+
+      - name: Upload version capture
+        uses: actions/upload-artifact@v6
+        with:
+          name: version-capture-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
+          path: versionmark-int-*.json
+
       - name: Upload integration test results
         if: always()
         uses: actions/upload-artifact@v6
@@ -312,6 +378,13 @@ jobs:
           name: codeql-sarif
           path: codeql-results
 
+      - name: Download all version captures
+        uses: actions/download-artifact@v7
+        with:
+          path: version-captures
+          pattern: 'version-capture-*'
+        continue-on-error: true
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
@@ -331,6 +404,14 @@ jobs:
 
       - name: Restore Tools
         run: dotnet tool restore
+
+      - name: Capture tool versions for build-docs
+        shell: bash
+        run: |
+          echo "Capturing tool versions..."
+          dotnet versionmark --capture --job-id "build-docs" -- \
+            dotnet git node npm pandoc weasyprint sarifmark reqstream buildmark versionmark
+          echo "✓ Tool versions captured"
 
       - name: Generate Requirements Report and Trace Matrix
         run: >
@@ -460,6 +541,20 @@ jobs:
             echo "Error: buildnotes.md was not created"
             exit 1
           fi
+
+      - name: Publish Tool Versions
+        shell: bash
+        run: |
+          echo "Publishing tool versions..."
+          dotnet versionmark --publish --report docs/buildnotes/versions.md --report-depth 1 \
+            -- "versionmark-*.json" "version-captures/**/versionmark-*.json"
+          echo "✓ Tool versions published"
+
+      - name: Display Tool Versions Report
+        shell: bash
+        run: |
+          echo "=== Tool Versions Report ==="
+          cat docs/buildnotes/versions.md
 
       - name: Generate Build Notes HTML with Pandoc
         shell: bash
