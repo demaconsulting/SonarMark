@@ -53,10 +53,10 @@ jobs:
           name: artifacts-ubuntu-latest
           path: artifacts
 
-      - name: Download documentation artifacts
+      - name: Download documents artifact
         uses: actions/download-artifact@v7
         with:
-          name: documentation
+          name: documents
           path: artifacts
 
       - name: Move buildnotes.md to root
