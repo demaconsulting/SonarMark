@@ -49,16 +49,19 @@ internal sealed record SonarQualityResult(
     /// <exception cref="ArgumentOutOfRangeException">Thrown when depth is not between 1 and 6</exception>
     public string ToMarkdown(int depth)
     {
+        // Validate that depth is in valid range for markdown headers
         if (depth < 1 || depth > 6)
         {
             throw new ArgumentOutOfRangeException(nameof(depth), depth, "Depth must be between 1 and 6");
         }
 
+        // Calculate heading strings based on requested depth
         var heading = new string('#', depth);
         var subHeadingDepth = Math.Min(depth + 1, 6);
         var subHeading = new string('#', subHeadingDepth);
         var sb = new System.Text.StringBuilder();
 
+        // Build markdown document by appending all sections
         AppendHeader(sb, heading);
         AppendConditionsSection(sb, subHeading);
         AppendIssuesSection(sb, subHeading);
@@ -70,6 +73,8 @@ internal sealed record SonarQualityResult(
     /// <summary>
     ///     Appends the header section with project name, dashboard link, and quality gate status
     /// </summary>
+    /// <param name="sb">String builder to append to</param>
+    /// <param name="heading">Heading prefix (e.g., "#" or "##")</param>
     private void AppendHeader(System.Text.StringBuilder sb, string heading)
     {
         // Add project name as main heading
@@ -89,6 +94,8 @@ internal sealed record SonarQualityResult(
     /// <summary>
     ///     Appends the conditions section if there are any conditions
     /// </summary>
+    /// <param name="sb">String builder to append to</param>
+    /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
     private void AppendConditionsSection(System.Text.StringBuilder sb, string subHeading)
     {
         if (Conditions.Count == 0)
@@ -115,6 +122,8 @@ internal sealed record SonarQualityResult(
     /// <summary>
     ///     Appends a single condition row to the table
     /// </summary>
+    /// <param name="sb">String builder to append to</param>
+    /// <param name="condition">Condition to format</param>
     private void AppendConditionRow(System.Text.StringBuilder sb, SonarQualityCondition condition)
     {
         // Use friendly name if available, otherwise fall back to metric key
@@ -132,6 +141,8 @@ internal sealed record SonarQualityResult(
     /// <summary>
     ///     Appends the issues section with count and details
     /// </summary>
+    /// <param name="sb">String builder to append to</param>
+    /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
     private void AppendIssuesSection(System.Text.StringBuilder sb, string subHeading)
     {
         sb.AppendLine($"{subHeading} Issues");
@@ -156,6 +167,8 @@ internal sealed record SonarQualityResult(
     /// <summary>
     ///     Appends the security hot-spots section with count and details
     /// </summary>
+    /// <param name="sb">String builder to append to</param>
+    /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
     private void AppendHotSpotsSection(System.Text.StringBuilder sb, string subHeading)
     {
         sb.AppendLine($"{subHeading} Security Hot-Spots");

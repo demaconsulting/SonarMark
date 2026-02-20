@@ -26,9 +26,27 @@ SonarQube/SonarCloud analysis results.
 ## Requirements (SonarMark-Specific)
 
 - All requirements MUST be linked to tests (prefer integration tests over unit tests)
-- Not all tests need to be linked to requirements (tests may exist for corner cases, design testing, failure-testing, etc.)
+- Not all tests need to be linked to requirements (tests may exist for corner cases, design testing,
+  failure-testing, etc.)
 - Enforced in CI: `dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce`
 - When adding features: add requirement + link to test
+
+## Test Source Filters
+
+Test links in `requirements.yaml` can include a source filter prefix to restrict which test results count as
+evidence. This is critical for platform and framework requirements - **do not remove these filters**.
+
+- `windows@TestName` - proves the test passed on a Windows platform
+- `ubuntu@TestName` - proves the test passed on a Linux (Ubuntu) platform
+- `net8.0@TestName` - proves the test passed under the .NET 8 target framework
+- `net9.0@TestName` - proves the test passed under the .NET 9 target framework
+- `net10.0@TestName` - proves the test passed under the .NET 10 target framework
+- `dotnet8.x@TestName` - proves the self-validation test ran on a machine with .NET 8.x runtime
+- `dotnet9.x@TestName` - proves the self-validation test ran on a machine with .NET 9.x runtime
+- `dotnet10.x@TestName` - proves the self-validation test ran on a machine with .NET 10.x runtime
+
+Without the source filter, a test result from any platform/framework satisfies the requirement. Adding the
+filter ensures the CI evidence comes specifically from the required environment.
 
 ## Testing (SonarMark-Specific)
 
@@ -44,10 +62,12 @@ SonarQube/SonarCloud analysis results.
 
 ## Linting (SonarMark-Specific)
 
-- **AI agent markdown files** (`.github/agents/*.md`): Use inline links `[text](url)` so URLs are visible in agent context
+- **AI agent markdown files** (`.github/agents/*.md`): Use inline links `[text](url)` so URLs are visible in
+  agent context
 - **README.md**: Absolute URLs only (shipped in NuGet package)
 - **Other .md**: Reference-style links `[text][ref]` with `[ref]: url` at end
-- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI workflows)
+- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI
+  workflows)
 
 ## Build & Quality (Quick Reference)
 

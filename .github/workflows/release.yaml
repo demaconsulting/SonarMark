@@ -18,19 +18,23 @@ on:
           - publish
 
 jobs:
+  # Calls the reusable build workflow to build, test, and generate documentation
+  # for the release version.
   build:
     name: Build
     permissions:
-      actions: read             # To read workflow artifacts
-      contents: read            # To read repository contents
-      pull-requests: write      # To write pull requests analysis results and artifacts
-      security-events: write    # To upload CodeQL results
+      actions: read
+      contents: read
+      pull-requests: write
+      security-events: write
     uses: ./.github/workflows/build.yaml
     with:
       version: ${{ inputs.version }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+  # Cuts and publishes the release, creating a GitHub release with artifacts
+  # and optionally publishing the NuGet package.
   release:
     name: Release
     runs-on: ubuntu-latest
@@ -62,10 +66,6 @@ jobs:
       - name: Move buildnotes.md to root
         run: |
           set -e
-          if [ ! -f "artifacts/buildnotes.md" ]; then
-            echo "Error: buildnotes.md not found in artifacts"
-            exit 1
-          fi
           mv artifacts/buildnotes.md buildnotes.md
 
       - name: Create GitHub Release

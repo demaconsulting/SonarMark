@@ -7,6 +7,15 @@ This document contains the requirements trace matrix for the SonarMark project.
 The trace matrix links requirements to their corresponding test cases, ensuring complete
 test coverage and traceability from requirements to implementation.
 
+## Scope
+
+This trace matrix document covers:
+
+- Linkage between requirements and test cases
+- Test coverage status for each requirement
+- Both unit/integration tests and self-validation tests
+- Platform-specific test execution results
+
 ## Test Sources
 
 Requirements traceability in SonarMark uses two types of tests:

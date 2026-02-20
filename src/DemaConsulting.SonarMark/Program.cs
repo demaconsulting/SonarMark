@@ -154,19 +154,21 @@ internal static class Program
     /// <param name="context">The context containing command line arguments and program state.</param>
     private static void ProcessSonarAnalysis(Context context)
     {
-        // Validate required parameters
+        // Validate that required server parameter is provided
         if (string.IsNullOrWhiteSpace(context.Server))
         {
             context.WriteError("Error: --server parameter is required");
             return;
         }
 
+        // Validate that required project key parameter is provided
         if (string.IsNullOrWhiteSpace(context.ProjectKey))
         {
             context.WriteError("Error: --project-key parameter is required");
             return;
         }
 
+        // Display configuration information
         context.WriteLine($"Server: {context.Server}");
         context.WriteLine($"Project Key: {context.ProjectKey}");
         if (!string.IsNullOrWhiteSpace(context.Branch))
@@ -174,10 +176,11 @@ internal static class Program
             context.WriteLine($"Branch: {context.Branch}");
         }
 
-        // Get quality results from SonarQube/SonarCloud
+        // Create SonarQube client using factory or default constructor
         context.WriteLine("Fetching quality results from server...");
         using var client = context.HttpClientFactory?.Invoke(context.Token) ?? new SonarQubeClient(context.Token);
 
+        // Fetch quality results from SonarQube/SonarCloud server
         SonarQualityResult qualityResult;
         try
         {
@@ -185,6 +188,8 @@ internal static class Program
                 context.Server,
                 context.ProjectKey,
                 context.Branch).GetAwaiter().GetResult();
+
+            // Display quality gate status and issue counts
             context.WriteLine($"Quality Gate Status: {qualityResult.QualityGateStatus}");
             context.WriteLine($"Issues: {qualityResult.Issues.Count}");
             context.WriteLine($"Hot-Spots: {qualityResult.HotSpots.Count}");
@@ -195,13 +200,13 @@ internal static class Program
             return;
         }
 
-        // Check enforcement if requested
+        // Check quality gate enforcement if requested
         if (context.Enforce && qualityResult.QualityGateStatus == "ERROR")
         {
             context.WriteError("Error: Quality gate failed");
         }
 
-        // Export quality report if requested
+        // Generate markdown report if requested
         if (context.ReportFile != null)
         {
             context.WriteLine($"Writing quality report to {context.ReportFile}...");

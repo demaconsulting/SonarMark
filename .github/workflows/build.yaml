@@ -351,13 +351,11 @@ jobs:
       contents: read
 
     steps:
+      # === CHECKOUT AND DOWNLOAD ARTIFACTS ===
+      # This section retrieves the code and all necessary artifacts from previous jobs.
+
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 'lts/*'
 
       - name: Download all test results
         uses: actions/download-artifact@v7
@@ -385,6 +383,14 @@ jobs:
           pattern: 'version-capture-*'
         continue-on-error: true
 
+      # === INSTALL DEPENDENCIES ===
+      # This section installs all required dependencies and tools for document generation.
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
@@ -405,6 +411,9 @@ jobs:
       - name: Restore Tools
         run: dotnet tool restore
 
+      # === CAPTURE TOOL VERSIONS ===
+      # This section captures the versions of all tools used in the build process.
+
       - name: Capture tool versions for build-docs
         shell: bash
         run: |
@@ -412,6 +421,9 @@ jobs:
           dotnet versionmark --capture --job-id "build-docs" -- \
             dotnet git node npm pandoc weasyprint sarifmark reqstream buildmark versionmark
           echo "✓ Tool versions captured"
+
+      # === GENERATE MARKDOWN REPORTS ===
+      # This section generates all markdown reports from various tools and sources.
 
       - name: Generate Requirements Report and Trace Matrix
         run: >
@@ -437,70 +449,6 @@ jobs:
         run: |
           echo "=== CodeQL Quality Report ==="
           cat docs/quality/codeql-quality.md
-
-      - name: Generate HTML with Pandoc
-        run: >
-          dotnet pandoc
-          --defaults docs/guide/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/guide/guide.html
-
-      - name: Generate PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/guide/guide.html
-          "docs/SonarMark User Guide.pdf"
-
-      - name: Generate Requirements HTML with Pandoc
-        run: >
-          dotnet pandoc
-          --defaults docs/requirements/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/requirements/requirements.html
-
-      - name: Generate Requirements PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/requirements/requirements.html
-          "docs/SonarMark Requirements.pdf"
-
-      - name: Generate Trace Matrix HTML with Pandoc
-        run: >
-          dotnet pandoc
-          --defaults docs/tracematrix/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/tracematrix/tracematrix.html
-
-      - name: Generate Trace Matrix PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/tracematrix/tracematrix.html
-          "docs/SonarMark Trace Matrix.pdf"
-
-      - name: Generate Justifications HTML with Pandoc
-        run: >
-          dotnet pandoc
-          --defaults docs/justifications/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/justifications/justifications.html
-
-      - name: Generate Justifications PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/justifications/justifications.html
-          "docs/SonarMark Requirements Justifications.pdf"
 
       - name: Generate Code Quality Report with SonarMark
         shell: bash
@@ -536,11 +484,6 @@ jobs:
         run: |
           echo "=== Build Notes Report ==="
           cat docs/buildnotes.md
-          # Verify buildnotes.md was created
-          if [ ! -f "docs/buildnotes.md" ]; then
-            echo "Error: buildnotes.md was not created"
-            exit 1
-          fi
 
       - name: Publish Tool Versions
         shell: bash
@@ -556,6 +499,45 @@ jobs:
           echo "=== Tool Versions Report ==="
           cat docs/buildnotes/versions.md
 
+      # === GENERATE HTML DOCUMENTS WITH PANDOC ===
+      # This section converts markdown documents to HTML using Pandoc.
+
+      - name: Generate Guide HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/guide/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/guide/guide.html
+
+      - name: Generate Requirements HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements/requirements.html
+
+      - name: Generate Trace Matrix HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/tracematrix/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/tracematrix/tracematrix.html
+
+      - name: Generate Justifications HTML with Pandoc
+        run: >
+          dotnet pandoc
+          --defaults docs/justifications/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/justifications/justifications.html
+
       - name: Generate Build Notes HTML with Pandoc
         shell: bash
         run: >
@@ -566,13 +548,6 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --output docs/buildnotes/buildnotes.html
 
-      - name: Convert Build Notes HTML to PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/buildnotes/buildnotes.html
-          "docs/SonarMark Build Notes.pdf"
-
       - name: Generate Code Quality HTML with Pandoc
         run: >
           dotnet pandoc
@@ -582,12 +557,53 @@ jobs:
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/quality/quality.html
 
+      # === GENERATE PDF DOCUMENTS WITH WEASYPRINT ===
+      # This section converts HTML documents to PDF using Weasyprint.
+
+      - name: Generate Guide PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/guide/guide.html
+          "docs/SonarMark User Guide.pdf"
+
+      - name: Generate Requirements PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/requirements/requirements.html
+          "docs/SonarMark Requirements.pdf"
+
+      - name: Generate Trace Matrix PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/tracematrix/tracematrix.html
+          "docs/SonarMark Trace Matrix.pdf"
+
+      - name: Generate Justifications PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/justifications/justifications.html
+          "docs/SonarMark Requirements Justifications.pdf"
+
+      - name: Generate Build Notes PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/buildnotes/buildnotes.html
+          "docs/SonarMark Build Notes.pdf"
+
       - name: Generate Code Quality PDF with Weasyprint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
           docs/quality/quality.html
           "docs/SonarMark Code Quality.pdf"
+
+      # === UPLOAD ARTIFACTS ===
+      # This section uploads all generated documentation artifacts.
 
       - name: Upload documentation
         uses: actions/upload-artifact@v6

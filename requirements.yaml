@@ -1,16 +1,32 @@
 ---
 # SonarMark Requirements
 #
-# Test Execution Strategy:
-# This file links requirements to tests across multiple execution contexts:
-# - Unit tests: Run locally via 'dotnet test' (validates most requirements)
-# - Self-validation tests: Run via 'sonarmark --validate' in CI integration-test job
-#   (validates SONAR-003, SONAR-004, SONAR-005, RPT-001, VAL-001)
-# - Platform tests: Run across OS/runtime matrix in CI integration-test job
-#   (validates PLT-001 through PLT-005)
+# This project uses three categories of tests to verify requirements:
 #
-# Note: Running 'dotnet reqstream --enforce' locally will show some unsatisfied requirements.
-# This is expected - full validation requires the complete CI pipeline.
+# 1. Unit Tests - Run locally via "dotnet test"
+# 2. Self-Validation Tests - Run locally via "--validate"
+# 3. Platform Tests - Run via CI/CD across OS/runtime matrix
+#
+# NOTE: Running "reqstream --enforce" with only local test results (unit tests
+# and local self-validation) is expected to show some unsatisfied requirements.
+# Platform-specific requirements require test results from CI/CD runs across
+# the full OS and runtime matrix.
+#
+# Test links can include a source filter prefix (e.g. "windows@", "ubuntu@", "net8.0@",
+# "dotnet8.x@") to restrict which test results count as evidence for a requirement. This
+# is critical for platform and framework requirements - removing these filters invalidates
+# the evidence-based proof.
+#
+# Source filter prefixes:
+#   windows@TestName    - proves the test passed on a Windows platform
+#   ubuntu@TestName     - proves the test passed on a Linux (Ubuntu) platform
+#   net8.0@TestName     - proves the test passed under the .NET 8 target framework
+#   net9.0@TestName     - proves the test passed under the .NET 9 target framework
+#   net10.0@TestName    - proves the test passed under the .NET 10 target framework
+#   dotnet8.x@TestName  - proves the self-validation test ran with .NET 8.x runtime
+#   dotnet9.x@TestName  - proves the self-validation test ran with .NET 9.x runtime
+#   dotnet10.x@TestName - proves the self-validation test ran with .NET 10.x runtime
+#
 sections:
   - title: SonarMark Requirements
     sections:

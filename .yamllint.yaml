@@ -4,6 +4,11 @@
 
 extends: default
 
+# Ignore node_modules and other generated/third-party directories
+ignore: |
+  node_modules/
+  .git/
+
 rules:
   # Allow 'on:' in GitHub Actions workflows (not a boolean value)
   truthy:

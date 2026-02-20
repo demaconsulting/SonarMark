@@ -1,14 +1,13 @@
 {
-  // Markdown linting configuration for markdownlint-cli2
   "config": {
     "default": true,
     "MD003": { "style": "atx" },
     "MD007": { "indent": 2 },
     "MD013": { "line_length": 120 },
+    "MD025": false,
     "MD033": false,
     "MD041": false
   },
-  // Ignore patterns
   "ignores": [
     "node_modules",
     "**/AGENT_REPORT_*.md"
