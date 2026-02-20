@@ -132,9 +132,11 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
     {
+        // Parse command-line arguments into structured form
         var parser = new ArgumentParser();
         parser.ParseArguments(args);
 
+        // Create context with parsed arguments
         var result = new Context
         {
             Version = parser.Version,
@@ -256,6 +258,7 @@ internal sealed class Context : IDisposable
         /// <param name="args">Command-line arguments.</param>
         public void ParseArguments(string[] args)
         {
+            // Iterate through all arguments, processing each one
             int i = 0;
             while (i < args.Length)
             {

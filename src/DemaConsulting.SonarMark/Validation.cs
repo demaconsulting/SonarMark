@@ -254,16 +254,18 @@ internal static class Validation
         string? reportFileName,
         Func<string, string?, string?> validator)
     {
+        // Record test start time for duration calculation
         var startTime = DateTime.UtcNow;
         var test = CreateTestResult(testName);
 
         try
         {
+            // Create temporary directory for test artifacts
             using var tempDir = new TemporaryDirectory();
             var logFile = Path.Combine(tempDir.DirectoryPath, $"{testName}.log");
             var reportFile = reportFileName != null ? Path.Combine(tempDir.DirectoryPath, reportFileName) : null;
 
-            // Build command line arguments
+            // Build command line arguments for test execution
             var args = new List<string>
             {
                 "--silent",
@@ -278,7 +280,7 @@ internal static class Validation
                 args.Add(reportFile);
             }
 
-            // Run the program
+            // Execute the program with mock HTTP client
             int exitCode;
             using (var testContext = Context.Create([.. args], mockFactory))
             {
@@ -286,16 +288,16 @@ internal static class Validation
                 exitCode = testContext.ExitCode;
             }
 
-            // Check if execution succeeded
+            // Verify that program executed successfully
             if (exitCode == 0)
             {
-                // Read log and report contents
+                // Read generated log and report files
                 var logContent = File.ReadAllText(logFile);
                 var reportContent = reportFile != null && File.Exists(reportFile)
                     ? File.ReadAllText(reportFile)
                     : null;
 
-                // Validate the results
+                // Validate test results using provided validator function
                 var errorMessage = validator(logContent, reportContent);
 
                 if (errorMessage == null)

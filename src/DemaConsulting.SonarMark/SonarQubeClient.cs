@@ -121,25 +121,31 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="projectKey">Project key</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Project name</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
     private async Task<string> GetProjectNameByKeyAsync(
         string serverUrl,
         string projectKey,
         CancellationToken cancellationToken)
     {
+        // Build API URL for component information
         var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={projectKey}";
 
+        // Fetch component data from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+        // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jsonDoc = JsonDocument.Parse(content);
 
+        // Extract component element from response
         var root = jsonDoc.RootElement;
         if (!root.TryGetProperty("component", out var component))
         {
             throw new InvalidOperationException("Invalid component response: missing 'component' property");
         }
 
+        // Extract project name from component
         if (!component.TryGetProperty("name", out var nameElement))
         {
             throw new InvalidOperationException("Invalid component response: missing 'name' property");
@@ -157,6 +163,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality gate status and conditions</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
     private async Task<(string QualityGateStatus, List<SonarQualityCondition> Conditions)>
         GetQualityGateStatusByBranchAsync(
             string serverUrl,
@@ -164,25 +171,29 @@ internal sealed class SonarQubeClient : IDisposable
             string? branch,
             CancellationToken cancellationToken)
     {
+        // Build API URL with project key and optional branch parameter
         var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={projectKey}";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
+        // Fetch quality gate status from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+        // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jsonDoc = JsonDocument.Parse(content);
 
+        // Extract project status element from response
         var root = jsonDoc.RootElement;
         if (!root.TryGetProperty("projectStatus", out var projectStatus))
         {
             throw new InvalidOperationException("Invalid quality gate response: missing 'projectStatus' property");
         }
 
-        // Parse quality gate status
+        // Extract quality gate status value
         if (!projectStatus.TryGetProperty("status", out var statusElement))
         {
             throw new InvalidOperationException("Invalid quality gate response: missing 'status' property");
@@ -190,7 +201,7 @@ internal sealed class SonarQubeClient : IDisposable
 
         var qualityGateStatus = statusElement.GetString() ?? "NONE";
 
-        // Parse conditions
+        // Parse quality gate conditions from response
         var conditions = ParseQualityGateConditions(projectStatus);
 
         return (qualityGateStatus, conditions);
@@ -238,6 +249,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of issues</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
     /// <remarks>
     ///     Page size is limited to 500 as per requirements. For projects with more than 500 issues,
     ///     only the first 500 will be returned. Future enhancements could implement pagination.
@@ -248,6 +260,7 @@ internal sealed class SonarQubeClient : IDisposable
         string? branch,
         CancellationToken cancellationToken)
     {
+        // Build API URL with project key, issue statuses filter, and page size limit
         // Note: Page size is limited to 500 as per requirements
         var url =
             $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=500";
@@ -256,12 +269,15 @@ internal sealed class SonarQubeClient : IDisposable
             url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
+        // Fetch issues from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+        // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jsonDoc = JsonDocument.Parse(content);
 
+        // Extract issues array from response
         var root = jsonDoc.RootElement;
         if (!root.TryGetProperty("issues", out var issuesElement))
         {
@@ -314,6 +330,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of hot-spots</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
     /// <remarks>
     ///     Page size is limited to 500 as per requirements. For projects with more than 500 hot-spots,
     ///     only the first 500 will be returned. Future enhancements could implement pagination.
@@ -324,6 +341,7 @@ internal sealed class SonarQubeClient : IDisposable
         string? branch,
         CancellationToken cancellationToken)
     {
+        // Build API URL with project key and page size limit
         // Note: Page size is limited to 500 as per requirements
         var url = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=500";
         if (!string.IsNullOrWhiteSpace(branch))
@@ -331,12 +349,15 @@ internal sealed class SonarQubeClient : IDisposable
             url += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
+        // Fetch hot-spots from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+        // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jsonDoc = JsonDocument.Parse(content);
 
+        // Extract hot-spots array from response
         var root = jsonDoc.RootElement;
         if (!root.TryGetProperty("hotspots", out var hotSpotsElement))
         {
@@ -386,24 +407,30 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="serverUrl">Server URL</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Dictionary mapping metric keys to friendly names</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
     private async Task<IReadOnlyDictionary<string, string>> GetMetricNamesByServerAsync(
         string serverUrl,
         CancellationToken cancellationToken)
     {
+        // Build API URL for metrics search
         var url = $"{serverUrl.TrimEnd('/')}/api/metrics/search";
 
+        // Fetch metrics from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
+        // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
         var jsonDoc = JsonDocument.Parse(content);
 
+        // Extract metrics array from response
         var root = jsonDoc.RootElement;
         if (!root.TryGetProperty("metrics", out var metricsElement))
         {
             throw new InvalidOperationException("Invalid metrics response: missing 'metrics' property");
         }
 
+        // Build dictionary of metric keys to friendly names
         var metricNames = new Dictionary<string, string>();
         if (metricsElement.ValueKind == JsonValueKind.Array)
         {
