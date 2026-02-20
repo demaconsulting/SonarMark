@@ -1,15 +1,27 @@
-# SonarMark Usage Guide
+# Introduction
 
-This guide provides comprehensive documentation for using SonarMark to generate code quality reports from
-SonarQube/SonarCloud analysis results.
+This document provides comprehensive documentation for using SonarMark to generate
+code quality reports from SonarQube/SonarCloud analysis results.
 
-## Introduction
+## Purpose
 
-SonarMark is a .NET command-line tool that fetches quality gate status, issues, and security hot-spots from
-SonarQube/SonarCloud and generates comprehensive markdown reports. It's designed to integrate seamlessly into CI/CD
-pipelines for automated quality reporting.
+SonarMark is a .NET command-line tool that fetches quality gate status, issues, and
+security hot-spots from SonarQube/SonarCloud and generates comprehensive markdown
+reports. It is designed to integrate seamlessly into CI/CD pipelines for automated
+quality reporting.
 
-### Key Features
+## Scope
+
+This user guide covers:
+
+- Installation and setup of SonarMark
+- Command-line options and usage
+- Report generation and format
+- CI/CD integration patterns
+- Self-validation testing
+- Troubleshooting common issues
+
+## Key Features
 
 - **Quality Gate Reporting**: Fetch and report quality gate status with detailed conditions
 - **Issue Analysis**: Retrieve and categorize issues by type and severity
@@ -18,13 +30,13 @@ pipelines for automated quality reporting.
 - **CI/CD Integration**: Support for enforcement mode to fail builds on quality gate failures
 - **Multi-Platform**: Works on Windows, Linux, and macOS with .NET 8, 9, or 10
 
-## Installation
+# Installation
 
-### Prerequisites
+## Prerequisites
 
 - [.NET SDK][dotnet-download] 8.0, 9.0, or 10.0
 
-### Global Installation
+## Global Installation
 
 Install SonarMark as a global .NET tool for system-wide access:
 
@@ -38,7 +50,7 @@ Verify the installation:
 sonarmark --version
 ```
 
-### Local Installation
+## Local Installation
 
 For team projects, install SonarMark as a local tool to ensure version consistency:
 
@@ -56,7 +68,7 @@ Run the locally installed tool:
 dotnet sonarmark --version
 ```
 
-### Update
+## Update
 
 To update to the latest version:
 
@@ -68,9 +80,9 @@ dotnet tool update --global DemaConsulting.SonarMark
 dotnet tool update DemaConsulting.SonarMark
 ```
 
-## Getting Started
+# Getting Started
 
-### Basic Usage
+## Basic Usage
 
 The most basic usage requires specifying the SonarQube/SonarCloud server URL and project key:
 
@@ -78,7 +90,7 @@ The most basic usage requires specifying the SonarQube/SonarCloud server URL and
 sonarmark --server https://sonarcloud.io --project-key my-org_my-project
 ```
 
-### With Authentication
+## With Authentication
 
 For private projects, provide an authentication token:
 
@@ -88,7 +100,7 @@ sonarmark --server https://sonarcloud.io \
   --token $SONAR_TOKEN
 ```
 
-### Generating a Report
+## Generating a Report
 
 To generate a markdown report file:
 
@@ -99,11 +111,11 @@ sonarmark --server https://sonarcloud.io \
   --report quality-report.md
 ```
 
-## Command-Line Options
+# Command-Line Options
 
-### Display Options
+## Display Options
 
-#### `--version`, `-v`
+### `--version`, `-v`
 
 Display version information and exit.
 
@@ -111,7 +123,7 @@ Display version information and exit.
 sonarmark --version
 ```
 
-#### `--help`, `-h`, `-?`
+### `--help`, `-h`, `-?`
 
 Display help message with all available options.
 
@@ -119,9 +131,9 @@ Display help message with all available options.
 sonarmark --help
 ```
 
-### Output Control
+## Output Control
 
-#### `--silent`
+### `--silent`
 
 Suppress console output. Useful in automated scripts where only the exit code matters.
 
@@ -131,7 +143,7 @@ sonarmark --server https://sonarcloud.io \
   --silent
 ```
 
-#### `--log <file>`
+### `--log <file>`
 
 Write all output to a log file in addition to console output.
 
@@ -141,9 +153,9 @@ sonarmark --server https://sonarcloud.io \
   --log analysis.log
 ```
 
-### SonarQube/SonarCloud Connection
+## SonarQube/SonarCloud Connection
 
-#### `--server <url>` (Required)
+### `--server <url>` (Required)
 
 SonarQube or SonarCloud server URL.
 
@@ -157,7 +169,7 @@ Examples:
 --server https://sonar.example.com
 ```
 
-#### `--project-key <key>` (Required)
+### `--project-key <key>` (Required)
 
 Project key in SonarQube/SonarCloud. This is the unique identifier for your project.
 
@@ -165,7 +177,7 @@ Project key in SonarQube/SonarCloud. This is the unique identifier for your proj
 --project-key my-organization_my-project
 ```
 
-#### `--branch <name>`
+### `--branch <name>`
 
 Branch name to query. If not specified, uses the main branch configured in SonarQube/SonarCloud.
 
@@ -176,7 +188,7 @@ sonarmark --server https://sonarcloud.io \
   --branch feature/new-feature
 ```
 
-#### `--token <token>`
+### `--token <token>`
 
 Personal access token for authentication. Can also be provided via the `SONAR_TOKEN` environment variable.
 
@@ -193,9 +205,9 @@ sonarmark --server https://sonarcloud.io \
   --token $SONAR_TOKEN
 ```
 
-### Report Generation
+## Report Generation
 
-#### `--report <file>`
+### `--report <file>`
 
 Export quality results to a markdown file. The file will contain quality gate status, conditions, issues, and
 security hot-spots.
@@ -206,7 +218,7 @@ sonarmark --server https://sonarcloud.io \
   --report quality-report.md
 ```
 
-#### `--report-depth <depth>`
+### `--report-depth <depth>`
 
 Set the markdown header depth for the report. Default is 1. Use this when embedding the report in larger documents.
 
@@ -218,9 +230,9 @@ sonarmark --server https://sonarcloud.io \
   --report-depth 2
 ```
 
-### Quality Enforcement
+## Quality Enforcement
 
-#### `--enforce`
+### `--enforce`
 
 Return a non-zero exit code if the quality gate fails. Essential for CI/CD pipelines to fail builds on quality issues.
 
@@ -230,9 +242,9 @@ sonarmark --server https://sonarcloud.io \
   --enforce
 ```
 
-### Self-Validation
+## Self-Validation
 
-#### `--validate`
+### `--validate`
 
 Run built-in self-validation tests. These tests verify SonarMark functionality without requiring access to a real
 SonarQube/SonarCloud server.
@@ -241,7 +253,7 @@ SonarQube/SonarCloud server.
 sonarmark --validate
 ```
 
-#### `--results <file>`
+### `--results <file>`
 
 Write validation results to a file. Supports TRX (`.trx`) and JUnit XML (`.xml`) formats. Requires `--validate`.
 
@@ -253,9 +265,9 @@ sonarmark --validate --results validation-results.trx
 sonarmark --validate --results validation-results.xml
 ```
 
-## Common Use Cases
+# Common Use Cases
 
-### CI/CD Integration
+## CI/CD Integration
 
 Integrate SonarMark into your CI/CD pipeline to automatically check code quality:
 
@@ -278,7 +290,7 @@ Integrate SonarMark into your CI/CD pipeline to automatically check code quality
     path: quality-report.md
 ```
 
-### Branch Analysis
+## Branch Analysis
 
 Analyze specific branches during pull request reviews:
 
@@ -291,7 +303,7 @@ sonarmark --server https://sonarcloud.io \
   --report pr-quality.md
 ```
 
-### Quality Gate Monitoring
+## Quality Gate Monitoring
 
 Monitor quality gate status without generating a full report:
 
@@ -304,7 +316,7 @@ sonarmark --server https://sonarcloud.io \
   --silent
 ```
 
-### Automated Reporting
+## Automated Reporting
 
 Generate daily/weekly quality reports:
 
@@ -319,11 +331,11 @@ sonarmark --server https://sonarcloud.io \
   --log "analysis-${TIMESTAMP}.log"
 ```
 
-## Report Format
+# Report Format
 
 The generated markdown report includes the following sections:
 
-### Project Header
+## Project Header
 
 The report begins with the project name and a link to the SonarQube/SonarCloud dashboard:
 
@@ -333,7 +345,7 @@ The report begins with the project name and a link to the SonarQube/SonarCloud d
 **Dashboard:** <https://sonarcloud.io/dashboard?id=my_project>
 ```
 
-### Quality Gate Status
+## Quality Gate Status
 
 Shows whether the project passed or failed the quality gate. Possible values are OK, ERROR, WARN, or NONE:
 
@@ -347,7 +359,7 @@ or
 **Quality Gate Status:** ERROR
 ```
 
-### Conditions
+## Conditions
 
 If quality gate conditions exist, they are displayed in a table with the following columns:
 
@@ -367,7 +379,7 @@ If quality gate conditions exist, they are displayed in a table with the followi
 | Duplications | OK | LT | 3 | 2.1 |
 ```
 
-### Issues
+## Issues
 
 The issues section shows a count of issues found and lists each issue in compiler-style format:
 
@@ -397,7 +409,7 @@ If no issues are found:
 Found no issues
 ```
 
-### Security Hot-Spots
+## Security Hot-Spots
 
 The security hot-spots section shows a count and lists each hot-spot in compiler-style format:
 
@@ -425,18 +437,18 @@ If no security hot-spots are found:
 Found no security hot-spots
 ```
 
-## Running Self-Validation
+# Running Self-Validation
 
 SonarMark includes built-in self-validation tests to verify functionality without requiring access to a real
 SonarQube/SonarCloud server. The validation uses mock data to test core features.
 
-### Running Validation
+## Running Validation
 
 ```bash
 sonarmark --validate
 ```
 
-### Validation Tests
+## Validation Tests
 
 The self-validation suite includes the following tests that verify core functionality:
 
@@ -457,7 +469,7 @@ These tests provide evidence of the tool's functionality and are particularly us
 **Note**: The test names with the `SonarMark_` prefix are designed for clear identification in test
 result files (TRX/JUnit) when integrating with larger projects or test frameworks.
 
-### Validation Output
+## Validation Output
 
 Example output:
 
@@ -478,7 +490,7 @@ Passed: 4
 Failed: 0
 ```
 
-### Saving Validation Results
+## Saving Validation Results
 
 Save results in TRX or JUnit XML format for integration with test reporting tools:
 
@@ -490,37 +502,37 @@ sonarmark --validate --results validation-results.trx
 sonarmark --validate --results validation-results.xml
 ```
 
-## Best Practices
+# Best Practices
 
-### Authentication
+## Authentication
 
 - **Store tokens securely**: Use environment variables or secret management systems
 - **Rotate tokens regularly**: Follow your organization's security policies
 - **Use read-only tokens**: SonarMark only needs read access to the API
 - **Don't commit tokens**: Never commit tokens to version control
 
-### CI/CD Best Practices
+## CI/CD Best Practices
 
 - **Use enforcement mode**: Always use `--enforce` in CI/CD to fail builds on quality gate failures
 - **Archive reports**: Save quality reports as build artifacts for historical tracking
 - **Set timeouts**: Configure reasonable timeouts for API calls in CI/CD environments
 - **Handle failures gracefully**: Use appropriate error handling in your CI/CD scripts
 
-### Report Best Practices
+## Report Best Practices
 
 - **Use meaningful filenames**: Include timestamps, branch names, or build numbers in report filenames
 - **Adjust header depth**: Use `--report-depth` when embedding reports in larger documents
 - **Combine with logging**: Use `--log` to capture detailed execution information
 
-### Performance
+## Performance
 
 - **Cache dependencies**: Use local tool installation to speed up execution in CI/CD
 - **Minimize API calls**: Only fetch data when needed (e.g., don't generate reports if not required)
 - **Use silent mode**: Suppress unnecessary output in automated scripts with `--silent`
 
-## Troubleshooting
+# Troubleshooting
 
-### Authentication Issues
+## Authentication Issues
 
 **Problem**: `401 Unauthorized` error
 
@@ -531,7 +543,7 @@ sonarmark --validate --results validation-results.xml
 - Check if the project exists and you have access to it
 - For SonarCloud, verify you're using a user token, not a project analysis token
 
-### Connection Issues
+## Connection Issues
 
 **Problem**: Cannot connect to SonarQube/SonarCloud server
 
@@ -543,7 +555,7 @@ sonarmark --validate --results validation-results.xml
 - Verify SSL/TLS certificates are valid
 - For self-hosted SonarQube, check if the server is running
 
-### Project Not Found
+## Project Not Found
 
 **Problem**: `404 Not Found` or project doesn't exist error
 
@@ -554,7 +566,7 @@ sonarmark --validate --results validation-results.xml
 - Check if you have access to the project
 - For branches, verify the branch exists in SonarQube/SonarCloud
 
-### Branch Issues
+## Branch Issues
 
 **Problem**: Branch not found or incorrect data
 
@@ -565,7 +577,7 @@ sonarmark --validate --results validation-results.xml
 - Check if the branch is a long-lived or short-lived branch
 - Use the exact branch name as shown in SonarQube/SonarCloud UI
 
-### Quality Gate Failures
+## Quality Gate Failures
 
 **Problem**: Quality gate fails unexpectedly with `--enforce`
 
@@ -576,7 +588,7 @@ sonarmark --validate --results validation-results.xml
 - Verify quality gate configuration in SonarQube/SonarCloud
 - Consider if the failure is expected (e.g., new issues introduced)
 
-### Report Generation Issues
+## Report Generation Issues
 
 **Problem**: Report file is not generated or is empty
 
@@ -587,7 +599,7 @@ sonarmark --validate --results validation-results.xml
 - Ensure there's enough disk space
 - Check the log output for specific error messages
 
-### Validation Failures
+## Validation Failures
 
 **Problem**: Self-validation tests fail
 
@@ -597,7 +609,7 @@ sonarmark --validate --results validation-results.xml
 - Check if there are any known issues in the GitHub repository
 - Report the issue with full validation output if problem persists
 
-### Performance Issues
+## Performance Issues
 
 **Problem**: SonarMark takes too long to execute
 
@@ -608,7 +620,7 @@ sonarmark --validate --results validation-results.xml
 - Consider caching results if running frequently
 - For large projects, be patient as data retrieval may take time
 
-### Exit Codes
+## Exit Codes
 
 SonarMark uses the following exit codes:
 
@@ -629,7 +641,7 @@ else
 fi
 ```
 
-## Additional Resources
+# Additional Resources
 
 - [GitHub Repository][github]
 - [Issue Tracker][issues]
