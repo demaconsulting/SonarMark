@@ -26,7 +26,8 @@ SonarQube/SonarCloud analysis results.
 ## Requirements (SonarMark-Specific)
 
 - All requirements MUST be linked to tests (prefer integration tests over unit tests)
-- Not all tests need to be linked to requirements (tests may exist for corner cases, design testing, failure-testing, etc.)
+- Not all tests need to be linked to requirements (tests may exist for corner cases, design testing,
+  failure-testing, etc.)
 - Enforced in CI: `dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce`
 - When adding features: add requirement + link to test
 
@@ -44,10 +45,12 @@ SonarQube/SonarCloud analysis results.
 
 ## Linting (SonarMark-Specific)
 
-- **AI agent markdown files** (`.github/agents/*.md`): Use inline links `[text](url)` so URLs are visible in agent context
+- **AI agent markdown files** (`.github/agents/*.md`): Use inline links `[text](url)` so URLs are visible in
+  agent context
 - **README.md**: Absolute URLs only (shipped in NuGet package)
 - **Other .md**: Reference-style links `[text][ref]` with `[ref]: url` at end
-- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI workflows)
+- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI
+  workflows)
 
 ## Build & Quality (Quick Reference)
 

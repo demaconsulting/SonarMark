@@ -209,12 +209,13 @@ Please see our [Contributing Guide](https://github.com/demaconsulting/SonarMark/
 development setup, coding standards, and submission guidelines. Also review our
 [Code of Conduct](https://github.com/demaconsulting/SonarMark/blob/main/CODE_OF_CONDUCT.md) for community guidelines.
 
-For bug reports, feature requests, and questions, please use [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues).
+For bug reports, feature requests, and questions, please use
+[GitHub Issues](https://github.com/demaconsulting/SonarMark/issues).
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE)
-file for details.
+This project is licensed under the MIT License - see the
+[LICENSE](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE) file for details.
 
 ## Support
 
