@@ -1,13 +1,13 @@
 # SonarMark
 
-[![GitHub forks](https://img.shields.io/github/forks/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/network/members)
-[![GitHub stars](https://img.shields.io/github/stars/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/stargazers)
-[![GitHub contributors](https://img.shields.io/github/contributors/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/graphs/contributors)
-[![License](https://img.shields.io/github/license/demaconsulting/SonarMark?style=plastic)](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE)
-[![Build](https://img.shields.io/github/actions/workflow/status/demaconsulting/SonarMark/build_on_push.yaml)](https://github.com/demaconsulting/SonarMark/actions/workflows/build_on_push.yaml)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=alert_status)](https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark)
-[![Security](https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=security_rating)](https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark)
-[![NuGet](https://img.shields.io/nuget/v/DemaConsulting.SonarMark?style=plastic)](https://www.nuget.org/packages/DemaConsulting.SonarMark)
+[![GitHub forks][badge-forks]][link-forks]
+[![GitHub stars][badge-stars]][link-stars]
+[![GitHub contributors][badge-contributors]][link-contributors]
+[![License][badge-license]][link-license]
+[![Build][badge-build]][link-build]
+[![Quality Gate][badge-quality]][link-quality]
+[![Security][badge-security]][link-security]
+[![NuGet][badge-nuget]][link-nuget]
 
 Code Quality Reporting Tool for SonarQube/SonarCloud
 
@@ -237,3 +237,23 @@ SonarMark is built with the following open-source projects:
 - [SonarQube](https://www.sonarqube.org/) - Continuous code quality inspection
 - [SonarCloud](https://sonarcloud.io/) - Cloud-based code quality and security service
 - [DemaConsulting.TestResults](https://github.com/demaconsulting/TestResults) - Test results parsing library
+
+<!-- Badge References -->
+[badge-forks]: https://img.shields.io/github/forks/demaconsulting/SonarMark?style=plastic
+[badge-stars]: https://img.shields.io/github/stars/demaconsulting/SonarMark?style=plastic
+[badge-contributors]: https://img.shields.io/github/contributors/demaconsulting/SonarMark?style=plastic
+[badge-license]: https://img.shields.io/github/license/demaconsulting/SonarMark?style=plastic
+[badge-build]: https://img.shields.io/github/actions/workflow/status/demaconsulting/SonarMark/build_on_push.yaml?style=plastic
+[badge-quality]: https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=alert_status
+[badge-security]: https://sonarcloud.io/api/project_badges/measure?project=demaconsulting_SonarMark&metric=security_rating
+[badge-nuget]: https://img.shields.io/nuget/v/DemaConsulting.SonarMark?style=plastic
+
+<!-- Link References -->
+[link-forks]: https://github.com/demaconsulting/SonarMark/network/members
+[link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
+[link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors
+[link-license]: https://github.com/demaconsulting/SonarMark/blob/main/LICENSE
+[link-build]: https://github.com/demaconsulting/SonarMark/actions/workflows/build_on_push.yaml
+[link-quality]: https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark
+[link-security]: https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark
+[link-nuget]: https://www.nuget.org/packages/DemaConsulting.SonarMark

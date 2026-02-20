@@ -171,7 +171,9 @@ internal sealed class Context : IDisposable
         {
             _logWriter = new StreamWriter(logFile, append: false);
         }
-        // Generic catch is justified here to wrap any file system exception with context
+        // Generic catch is justified here to wrap any file system exception with context.
+        // Expected exceptions include IOException, UnauthorizedAccessException, ArgumentException,
+        // NotSupportedException, and other file system-related exceptions.
         catch (Exception ex)
         {
             throw new InvalidOperationException($"Failed to open log file '{logFile}': {ex.Message}", ex);
@@ -183,23 +185,75 @@ internal sealed class Context : IDisposable
     /// </summary>
     private sealed class ArgumentParser
     {
+        /// <summary>
+        ///     Gets a value indicating whether the version flag was specified.
+        /// </summary>
         public bool Version { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the help flag was specified.
+        /// </summary>
         public bool Help { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the silent flag was specified.
+        /// </summary>
         public bool Silent { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the validate flag was specified.
+        /// </summary>
         public bool Validate { get; private set; }
+
+        /// <summary>
+        ///     Gets a value indicating whether the enforce flag was specified.
+        /// </summary>
         public bool Enforce { get; private set; }
+
+        /// <summary>
+        ///     Gets the report file path.
+        /// </summary>
         public string? ReportFile { get; private set; }
+
+        /// <summary>
+        ///     Gets the report markdown depth.
+        /// </summary>
         public int ReportDepth { get; private set; } = 1;
+
+        /// <summary>
+        ///     Gets the personal access token for SonarQube/SonarCloud authentication.
+        /// </summary>
         public string? Token { get; private set; }
+
+        /// <summary>
+        ///     Gets the SonarQube/SonarCloud server URL.
+        /// </summary>
         public string? Server { get; private set; }
+
+        /// <summary>
+        ///     Gets the SonarQube/SonarCloud project key.
+        /// </summary>
         public string? ProjectKey { get; private set; }
+
+        /// <summary>
+        ///     Gets the branch name to query.
+        /// </summary>
         public string? Branch { get; private set; }
+
+        /// <summary>
+        ///     Gets the log file path.
+        /// </summary>
         public string? LogFile { get; private set; }
+
+        /// <summary>
+        ///     Gets the validation results file path.
+        /// </summary>
         public string? ResultsFile { get; private set; }
 
         /// <summary>
         ///     Parses command-line arguments
         /// </summary>
+        /// <param name="args">Command-line arguments.</param>
         public void ParseArguments(string[] args)
         {
             int i = 0;
@@ -288,6 +342,7 @@ internal sealed class Context : IDisposable
         /// <param name="args">All arguments</param>
         /// <param name="index">Current index</param>
         /// <param name="description">Description of what's required</param>
+        /// <returns>Argument value</returns>
         private static string GetRequiredStringArgument(string arg, string[] args, int index, string description)
         {
             if (index >= args.Length)
@@ -301,6 +356,10 @@ internal sealed class Context : IDisposable
         /// <summary>
         ///     Gets a required positive integer argument value
         /// </summary>
+        /// <param name="arg">Argument name</param>
+        /// <param name="args">All arguments</param>
+        /// <param name="index">Current index</param>
+        /// <returns>Argument value</returns>
         private static int GetRequiredIntArgument(string arg, string[] args, int index)
         {
             if (index >= args.Length)
