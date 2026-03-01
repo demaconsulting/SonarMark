@@ -120,6 +120,9 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args)
     {
+        // Validate that args is not null
+        ArgumentNullException.ThrowIfNull(args);
+
         return Create(args, null);
     }
 
@@ -132,6 +135,9 @@ internal sealed class Context : IDisposable
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
     {
+        // Validate that args is not null
+        ArgumentNullException.ThrowIfNull(args);
+
         // Parse command-line arguments into structured form
         var parser = new ArgumentParser();
         parser.ParseArguments(args);
