@@ -48,6 +48,9 @@ internal static class Validation
     /// <param name="context">The context containing command line arguments and program state.</param>
     public static void Run(Context context)
     {
+        // Validate that context is not null
+        ArgumentNullException.ThrowIfNull(context);
+
         // Print validation header
         PrintValidationHeader(context);
 
