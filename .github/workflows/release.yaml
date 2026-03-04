@@ -54,7 +54,7 @@ jobs:
       - name: Download package artifacts
         uses: actions/download-artifact@v8
         with:
-          name: artifacts-ubuntu-latest
+          name: packages-ubuntu-latest
           path: artifacts
 
       - name: Download documents artifact
