@@ -32,7 +32,7 @@ sections:
     sections:
       - title: Command-Line Interface
         requirements:
-          - id: Sonar-Cmd-Cli
+          - id: SonarMark-Cmd-Cli
             title: The tool shall provide a command-line interface.
             justification: |
               A command-line interface is essential for automation and integration into CI/CD pipelines.
@@ -42,7 +42,7 @@ sections:
               - IntegrationTest_VersionFlag_OutputsVersion
               - IntegrationTest_HelpFlag_OutputsUsageInformation
 
-          - id: Sonar-Cmd-Version
+          - id: SonarMark-Cmd-Version
             title: The tool shall display version information when requested.
             justification: |
               Version information helps users verify which version of the tool they are running, which is
@@ -51,7 +51,7 @@ sections:
             tests:
               - IntegrationTest_VersionFlag_OutputsVersion
 
-          - id: Sonar-Cmd-Help
+          - id: SonarMark-Cmd-Help
             title: The tool shall display help information when requested.
             justification: |
               Help information provides users with usage instructions and available options without needing
@@ -60,7 +60,7 @@ sections:
             tests:
               - IntegrationTest_HelpFlag_OutputsUsageInformation
 
-          - id: Sonar-Cmd-Silent
+          - id: SonarMark-Cmd-Silent
             title: The tool shall support silent mode to suppress console output.
             justification: |
               Silent mode is important for automated environments where console output may interfere with
@@ -69,7 +69,7 @@ sections:
             tests:
               - IntegrationTest_SilentFlag_SuppressesOutput
 
-          - id: Sonar-Cmd-Log
+          - id: SonarMark-Cmd-Log
             title: The tool shall support writing output to a log file.
             justification: |
               Log file output enables persistent recording of tool execution for later review and audit trails.
@@ -78,7 +78,7 @@ sections:
             tests:
               - Context_Create_WithLogFile_WritesToLogFile
 
-          - id: Sonar-Cmd-Enforce
+          - id: SonarMark-Cmd-Enforce
             title: The tool shall support enforcing quality gate checks.
             justification: |
               Quality gate enforcement allows the tool to fail builds when quality standards are not met,
@@ -89,7 +89,7 @@ sections:
 
       - title: SonarQube/SonarCloud Integration
         requirements:
-          - id: Sonar-Server-Connect
+          - id: SonarMark-Svr-Connect
             title: The tool shall connect to SonarQube/SonarCloud servers.
             justification: |
               Connection to SonarQube/SonarCloud servers is the core functionality of the tool, enabling
@@ -99,7 +99,7 @@ sections:
             tests:
               - IntegrationTest_MissingServerParameter_ShowsError
 
-          - id: Sonar-Server-Auth
+          - id: SonarMark-Svr-Auth
             title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
             justification: |
               Token-based authentication is the secure and recommended method for accessing SonarQube/SonarCloud
@@ -108,7 +108,7 @@ sections:
             tests:
               - IntegrationTest_TokenParameter_IsAccepted
 
-          - id: Sonar-Server-QualityGate
+          - id: SonarMark-Svr-QualityGate
             title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
             justification: |
               Quality gate status indicates whether code meets the defined quality standards and is fundamental
@@ -117,7 +117,7 @@ sections:
             tests:
               - SonarMark_QualityGateRetrieval
 
-          - id: Sonar-Server-Issues
+          - id: SonarMark-Svr-Issues
             title: The tool shall fetch issues from SonarQube/SonarCloud.
             justification: |
               Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
@@ -126,7 +126,7 @@ sections:
             tests:
               - SonarMark_IssuesRetrieval
 
-          - id: Sonar-Server-HotSpots
+          - id: SonarMark-Svr-HotSpots
             title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
             justification: |
               Security hot-spots highlight code that requires security review, helping teams identify and
@@ -135,7 +135,7 @@ sections:
             tests:
               - SonarMark_HotSpotsRetrieval
 
-          - id: Sonar-Server-ProjectKey
+          - id: SonarMark-Svr-ProjectKey
             title: The tool shall support filtering by project key.
             justification: |
               Project key filtering is essential for identifying which specific project to analyze when
@@ -144,7 +144,7 @@ sections:
             tests:
               - IntegrationTest_MissingProjectKeyParameter_ShowsError
 
-          - id: Sonar-Server-Branch
+          - id: SonarMark-Svr-Branch
             title: The tool shall support filtering by branch.
             justification: |
               Branch filtering enables analysis of specific branches in version control, which is crucial
@@ -155,7 +155,7 @@ sections:
 
       - title: Report Generation
         requirements:
-          - id: Sonar-Report-Markdown
+          - id: SonarMark-Rpt-Markdown
             title: The tool shall generate markdown reports.
             justification: |
               Markdown reports provide human-readable documentation of code quality that can be easily
@@ -166,7 +166,7 @@ sections:
               - IntegrationTest_ReportParameter_IsAccepted
               - SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Report-Depth
+          - id: SonarMark-Rpt-Depth
             title: The tool shall support configurable report depth.
             justification: |
               Configurable report depth allows users to control the level of detail in generated reports,
@@ -178,7 +178,7 @@ sections:
               - IntegrationTest_ReportDepthWithInvalidValue_ShowsError
               - IntegrationTest_ReportDepthWithoutValue_ShowsError
 
-          - id: Sonar-Report-QualityGate
+          - id: SonarMark-Rpt-QualityGate
             title: The tool shall include quality gate status in reports.
             justification: |
               Quality gate status is the most important metric in the report, providing a clear pass/fail
@@ -192,7 +192,7 @@ sections:
               - SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput
               - SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames
 
-          - id: Sonar-Report-Issues
+          - id: SonarMark-Rpt-Issues
             title: The tool shall categorize and report issues by type and severity.
             justification: |
               Categorizing issues by type and severity helps teams prioritize remediation efforts and
@@ -202,7 +202,7 @@ sections:
               - SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput
               - SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText
 
-          - id: Sonar-Report-HotSpots
+          - id: SonarMark-Rpt-HotSpots
             title: The tool shall report security hot-spots requiring review.
             justification: |
               Security hot-spots require manual review to determine if they represent actual vulnerabilities.
@@ -213,7 +213,7 @@ sections:
 
       - title: Validation and Testing
         requirements:
-          - id: Sonar-Val-Validate
+          - id: SonarMark-Val-Validate
             title: The tool shall support self-validation mode.
             justification: |
               Self-validation mode allows the tool to verify its own functionality without requiring
@@ -227,7 +227,7 @@ sections:
               - SonarMark_HotSpotsRetrieval
               - SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Val-Results
+          - id: SonarMark-Val-Results
             title: The tool shall write validation results to test result files.
             justification: |
               Writing validation results to test result files allows integration with standard testing
@@ -237,7 +237,7 @@ sections:
               - Context_Create_ResultsFile_SetsResultsProperty
               - Context_Create_MissingResultsFilename_ThrowsException
 
-          - id: Sonar-Val-TrxFormat
+          - id: SonarMark-Val-TrxFormat
             title: The tool shall support TRX format for test results.
             justification: |
               TRX (Test Results XML) is the native test results format for Microsoft testing tools and
@@ -246,7 +246,7 @@ sections:
             tests:
               - Context_Create_ResultsFile_SetsResultsProperty
 
-          - id: Sonar-Val-JUnitFormat
+          - id: SonarMark-Val-JUnitFormat
             title: The tool shall support JUnit format for test results.
             justification: |
               JUnit format is a widely-supported standard for test results across many platforms and tools,
@@ -257,7 +257,7 @@ sections:
 
       - title: Quality Enforcement
         requirements:
-          - id: Sonar-Enf-Mode
+          - id: SonarMark-Enf-Mode
             title: The tool shall support enforcement mode to fail on quality gate failures.
             justification: |
               Enforcement mode is critical for maintaining code quality standards by preventing builds
@@ -266,7 +266,7 @@ sections:
             tests:
               - Context_Create_EnforceFlag_SetsEnforceProperty
 
-          - id: Sonar-Enf-ExitCode
+          - id: SonarMark-Enf-ExitCode
             title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
             justification: |
               Returning a non-zero exit code on quality gate failure is the standard mechanism for
@@ -277,7 +277,7 @@ sections:
 
       - title: Platform Support
         requirements:
-          - id: Sonar-Platform-Windows
+          - id: SonarMark-Plt-Windows
             title: The tool shall run on Windows operating systems.
             justification: |
               Windows is a major development platform, especially for .NET development. Supporting Windows
@@ -294,7 +294,7 @@ sections:
               - windows@SonarMark_HotSpotsRetrieval
               - windows@SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Platform-Linux
+          - id: SonarMark-Plt-Linux
             title: The tool shall run on Linux operating systems.
             justification: |
               Linux is the dominant platform for cloud-based CI/CD systems and containerized environments.
@@ -311,7 +311,7 @@ sections:
               - ubuntu@SonarMark_HotSpotsRetrieval
               - ubuntu@SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Platform-Net8
+          - id: SonarMark-Plt-Net8
             title: The tool shall support .NET 8.0 runtime.
             justification: |
               .NET 8.0 is a Long-Term Support (LTS) release with support until November 2026. Supporting
@@ -325,7 +325,7 @@ sections:
               - dotnet8.x@SonarMark_HotSpotsRetrieval
               - dotnet8.x@SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Platform-Net9
+          - id: SonarMark-Plt-Net9
             title: The tool shall support .NET 9.0 runtime.
             justification: |
               .NET 9.0 is a Standard Term Support (STS) release providing access to the latest features
@@ -339,7 +339,7 @@ sections:
               - dotnet9.x@SonarMark_HotSpotsRetrieval
               - dotnet9.x@SonarMark_MarkdownReportGeneration
 
-          - id: Sonar-Platform-Net10
+          - id: SonarMark-Plt-Net10
             title: The tool shall support .NET 10.0 runtime.
             justification: |
               .NET 10.0 is the next Long-Term Support (LTS) release scheduled for November 2025. Supporting
