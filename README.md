@@ -137,29 +137,41 @@ sonarmark --validate
 sonarmark --validate --results validation-results.trx
 ```
 
-### Self-Validation Tests
+## Self Validation
 
-SonarMark includes built-in self-validation tests that verify the tool's functionality without requiring
-a live SonarQube/SonarCloud server. These tests use mock data to validate core features and generate test
-result files in TRX or JUnit format.
+Running self-validation produces a report containing the following information:
 
-The self-validation suite includes the following tests:
+```text
+# DEMA Consulting SonarMark
 
-| Test Name | Description |
-| :-------- | :---------- |
-| `SonarMark_QualityGateRetrieval` | Verifies fetching and processing quality gate status |
-| `SonarMark_IssuesRetrieval` | Verifies fetching and processing code issues |
-| `SonarMark_HotSpotsRetrieval` | Verifies fetching and processing security hot-spots |
-| `SonarMark_MarkdownReportGeneration` | Verifies generating markdown reports with quality metrics |
+| Information         | Value                                              |
+| :------------------ | :------------------------------------------------- |
+| SonarMark Version   | <version>                                          |
+| Machine Name        | <machine-name>                                     |
+| OS Version          | <os-version>                                       |
+| DotNet Runtime      | <dotnet-runtime-version>                           |
+| Time Stamp          | <timestamp> UTC                                    |
 
-These tests provide evidence of the tool's functionality and are particularly useful for:
+✓ SonarMark_QualityGateRetrieval - Passed
+✓ SonarMark_IssuesRetrieval - Passed
+✓ SonarMark_HotSpotsRetrieval - Passed
+✓ SonarMark_MarkdownReportGeneration - Passed
 
-- Verifying the installation is working correctly
-- Running automated tests in CI/CD pipelines without requiring SonarQube access
-- Generating test evidence for compliance and traceability requirements
+Total Tests: 4
+Passed: 4
+Failed: 0
+```
 
-For detailed usage instructions, command-line options, and examples, including tool update instructions, see the
-[Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md).
+Each test in the report proves:
+
+- **`SonarMark_QualityGateRetrieval`** - Verifies fetching and processing quality gate status from SonarQube/SonarCloud.
+- **`SonarMark_IssuesRetrieval`** - Verifies fetching and processing code issues with severity classification.
+- **`SonarMark_HotSpotsRetrieval`** - Verifies fetching and processing security hot-spots and vulnerabilities.
+- **`SonarMark_MarkdownReportGeneration`** - Verifies generating markdown reports with quality metrics and findings.
+
+See the [User Guide][link-guide] for more details on the self-validation tests.
+
+On validation failure the tool will exit with a non-zero exit code.
 
 ## Report Format
 
@@ -251,6 +263,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
+[link-guide]: https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
 [link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors
 [link-license]: https://github.com/demaconsulting/SonarMark/blob/main/LICENSE

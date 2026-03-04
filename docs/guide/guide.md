@@ -437,70 +437,64 @@ If no security hot-spots are found:
 Found no security hot-spots
 ```
 
-# Running Self-Validation
+# Self-Validation
 
-SonarMark includes built-in self-validation tests to verify functionality without requiring access to a real
-SonarQube/SonarCloud server. The validation uses mock data to test core features.
+Self-validation produces a report demonstrating that SonarMark is functioning
+correctly. This is useful in regulated industries where tool validation evidence is required.
 
 ## Running Validation
+
+To perform self-validation:
 
 ```bash
 sonarmark --validate
 ```
 
-## Validation Tests
+To save validation results to a file:
 
-The self-validation suite includes the following tests that verify core functionality:
+```bash
+sonarmark --validate --results results.trx
+```
 
-| Test Name | Description |
-| :-------- | :---------- |
-| `SonarMark_QualityGateRetrieval` | Verifies fetching and processing quality gate status from SonarQube/SonarCloud |
-| `SonarMark_IssuesRetrieval` | Verifies fetching and processing code issues with severity classification |
-| `SonarMark_HotSpotsRetrieval` | Verifies fetching and processing security hot-spots and vulnerabilities |
-| `SonarMark_MarkdownReportGeneration` | Verifies generating markdown reports with quality metrics and findings |
+The results file format is determined by the file extension: `.trx` for TRX (MSTest) format,
+or `.xml` for JUnit format.
 
-These tests provide evidence of the tool's functionality and are particularly useful for:
+## Validation Report
 
-- Verifying the installation is working correctly on different platforms and .NET versions
-- Running automated tests in CI/CD pipelines without requiring SonarQube access
-- Generating test evidence for compliance and traceability requirements
-- Validating tool functionality before deployment
+The validation report contains the tool version, machine name, operating system version,
+.NET runtime version, timestamp, and test results.
 
-**Note**: The test names with the `SonarMark_` prefix are designed for clear identification in test
-result files (TRX/JUnit) when integrating with larger projects or test frameworks.
-
-## Validation Output
-
-Example output:
+Example validation report:
 
 ```text
-SonarMark version 1.0.0
-Copyright (c) DEMA Consulting
-
 # DEMA Consulting SonarMark
-## Self-Validation Tests
 
-[PASS] Quality Gate Status Retrieval
-[PASS] Issues Retrieval
-[PASS] Hot-Spots Retrieval
-[PASS] Markdown Report Generation
+| Information         | Value                                              |
+| :------------------ | :------------------------------------------------- |
+| SonarMark Version   | 1.0.0                                              |
+| Machine Name        | BUILD-SERVER                                       |
+| OS Version          | Ubuntu 22.04.3 LTS                                 |
+| DotNet Runtime      | .NET 10.0.0                                        |
+| Time Stamp          | 2024-01-15 10:30:00 UTC                            |
+
+✓ SonarMark_QualityGateRetrieval - Passed
+✓ SonarMark_IssuesRetrieval - Passed
+✓ SonarMark_HotSpotsRetrieval - Passed
+✓ SonarMark_MarkdownReportGeneration - Passed
 
 Total Tests: 4
 Passed: 4
 Failed: 0
 ```
 
-## Saving Validation Results
+## Validation Tests
 
-Save results in TRX or JUnit XML format for integration with test reporting tools:
+Each test proves specific functionality works correctly:
 
-```bash
-# TRX format (for Azure DevOps, Visual Studio)
-sonarmark --validate --results validation-results.trx
-
-# JUnit XML format (for Jenkins, GitLab CI)
-sonarmark --validate --results validation-results.xml
-```
+- **`SonarMark_QualityGateRetrieval`** - Verifies fetching and processing quality gate status from SonarQube/SonarCloud.
+- **`SonarMark_IssuesRetrieval`** - Verifies fetching and processing code issues with severity classification.
+- **`SonarMark_HotSpotsRetrieval`** - Verifies fetching and processing security hot-spots and vulnerabilities.
+- **`SonarMark_MarkdownReportGeneration`** - Verifies generating markdown reports with quality metrics and findings.
 
 # Best Practices
 
