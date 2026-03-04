@@ -362,21 +362,21 @@ public class ContextTests
     [TestMethod]
     public void Context_WriteError_NormalMode_WritesToConsole()
     {
-        var originalOut = Console.Out;
-        using var output = new StringWriter();
-        Console.SetOut(output);
+        var originalError = Console.Error;
+        using var error = new StringWriter();
+        Console.SetError(error);
 
         try
         {
             using var context = Context.Create([]);
             context.WriteError("Error message");
 
-            Assert.AreEqual("Error message" + Environment.NewLine, output.ToString());
+            Assert.AreEqual("Error message" + Environment.NewLine, error.ToString());
             Assert.AreEqual(1, context.ExitCode);
         }
         finally
         {
-            Console.SetOut(originalOut);
+            Console.SetError(originalError);
         }
     }
 

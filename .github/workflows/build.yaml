@@ -201,6 +201,10 @@ jobs:
             9.x
             10.x
 
+      - name: Restore Tools
+        run: >
+          dotnet tool restore
+
       - name: Restore Dependencies
         run: >
           dotnet restore
@@ -419,7 +423,7 @@ jobs:
         run: |
           echo "Capturing tool versions..."
           dotnet versionmark --capture --job-id "build-docs" -- \
-            dotnet git node npm pandoc weasyprint sarifmark reqstream buildmark versionmark
+            dotnet git node npm pandoc weasyprint sarifmark sonarmark reqstream buildmark versionmark
           echo "✓ Tool versions captured"
 
       # === GENERATE MARKDOWN REPORTS ===
