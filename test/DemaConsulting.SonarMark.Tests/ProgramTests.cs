@@ -105,10 +105,13 @@ public class ProgramTests
     [TestMethod]
     public void Program_Run_WithNoArguments_OutputsBannerAndRequiresServerError()
     {
-        // Arrange - capture console output
+        // Arrange - capture console output (stdout for banner, stderr for error messages)
         var originalOut = Console.Out;
+        var originalError = Console.Error;
         using var output = new StringWriter();
+        using var errorOutput = new StringWriter();
         Console.SetOut(output);
+        Console.SetError(errorOutput);
 
         try
         {
@@ -117,16 +120,16 @@ public class ProgramTests
             // Act - run the program with no arguments
             Program.Run(context);
 
-            // Assert - verify banner is shown and error about missing --server parameter
+            // Assert - verify banner is shown on stdout and error about missing --server parameter on stderr
             // This test proves that running without required parameters shows appropriate error
-            var outputText = output.ToString();
-            Assert.Contains("SonarMark version", outputText);
-            Assert.Contains("--server parameter is required", outputText);
+            Assert.Contains("SonarMark version", output.ToString());
+            Assert.Contains("--server parameter is required", errorOutput.ToString());
             Assert.AreEqual(1, context.ExitCode);
         }
         finally
         {
             Console.SetOut(originalOut);
+            Console.SetError(originalError);
         }
     }
 
@@ -136,10 +139,10 @@ public class ProgramTests
     [TestMethod]
     public void Program_Run_WithServerButNoProjectKey_OutputsProjectKeyRequiredError()
     {
-        // Arrange - capture console output
-        var originalOut = Console.Out;
-        using var output = new StringWriter();
-        Console.SetOut(output);
+        // Arrange - capture console error output
+        var originalError = Console.Error;
+        using var errorOutput = new StringWriter();
+        Console.SetError(errorOutput);
 
         try
         {
@@ -150,13 +153,12 @@ public class ProgramTests
 
             // Assert - verify error about missing --project-key parameter
             // This test proves that --server requires --project-key to also be specified
-            var outputText = output.ToString();
-            Assert.Contains("--project-key parameter is required", outputText);
+            Assert.Contains("--project-key parameter is required", errorOutput.ToString());
             Assert.AreEqual(1, context.ExitCode);
         }
         finally
         {
-            Console.SetOut(originalOut);
+            Console.SetError(originalError);
         }
     }
 

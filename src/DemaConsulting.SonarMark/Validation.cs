@@ -128,7 +128,6 @@ internal static class Validation
             testResults,
             mockFactory,
             "SonarMark_QualityGateRetrieval",
-            "Quality Gate Retrieval Test",
             null,
             (logContent, _) =>
             {
@@ -159,7 +158,6 @@ internal static class Validation
             testResults,
             mockFactory,
             "SonarMark_IssuesRetrieval",
-            "Issues Retrieval Test",
             null,
             (logContent, _) =>
             {
@@ -188,7 +186,6 @@ internal static class Validation
             testResults,
             mockFactory,
             "SonarMark_HotSpotsRetrieval",
-            "Hot-Spots Retrieval Test",
             null,
             (logContent, _) =>
             {
@@ -217,7 +214,6 @@ internal static class Validation
             testResults,
             mockFactory,
             "SonarMark_MarkdownReportGeneration",
-            "Markdown Report Generation Test",
             "quality-report.md",
             (logContent, reportContent) =>
             {
@@ -245,7 +241,6 @@ internal static class Validation
     /// <param name="testResults">The test results collection.</param>
     /// <param name="mockFactory">The mock HTTP client factory.</param>
     /// <param name="testName">The name of the test.</param>
-    /// <param name="displayName">The display name for console output.</param>
     /// <param name="reportFileName">Optional report file name to generate.</param>
     /// <param name="validator">Function to validate test results. Returns null on success or error message on failure.</param>
     private static void RunValidationTest(
@@ -253,7 +248,6 @@ internal static class Validation
         DemaConsulting.TestResults.TestResults testResults,
         Func<string?, SonarQubeClient> mockFactory,
         string testName,
-        string displayName,
         string? reportFileName,
         Func<string, string?, string?> validator)
     {
@@ -306,26 +300,26 @@ internal static class Validation
                 if (errorMessage == null)
                 {
                     test.Outcome = DemaConsulting.TestResults.TestOutcome.Passed;
-                    context.WriteLine($"✓ {displayName} - PASSED");
+                    context.WriteLine($"✓ {testName} - Passed");
                 }
                 else
                 {
                     test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
                     test.ErrorMessage = errorMessage;
-                    context.WriteError($"✗ {displayName} - FAILED: {errorMessage}");
+                    context.WriteError($"✗ {testName} - Failed: {errorMessage}");
                 }
             }
             else
             {
                 test.Outcome = DemaConsulting.TestResults.TestOutcome.Failed;
                 test.ErrorMessage = $"Program exited with code {exitCode}";
-                context.WriteError($"✗ {displayName} - FAILED: Exit code {exitCode}");
+                context.WriteError($"✗ {testName} - Failed: Exit code {exitCode}");
             }
         }
         // Generic catch is justified here to handle any exception during test execution
         catch (Exception ex)
         {
-            HandleTestException(test, context, displayName, ex);
+            HandleTestException(test, context, testName, ex);
         }
 
         FinalizeTestResult(test, startTime, testResults);

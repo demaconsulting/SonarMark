@@ -46,11 +46,20 @@
     <SBOMPackageSupplier>Organization: $(Company)</SBOMPackageSupplier>
   </PropertyGroup>
 
+  <!-- Runtime Dependencies -->
   <ItemGroup>
     <PackageReference Include="DemaConsulting.TestResults" Version="1.5.0" />
-    <!-- PrivateAssets="All" prevents these build-time-only packages from becoming transitive dependencies -->
+  </ItemGroup>
+
+  <!-- Build Tool Dependencies -->
+  <ItemGroup>
     <PackageReference Include="Microsoft.Sbom.Targets" Version="4.1.5" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All" />
+    <PackageReference Include="Polyfill" Version="9.13.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <!-- Code Analysis Dependencies -->
+  <ItemGroup>
     <!--
       Analyzer and source-only packages require both PrivateAssets and IncludeAssets:
         PrivateAssets="all"   - prevents these build-time assets from flowing to consumers
@@ -62,11 +71,6 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="SonarAnalyzer.CSharp" Version="10.20.0.135146">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <!-- Polyfill is a source-only package; contentfiles delivers the polyfill source into this project -->
-    <PackageReference Include="Polyfill" Version="9.13.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

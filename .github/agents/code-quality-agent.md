@@ -31,7 +31,7 @@ Ensure the project is:
 
 1. **Build**: Zero warnings (TreatWarningsAsErrors=true)
 2. **Linting**:
-   - markdownlint (`.markdownlint.json`)
+   - markdownlint (`.markdownlint-cli2.jsonc`)
    - cspell (`.cspell.json`)
    - yamllint (`.yamllint.yaml`)
    - dotnet format (`.editorconfig`)

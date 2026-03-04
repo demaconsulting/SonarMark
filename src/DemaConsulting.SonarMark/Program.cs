@@ -62,19 +62,19 @@ internal static class Program
         catch (ArgumentException ex)
         {
             // Print expected argument exceptions and return error code
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
             return 1;
         }
         catch (InvalidOperationException ex)
         {
             // Print expected operation exceptions and return error code
-            Console.WriteLine($"Error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
             return 1;
         }
         catch (Exception ex)
         {
             // Print unexpected exceptions and re-throw to generate event logs
-            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
             throw;
         }
     }
@@ -88,7 +88,7 @@ internal static class Program
         // Priority 1: Version query
         if (context.Version)
         {
-            Console.WriteLine(Version);
+            context.WriteLine(Version);
             return;
         }
 
