@@ -56,7 +56,7 @@ The agent reviews the following areas for consistency with the template:
 
 #### Quality Configuration
 
-- **Linting Rules**: `.cspell.json`, `.markdownlint.json`, `.yamllint.yaml`
+- **Linting Rules**: `.cspell.json`, `.markdownlint-cli2.jsonc`, `.yamllint.yaml`
   - Note: Spelling exceptions will be repository-specific
 - **Editor Config**: `.editorconfig` settings (file-scoped namespaces, 4-space indent, UTF-8+BOM, LF endings)
 - **Code Style**: C# code style rules and analyzer configuration
@@ -87,6 +87,34 @@ The agent reviews the following areas for consistency with the template:
 2. **Assess Impact**: Determine if differences are intentional variations or drift
 3. **Recommend Updates**: Suggest specific files or patterns that should be updated
 4. **Respect Customizations**: Recognize valid project-specific customizations
+
+### Tracking Template Evolution
+
+To ensure downstream projects benefit from recent template improvements, review recent pull requests
+merged into the template repository:
+
+1. **List Recent PRs**: Retrieve recently merged PRs from `demaconsulting/TemplateDotNetTool`
+   - Review the last 10-20 PRs to identify template improvements
+
+2. **Identify Propagatable Changes**: For each PR, determine if changes should apply to downstream
+   projects:
+   - Focus on structural changes (workflows, agents, configurations) over content-specific changes
+   - Note changes to `.github/`, linting configurations, project patterns, and documentation
+     structure
+
+3. **Check Downstream Application**: Verify if identified changes exist in the downstream project:
+   - Check if similar files/patterns exist in downstream
+   - Compare file contents between template and downstream project
+   - Look for similar PR titles or commit messages in downstream repository history
+
+4. **Recommend Missing Updates**: For changes not yet applied, include them in the consistency
+   review with:
+   - Description of the template change (reference PR number)
+   - Explanation of benefits for the downstream project
+   - Specific files or patterns that need updating
+
+This technique ensures downstream projects don't miss important template improvements and helps
+maintain long-term consistency.
 
 ### What NOT to Flag
 
