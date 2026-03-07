@@ -30,6 +30,20 @@ This user guide covers:
 - **CI/CD Integration**: Support for enforcement mode to fail builds on quality gate failures
 - **Multi-Platform**: Works on Windows, Linux, and macOS with .NET 8, 9, or 10
 
+# Continuous Compliance
+
+SonarMark follows the [Continuous Compliance][continuous-compliance] methodology, which ensures
+compliance evidence is generated automatically on every CI run.
+
+## Key Practices
+
+- **Requirements Traceability**: Every requirement is linked to passing tests, and a trace matrix is
+  auto-generated on each release
+- **Linting Enforcement**: markdownlint, cspell, and yamllint are enforced before any build proceeds
+- **Automated Audit Documentation**: Each release ships with generated requirements, justifications,
+  trace matrix, and quality reports
+- **CodeQL and SonarCloud**: Security and quality analyses run on every build
+
 # Installation
 
 ## Prerequisites
@@ -649,3 +663,4 @@ fi
 [security]: https://github.com/demaconsulting/SonarMark/blob/main/SECURITY.md
 [sonarqube-docs]: https://docs.sonarqube.org/latest/
 [sonarcloud-docs]: https://docs.sonarcloud.io/
+[continuous-compliance]: https://github.com/demaconsulting/ContinuousCompliance

@@ -90,7 +90,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -124,8 +124,8 @@ jobs:
         run: |
           mkdir -p artifacts
           echo "Capturing tool versions..."
-          # Create short job ID: build-win, build-ubuntu
-          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/windows-latest/win/;s/ubuntu-latest/ubuntu/')
+          # Create short job ID: build-windows, build-ubuntu, build-macos
+          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/-latest//')
           JOB_ID="build-${OS_SHORT}"
           dotnet versionmark --capture --job-id "${JOB_ID}" \
             --output "artifacts/versionmark-${JOB_ID}.json" -- \
@@ -230,6 +230,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: csharp
+          build-mode: manual
           queries: security-and-quality
           config-file: ./.github/codeql-config.yml
 
@@ -285,7 +286,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         dotnet-version: ['8.x', '9.x', '10.x']
 
     steps:
@@ -331,8 +332,8 @@ jobs:
         run: |
           mkdir -p artifacts
           echo "Capturing tool versions..."
-          # Create short job ID: int-win-8, int-win-9, int-ubuntu-8, etc.
-          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/windows-latest/win/;s/ubuntu-latest/ubuntu/')
+          # Create short job ID: int-windows-8, int-ubuntu-9, int-macos-10, etc.
+          OS_SHORT=$(echo "${{ matrix.os }}" | sed 's/-latest//')
           DOTNET_SHORT=$(echo "${{ matrix.dotnet-version }}" | sed 's/\.x$//')
           JOB_ID="int-${OS_SHORT}-${DOTNET_SHORT}"
           dotnet versionmark --capture --job-id "${JOB_ID}" \
