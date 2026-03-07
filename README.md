@@ -28,6 +28,10 @@ documentation workflows.
 - 🌐 **Multi-Platform** - Support for .NET 8, 9, and 10 across Windows, Linux, and macOS
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
+- 🔍 **Linting Enforcement** - markdownlint, cspell, and yamllint enforced on every CI run
+- 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following
+  the [Continuous Compliance][link-continuous-compliance] methodology
+- 🗂️ **Requirements Traceability** - Requirements linked to passing tests with auto-generated trace matrix
 
 ## Installation
 
@@ -271,3 +275,4 @@ SonarMark is built with the following open-source projects:
 [link-quality]: https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark
 [link-security]: https://sonarcloud.io/dashboard?id=demaconsulting_SonarMark
 [link-nuget]: https://www.nuget.org/packages/DemaConsulting.SonarMark
+[link-continuous-compliance]: https://github.com/demaconsulting/ContinuousCompliance

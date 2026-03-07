@@ -20,6 +20,7 @@
 # Source filter prefixes:
 #   windows@TestName    - proves the test passed on a Windows platform
 #   ubuntu@TestName     - proves the test passed on a Linux (Ubuntu) platform
+#   macos@TestName      - proves the test passed on a macOS platform
 #   net8.0@TestName     - proves the test passed under the .NET 8 target framework
 #   net9.0@TestName     - proves the test passed under the .NET 9 target framework
 #   net10.0@TestName    - proves the test passed under the .NET 10 target framework
@@ -310,6 +311,23 @@ sections:
               - ubuntu@SonarMark_IssuesRetrieval
               - ubuntu@SonarMark_HotSpotsRetrieval
               - ubuntu@SonarMark_MarkdownReportGeneration
+
+          - id: SonarMark-Plt-MacOS
+            title: The tool shall run on macOS operating systems.
+            justification: |
+              macOS is a major development platform for developers using Apple hardware. Supporting macOS
+              ensures the tool can be used in macOS-based development environments and CI/CD systems,
+              broadening the tool's reach across all major desktop development platforms.
+            # Test source pattern "macos@" ensures these tests ran on macOS.
+            # This filtering is necessary to prove macOS OS functionality.
+            tests:
+              - macos@IntegrationTest_VersionFlag_OutputsVersion
+              - macos@IntegrationTest_HelpFlag_OutputsUsageInformation
+              - macos@IntegrationTest_ReportParameter_IsAccepted
+              - macos@SonarMark_QualityGateRetrieval
+              - macos@SonarMark_IssuesRetrieval
+              - macos@SonarMark_HotSpotsRetrieval
+              - macos@SonarMark_MarkdownReportGeneration
 
           - id: SonarMark-Plt-Net8
             title: The tool shall support .NET 8.0 runtime.
