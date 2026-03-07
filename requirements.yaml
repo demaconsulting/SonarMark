@@ -319,7 +319,7 @@ sections:
               ensures the tool can be used in macOS-based development environments and CI/CD systems,
               broadening the tool's reach across all major desktop development platforms.
             # Test source pattern "macos@" ensures these tests ran on macOS.
-            # This filtering is necessary to prove macOS OS functionality.
+            # This filtering is necessary to prove macOS functionality.
             tests:
               - macos@IntegrationTest_VersionFlag_OutputsVersion
               - macos@IntegrationTest_HelpFlag_OutputsUsageInformation
