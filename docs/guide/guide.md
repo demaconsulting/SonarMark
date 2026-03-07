@@ -42,7 +42,7 @@ compliance evidence is generated automatically on every CI run.
 - **Linting Enforcement**: markdownlint, cspell, and yamllint are enforced before any build proceeds
 - **Automated Audit Documentation**: Each release ships with generated requirements, justifications,
   trace matrix, and quality reports
-- **CodeQL and SonarCloud**: Security and quality analysis runs on every build
+- **CodeQL and SonarCloud**: Security and quality analyses run on every build
 
 # Installation
 
