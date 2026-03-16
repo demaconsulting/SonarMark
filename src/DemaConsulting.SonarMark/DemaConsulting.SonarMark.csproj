@@ -48,14 +48,14 @@
 
   <!-- Runtime Dependencies -->
   <ItemGroup>
-    <PackageReference Include="DemaConsulting.TestResults" Version="1.5.0" />
+    <PackageReference Include="DemaConsulting.TestResults" Version="1.6.0" />
   </ItemGroup>
 
   <!-- Build Tool Dependencies -->
   <ItemGroup>
     <PackageReference Include="Microsoft.Sbom.Targets" Version="4.1.5" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.103" PrivateAssets="All" />
-    <PackageReference Include="Polyfill" Version="9.18.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.201" PrivateAssets="All" />
+    <PackageReference Include="Polyfill" Version="9.22.0" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Code Analysis Dependencies -->
@@ -66,11 +66,11 @@
         IncludeAssets         - explicitly enables contentfiles (source injection) and
                                 analyzers/buildtransitive (Roslyn analyzers at compile time)
     -->
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.103">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.20.0.135146">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="10.21.0.135717">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
