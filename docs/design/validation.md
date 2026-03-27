@@ -4,8 +4,8 @@
 
 `Validation` provides the self-validation capability of SonarMark. When the tool
 is invoked with `--validate`, `Validation.Run` executes a suite of internal tests
-against a mock HTTP server, verifying that the tool's core workflows function
-correctly without requiring a live SonarQube/SonarCloud server.
+using a mocked HTTP client, verifying that the tool's core workflows function
+correctly without starting a real HTTP server or requiring a live SonarQube/SonarCloud instance.
 
 ## Design Decisions
 
