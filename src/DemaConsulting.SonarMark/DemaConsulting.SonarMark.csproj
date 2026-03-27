@@ -60,12 +60,11 @@
 
   <!-- Code Analysis Dependencies -->
   <ItemGroup>
-    <!--
-      Analyzer and source-only packages require both PrivateAssets and IncludeAssets:
-        PrivateAssets="all"   - prevents these build-time assets from flowing to consumers
-        IncludeAssets         - explicitly enables contentfiles (source injection) and
-                                analyzers/buildtransitive (Roslyn analyzers at compile time)
-    -->
+    <!-- Analyzer packages use child-element form to configure both PrivateAssets and IncludeAssets:
+         - PrivateAssets="all" prevents these build-time analyzers from becoming transitive dependencies
+           in packages that consume this tool.
+         - IncludeAssets lists all asset types (including 'analyzers' and 'buildtransitive') to ensure
+           Roslyn analyzers and MSBuild targets are fully activated during the build. -->
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.201">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

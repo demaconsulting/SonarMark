@@ -49,6 +49,12 @@
       "commands": [
         "versionmark"
       ]
+    },
+    "demaconsulting.reviewmark": {
+      "version": "0.2.0",
+      "commands": [
+        "reviewmark"
+      ]
     }
   }
 }

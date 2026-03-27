@@ -73,10 +73,16 @@ We follow a standard GitHub workflow for contributions:
    dotnet build --configuration Release
    ```
 
-4. Run tests:
+4. Run unit tests:
 
    ```bash
    dotnet test --configuration Release
+   ```
+
+5. Run self-validation tests:
+
+   ```bash
+   dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
    ```
 
 ## Coding Standards
@@ -95,7 +101,7 @@ This project enforces code style through `.editorconfig`. Key requirements:
 
 - **Indentation**: 4 spaces for C#, 2 spaces for YAML/JSON/XML
 - **Line Endings**: LF (Unix-style)
-- **Encoding**: UTF-8 with BOM
+- **Encoding**: UTF-8
 - **Namespaces**: Use file-scoped namespace declarations
 - **Braces**: Required for all control statements
 - **Naming Conventions**:
@@ -142,7 +148,7 @@ Examples:
 
 - Write tests that are clear and focused
 - Use modern MSTest v4 assertions:
-  - `Assert.HasCount(collection, expectedCount)`
+  - `Assert.HasCount(expectedCount, collection)`
   - `Assert.IsEmpty(collection)`
   - `Assert.DoesNotContain(item, collection)`
 - Always clean up resources (use `try/finally` for console redirection)
@@ -150,15 +156,24 @@ Examples:
 
 ### Running Tests
 
+#### Unit Tests
+
 ```bash
-# Run all tests
+# Run all unit tests
 dotnet test --configuration Release
 
-# Run specific test
+# Run specific unit test
 dotnet test --filter "FullyQualifiedName~YourTestName"
 
 # Run with coverage
 dotnet test --collect "XPlat Code Coverage"
+```
+
+#### Self-Validation Tests
+
+```bash
+# Run self-validation tests
+dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
 ```
 
 ### Test Execution Strategy
@@ -212,19 +227,16 @@ All markdown files must follow these rules (enforced by markdownlint):
 - Lists must be surrounded by blank lines
 - Use reference-style links: `[text][ref]` with `[ref]: url` at document end
 - **Exception**: `README.md` uses absolute URLs (it's included in the NuGet package)
-- **Exception**: Agent markdown files in `.github/agents/*.md` use inline links `[text](url)` for visibility in agent
+- **Exception**: Agent markdown files in `.github/agents/*.agent.md` use inline links `[text](url)` for visibility in agent
   context
 
 ### Spell Checking
 
-All files are spell-checked using cspell. Add project-specific terms to `.cspell.json`:
+All files are spell-checked using cspell. Add project-specific terms to `.cspell.yaml`:
 
-```json
-{
-  "words": [
-    "myterm"
-  ]
-}
+```yaml
+words:
+  - myterm
 ```
 
 ## Quality Checks
@@ -242,20 +254,12 @@ All tests must pass with zero warnings.
 
 ### 2. Linting
 
-Run all linters to ensure code quality and consistency:
+Use the lint script which installs dependencies and runs all linters:
 
 ```bash
-# Markdown linting
-npx markdownlint-cli2
-
-# Spell checking
-npx cspell "**/*.{md,cs}" --no-progress
-
-# YAML linting
-yamllint .
-
-# Code formatting
-dotnet format --verify-no-changes
+./lint.sh           # Linux/macOS (or: bash ./lint.sh)
+cmd /c lint.bat     # Windows (Command Prompt)
+./lint.bat          # Windows (PowerShell)
 ```
 
 All linters must pass with no errors or warnings.

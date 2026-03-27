@@ -41,23 +41,29 @@ coverage/
 node_modules/
 package-lock.json
 
+# Python virtual environment
+.venv/
+
 # Agent communication files
 AGENT_REPORT_*.md
 
 # Generated documentation
 docs/*.pdf
 docs/guide/*.html
-docs/requirements/requirements.md
-docs/requirements/*.html
-docs/tracematrix/tracematrix.md
-docs/tracematrix/*.html
-docs/justifications/justifications.md
-docs/justifications/*.html
-docs/quality/sonar-quality.md
-docs/quality/codeql-quality.md
-docs/quality/*.html
-docs/buildnotes.md
-docs/buildnotes/versions.md
+docs/requirements_doc/requirements.md
+docs/requirements_doc/justifications.md
+docs/requirements_doc/*.html
+docs/requirements_report/trace_matrix.md
+docs/requirements_report/*.html
+docs/code_quality/codeql-quality.md
+docs/code_quality/sonar-quality.md
+docs/code_quality/*.html
+docs/build_notes.md
+docs/build_notes/versions.md
+docs/code_review_plan/plan.md
+docs/code_review_plan/*.html
+docs/code_review_report/report.md
+docs/code_review_report/*.html
 
 # VersionMark captures (generated during CI/CD)
 versionmark-*.json
