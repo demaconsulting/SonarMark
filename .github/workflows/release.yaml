@@ -69,7 +69,7 @@ jobs:
         with:
           tag: ${{ inputs.version }}
           artifacts: artifacts/*
-          bodyFile: artifacts/buildnotes.md
+          bodyFile: artifacts/build_notes.md
           generateReleaseNotes: false
 
       - name: Publish to NuGet.org
