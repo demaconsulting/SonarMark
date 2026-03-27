@@ -21,5 +21,6 @@ includes:
   - docs/reqstream/sonar-hot-spot-requirements.yaml
   - docs/reqstream/sonar-issue-requirements.yaml
   - docs/reqstream/sonar-quality-result-requirements.yaml
+  - docs/reqstream/system-requirements.yaml
   - docs/reqstream/platform-requirements.yaml
   - docs/reqstream/ots-requirements.yaml

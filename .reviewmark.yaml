@@ -40,9 +40,6 @@ reviews:
       - "docs/design/program.md"
       - "src/**/Program.cs"
       - "test/**/ProgramTests.cs"
-      - "test/**/IntegrationTests.cs"
-      - "test/**/Runner.cs"
-      - "test/**/AssemblyInfo.cs"
 
   - id: SonarMark-Validation
     title: Review of SonarMark Validation Unit
@@ -96,9 +93,6 @@ reviews:
       - "src/**/Program.cs"
       - "test/**/ContextTests.cs"
       - "test/**/ProgramTests.cs"
-      - "test/**/IntegrationTests.cs"
-      - "test/**/Runner.cs"
-      - "test/**/AssemblyInfo.cs"
 
   - id: SonarMark-SonarIntegration
     title: Review of SonarMark SonarQube Integration Subsystem
@@ -125,6 +119,16 @@ reviews:
       - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
 
+  # System review — end-to-end integrated system
+  - id: SonarMark-System
+    title: Review of SonarMark Integrated System
+    paths:
+      - "docs/reqstream/system-requirements.yaml"
+      - "docs/design/introduction.md"
+      - "test/**/IntegrationTests.cs"
+      - "test/**/Runner.cs"
+      - "test/**/AssemblyInfo.cs"
+
   # Requirements review — all requirements files
   - id: SonarMark-Requirements
     title: Review of SonarMark Requirements
@@ -136,6 +140,7 @@ reviews:
       - "docs/reqstream/sonar-hot-spot-requirements.yaml"
       - "docs/reqstream/sonar-issue-requirements.yaml"
       - "docs/reqstream/sonar-quality-result-requirements.yaml"
+      - "docs/reqstream/system-requirements.yaml"
       - "docs/reqstream/platform-requirements.yaml"
       - "docs/reqstream/ots-requirements.yaml"
 
