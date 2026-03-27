@@ -1,0 +1,43 @@
+---
+# SonarMark SonarIssue Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarIssue software unit
+# - SonarIssue is an immutable data record representing a code issue retrieved
+#   from SonarQube/SonarCloud, carrying all properties needed for severity-based
+#   categorization and reporting
+#
+sections:
+  - title: SonarIssue
+    requirements:
+      - id: SonarMark-Iss-Record
+        title: >-
+          The SonarIssue shall represent a SonarQube issue with its key, rule, severity,
+          component, line, message, and type.
+        justification: |
+          The SonarIssue data record must faithfully carry all properties returned by the
+          SonarQube API for an issue entry. This ensures that downstream report generation
+          and display logic has access to every field required to produce accurate and complete
+          issue output.
+        tests:
+          - SonarIssue_Constructor_AllProperties_CreatesInstance
+
+      - id: SonarMark-Iss-OptionalLine
+        title: The SonarIssue shall support an optional line number for issues not associated with a specific line.
+        justification: |
+          Some SonarQube issues are reported at file level rather than on a specific line. The
+          line number must therefore be nullable so the record accurately represents both line-level
+          and file-level issues without resorting to sentinel values.
+        tests:
+          - SonarIssue_Constructor_NullLine_CreatesInstance
+
+      - id: SonarMark-Iss-Severity
+        title: The SonarIssue shall capture the severity level to enable severity-based categorization in reports.
+        justification: |
+          Issue severity (BLOCKER, CRITICAL, MAJOR, MINOR, INFO) indicates the impact of the
+          issue on the codebase. Capturing this value enables the report to group and display
+          issues by severity so that teams can prioritize the most impactful problems first.
+        tests:
+          - SonarIssue_Constructor_BlockerSeverity_CreatesInstance
+          - SonarIssue_Constructor_CriticalSeverity_CreatesInstance
+          - SonarIssue_Constructor_InfoSeverity_CreatesInstance

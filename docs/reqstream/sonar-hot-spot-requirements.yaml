@@ -1,0 +1,42 @@
+---
+# SonarMark SonarHotSpot Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarHotSpot software unit
+# - SonarHotSpot is an immutable data record representing a security hot-spot
+#   retrieved from SonarQube/SonarCloud, carrying all properties needed for
+#   reporting and prioritization
+#
+sections:
+  - title: SonarHotSpot
+    requirements:
+      - id: SonarMark-Hs-Record
+        title: >-
+          The SonarHotSpot shall represent a SonarQube security hot-spot with its key,
+          component, line, message, security category, and vulnerability probability.
+        justification: |
+          The SonarHotSpot data record must faithfully carry all properties returned by the
+          SonarQube API for a hot-spot entry. This ensures that downstream report generation
+          and display logic has access to every field required to produce accurate and complete
+          security hot-spot output.
+        tests:
+          - SonarHotSpot_Constructor_AllProperties_CreatesInstance
+
+      - id: SonarMark-Hs-OptionalLine
+        title: The SonarHotSpot shall support an optional line number for hot-spots not associated with a specific line.
+        justification: |
+          Some SonarQube security hot-spots are reported at file level rather than on a specific
+          line. The line number must therefore be nullable so the record accurately represents
+          both line-level and file-level hot-spots without resorting to sentinel values.
+        tests:
+          - SonarHotSpot_Constructor_NullLine_CreatesInstance
+
+      - id: SonarMark-Hs-VulnerabilityProbability
+        title: The SonarHotSpot shall capture the vulnerability probability to enable priority-based reporting.
+        justification: |
+          Vulnerability probability (HIGH, MEDIUM, LOW) indicates the likelihood that a hot-spot
+          represents an actual security vulnerability. Capturing this value allows report generation
+          to present hot-spots in priority order and helps reviewers focus on the highest-risk
+          items first.
+        tests:
+          - SonarHotSpot_Constructor_LowProbability_CreatesInstance

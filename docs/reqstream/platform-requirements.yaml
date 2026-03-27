@@ -5,9 +5,20 @@
 # - Define requirements for platform and runtime support
 # - Test source filters ensure evidence comes from specific platforms/runtimes
 #
-# NOTE: Test links include source filter prefixes (e.g. "windows@", "ubuntu@", "dotnet8.x@")
-# to restrict which test results count as evidence. This filtering is critical for platform
+# Test links include a source filter prefix to restrict which test results count
+# as evidence for each requirement. This filtering is critical for platform
 # requirements and must not be removed.
+#
+# Source filter prefixes:
+#   windows@TestName    - proves the test passed on a Windows platform
+#   ubuntu@TestName     - proves the test passed on a Linux (Ubuntu) platform
+#   macos@TestName      - proves the test passed on a macOS platform
+#   net8.0@TestName     - proves the test passed under the .NET 8 target framework
+#   net9.0@TestName     - proves the test passed under the .NET 9 target framework
+#   net10.0@TestName    - proves the test passed under the .NET 10 target framework
+#   dotnet8.x@TestName  - proves the self-validation test ran with .NET 8.x runtime
+#   dotnet9.x@TestName  - proves the self-validation test ran with .NET 9.x runtime
+#   dotnet10.x@TestName - proves the self-validation test ran with .NET 10.x runtime
 #
 sections:
   - title: Platform Support

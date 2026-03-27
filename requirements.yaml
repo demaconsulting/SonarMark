@@ -12,28 +12,14 @@
 # Platform-specific requirements require test results from CI/CD runs across
 # the full OS and runtime matrix.
 #
-# Test links can include a source filter prefix (e.g. "windows@", "ubuntu@", "net8.0@",
-# "dotnet8.x@") to restrict which test results count as evidence for a requirement. This
-# is critical for platform and framework requirements - removing these filters invalidates
-# the evidence-based proof.
-#
-# Source filter prefixes:
-#   windows@TestName    - proves the test passed on a Windows platform
-#   ubuntu@TestName     - proves the test passed on a Linux (Ubuntu) platform
-#   macos@TestName      - proves the test passed on a macOS platform
-#   net8.0@TestName     - proves the test passed under the .NET 8 target framework
-#   net9.0@TestName     - proves the test passed under the .NET 9 target framework
-#   net10.0@TestName    - proves the test passed under the .NET 10 target framework
-#   dotnet8.x@TestName  - proves the self-validation test ran with .NET 8.x runtime
-#   dotnet9.x@TestName  - proves the self-validation test ran with .NET 9.x runtime
-#   dotnet10.x@TestName - proves the self-validation test ran with .NET 10.x runtime
-#
 
 includes:
   - docs/reqstream/context-requirements.yaml
   - docs/reqstream/program-requirements.yaml
   - docs/reqstream/validation-requirements.yaml
-  - docs/reqstream/sonar-quality-result-requirements.yaml
   - docs/reqstream/sonar-qube-client-requirements.yaml
+  - docs/reqstream/sonar-hot-spot-requirements.yaml
+  - docs/reqstream/sonar-issue-requirements.yaml
+  - docs/reqstream/sonar-quality-result-requirements.yaml
   - docs/reqstream/platform-requirements.yaml
   - docs/reqstream/ots-requirements.yaml
