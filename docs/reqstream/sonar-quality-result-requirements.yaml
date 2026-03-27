@@ -1,36 +1,14 @@
 ---
-# SonarMark Report Generation Requirements
+# SonarMark SonarQualityResult Requirements
 #
 # PURPOSE:
-# - Define requirements for the report generation subsystem
-# - These requirements describe the markdown report output behavior
+# - Define requirements for the SonarQualityResult software unit
+# - SonarQualityResult.ToMarkdown renders quality gate status, issues, and
+#   security hot-spots into a structured markdown report
 #
 sections:
-  - title: Report Generation
+  - title: SonarQualityResult
     requirements:
-      - id: SonarMark-Rpt-Markdown
-        title: The tool shall generate markdown reports.
-        justification: |
-          Markdown reports provide human-readable documentation of code quality that can be easily
-          integrated into documentation systems, pull request comments, and version control. Markdown
-          is widely supported and readable both as plain text and rendered, making it ideal for
-          developer communication and documentation.
-        tests:
-          - IntegrationTest_ReportParameter_IsAccepted
-          - SonarMark_MarkdownReportGeneration
-
-      - id: SonarMark-Rpt-Depth
-        title: The tool shall support configurable report depth.
-        justification: |
-          Configurable report depth allows users to control the level of detail in generated reports,
-          accommodating different use cases from high-level summaries to detailed analysis. This
-          flexibility ensures reports can be integrated into various document structures without
-          conflicting heading levels.
-        tests:
-          - IntegrationTest_ReportDepthWithZero_ShowsError
-          - IntegrationTest_ReportDepthWithInvalidValue_ShowsError
-          - IntegrationTest_ReportDepthWithoutValue_ShowsError
-
       - id: SonarMark-Rpt-QualityGate
         title: The tool shall include quality gate status in reports.
         justification: |

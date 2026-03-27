@@ -11,15 +11,23 @@ class in the codebase.
 
 ## Scope
 
-This design document covers the following software units:
+This design document covers the software units that make up SonarMark, organized into the
+following subsystems:
 
-- **Context** — command-line argument parsing and program output management
-- **Program** — main entry point and top-level program logic
-- **SonarHotSpot** — data record representing a SonarQube security hot-spot
-- **SonarIssue** — data record representing a SonarQube issue
-- **SonarQualityResult** — data record representing quality analysis results with markdown generation
-- **SonarQubeClient** — HTTP client for the SonarQube/SonarCloud API
-- **Validation** — self-validation functionality for the tool
+```text
+SonarMark (system)
+├── CLI (subsystem)
+│   ├── Context           — argument parsing, output, log-file, enforce, results-file
+│   └── Program           — entry point, dispatch, parameter validation, report writing
+├── SonarQube Integration (subsystem)
+│   ├── SonarQubeClient   — HTTP API client, fetches quality gate, issues, and hot-spots
+│   ├── SonarHotSpot      — data record representing a SonarQube security hot-spot
+│   └── SonarIssue        — data record representing a SonarQube issue
+├── Report Generation (subsystem)
+│   └── SonarQualityResult — aggregates results and renders the markdown report
+└── Validation (subsystem)
+    └── Validation        — self-validation runner, writes TRX and JUnit result files
+```
 
 ## Audience
 

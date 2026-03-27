@@ -30,10 +30,10 @@
 #
 
 includes:
-  - docs/reqstream/cli-requirements.yaml
-  - docs/reqstream/sonarqube-requirements.yaml
-  - docs/reqstream/report-requirements.yaml
+  - docs/reqstream/context-requirements.yaml
+  - docs/reqstream/program-requirements.yaml
   - docs/reqstream/validation-requirements.yaml
-  - docs/reqstream/quality-enforcement-requirements.yaml
+  - docs/reqstream/sonar-quality-result-requirements.yaml
+  - docs/reqstream/sonar-qube-client-requirements.yaml
   - docs/reqstream/platform-requirements.yaml
   - docs/reqstream/ots-requirements.yaml
