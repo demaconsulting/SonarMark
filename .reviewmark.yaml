@@ -120,17 +120,9 @@ reviews:
   - id: SonarMark-ReportGeneration
     title: Review of SonarMark Report Generation Subsystem
     paths:
-      - "docs/reqstream/program-requirements.yaml"
       - "docs/reqstream/sonar-quality-result-requirements.yaml"
-      - "docs/design/program.md"
       - "docs/design/sonar-quality-result.md"
-      - "docs/design/sonar-hot-spot.md"
-      - "docs/design/sonar-issue.md"
-      - "src/**/Program.cs"
       - "src/**/SonarQualityResult.cs"
-      - "src/**/SonarHotSpot.cs"
-      - "src/**/SonarIssue.cs"
-      - "test/**/IntegrationTests.cs"
       - "test/**/SonarQualityResultTests.cs"
 
   # Requirements review — all requirements files
