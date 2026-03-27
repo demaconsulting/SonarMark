@@ -1,0 +1,14 @@
+---
+title: SonarMark Design
+subtitle: Software Design Specification for the SonarMark Tool
+author: DEMA Consulting
+description: Software Design Specification for the SonarMark Tool
+lang: en-US
+keywords:
+  - SonarMark
+  - Design
+  - Specification
+  - .NET
+  - YAML
+  - Command-Line Tool
+---

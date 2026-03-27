@@ -6,10 +6,11 @@
 # Patterns identifying all files that require review.
 # Processed in order; prefix a pattern with '!' to exclude.
 needs-review:
-  - "**/*.cs"                    # All C# source and test files
-  - "requirements.yaml"          # Root requirements file
-  - "!**/obj/**"                 # Exclude build output
-  - "!**/bin/**"                 # Exclude build output
+  - "docs/reqstream/**/*.yaml"    # All requirements files
+  - "docs/design/**/*.md"         # All design documents
+  - "**/*.cs"                     # All C# source and test files
+  - "!**/obj/**"                  # Exclude build output
+  - "!**/bin/**"                  # Exclude build output
 
 # Evidence source: review data and index.json are located in the 'reviews' branch
 # of this repository, accessed through the GitHub public HTTPS raw content access.
@@ -20,18 +21,27 @@ evidence-source:
   location: https://raw.githubusercontent.com/demaconsulting/SonarMark/reviews/index.json
 
 # Review sets grouping files by logical unit of review.
-# Each review-set groups requirements, source, and tests for a coherent software unit
+# Each review-set groups requirements, design, source, and tests for a coherent software unit
 # so that an AI-assisted review can verify consistency across the full evidence chain.
 reviews:
   - id: SonarMark-Context
     title: Review of SonarMark Context Unit
     paths:
+      - "docs/reqstream/cli-requirements.yaml"
+      - "docs/reqstream/validation-requirements.yaml"
+      - "docs/reqstream/quality-enforcement-requirements.yaml"
+      - "docs/design/context.md"
       - "src/**/Context.cs"
       - "test/**/ContextTests.cs"
 
   - id: SonarMark-Program
     title: Review of SonarMark Program Unit
     paths:
+      - "docs/reqstream/cli-requirements.yaml"
+      - "docs/reqstream/sonarqube-requirements.yaml"
+      - "docs/reqstream/report-requirements.yaml"
+      - "docs/reqstream/validation-requirements.yaml"
+      - "docs/design/program.md"
       - "src/**/Program.cs"
       - "test/**/ProgramTests.cs"
       - "test/**/IntegrationTests.cs"
@@ -41,11 +51,17 @@ reviews:
   - id: SonarMark-Validation
     title: Review of SonarMark Validation Unit
     paths:
+      - "docs/reqstream/validation-requirements.yaml"
+      - "docs/design/validation.md"
       - "src/**/Validation.cs"
 
   - id: SonarMark-SonarData
     title: Review of SonarMark Sonar Data Models
     paths:
+      - "docs/reqstream/report-requirements.yaml"
+      - "docs/design/sonar-hot-spot.md"
+      - "docs/design/sonar-issue.md"
+      - "docs/design/sonar-quality-result.md"
       - "src/**/SonarHotSpot.cs"
       - "src/**/SonarIssue.cs"
       - "src/**/SonarQualityResult.cs"
@@ -56,11 +72,24 @@ reviews:
   - id: SonarMark-SonarQubeClient
     title: Review of SonarMark SonarQube Client Unit
     paths:
+      - "docs/reqstream/sonarqube-requirements.yaml"
+      - "docs/design/sonar-qube-client.md"
       - "src/**/SonarQubeClient.cs"
       - "test/**/SonarQubeClientTests.cs"
 
-  # Requirements review
   - id: SonarMark-Requirements
     title: Review of SonarMark Requirements
     paths:
-      - "requirements.yaml"
+      - "docs/reqstream/cli-requirements.yaml"
+      - "docs/reqstream/sonarqube-requirements.yaml"
+      - "docs/reqstream/report-requirements.yaml"
+      - "docs/reqstream/validation-requirements.yaml"
+      - "docs/reqstream/quality-enforcement-requirements.yaml"
+      - "docs/reqstream/platform-requirements.yaml"
+      - "docs/reqstream/ots-requirements.yaml"
+
+  - id: SonarMark-Platform
+    title: Review of SonarMark Platform and OTS Requirements
+    paths:
+      - "docs/reqstream/platform-requirements.yaml"
+      - "docs/reqstream/ots-requirements.yaml"

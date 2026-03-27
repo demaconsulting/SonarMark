@@ -1,0 +1,64 @@
+---
+# SonarMark Command-Line Interface Requirements
+#
+# PURPOSE:
+# - Define requirements for the command-line interface subsystem
+# - These requirements describe the externally visible CLI behavior
+#
+sections:
+  - title: Command-Line Interface
+    requirements:
+      - id: SonarMark-Cmd-Cli
+        title: The tool shall provide a command-line interface.
+        justification: |
+          A command-line interface is essential for automation and integration into CI/CD pipelines.
+          It allows users to incorporate SonarMark into their build processes without manual interaction,
+          enabling automated quality checks and reporting as part of the development workflow.
+        tests:
+          - IntegrationTest_VersionFlag_OutputsVersion
+          - IntegrationTest_HelpFlag_OutputsUsageInformation
+
+      - id: SonarMark-Cmd-Version
+        title: The tool shall display version information when requested.
+        justification: |
+          Version information helps users verify which version of the tool they are running, which is
+          critical for troubleshooting, ensuring compatibility, and tracking which features are available.
+          This is a standard expectation for command-line tools.
+        tests:
+          - IntegrationTest_VersionFlag_OutputsVersion
+
+      - id: SonarMark-Cmd-Help
+        title: The tool shall display help information when requested.
+        justification: |
+          Help information provides users with usage instructions and available options without needing
+          to consult external documentation. This improves usability and reduces the learning curve,
+          especially for new users or those who need a quick reference.
+        tests:
+          - IntegrationTest_HelpFlag_OutputsUsageInformation
+
+      - id: SonarMark-Cmd-Silent
+        title: The tool shall support silent mode to suppress console output.
+        justification: |
+          Silent mode is important for automated environments where console output may interfere with
+          log parsing or where minimal output is preferred. It allows the tool to run without cluttering
+          build logs while still performing its analysis and reporting functions.
+        tests:
+          - IntegrationTest_SilentFlag_SuppressesOutput
+
+      - id: SonarMark-Cmd-Log
+        title: The tool shall support writing output to a log file.
+        justification: |
+          Log file output enables persistent recording of tool execution for later review and audit trails.
+          This is particularly valuable for debugging issues, maintaining compliance records, and analyzing
+          trends in code quality over time without relying on transient console output.
+        tests:
+          - Context_Create_WithLogFile_WritesToLogFile
+
+      - id: SonarMark-Cmd-Enforce
+        title: The tool shall support enforcing quality gate checks.
+        justification: |
+          Quality gate enforcement allows the tool to fail builds when quality standards are not met,
+          preventing low-quality code from progressing through the pipeline. This is a critical feature
+          for maintaining code quality standards and preventing technical debt accumulation.
+        tests:
+          - IntegrationTest_EnforceFlag_IsAccepted

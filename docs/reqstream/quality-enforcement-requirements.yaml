@@ -1,0 +1,27 @@
+---
+# SonarMark Quality Enforcement Requirements
+#
+# PURPOSE:
+# - Define requirements for the quality enforcement subsystem
+# - These requirements describe the enforcement mode behavior
+#
+sections:
+  - title: Quality Enforcement
+    requirements:
+      - id: SonarMark-Enf-Mode
+        title: The tool shall support enforcement mode to fail on quality gate failures.
+        justification: |
+          Enforcement mode is critical for maintaining code quality standards by preventing builds
+          from succeeding when quality gates fail. This capability enables teams to establish and
+          maintain quality policies that must be met before code can be merged or deployed.
+        tests:
+          - Context_Create_EnforceFlag_SetsEnforceProperty
+
+      - id: SonarMark-Enf-ExitCode
+        title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
+        justification: |
+          Returning a non-zero exit code on quality gate failure is the standard mechanism for
+          indicating failure in command-line tools and CI/CD systems. This allows build systems
+          to automatically detect and halt builds when quality standards are not met.
+        tests:
+          - IntegrationTest_EnforceFlag_IsAccepted

@@ -1,0 +1,73 @@
+---
+# SonarMark SonarQube/SonarCloud Integration Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarQube/SonarCloud integration subsystem
+# - These requirements describe the server connection and data retrieval behavior
+#
+sections:
+  - title: SonarQube/SonarCloud Integration
+    requirements:
+      - id: SonarMark-Svr-Connect
+        title: The tool shall connect to SonarQube/SonarCloud servers.
+        justification: |
+          Connection to SonarQube/SonarCloud servers is the core functionality of the tool, enabling
+          retrieval of code quality metrics, analysis results, and quality gate status. Without this
+          capability, the tool cannot fulfill its primary purpose of integrating Sonar analysis into
+          development workflows.
+        tests:
+          - IntegrationTest_MissingServerParameter_ShowsError
+
+      - id: SonarMark-Svr-Auth
+        title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
+        justification: |
+          Token-based authentication is the secure and recommended method for accessing SonarQube/SonarCloud
+          APIs. It provides better security than password-based authentication and is essential for
+          automated environments where interactive authentication is not possible.
+        tests:
+          - IntegrationTest_TokenParameter_IsAccepted
+
+      - id: SonarMark-Svr-QualityGate
+        title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
+        justification: |
+          Quality gate status indicates whether code meets the defined quality standards and is fundamental
+          to the tool's enforcement capabilities. This information is essential for making pass/fail
+          decisions in CI/CD pipelines and providing visibility into overall code quality.
+        tests:
+          - SonarMark_QualityGateRetrieval
+
+      - id: SonarMark-Svr-Issues
+        title: The tool shall fetch issues from SonarQube/SonarCloud.
+        justification: |
+          Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
+          these issues allows developers to understand what needs to be fixed and provides the detailed
+          information needed to improve code quality beyond just pass/fail status.
+        tests:
+          - SonarMark_IssuesRetrieval
+
+      - id: SonarMark-Svr-HotSpots
+        title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
+        justification: |
+          Security hot-spots highlight code that requires security review, helping teams identify and
+          address potential security vulnerabilities. This is critical for maintaining secure applications
+          and meeting security compliance requirements.
+        tests:
+          - SonarMark_HotSpotsRetrieval
+
+      - id: SonarMark-Svr-ProjectKey
+        title: The tool shall support filtering by project key.
+        justification: |
+          Project key filtering is essential for identifying which specific project to analyze when
+          multiple projects exist on a Sonar server. This parameter is mandatory for the tool to
+          retrieve the correct analysis results for the intended codebase.
+        tests:
+          - IntegrationTest_MissingProjectKeyParameter_ShowsError
+
+      - id: SonarMark-Svr-Branch
+        title: The tool shall support filtering by branch.
+        justification: |
+          Branch filtering enables analysis of specific branches in version control, which is crucial
+          for multi-branch development workflows. This allows teams to check quality gates for feature
+          branches, pull requests, and release branches independently.
+        tests:
+          - IntegrationTest_BranchParameter_IsAccepted

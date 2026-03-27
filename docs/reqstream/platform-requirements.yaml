@@ -1,0 +1,106 @@
+---
+# SonarMark Platform Support Requirements
+#
+# PURPOSE:
+# - Define requirements for platform and runtime support
+# - Test source filters ensure evidence comes from specific platforms/runtimes
+#
+# NOTE: Test links include source filter prefixes (e.g. "windows@", "ubuntu@", "dotnet8.x@")
+# to restrict which test results count as evidence. This filtering is critical for platform
+# requirements and must not be removed.
+#
+sections:
+  - title: Platform Support
+    requirements:
+      - id: SonarMark-Plt-Windows
+        title: The tool shall run on Windows operating systems.
+        justification: |
+          Windows is a major development platform, especially for .NET development. Supporting Windows
+          ensures the tool can be used in Windows-based development environments and CI/CD systems,
+          which are common in enterprise .NET development shops.
+        # Test source pattern "windows@" ensures these tests ran on Windows.
+        # This filtering is necessary to prove Windows OS functionality.
+        tests:
+          - windows@IntegrationTest_VersionFlag_OutputsVersion
+          - windows@IntegrationTest_HelpFlag_OutputsUsageInformation
+          - windows@IntegrationTest_ReportParameter_IsAccepted
+          - windows@SonarMark_QualityGateRetrieval
+          - windows@SonarMark_IssuesRetrieval
+          - windows@SonarMark_HotSpotsRetrieval
+          - windows@SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Plt-Linux
+        title: The tool shall run on Linux operating systems.
+        justification: |
+          Linux is the dominant platform for cloud-based CI/CD systems and containerized environments.
+          Supporting Linux ensures the tool can be used in modern DevOps pipelines, Docker containers,
+          and popular CI platforms like GitHub Actions, GitLab CI, and Jenkins.
+        # Test source pattern "ubuntu@" ensures these tests ran on Linux.
+        # This filtering is necessary to prove Linux OS functionality.
+        tests:
+          - ubuntu@IntegrationTest_VersionFlag_OutputsVersion
+          - ubuntu@IntegrationTest_HelpFlag_OutputsUsageInformation
+          - ubuntu@IntegrationTest_ReportParameter_IsAccepted
+          - ubuntu@SonarMark_QualityGateRetrieval
+          - ubuntu@SonarMark_IssuesRetrieval
+          - ubuntu@SonarMark_HotSpotsRetrieval
+          - ubuntu@SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Plt-MacOS
+        title: The tool shall run on macOS operating systems.
+        justification: |
+          macOS is a major development platform for developers using Apple hardware. Supporting macOS
+          ensures the tool can be used in macOS-based development environments and CI/CD systems,
+          broadening the tool's reach across all major desktop development platforms.
+        # Test source pattern "macos@" ensures these tests ran on macOS.
+        # This filtering is necessary to prove macOS functionality.
+        tests:
+          - macos@IntegrationTest_VersionFlag_OutputsVersion
+          - macos@IntegrationTest_HelpFlag_OutputsUsageInformation
+          - macos@IntegrationTest_ReportParameter_IsAccepted
+          - macos@SonarMark_QualityGateRetrieval
+          - macos@SonarMark_IssuesRetrieval
+          - macos@SonarMark_HotSpotsRetrieval
+          - macos@SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Plt-Net8
+        title: The tool shall support .NET 8.0 runtime.
+        justification: |
+          .NET 8.0 is a Long-Term Support (LTS) release with support until November 2026. Supporting
+          this version ensures compatibility with enterprise environments that standardize on LTS
+          releases for stability and long-term support guarantees.
+        # Test source pattern "dotnet8.x@" ensures these tests ran on .NET 8.0.
+        # This filtering is necessary to prove .NET 8.0 runtime support.
+        tests:
+          - dotnet8.x@SonarMark_QualityGateRetrieval
+          - dotnet8.x@SonarMark_IssuesRetrieval
+          - dotnet8.x@SonarMark_HotSpotsRetrieval
+          - dotnet8.x@SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Plt-Net9
+        title: The tool shall support .NET 9.0 runtime.
+        justification: |
+          .NET 9.0 is a Standard Term Support (STS) release providing access to the latest features
+          and performance improvements. Supporting this version allows users who adopt newer .NET
+          versions to use the tool without compatibility concerns.
+        # Test source pattern "dotnet9.x@" ensures these tests ran on .NET 9.0.
+        # This filtering is necessary to prove .NET 9.0 runtime support.
+        tests:
+          - dotnet9.x@SonarMark_QualityGateRetrieval
+          - dotnet9.x@SonarMark_IssuesRetrieval
+          - dotnet9.x@SonarMark_HotSpotsRetrieval
+          - dotnet9.x@SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Plt-Net10
+        title: The tool shall support .NET 10.0 runtime.
+        justification: |
+          .NET 10.0 is the next Long-Term Support (LTS) release scheduled for November 2025. Supporting
+          this version ensures the tool remains compatible with the latest LTS release, providing users
+          with a future-proof solution and access to the newest platform capabilities.
+        # Test source pattern "dotnet10.x@" ensures these tests ran on .NET 10.0.
+        # This filtering is necessary to prove .NET 10.0 runtime support.
+        tests:
+          - dotnet10.x@SonarMark_QualityGateRetrieval
+          - dotnet10.x@SonarMark_IssuesRetrieval
+          - dotnet10.x@SonarMark_HotSpotsRetrieval
+          - dotnet10.x@SonarMark_MarkdownReportGeneration

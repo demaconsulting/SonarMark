@@ -1,0 +1,51 @@
+---
+# SonarMark Validation and Testing Requirements
+#
+# PURPOSE:
+# - Define requirements for the self-validation subsystem
+# - These requirements describe the tool's built-in self-testing capabilities
+#
+sections:
+  - title: Validation and Testing
+    requirements:
+      - id: SonarMark-Val-Validate
+        title: The tool shall support self-validation mode.
+        justification: |
+          Self-validation mode allows the tool to verify its own functionality without requiring
+          external dependencies or a live Sonar server. This capability is essential for testing
+          the tool itself and providing confidence in its operation before using it in production
+          pipelines.
+        tests:
+          - IntegrationTest_ValidateFlag_OutputsNotImplemented
+          - SonarMark_QualityGateRetrieval
+          - SonarMark_IssuesRetrieval
+          - SonarMark_HotSpotsRetrieval
+          - SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-Val-Results
+        title: The tool shall write validation results to test result files.
+        justification: |
+          Writing validation results to test result files allows integration with standard testing
+          frameworks and CI/CD tools. This enables validation outcomes to be tracked, reported, and
+          integrated into build pipelines alongside other test results.
+        tests:
+          - Context_Create_ResultsFile_SetsResultsProperty
+          - Context_Create_MissingResultsFilename_ThrowsException
+
+      - id: SonarMark-Val-TrxFormat
+        title: The tool shall support TRX format for test results.
+        justification: |
+          TRX (Test Results XML) is the native test results format for Microsoft testing tools and
+          Visual Studio. Supporting this format ensures compatibility with .NET development workflows
+          and enables seamless integration with Azure DevOps and other Microsoft-based CI/CD systems.
+        tests:
+          - Context_Create_ResultsFile_SetsResultsProperty
+
+      - id: SonarMark-Val-JUnitFormat
+        title: The tool shall support JUnit format for test results.
+        justification: |
+          JUnit format is a widely-supported standard for test results across many platforms and tools,
+          including Jenkins, GitLab CI, and GitHub Actions. Supporting this format ensures broad
+          compatibility with diverse CI/CD environments beyond Microsoft ecosystems.
+        tests:
+          - Context_Create_ResultsFile_SetsResultsProperty
