@@ -37,16 +37,16 @@ before attempting any network call. Missing required parameters are reported via
 
 ## Satisfies Requirements
 
-- `SonarMark-Cmd-Cli` — `Main` is the CLI entry point
-- `SonarMark-Cmd-Version` — `Run` prints the version string and returns when `context.Version` is true
-- `SonarMark-Cmd-Help` — `Run` prints help and returns when `context.Help` is true
-- `SonarMark-Svr-Connect` — `ProcessSonarAnalysis` validates the `--server` parameter
-- `SonarMark-Svr-Auth` — `SonarQubeClient` is created with the token from context
-- `SonarMark-Svr-QualityGate` — `GetQualityResultByBranchAsync` fetches quality gate status
-- `SonarMark-Svr-Issues` — quality result includes the issues collection
-- `SonarMark-Svr-HotSpots` — quality result includes the hot-spots collection
-- `SonarMark-Svr-ProjectKey` — `ProcessSonarAnalysis` validates the `--project-key` parameter
-- `SonarMark-Svr-Branch` — branch is passed through to `GetQualityResultByBranchAsync`
-- `SonarMark-Rpt-Markdown` — `File.WriteAllText` writes the markdown report when `--report` is set
-- `SonarMark-Val-Validate` — `Run` delegates to `Validation.Run` when `context.Validate` is true
-- `SonarMark-Enf-ExitCode` — `context.ExitCode` is returned from `Main`
+- `SonarMark-Cli-Interface` — `Main` is the CLI entry point
+- `SonarMark-Cli-Version` — `Run` prints the version string and returns when `context.Version` is true
+- `SonarMark-Cli-Help` — `Run` prints help and returns when `context.Help` is true
+- `SonarMark-Server-Connect` — `ProcessSonarAnalysis` validates the `--server` parameter
+- `SonarMark-Server-Auth` — `SonarQubeClient` is created with the token from context
+- `SonarMark-Server-QualityGate` — `GetQualityResultByBranchAsync` fetches quality gate status
+- `SonarMark-Server-Issues` — quality result includes the issues collection
+- `SonarMark-Server-HotSpots` — quality result includes the hot-spots collection
+- `SonarMark-Server-ProjectKey` — `ProcessSonarAnalysis` validates the `--project-key` parameter
+- `SonarMark-Server-Branch` — branch is passed through to `GetQualityResultByBranchAsync`
+- `SonarMark-Report-Markdown` — `File.WriteAllText` writes the markdown report when `--report` is set
+- `SonarMark-Validation-Run` — `Run` delegates to `Validation.Run` when `context.Validate` is true
+- `SonarMark-Enforce-ExitCode` — `context.ExitCode` is returned from `Main`

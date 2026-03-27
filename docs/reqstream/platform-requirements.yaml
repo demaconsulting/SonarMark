@@ -23,7 +23,7 @@
 sections:
   - title: Platform Support
     requirements:
-      - id: SonarMark-Plt-Windows
+      - id: SonarMark-Platform-Windows
         title: The tool shall run on Windows operating systems.
         justification: |
           Windows is a major development platform, especially for .NET development. Supporting Windows
@@ -40,7 +40,7 @@ sections:
           - windows@SonarMark_HotSpotsRetrieval
           - windows@SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Plt-Linux
+      - id: SonarMark-Platform-Linux
         title: The tool shall run on Linux operating systems.
         justification: |
           Linux is the dominant platform for cloud-based CI/CD systems and containerized environments.
@@ -57,7 +57,7 @@ sections:
           - ubuntu@SonarMark_HotSpotsRetrieval
           - ubuntu@SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Plt-MacOS
+      - id: SonarMark-Platform-MacOS
         title: The tool shall run on macOS operating systems.
         justification: |
           macOS is a major development platform for developers using Apple hardware. Supporting macOS
@@ -74,7 +74,7 @@ sections:
           - macos@SonarMark_HotSpotsRetrieval
           - macos@SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Plt-Net8
+      - id: SonarMark-Platform-Net8
         title: The tool shall support .NET 8.0 runtime.
         justification: |
           .NET 8.0 is a Long-Term Support (LTS) release with support until November 2026. Supporting
@@ -88,7 +88,7 @@ sections:
           - dotnet8.x@SonarMark_HotSpotsRetrieval
           - dotnet8.x@SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Plt-Net9
+      - id: SonarMark-Platform-Net9
         title: The tool shall support .NET 9.0 runtime.
         justification: |
           .NET 9.0 is a Standard Term Support (STS) release providing access to the latest features
@@ -102,7 +102,7 @@ sections:
           - dotnet9.x@SonarMark_HotSpotsRetrieval
           - dotnet9.x@SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Plt-Net10
+      - id: SonarMark-Platform-Net10
         title: The tool shall support .NET 10.0 runtime.
         justification: |
           .NET 10.0 is the next Long-Term Support (LTS) release scheduled for November 2025. Supporting

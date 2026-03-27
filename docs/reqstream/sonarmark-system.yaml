@@ -12,7 +12,7 @@
 sections:
   - title: System Integration
     requirements:
-      - id: SonarMark-Sys-QualityGate
+      - id: SonarMark-System-QualityGate
         title: The system shall retrieve quality gate status from SonarQube/SonarCloud and include it in the report.
         justification: |
           Quality gate status is the primary outcome of a SonarQube/SonarCloud analysis and the most
@@ -22,7 +22,7 @@ sections:
         tests:
           - SonarMark_QualityGateRetrieval
 
-      - id: SonarMark-Sys-Issues
+      - id: SonarMark-System-Issues
         title: The system shall retrieve issues from SonarQube/SonarCloud and include them in the report.
         justification: |
           Issues represent code quality defects identified by Sonar analysis. Verifying end-to-end
@@ -31,7 +31,7 @@ sections:
         tests:
           - SonarMark_IssuesRetrieval
 
-      - id: SonarMark-Sys-HotSpots
+      - id: SonarMark-System-HotSpots
         title: The system shall retrieve security hot-spots from SonarQube/SonarCloud and include them in the report.
         justification: |
           Security hot-spots require manual security review and must be reported separately from
@@ -40,7 +40,7 @@ sections:
         tests:
           - SonarMark_HotSpotsRetrieval
 
-      - id: SonarMark-Sys-Report
+      - id: SonarMark-System-Report
         title: The system shall generate a complete markdown report combining all retrieved analysis data.
         justification: |
           The primary deliverable of SonarMark is a comprehensive markdown report that combines

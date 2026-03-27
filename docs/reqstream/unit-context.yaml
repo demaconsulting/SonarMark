@@ -9,7 +9,7 @@
 sections:
   - title: Context
     requirements:
-      - id: SonarMark-Cmd-Silent
+      - id: SonarMark-Cli-Silent
         title: The tool shall support silent mode to suppress console output.
         justification: |
           Silent mode is important for automated environments where console output may interfere with
@@ -18,7 +18,7 @@ sections:
         tests:
           - IntegrationTest_SilentFlag_SuppressesOutput
 
-      - id: SonarMark-Cmd-Log
+      - id: SonarMark-Cli-Log
         title: The tool shall support writing output to a log file.
         justification: |
           Log file output enables persistent recording of tool execution for later review and audit trails.
@@ -27,7 +27,7 @@ sections:
         tests:
           - Context_Create_WithLogFile_WritesToLogFile
 
-      - id: SonarMark-Cmd-Enforce
+      - id: SonarMark-Cli-Enforce
         title: The tool shall support enforcing quality gate checks.
         justification: |
           Quality gate enforcement allows the tool to fail builds when quality standards are not met,
@@ -36,7 +36,7 @@ sections:
         tests:
           - Context_Create_EnforceFlag_SetsEnforceProperty
 
-      - id: SonarMark-Enf-Mode
+      - id: SonarMark-Enforce-Mode
         title: The tool shall accept the --enforce flag and expose it for downstream processing.
         justification: |
           The Context unit is responsible for parsing command-line arguments and making them

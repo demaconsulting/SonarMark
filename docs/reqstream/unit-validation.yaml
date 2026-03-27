@@ -8,7 +8,7 @@
 sections:
   - title: Validation
     requirements:
-      - id: SonarMark-Val-Validate
+      - id: SonarMark-Validation-Run
         title: The tool shall support self-validation mode.
         justification: |
           Self-validation mode allows the tool to verify its own functionality without requiring
@@ -25,7 +25,7 @@ sections:
           - SonarMark_HotSpotsRetrieval
           - SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Val-Results
+      - id: SonarMark-Validation-Results
         title: The tool shall write validation results to test result files.
         justification: |
           Writing validation results to test result files allows integration with standard testing
@@ -37,7 +37,7 @@ sections:
           - Validation_Run_WithTrxResultsFile_WritesTrxFile
           - Validation_Run_WithXmlResultsFile_WritesJUnitFile
 
-      - id: SonarMark-Val-TrxFormat
+      - id: SonarMark-Validation-TrxFormat
         title: The tool shall support TRX format for test results.
         justification: |
           TRX (Test Results XML) is the native test results format for Microsoft testing tools and
@@ -47,7 +47,7 @@ sections:
           - Context_Create_ResultsFile_SetsResultsProperty
           - Validation_Run_WithTrxResultsFile_WritesTrxFile
 
-      - id: SonarMark-Val-JUnitFormat
+      - id: SonarMark-Validation-JUnitFormat
         title: The tool shall support JUnit format for test results.
         justification: |
           JUnit format is a widely-supported standard for test results across many platforms and tools,

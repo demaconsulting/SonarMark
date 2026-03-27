@@ -10,7 +10,7 @@
 sections:
   - title: SonarHotSpot
     requirements:
-      - id: SonarMark-Hs-Record
+      - id: SonarMark-HotSpot-Record
         title: >-
           The SonarHotSpot shall represent a SonarQube security hot-spot with its key,
           component, line, message, security category, and vulnerability probability.
@@ -22,7 +22,7 @@ sections:
         tests:
           - SonarHotSpot_Constructor_AllProperties_CreatesInstance
 
-      - id: SonarMark-Hs-OptionalLine
+      - id: SonarMark-HotSpot-OptionalLine
         title: The SonarHotSpot shall support an optional line number for hot-spots not associated with a specific line.
         justification: |
           Some SonarQube security hot-spots are reported at file level rather than on a specific
@@ -31,7 +31,7 @@ sections:
         tests:
           - SonarHotSpot_Constructor_NullLine_CreatesInstance
 
-      - id: SonarMark-Hs-VulnerabilityProbability
+      - id: SonarMark-HotSpot-VulnerabilityProbability
         title: The SonarHotSpot shall capture the vulnerability probability to enable priority-based reporting.
         justification: |
           Vulnerability probability (HIGH, MEDIUM, LOW) indicates the likelihood that a hot-spot

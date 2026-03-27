@@ -41,12 +41,12 @@ Using `IDisposable` rather than a finalizer is appropriate because the resource
 
 ## Satisfies Requirements
 
-- `SonarMark-Cmd-Cli` — `Context.Create` parses the full set of supported flags
-- `SonarMark-Cmd-Silent` — `Silent` property suppresses console output
-- `SonarMark-Cmd-Log` — `OpenLogFile` writes all output to a log file
-- `SonarMark-Cmd-Enforce` — `Enforce` property enables quality gate enforcement
-- `SonarMark-Val-Results` — `ResultsFile` property specifies where results are written
-- `SonarMark-Val-TrxFormat` — TRX file extension is accepted by `ResultsFile`
-- `SonarMark-Val-JUnitFormat` — JUnit XML file extension is accepted by `ResultsFile`
-- `SonarMark-Enf-Mode` — `Enforce` flag is parsed and stored
-- `SonarMark-Enf-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
+- `SonarMark-Cli-Interface` — `Context.Create` parses the full set of supported flags
+- `SonarMark-Cli-Silent` — `Silent` property suppresses console output
+- `SonarMark-Cli-Log` — `OpenLogFile` writes all output to a log file
+- `SonarMark-Cli-Enforce` — `Enforce` property enables quality gate enforcement
+- `SonarMark-Validation-Results` — `ResultsFile` property specifies where results are written
+- `SonarMark-Validation-TrxFormat` — TRX file extension is accepted by `ResultsFile`
+- `SonarMark-Validation-JUnitFormat` — JUnit XML file extension is accepted by `ResultsFile`
+- `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
+- `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true

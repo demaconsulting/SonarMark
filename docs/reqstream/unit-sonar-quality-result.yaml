@@ -9,7 +9,7 @@
 sections:
   - title: SonarQualityResult
     requirements:
-      - id: SonarMark-Rpt-QualityGate
+      - id: SonarMark-Report-QualityGate
         title: The tool shall include quality gate status in reports.
         justification: |
           Quality gate status is the most important metric in the report, providing a clear pass/fail
@@ -23,7 +23,7 @@ sections:
           - SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput
           - SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames
 
-      - id: SonarMark-Rpt-Issues
+      - id: SonarMark-Report-Issues
         title: The tool shall categorize and report issues by type and severity.
         justification: |
           Categorizing issues by type and severity helps teams prioritize remediation efforts and
@@ -33,7 +33,7 @@ sections:
           - SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput
           - SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText
 
-      - id: SonarMark-Rpt-HotSpots
+      - id: SonarMark-Report-HotSpots
         title: The tool shall report security hot-spots requiring review.
         justification: |
           Security hot-spots require manual review to determine if they represent actual vulnerabilities.

@@ -37,7 +37,7 @@ added or removed independently.
 
 ## Satisfies Requirements
 
-- `SonarMark-Val-Validate` — implements the self-validation mode invoked by `--validate`
-- `SonarMark-Val-Results` — writes results to the file specified by `--results`
-- `SonarMark-Val-TrxFormat` — writes TRX format when the results file has a `.trx` extension
-- `SonarMark-Val-JUnitFormat` — writes JUnit XML when the results file has a `.xml` extension
+- `SonarMark-Validation-Run` — implements the self-validation mode invoked by `--validate`
+- `SonarMark-Validation-Results` — writes results to the file specified by `--results`
+- `SonarMark-Validation-TrxFormat` — writes TRX format when the results file has a `.trx` extension
+- `SonarMark-Validation-JUnitFormat` — writes JUnit XML when the results file has a `.xml` extension

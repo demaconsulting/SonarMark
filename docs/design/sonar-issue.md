@@ -22,5 +22,5 @@ source location needed for compiler-style output.
 
 ## Satisfies Requirements
 
-- `SonarMark-Svr-Issues` — holds the data for one issue fetched from the server
-- `SonarMark-Rpt-Issues` — provides the fields rendered in the issues section of the report
+- `SonarMark-Server-Issues` — holds the data for one issue fetched from the server
+- `SonarMark-Report-Issues` — provides the fields rendered in the issues section of the report

@@ -25,8 +25,8 @@ API response schema.
 
 ## Satisfies Requirements
 
-- `SonarMark-Hs-Record` — holds the data for one hot-spot fetched from the server
-- `SonarMark-Hs-OptionalLine` — captures the optional line number field
-- `SonarMark-Hs-VulnerabilityProbability` — captures the vulnerability probability field
-- `SonarMark-Svr-HotSpots` — holds the data for one hot-spot fetched from the server
-- `SonarMark-Rpt-HotSpots` — provides the fields rendered in the hot-spots section of the report
+- `SonarMark-HotSpot-Record` — holds the data for one hot-spot fetched from the server
+- `SonarMark-HotSpot-OptionalLine` — captures the optional line number field
+- `SonarMark-HotSpot-VulnerabilityProbability` — captures the vulnerability probability field
+- `SonarMark-Server-HotSpots` — holds the data for one hot-spot fetched from the server
+- `SonarMark-Report-HotSpots` — provides the fields rendered in the hot-spots section of the report

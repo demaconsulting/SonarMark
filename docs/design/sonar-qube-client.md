@@ -42,10 +42,10 @@ errors from network errors and report them appropriately.
 
 ## Satisfies Requirements
 
-- `SonarMark-Svr-Connect` — establishes HTTP connections to the SonarQube/SonarCloud server
-- `SonarMark-Svr-Auth` — applies token-based Basic Authentication to all requests
-- `SonarMark-Svr-QualityGate` — fetches quality gate status and conditions from the API
-- `SonarMark-Svr-Issues` — fetches issues with pagination from the API
-- `SonarMark-Svr-HotSpots` — fetches security hot-spots with pagination from the API
-- `SonarMark-Svr-ProjectKey` — passes the project key as a query parameter on all requests
-- `SonarMark-Svr-Branch` — passes the branch name as an optional query parameter
+- `SonarMark-Server-Connect` — establishes HTTP connections to the SonarQube/SonarCloud server
+- `SonarMark-Server-Auth` — applies token-based Basic Authentication to all requests
+- `SonarMark-Server-QualityGate` — fetches quality gate status and conditions from the API
+- `SonarMark-Server-Issues` — fetches issues with pagination from the API
+- `SonarMark-Server-HotSpots` — fetches security hot-spots with pagination from the API
+- `SonarMark-Server-ProjectKey` — passes the project key as a query parameter on all requests
+- `SonarMark-Server-Branch` — passes the branch name as an optional query parameter

@@ -9,7 +9,7 @@
 sections:
   - title: SonarQubeClient
     requirements:
-      - id: SonarMark-Svr-QualityGate
+      - id: SonarMark-Server-QualityGate
         title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
         justification: |
           Quality gate status indicates whether code meets the defined quality standards and is fundamental
@@ -18,7 +18,7 @@ sections:
         tests:
           - SonarMark_QualityGateRetrieval
 
-      - id: SonarMark-Svr-Issues
+      - id: SonarMark-Server-Issues
         title: The tool shall fetch issues from SonarQube/SonarCloud.
         justification: |
           Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
@@ -27,7 +27,7 @@ sections:
         tests:
           - SonarMark_IssuesRetrieval
 
-      - id: SonarMark-Svr-HotSpots
+      - id: SonarMark-Server-HotSpots
         title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
         justification: |
           Security hot-spots highlight code that requires security review, helping teams identify and

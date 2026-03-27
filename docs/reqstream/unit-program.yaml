@@ -9,7 +9,7 @@
 sections:
   - title: Program
     requirements:
-      - id: SonarMark-Cmd-Cli
+      - id: SonarMark-Cli-Interface
         title: The tool shall provide a command-line interface.
         justification: |
           A command-line interface is essential for automation and integration into CI/CD pipelines.
@@ -19,7 +19,7 @@ sections:
           - IntegrationTest_VersionFlag_OutputsVersion
           - IntegrationTest_HelpFlag_OutputsUsageInformation
 
-      - id: SonarMark-Cmd-Version
+      - id: SonarMark-Cli-Version
         title: The tool shall display version information when requested.
         justification: |
           Version information helps users verify which version of the tool they are running, which is
@@ -28,7 +28,7 @@ sections:
         tests:
           - IntegrationTest_VersionFlag_OutputsVersion
 
-      - id: SonarMark-Cmd-Help
+      - id: SonarMark-Cli-Help
         title: The tool shall display help information when requested.
         justification: |
           Help information provides users with usage instructions and available options without needing
@@ -37,7 +37,7 @@ sections:
         tests:
           - IntegrationTest_HelpFlag_OutputsUsageInformation
 
-      - id: SonarMark-Svr-Connect
+      - id: SonarMark-Server-Connect
         title: The tool shall connect to SonarQube/SonarCloud servers.
         justification: |
           Connection to SonarQube/SonarCloud servers is the core functionality of the tool, enabling
@@ -47,7 +47,7 @@ sections:
         tests:
           - IntegrationTest_MissingServerParameter_ShowsError
 
-      - id: SonarMark-Svr-Auth
+      - id: SonarMark-Server-Auth
         title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
         justification: |
           Token-based authentication is the secure and recommended method for accessing SonarQube/SonarCloud
@@ -56,7 +56,7 @@ sections:
         tests:
           - IntegrationTest_TokenParameter_IsAccepted
 
-      - id: SonarMark-Svr-ProjectKey
+      - id: SonarMark-Server-ProjectKey
         title: The tool shall support filtering by project key.
         justification: |
           Project key filtering is essential for identifying which specific project to analyze when
@@ -65,7 +65,7 @@ sections:
         tests:
           - IntegrationTest_MissingProjectKeyParameter_ShowsError
 
-      - id: SonarMark-Svr-Branch
+      - id: SonarMark-Server-Branch
         title: The tool shall support filtering by branch.
         justification: |
           Branch filtering enables analysis of specific branches in version control, which is crucial
@@ -74,7 +74,7 @@ sections:
         tests:
           - IntegrationTest_BranchParameter_IsAccepted
 
-      - id: SonarMark-Rpt-Markdown
+      - id: SonarMark-Report-Markdown
         title: The tool shall generate markdown reports.
         justification: |
           Markdown reports provide human-readable documentation of code quality that can be easily
@@ -85,7 +85,7 @@ sections:
           - IntegrationTest_ReportParameter_IsAccepted
           - SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-Rpt-Depth
+      - id: SonarMark-Report-Depth
         title: The tool shall support configurable report depth.
         justification: |
           Configurable report depth allows users to control the level of detail in generated reports,
@@ -97,7 +97,7 @@ sections:
           - IntegrationTest_ReportDepthWithInvalidValue_ShowsError
           - IntegrationTest_ReportDepthWithoutValue_ShowsError
 
-      - id: SonarMark-Enf-ExitCode
+      - id: SonarMark-Enforce-ExitCode
         title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
         justification: |
           Returning a non-zero exit code on quality gate failure is the standard mechanism for
