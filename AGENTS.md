@@ -5,24 +5,26 @@ SonarQube/SonarCloud analysis results.
 
 ## Available Specialized Agents
 
-- **Requirements Agent** - Develops requirements and ensures test coverage linkage
-- **Technical Writer** - Creates accurate documentation following regulatory best practices
-- **Software Developer** - Writes production code and self-validation tests in literate style
-- **Test Developer** - Creates unit and integration tests following AAA pattern
-- **Code Quality Agent** - Enforces linting, static analysis, and security standards
-- **Repo Consistency Agent** - Ensures SonarMark remains consistent with TemplateDotNetTool template patterns
+- **requirements** - Develops requirements and ensures test coverage linkage
+- **technical-writer** - Creates accurate documentation following regulatory best practices
+- **software-developer** - Writes production code and self-validation tests in literate style
+- **test-developer** - Creates unit and integration tests following AAA pattern
+- **code-quality** - Enforces linting, static analysis, and security standards
+- **code-review** - Assists in performing formal file reviews
+- **repo-consistency** - Ensures SonarMark remains consistent with TemplateDotNetTool template patterns
 
 ## Agent Selection Guide
 
-- Fix a bug → **Software Developer**
-- Add a new feature → **Requirements Agent** → **Software Developer** → **Test Developer**
-- Write a test → **Test Developer**
-- Fix linting or static analysis issues → **Code Quality Agent**
-- Update documentation → **Technical Writer**
-- Add or update requirements → **Requirements Agent**
-- Ensure test coverage linkage in `requirements.yaml` → **Requirements Agent**
-- Run security scanning or address CodeQL alerts → **Code Quality Agent**
-- Propagate template changes → **Repo Consistency Agent**
+- Fix a bug → **@software-developer**
+- Add a new feature → **@requirements** → **@software-developer** → **@test-developer**
+- Write a test → **@test-developer**
+- Fix linting or static analysis issues → **@code-quality**
+- Update documentation → **@technical-writer**
+- Add or update requirements → **@requirements**
+- Ensure test coverage linkage in `requirements.yaml` → **@requirements**
+- Run security scanning or address CodeQL alerts → **@code-quality**
+- Perform a formal file review → **@code-review**
+- Propagate template changes → **@repo-consistency**
 
 ## Tech Stack
 
@@ -32,7 +34,7 @@ SonarQube/SonarCloud analysis results.
 
 - **`requirements.yaml`** - All requirements with test linkage (enforced via `dotnet reqstream --enforce`)
 - **`.editorconfig`** - Code style (file-scoped namespaces, 4-space indent, UTF-8+BOM, LF endings)
-- **`.cspell.json`, `.markdownlint-cli2.jsonc`, `.yamllint.yaml`** - Linting configs
+- **`.cspell.yaml`, `.markdownlint-cli2.yaml`, `.yamllint.yaml`** - Linting configs
 - **`.vscode/tasks.json`** - VS Code tasks for build, test, lint, and quality checks
 
 ## Requirements (SonarMark-Specific)
@@ -100,10 +102,11 @@ dotnet build --configuration Release && dotnet test --configuration Release
 
 Delegate tasks to specialized agents for better results:
 
-- **requirements-agent** - For: developing requirements, ensuring test coverage linkage, determining test strategy
+- **requirements** - For: developing requirements, ensuring test coverage linkage, determining test strategy
 - **technical-writer** - For: documentation updates/reviews, markdown/spell/YAML linting
 - **software-developer** - For: production code features, self-validation tests, refactoring for testability
 - **test-developer** - For: unit and integration tests, improving test coverage, test refactoring
-- **code-quality-agent** - For: code quality reviews, linting/static analysis issues, security verification,
+- **code-quality** - For: code quality reviews, linting/static analysis issues, security verification,
   requirements traceability enforcement
-- **repo-consistency-agent** - For: periodic reviews to ensure SonarMark follows TemplateDotNetTool patterns
+- **code-review** - For: performing formal file reviews against review-set definitions
+- **repo-consistency** - For: periodic reviews to ensure SonarMark follows TemplateDotNetTool patterns

@@ -1,20 +1,40 @@
 @echo off
-REM Run all linters for SonarMark (Windows)
+setlocal
 
-echo Checking markdown...
-call npx markdownlint-cli2
-if %errorlevel% neq 0 exit /b %errorlevel%
+REM Comprehensive Linting Script
+REM 
+REM PURPOSE:
+REM - Run ALL lint checks when executed (no options or modes)
+REM - Output lint failures directly for agent parsing
+REM - NO command-line arguments, pretty printing, or colorization
+REM - Agents execute this script to identify files needing fixes
 
-echo Checking spelling...
-call npx cspell "**/*.{cs,md,json,yaml,yml}" --no-progress
-if %errorlevel% neq 0 exit /b %errorlevel%
+set "LINT_ERROR=0"
 
-echo Checking YAML...
+REM Install npm dependencies
+call npm install
+
+REM Create Python virtual environment (for yamllint) if missing
+if not exist ".venv\Scripts\activate.bat" (
+    python -m venv .venv
+)
+call .venv\Scripts\activate.bat
+pip install -r pip-requirements.txt
+
+REM Run spell check
+call npx cspell --no-progress --no-color "**/*.{md,yaml,yml,json,cs,txt}"
+if errorlevel 1 set "LINT_ERROR=1"
+
+REM Run markdownlint check
+call npx markdownlint-cli2 "**/*.md"
+if errorlevel 1 set "LINT_ERROR=1"
+
+REM Run yamllint check
 yamllint .
-if %errorlevel% neq 0 exit /b %errorlevel%
+if errorlevel 1 set "LINT_ERROR=1"
 
-echo Checking code formatting...
+REM Run .NET formatting check (verifies no changes are needed)
 dotnet format --verify-no-changes
-if %errorlevel% neq 0 exit /b %errorlevel%
+if errorlevel 1 set "LINT_ERROR=1"
 
-echo All linting passed!
+exit /b %LINT_ERROR%

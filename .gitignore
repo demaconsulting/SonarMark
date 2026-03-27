@@ -41,6 +41,9 @@ coverage/
 node_modules/
 package-lock.json
 
+# Python virtual environment
+.venv/
+
 # Agent communication files
 AGENT_REPORT_*.md
 

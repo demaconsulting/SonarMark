@@ -55,21 +55,19 @@ jobs:
       # === RUN QUALITY CHECKS ===
       # This section runs all quality checks for the project.
 
-      - name: Run markdown linter
-        uses: DavidAnson/markdownlint-cli2-action@v22
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          globs: '**/*.md'
+          node-version: 24.x
 
-      - name: Run spell checker
-        uses: streetsidesoftware/cspell-action@v8
+      - name: Setup Python
+        uses: actions/setup-python@v6
         with:
-          files: '**/*.{md,cs}'
-          incremental_files_only: false
+          python-version: '3.14'
 
-      - name: Run YAML linter
-        uses: ibiqlik/action-yamllint@v3
-        with:
-          config_file: .yamllint.yaml
+      - name: Run linters
+        shell: bash
+        run: bash ./lint.sh
 
       # === UPLOAD ARTIFACTS ===
       # This section uploads all quality artifacts.
