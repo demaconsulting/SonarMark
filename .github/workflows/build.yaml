@@ -595,6 +595,7 @@ jobs:
       # This section converts markdown documents to HTML using Pandoc.
 
       - name: Generate Guide HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/guide/definition.yaml
@@ -604,6 +605,7 @@ jobs:
           --output docs/guide/guide.html
 
       - name: Generate Requirements HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/requirements_doc/definition.yaml
@@ -613,6 +615,7 @@ jobs:
           --output docs/requirements_doc/requirements.html
 
       - name: Generate Trace Matrix HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/requirements_report/definition.yaml
@@ -632,6 +635,7 @@ jobs:
           --output docs/build_notes/buildnotes.html
 
       - name: Generate Code Quality HTML with Pandoc
+        shell: bash
         run: >
           dotnet pandoc
           --defaults docs/code_quality/definition.yaml
