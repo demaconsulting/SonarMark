@@ -37,10 +37,11 @@ sections:
           - Context_Create_EnforceFlag_SetsEnforceProperty
 
       - id: SonarMark-Enf-Mode
-        title: The tool shall support enforcement mode to fail on quality gate failures.
+        title: The tool shall accept the --enforce flag and expose it for downstream processing.
         justification: |
-          Enforcement mode is critical for maintaining code quality standards by preventing builds
-          from succeeding when quality gates fail. This capability enables teams to establish and
-          maintain quality policies that must be met before code can be merged or deployed.
+          The Context unit is responsible for parsing command-line arguments and making them
+          available to the rest of the program. Accepting --enforce and storing it as the Enforce
+          property allows Program and other units to act on enforcement policy without coupling
+          argument parsing to enforcement logic.
         tests:
           - Context_Create_EnforceFlag_SetsEnforceProperty

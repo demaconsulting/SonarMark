@@ -105,3 +105,4 @@ sections:
           to automatically detect and halt builds when quality standards are not met.
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
+          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode

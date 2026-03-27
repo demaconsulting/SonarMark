@@ -6,6 +6,7 @@
 # Patterns identifying all files that require review.
 # Processed in order; prefix a pattern with '!' to exclude.
 needs-review:
+  - "requirements.yaml"            # Root requirements manifest
   - "docs/reqstream/**/*.yaml"    # All requirements files
   - "docs/design/**/*.md"         # All design documents
   - "**/*.cs"                     # All C# source and test files
@@ -138,6 +139,7 @@ reviews:
   - id: SonarMark-Requirements
     title: Review of SonarMark Requirements
     paths:
+      - "requirements.yaml"
       - "docs/reqstream/unit-context.yaml"
       - "docs/reqstream/unit-program.yaml"
       - "docs/reqstream/unit-validation.yaml"

@@ -16,7 +16,7 @@ sections:
           the tool itself and providing confidence in its operation before using it in production
           pipelines.
         tests:
-          - IntegrationTest_ValidateFlag_OutputsNotImplemented
+          - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
           - Validation_Run_WithSilentContext_CompletesWithZeroExitCode
           - Validation_Run_OutputsValidationHeader
           - Validation_Run_ReportsFourPassedTests
