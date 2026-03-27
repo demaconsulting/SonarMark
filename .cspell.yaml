@@ -18,7 +18,7 @@ words:
   - Blockquotes
   - buildmark
   - BuildMark
-  - buildnotes
+  - build_notes
   - buildtransitive
   - camelcase
   - CodeQL
@@ -80,7 +80,12 @@ words:
   - spdx
   - spdxtool
   - testname
-  - tracematrix
+  - code_quality
+  - code_review_plan
+  - code_review_report
+  - requirements_doc
+  - requirements_report
+  - trace_matrix
   - triaging
   - trx
   - vbproj

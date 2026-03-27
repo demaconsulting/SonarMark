@@ -73,10 +73,16 @@ We follow a standard GitHub workflow for contributions:
    dotnet build --configuration Release
    ```
 
-4. Run tests:
+4. Run unit tests:
 
    ```bash
    dotnet test --configuration Release
+   ```
+
+5. Run self-validation tests:
+
+   ```bash
+   dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
    ```
 
 ## Coding Standards
@@ -150,15 +156,24 @@ Examples:
 
 ### Running Tests
 
+#### Unit Tests
+
 ```bash
-# Run all tests
+# Run all unit tests
 dotnet test --configuration Release
 
-# Run specific test
+# Run specific unit test
 dotnet test --filter "FullyQualifiedName~YourTestName"
 
 # Run with coverage
 dotnet test --collect "XPlat Code Coverage"
+```
+
+#### Self-Validation Tests
+
+```bash
+# Run self-validation tests
+dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
 ```
 
 ### Test Execution Strategy

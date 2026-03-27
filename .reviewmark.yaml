@@ -23,7 +23,6 @@ evidence-source:
 # Each review-set groups requirements, source, and tests for a coherent software unit
 # so that an AI-assisted review can verify consistency across the full evidence chain.
 reviews:
-  # Software unit reviews - one per class or logical grouping
   - id: SonarMark-Context
     title: Review of SonarMark Context Unit
     paths:
