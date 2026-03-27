@@ -98,18 +98,17 @@ reviews:
     title: Review of SonarMark SonarQube Integration Subsystem
     paths:
       - "docs/reqstream/sonar-qube-client-requirements.yaml"
+      - "docs/reqstream/sonar-hot-spot-requirements.yaml"
+      - "docs/reqstream/sonar-issue-requirements.yaml"
       - "docs/design/sonar-qube-client.md"
       - "docs/design/sonar-hot-spot.md"
       - "docs/design/sonar-issue.md"
-      - "docs/design/sonar-quality-result.md"
       - "src/**/SonarQubeClient.cs"
       - "src/**/SonarHotSpot.cs"
       - "src/**/SonarIssue.cs"
-      - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQubeClientTests.cs"
       - "test/**/SonarHotSpotTests.cs"
       - "test/**/SonarIssueTests.cs"
-      - "test/**/SonarQualityResultTests.cs"
 
   - id: SonarMark-ReportGeneration
     title: Review of SonarMark Report Generation Subsystem
@@ -119,11 +118,13 @@ reviews:
       - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
 
-  # System review — end-to-end integrated system
+  # System review — end-to-end integrated system and platform support
   - id: SonarMark-System
     title: Review of SonarMark Integrated System
     paths:
       - "docs/reqstream/system-requirements.yaml"
+      - "docs/reqstream/platform-requirements.yaml"
+      - "docs/reqstream/ots-requirements.yaml"
       - "docs/design/introduction.md"
       - "test/**/IntegrationTests.cs"
       - "test/**/Runner.cs"
@@ -141,11 +142,5 @@ reviews:
       - "docs/reqstream/sonar-issue-requirements.yaml"
       - "docs/reqstream/sonar-quality-result-requirements.yaml"
       - "docs/reqstream/system-requirements.yaml"
-      - "docs/reqstream/platform-requirements.yaml"
-      - "docs/reqstream/ots-requirements.yaml"
-
-  - id: SonarMark-Platform
-    title: Review of SonarMark Platform and OTS Requirements
-    paths:
       - "docs/reqstream/platform-requirements.yaml"
       - "docs/reqstream/ots-requirements.yaml"
