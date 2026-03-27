@@ -14,19 +14,24 @@
 #
 
 includes:
-  # CLI subsystem
-  - docs/reqstream/context-requirements.yaml
-  - docs/reqstream/program-requirements.yaml
-  # SonarQube Integration subsystem
-  - docs/reqstream/sonar-qube-client-requirements.yaml
-  - docs/reqstream/sonar-hot-spot-requirements.yaml
-  - docs/reqstream/sonar-issue-requirements.yaml
-  # Report Generation subsystem
-  - docs/reqstream/sonar-quality-result-requirements.yaml
-  # Validation subsystem
-  - docs/reqstream/validation-requirements.yaml
+  # CLI subsystem units
+  - docs/reqstream/unit-context.yaml
+  - docs/reqstream/unit-program.yaml
+  # SonarQube Integration subsystem units
+  - docs/reqstream/unit-sonar-qube-client.yaml
+  - docs/reqstream/unit-sonar-hot-spot.yaml
+  - docs/reqstream/unit-sonar-issue.yaml
+  # Report Generation subsystem units
+  - docs/reqstream/unit-sonar-quality-result.yaml
+  # Validation subsystem units
+  - docs/reqstream/unit-validation.yaml
   # System-level requirements
-  - docs/reqstream/system-requirements.yaml
-  # Extra: platform and OTS software
+  - docs/reqstream/sonarmark-system.yaml
+  # Platform support requirements
   - docs/reqstream/platform-requirements.yaml
-  - docs/reqstream/ots-requirements.yaml
+  # OTS software requirements (one per component)
+  - docs/reqstream/ots-mstest.yaml
+  - docs/reqstream/ots-reqstream.yaml
+  - docs/reqstream/ots-buildmark.yaml
+  - docs/reqstream/ots-versionmark.yaml
+  - docs/reqstream/ots-sarifmark.yaml

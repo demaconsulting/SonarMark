@@ -1,0 +1,26 @@
+---
+# MSTest OTS Software Requirements
+#
+# PURPOSE:
+# - Document the functionality required from MSTest
+# - MSTest (MSTest.TestFramework and MSTest.TestAdapter) is the unit-testing framework
+#
+sections:
+  - title: MSTest
+    requirements:
+      - id: SonarMark-OTS-MSTest
+        title: MSTest shall execute unit tests and report results.
+        justification: |
+          MSTest (MSTest.TestFramework and MSTest.TestAdapter) is the unit-testing framework used
+          by the project. It discovers and runs all test methods and writes TRX result files that
+          feed into coverage reporting and requirements traceability. Passing tests confirm the
+          framework is functioning correctly.
+        tags: [ots]
+        tests:
+          - Context_Create_WithLogFile_WritesToLogFile
+          - Context_Create_ResultsFile_SetsResultsProperty
+          - Context_Create_MissingResultsFilename_ThrowsException
+          - Context_Create_EnforceFlag_SetsEnforceProperty
+          - SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput
+          - SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput
+          - SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput
