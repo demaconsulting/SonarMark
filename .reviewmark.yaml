@@ -6,10 +6,12 @@
 # Patterns identifying all files that require review.
 # Processed in order; prefix a pattern with '!' to exclude.
 needs-review:
-  - "**/*.cs"                    # All C# source and test files
-  - "requirements.yaml"          # Root requirements file
-  - "!**/obj/**"                 # Exclude build output
-  - "!**/bin/**"                 # Exclude build output
+  - "requirements.yaml"            # Root requirements manifest
+  - "docs/reqstream/**/*.yaml"    # All requirements files
+  - "docs/design/**/*.md"         # All design documents
+  - "**/*.cs"                     # All C# source and test files
+  - "!**/obj/**"                  # Exclude build output
+  - "!**/bin/**"                  # Exclude build output
 
 # Evidence source: review data and index.json are located in the 'reviews' branch
 # of this repository, accessed through the GitHub public HTTPS raw content access.
@@ -20,47 +22,135 @@ evidence-source:
   location: https://raw.githubusercontent.com/demaconsulting/SonarMark/reviews/index.json
 
 # Review sets grouping files by logical unit of review.
-# Each review-set groups requirements, source, and tests for a coherent software unit
+# Each review-set groups requirements, design, source, and tests for a coherent software unit
 # so that an AI-assisted review can verify consistency across the full evidence chain.
 reviews:
+  # Software unit reviews — one per class
   - id: SonarMark-Context
     title: Review of SonarMark Context Unit
     paths:
+      - "docs/reqstream/unit-context.yaml"
+      - "docs/design/context.md"
       - "src/**/Context.cs"
       - "test/**/ContextTests.cs"
 
   - id: SonarMark-Program
     title: Review of SonarMark Program Unit
     paths:
+      - "docs/reqstream/unit-program.yaml"
+      - "docs/design/program.md"
       - "src/**/Program.cs"
       - "test/**/ProgramTests.cs"
-      - "test/**/IntegrationTests.cs"
-      - "test/**/Runner.cs"
-      - "test/**/AssemblyInfo.cs"
 
   - id: SonarMark-Validation
     title: Review of SonarMark Validation Unit
     paths:
+      - "docs/reqstream/unit-validation.yaml"
+      - "docs/design/validation.md"
       - "src/**/Validation.cs"
+      - "test/**/ValidationTests.cs"
 
-  - id: SonarMark-SonarData
-    title: Review of SonarMark Sonar Data Models
+  - id: SonarMark-SonarHotSpot
+    title: Review of SonarMark SonarHotSpot Unit
     paths:
+      - "docs/reqstream/unit-sonar-hot-spot.yaml"
+      - "docs/design/sonar-hot-spot.md"
       - "src/**/SonarHotSpot.cs"
-      - "src/**/SonarIssue.cs"
-      - "src/**/SonarQualityResult.cs"
       - "test/**/SonarHotSpotTests.cs"
+
+  - id: SonarMark-SonarIssue
+    title: Review of SonarMark SonarIssue Unit
+    paths:
+      - "docs/reqstream/unit-sonar-issue.yaml"
+      - "docs/design/sonar-issue.md"
+      - "src/**/SonarIssue.cs"
       - "test/**/SonarIssueTests.cs"
+
+  - id: SonarMark-SonarQualityResult
+    title: Review of SonarMark SonarQualityResult Unit
+    paths:
+      - "docs/reqstream/unit-sonar-quality-result.yaml"
+      - "docs/design/sonar-quality-result.md"
+      - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
 
   - id: SonarMark-SonarQubeClient
-    title: Review of SonarMark SonarQube Client Unit
+    title: Review of SonarMark SonarQubeClient Unit
     paths:
+      - "docs/reqstream/unit-sonar-qube-client.yaml"
+      - "docs/design/sonar-qube-client.md"
       - "src/**/SonarQubeClient.cs"
       - "test/**/SonarQubeClientTests.cs"
 
-  # Requirements review
+  # Subsystem reviews — cross-cutting subsystems spanning multiple units
+  - id: SonarMark-CLI
+    title: Review of SonarMark CLI Subsystem
+    paths:
+      - "docs/reqstream/unit-context.yaml"
+      - "docs/reqstream/unit-program.yaml"
+      - "docs/design/context.md"
+      - "docs/design/program.md"
+      - "src/**/Context.cs"
+      - "src/**/Program.cs"
+      - "test/**/ContextTests.cs"
+      - "test/**/ProgramTests.cs"
+
+  - id: SonarMark-SonarIntegration
+    title: Review of SonarMark SonarQube Integration Subsystem
+    paths:
+      - "docs/reqstream/unit-sonar-qube-client.yaml"
+      - "docs/reqstream/unit-sonar-hot-spot.yaml"
+      - "docs/reqstream/unit-sonar-issue.yaml"
+      - "docs/design/sonar-qube-client.md"
+      - "docs/design/sonar-hot-spot.md"
+      - "docs/design/sonar-issue.md"
+      - "src/**/SonarQubeClient.cs"
+      - "src/**/SonarHotSpot.cs"
+      - "src/**/SonarIssue.cs"
+      - "test/**/SonarQubeClientTests.cs"
+      - "test/**/SonarHotSpotTests.cs"
+      - "test/**/SonarIssueTests.cs"
+
+  - id: SonarMark-ReportGeneration
+    title: Review of SonarMark Report Generation Subsystem
+    paths:
+      - "docs/reqstream/unit-sonar-quality-result.yaml"
+      - "docs/design/sonar-quality-result.md"
+      - "src/**/SonarQualityResult.cs"
+      - "test/**/SonarQualityResultTests.cs"
+
+  # System review — end-to-end integrated system and platform support
+  - id: SonarMark-System
+    title: Review of SonarMark Integrated System
+    paths:
+      - "docs/reqstream/sonarmark-system.yaml"
+      - "docs/reqstream/platform-requirements.yaml"
+      - "docs/reqstream/ots-mstest.yaml"
+      - "docs/reqstream/ots-reqstream.yaml"
+      - "docs/reqstream/ots-buildmark.yaml"
+      - "docs/reqstream/ots-versionmark.yaml"
+      - "docs/reqstream/ots-sarifmark.yaml"
+      - "docs/design/introduction.md"
+      - "test/**/IntegrationTests.cs"
+      - "test/**/Runner.cs"
+      - "test/**/AssemblyInfo.cs"
+
+  # Requirements review — all requirements files
   - id: SonarMark-Requirements
     title: Review of SonarMark Requirements
     paths:
       - "requirements.yaml"
+      - "docs/reqstream/unit-context.yaml"
+      - "docs/reqstream/unit-program.yaml"
+      - "docs/reqstream/unit-validation.yaml"
+      - "docs/reqstream/unit-sonar-qube-client.yaml"
+      - "docs/reqstream/unit-sonar-hot-spot.yaml"
+      - "docs/reqstream/unit-sonar-issue.yaml"
+      - "docs/reqstream/unit-sonar-quality-result.yaml"
+      - "docs/reqstream/sonarmark-system.yaml"
+      - "docs/reqstream/platform-requirements.yaml"
+      - "docs/reqstream/ots-mstest.yaml"
+      - "docs/reqstream/ots-reqstream.yaml"
+      - "docs/reqstream/ots-buildmark.yaml"
+      - "docs/reqstream/ots-versionmark.yaml"
+      - "docs/reqstream/ots-sarifmark.yaml"

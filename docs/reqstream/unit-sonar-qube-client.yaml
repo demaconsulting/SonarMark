@@ -1,0 +1,37 @@
+---
+# SonarMark SonarQubeClient Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarQubeClient software unit
+# - SonarQubeClient makes HTTP API calls to SonarQube/SonarCloud to fetch
+#   quality gate status, issues, and security hot-spots with full pagination
+#
+sections:
+  - title: SonarQubeClient
+    requirements:
+      - id: SonarMark-Server-QualityGate
+        title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
+        justification: |
+          Quality gate status indicates whether code meets the defined quality standards and is fundamental
+          to the tool's enforcement capabilities. This information is essential for making pass/fail
+          decisions in CI/CD pipelines and providing visibility into overall code quality.
+        tests:
+          - SonarMark_QualityGateRetrieval
+
+      - id: SonarMark-Server-Issues
+        title: The tool shall fetch issues from SonarQube/SonarCloud.
+        justification: |
+          Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
+          these issues allows developers to understand what needs to be fixed and provides the detailed
+          information needed to improve code quality beyond just pass/fail status.
+        tests:
+          - SonarMark_IssuesRetrieval
+
+      - id: SonarMark-Server-HotSpots
+        title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
+        justification: |
+          Security hot-spots highlight code that requires security review, helping teams identify and
+          address potential security vulnerabilities. This is critical for maintaining secure applications
+          and meeting security compliance requirements.
+        tests:
+          - SonarMark_HotSpotsRetrieval

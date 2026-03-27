@@ -1,3 +1,6 @@
+using System.Net;
+using System.Text;
+
 namespace DemaConsulting.SonarMark.Tests;
 
 /// <summary>
@@ -188,6 +191,96 @@ public class ProgramTests
         finally
         {
             Console.SetOut(originalOut);
+        }
+    }
+
+    /// <summary>
+    ///     Test that Run method with enforce flag and failing quality gate returns non-zero exit code
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode()
+    {
+        // Arrange - create mock HTTP client factory that returns failing quality gate (ERROR status)
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
+        using var context = Context.Create(
+            ["--server", "https://mock.sonarqube.example", "--project-key", "test-project", "--enforce"],
+            mockFactory);
+
+        // Act - run the program with enforce flag and a server that reports quality gate ERROR
+        Program.Run(context);
+
+        // Assert - verify exit code is 1 (non-zero) because quality gate failed and --enforce was set
+        // This test proves that Program returns a non-zero exit code when quality gate fails in enforcement mode
+        Assert.AreEqual(1, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient that returns quality gate status ERROR for testing enforcement behavior.
+    /// </summary>
+    /// <returns>Mock HttpClient for enforcement testing.</returns>
+    private static HttpClient CreateMockFailingQualityGateHttpClient()
+    {
+        return new HttpClient(new FailingQualityGateMockHandler());
+    }
+
+    /// <summary>
+    ///     Mock HTTP handler that returns a failing (ERROR) quality gate status.
+    /// </summary>
+    private sealed class FailingQualityGateMockHandler : HttpMessageHandler
+    {
+        /// <inheritdoc/>
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var requestUri = request.RequestUri?.ToString() ?? string.Empty;
+
+            if (requestUri.Contains("/api/components/show"))
+            {
+                var json = """{"component": {"key": "test-project", "name": "Test Project"}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/qualitygates/project_status"))
+            {
+                var json = """{"projectStatus": {"status": "ERROR", "conditions": []}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/issues/search"))
+            {
+                var json = """{"issues": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/hotspots/search"))
+            {
+                var json = """{"hotspots": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/metrics/search"))
+            {
+                var json = """{"metrics": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
         }
     }
 }

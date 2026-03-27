@@ -92,7 +92,7 @@ public class IntegrationTests
     ///     Test that validate flag outputs not implemented message
     /// </summary>
     [TestMethod]
-    public void IntegrationTest_ValidateFlag_OutputsNotImplemented()
+    public void IntegrationTest_ValidateFlag_OutputsHeaderAndSummary()
     {
         // Run the application with --validate flag
         var exitCode = Runner.Run(

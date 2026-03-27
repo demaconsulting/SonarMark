@@ -1,0 +1,43 @@
+---
+# SonarMark SonarQualityResult Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarQualityResult software unit
+# - SonarQualityResult.ToMarkdown renders quality gate status, issues, and
+#   security hot-spots into a structured markdown report
+#
+sections:
+  - title: SonarQualityResult
+    requirements:
+      - id: SonarMark-Report-QualityGate
+        title: The tool shall include quality gate status in reports.
+        justification: |
+          Quality gate status is the most important metric in the report, providing a clear pass/fail
+          indication of code quality. Including this information with condition details helps teams
+          understand whether their code meets quality standards and which metrics need improvement.
+        tests:
+          - SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput
+          - SonarQualityResult_ToMarkdown_Depth3_UsesCorrectHeadingLevels
+          - SonarQualityResult_ToMarkdown_Depth6_ProducesCorrectOutput
+          - SonarQualityResult_ToMarkdown_NoConditions_ExcludesConditionsSection
+          - SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput
+          - SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames
+
+      - id: SonarMark-Report-Issues
+        title: The tool shall categorize and report issues by type and severity.
+        justification: |
+          Categorizing issues by type and severity helps teams prioritize remediation efforts and
+          understand the nature of quality problems in their codebase. This organization makes it
+          easier to address the most critical issues first and track specific categories of problems.
+        tests:
+          - SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput
+          - SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText
+
+      - id: SonarMark-Report-HotSpots
+        title: The tool shall report security hot-spots requiring review.
+        justification: |
+          Security hot-spots require manual review to determine if they represent actual vulnerabilities.
+          Reporting these separately from standard issues ensures they receive appropriate security-focused
+          attention and helps teams maintain secure coding practices.
+        tests:
+          - SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput
