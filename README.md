@@ -233,6 +233,8 @@ For bug reports, feature requests, and questions, please use
 This project is licensed under the MIT License - see the
 [LICENSE](https://github.com/demaconsulting/SonarMark/blob/main/LICENSE) file for details.
 
+By contributing to this project, you agree that your contributions will be licensed under the MIT License.
+
 ## Support
 
 - 🐛 **Report Bugs**: [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues)

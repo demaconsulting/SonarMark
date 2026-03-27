@@ -95,7 +95,7 @@ This project enforces code style through `.editorconfig`. Key requirements:
 
 - **Indentation**: 4 spaces for C#, 2 spaces for YAML/JSON/XML
 - **Line Endings**: LF (Unix-style)
-- **Encoding**: UTF-8 with BOM
+- **Encoding**: UTF-8
 - **Namespaces**: Use file-scoped namespace declarations
 - **Braces**: Required for all control statements
 - **Naming Conventions**:
@@ -142,7 +142,7 @@ Examples:
 
 - Write tests that are clear and focused
 - Use modern MSTest v4 assertions:
-  - `Assert.HasCount(collection, expectedCount)`
+  - `Assert.HasCount(expectedCount, collection)`
   - `Assert.IsEmpty(collection)`
   - `Assert.DoesNotContain(item, collection)`
 - Always clean up resources (use `try/finally` for console redirection)

@@ -33,7 +33,7 @@ SonarQube/SonarCloud analysis results.
 ## Key Files
 
 - **`requirements.yaml`** - All requirements with test linkage (enforced via `dotnet reqstream --enforce`)
-- **`.editorconfig`** - Code style (file-scoped namespaces, 4-space indent, UTF-8+BOM, LF endings)
+- **`.editorconfig`** - Code style (file-scoped namespaces, 4-space indent, UTF-8, LF endings)
 - **`.cspell.yaml`, `.markdownlint-cli2.yaml`, `.yamllint.yaml`** - Linting configs
 - **`.vscode/tasks.json`** - VS Code tasks for build, test, lint, and quality checks
 
