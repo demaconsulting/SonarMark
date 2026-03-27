@@ -1,12 +1,12 @@
 ---
-# SonarMark Validation and Testing Requirements
+# SonarMark Validation Requirements
 #
 # PURPOSE:
-# - Define requirements for the self-validation subsystem
+# - Define requirements for the Validation software unit
 # - These requirements describe the tool's built-in self-testing capabilities
 #
 sections:
-  - title: Validation and Testing
+  - title: Validation
     requirements:
       - id: SonarMark-Val-Validate
         title: The tool shall support self-validation mode.

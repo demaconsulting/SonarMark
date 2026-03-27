@@ -14,13 +14,19 @@
 #
 
 includes:
+  # CLI subsystem
   - docs/reqstream/context-requirements.yaml
   - docs/reqstream/program-requirements.yaml
-  - docs/reqstream/validation-requirements.yaml
+  # SonarQube Integration subsystem
   - docs/reqstream/sonar-qube-client-requirements.yaml
   - docs/reqstream/sonar-hot-spot-requirements.yaml
   - docs/reqstream/sonar-issue-requirements.yaml
+  # Report Generation subsystem
   - docs/reqstream/sonar-quality-result-requirements.yaml
+  # Validation subsystem
+  - docs/reqstream/validation-requirements.yaml
+  # System-level requirements
   - docs/reqstream/system-requirements.yaml
+  # Extra: platform and OTS software
   - docs/reqstream/platform-requirements.yaml
   - docs/reqstream/ots-requirements.yaml
