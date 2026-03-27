@@ -1,0 +1,67 @@
+---
+# ReviewMark Configuration File
+# This file defines which files require review, where the evidence store is located,
+# and how files are grouped into named review-sets following software unit boundaries.
+
+# Patterns identifying all files that require review.
+# Processed in order; prefix a pattern with '!' to exclude.
+needs-review:
+  - "**/*.cs"                    # All C# source and test files
+  - "requirements.yaml"          # Root requirements file
+  - "!**/obj/**"                 # Exclude build output
+  - "!**/bin/**"                 # Exclude build output
+
+# Evidence source: review data and index.json are located in the 'reviews' branch
+# of this repository, accessed through the GitHub public HTTPS raw content access.
+# Note: The 'reviews' branch must be created and populated with review evidence PDFs
+# and an index.json before enforcement (--enforce flag) can be enabled in the pipeline.
+evidence-source:
+  type: url
+  location: https://raw.githubusercontent.com/demaconsulting/SonarMark/reviews/index.json
+
+# Review sets grouping files by logical unit of review.
+# Each review-set groups requirements, source, and tests for a coherent software unit
+# so that an AI-assisted review can verify consistency across the full evidence chain.
+reviews:
+  # Software unit reviews - one per class or logical grouping
+  - id: SonarMark-Context
+    title: Review of SonarMark Context Unit
+    paths:
+      - "src/**/Context.cs"
+      - "test/**/ContextTests.cs"
+
+  - id: SonarMark-Program
+    title: Review of SonarMark Program Unit
+    paths:
+      - "src/**/Program.cs"
+      - "test/**/ProgramTests.cs"
+      - "test/**/IntegrationTests.cs"
+      - "test/**/Runner.cs"
+      - "test/**/AssemblyInfo.cs"
+
+  - id: SonarMark-Validation
+    title: Review of SonarMark Validation Unit
+    paths:
+      - "src/**/Validation.cs"
+
+  - id: SonarMark-SonarData
+    title: Review of SonarMark Sonar Data Models
+    paths:
+      - "src/**/SonarHotSpot.cs"
+      - "src/**/SonarIssue.cs"
+      - "src/**/SonarQualityResult.cs"
+      - "test/**/SonarHotSpotTests.cs"
+      - "test/**/SonarIssueTests.cs"
+      - "test/**/SonarQualityResultTests.cs"
+
+  - id: SonarMark-SonarQubeClient
+    title: Review of SonarMark SonarQube Client Unit
+    paths:
+      - "src/**/SonarQubeClient.cs"
+      - "test/**/SonarQubeClientTests.cs"
+
+  # Requirements review
+  - id: SonarMark-Requirements
+    title: Review of SonarMark Requirements
+    paths:
+      - "requirements.yaml"

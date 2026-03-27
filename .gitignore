@@ -61,6 +61,10 @@ docs/quality/codeql-quality.md
 docs/quality/*.html
 docs/buildnotes.md
 docs/buildnotes/versions.md
+docs/code_review_plan/plan.md
+docs/code_review_plan/*.html
+docs/code_review_report/report.md
+docs/code_review_report/*.html
 
 # VersionMark captures (generated during CI/CD)
 versionmark-*.json
