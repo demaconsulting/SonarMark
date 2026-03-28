@@ -22,5 +22,8 @@ source location needed for compiler-style output.
 
 ## Satisfies Requirements
 
+- `SonarMark-Issue-Record` — holds the data for one issue fetched from the server
+- `SonarMark-Issue-OptionalLine` — captures the optional line number field
+- `SonarMark-Issue-Severity` — captures the severity level for severity-based categorization
 - `SonarMark-Server-Issues` — holds the data for one issue fetched from the server
 - `SonarMark-Report-Issues` — provides the fields rendered in the issues section of the report

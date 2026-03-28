@@ -154,3 +154,18 @@ reviews:
       - "docs/reqstream/ots-buildmark.yaml"
       - "docs/reqstream/ots-versionmark.yaml"
       - "docs/reqstream/ots-sarifmark.yaml"
+
+  # Design review — system requirements against all design documentation
+  - id: SonarMark-Design
+    title: Review of SonarMark Design
+    paths:
+      - "docs/reqstream/sonarmark-system.yaml"
+      - "docs/design/introduction.md"
+      - "docs/design/system.md"
+      - "docs/design/context.md"
+      - "docs/design/program.md"
+      - "docs/design/sonar-qube-client.md"
+      - "docs/design/sonar-hot-spot.md"
+      - "docs/design/sonar-issue.md"
+      - "docs/design/sonar-quality-result.md"
+      - "docs/design/validation.md"
