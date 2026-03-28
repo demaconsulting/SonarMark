@@ -19,34 +19,23 @@ return values; no subsystem reaches back into another's internals.
 
 ## End-to-End Data Flow
 
-```text
-CLI arguments
-    │
-    ▼
-Context.Create          — parses flags; provides server, project-key, branch, token
-    │
-    ▼
-Program.ProcessSonarAnalysis
-    │   validates --server and --project-key are present
-    │
-    ▼
-SonarQubeClient         — issues async HTTP requests to SonarQube/SonarCloud API
-    │   GetQualityResultByBranchAsync:
-    │     • fetches quality gate status
-    │     • fetches issues collection
-    │     • fetches security hot-spots collection
-    │
-    ▼
-SonarQualityResult      — aggregates QualityGate, Issues, HotSpots into one object
-    │   ToMarkdown():
-    │     • renders markdown report string
-    │
-    ▼
-File.WriteAllText       — writes rendered markdown to the --report path (if supplied)
-    │
-    ▼
-context.ExitCode        — 0 on success; 1 if --enforce and quality gate failed
-```
+When invoked for SonarQube analysis, data moves through the system in the following steps:
+
+1. **`Context.Create`** — parses CLI flags and provides server, project-key, branch, and
+   authentication token to the rest of the system.
+2. **`Program.ProcessSonarAnalysis`** — validates that `--server` and `--project-key` are
+   present before any network activity begins.
+3. **`SonarQubeClient.GetQualityResultByBranchAsync`** — issues async HTTP requests to the
+   SonarQube/SonarCloud API to fetch the quality gate status, issues collection, and
+   security hot-spots collection.
+4. **`SonarQualityResult`** — aggregates the quality gate status, issues, and hot-spots
+   into a single object.
+5. **`SonarQualityResult.ToMarkdown`** — renders the aggregated data as a markdown report
+   string.
+6. **`File.WriteAllText`** — writes the rendered markdown to the `--report` path if one
+   was supplied.
+7. **`context.ExitCode`** — returns 0 on success, or 1 if `--enforce` is set and the
+   quality gate failed.
 
 ## Design Decisions
 
