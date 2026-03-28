@@ -52,8 +52,9 @@ tool.
 All SonarQube API calls are performed using `async`/`await` throughout the call stack,
 from `SonarQubeClient` up through `Program.ProcessSonarAnalysis`. This allows the
 application to remain responsive and avoids thread-pool exhaustion on longer requests
-without introducing background threads or callback chains. The entry point `Main` is
-declared `async Task<int>` to support this cleanly.
+without introducing background threads or callback chains. The entry point `Main` is a
+synchronous `int` method that bridges into the async pipeline via `.GetAwaiter().GetResult()`
+on the top-level async call.
 
 ### Markdown Report Format
 
