@@ -49,12 +49,13 @@ tool.
 
 ### Async/Await HTTP Pipeline
 
-All SonarQube API calls are performed using `async`/`await` throughout the call stack,
-from `SonarQubeClient` up through `Program.ProcessSonarAnalysis`. This allows the
-application to remain responsive and avoids thread-pool exhaustion on longer requests
-without introducing background threads or callback chains. The entry point `Main` is a
-synchronous `int` method that bridges into the async pipeline via `.GetAwaiter().GetResult()`
-on the top-level async call.
+SonarQube HTTP calls are exposed as asynchronous methods on `SonarQubeClient` (for
+example, `GetQualityResultByBranchAsync`), implemented using `async`/`await` to avoid
+blocking threads during network I/O. The orchestration layer, `Program.ProcessSonarAnalysis`,
+remains a synchronous method and performs a deliberate sync-over-async bridge by calling
+`GetQualityResultByBranchAsync(...).GetAwaiter().GetResult()`. The entry point `Main` is a
+standard synchronous `int` method that invokes `ProcessSonarAnalysis` and does not interact
+with asynchronous APIs directly.
 
 ### Markdown Report Format
 
