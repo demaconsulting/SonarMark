@@ -34,8 +34,9 @@ When invoked for SonarQube analysis, data moves through the system in the follow
    string.
 6. **`File.WriteAllText`** — writes the rendered markdown to the `--report` path if one
    was supplied.
-7. **`context.ExitCode`** — returns 0 on success, or 1 if `--enforce` is set and the
-   quality gate failed.
+7. **`context.ExitCode`** — is 0 when no errors are reported, or 1 if any error is written
+   via `context.WriteError(...)` (for example, missing required arguments, fetch or
+   report-write failures, or a `--enforce` quality gate failure).
 
 ## Design Decisions
 
