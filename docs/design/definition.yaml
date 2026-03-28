@@ -5,6 +5,7 @@ resource-path:
 input-files:
   - docs/design/title.txt
   - docs/design/introduction.md
+  - docs/design/system.md
   - docs/design/context.md
   - docs/design/program.md
   - docs/design/sonar-hot-spot.md

@@ -664,6 +664,16 @@ jobs:
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/code_review_report/report.html
 
+      - name: Generate Design HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/design/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/design/design.html
+
       # === GENERATE PDF DOCUMENTS WITH WEASYPRINT ===
       # This section converts HTML documents to PDF using Weasyprint.
 
@@ -715,6 +725,13 @@ jobs:
           --pdf-variant pdf/a-3u
           docs/code_review_report/report.html
           "docs/SonarMark Review Report.pdf"
+
+      - name: Generate Design PDF with Weasyprint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/design/design.html
+          "docs/SonarMark Design.pdf"
 
       # === UPLOAD ARTIFACTS ===
       # This section uploads all generated documentation artifacts.
