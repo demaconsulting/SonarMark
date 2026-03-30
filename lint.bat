@@ -12,17 +12,17 @@ REM - Agents execute this script to identify files needing fixes
 set "LINT_ERROR=0"
 
 REM Install npm dependencies
-call npm install
+call npm install --silent
 
 REM Create Python virtual environment (for yamllint) if missing
 if not exist ".venv\Scripts\activate.bat" (
     python -m venv .venv
 )
 call .venv\Scripts\activate.bat
-pip install -r pip-requirements.txt
+pip install -r pip-requirements.txt --quiet --disable-pip-version-check
 
 REM Run spell check
-call npx cspell --no-progress --no-color "**/*.{md,yaml,yml,json,cs,txt}"
+call npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,txt}"
 if errorlevel 1 set "LINT_ERROR=1"
 
 REM Run markdownlint check

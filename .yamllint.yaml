@@ -21,6 +21,7 @@ ignore: |
   thirdparty/
   third-party/
   3rd-party/
+  .agent-logs/
 
 rules:
   # Allow 'on:' in GitHub Actions workflows (not a boolean value)

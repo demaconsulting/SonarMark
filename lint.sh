@@ -11,17 +11,17 @@
 lint_error=0
 
 # Install npm dependencies
-npm install
+npm install --silent
 
 # Create Python virtual environment (for yamllint)
 if [ ! -d ".venv" ]; then
   python -m venv .venv
 fi
 source .venv/bin/activate
-pip install -r pip-requirements.txt
+pip install -r pip-requirements.txt --quiet --disable-pip-version-check
 
 # Run spell check
-npx cspell --no-progress --no-color "**/*.{md,yaml,yml,json,cs,txt}" || lint_error=1
+npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,txt}" || lint_error=1
 
 # Run markdownlint check
 npx markdownlint-cli2 "**/*.md" || lint_error=1

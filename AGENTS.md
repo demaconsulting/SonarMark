@@ -3,28 +3,56 @@
 Project-specific guidance for agents working on SonarMark - a .NET CLI tool for creating code quality reports from
 SonarQube/SonarCloud analysis results.
 
+## Standards Application (ALL Agents Must Follow)
+
+Before performing any work, agents must read and apply the relevant standards from `.github/standards/`:
+
+- **`csharp-language.md`** - For C# code development (literate programming, XML docs, dependency injection)
+- **`csharp-testing.md`** - For C# test development (AAA pattern, naming, MSTest anti-patterns)
+- **`reqstream-usage.md`** - For requirements management (traceability, semantic IDs, source filters)
+- **`reviewmark-usage.md`** - For file review management (review-sets, file patterns, enforcement)
+- **`software-items.md`** - For software categorization (system/subsystem/unit/OTS classification)
+- **`technical-documentation.md`** - For documentation creation and maintenance (structure, Pandoc, README best practices)
+
+Load only the standards relevant to your specific task scope and apply their
+quality checks and guidelines throughout your work.
+
+## Agent Delegation Guidelines
+
+The default agent should handle simple, straightforward tasks directly.
+Delegate to specialized agents only for specific scenarios:
+
+- **Light development work** (small fixes, simple features) → Call @developer agent
+- **Light quality checking** (linting, basic validation) → Call @quality agent
+- **Formal feature implementation** (complex, multi-step) → Call the `@implementation` agent
+- **Formal bug resolution** (complex debugging, systematic fixes) → Call the `@implementation` agent
+- **Formal reviews** (compliance verification, detailed analysis) → Call @code-review agent
+- **Template consistency** (downstream repository alignment) → Call @repo-consistency agent
+
 ## Available Specialized Agents
 
-- **requirements** - Develops requirements and ensures test coverage linkage
-- **technical-writer** - Creates accurate documentation following regulatory best practices
-- **software-developer** - Writes production code and self-validation tests in literate style
-- **test-developer** - Creates unit and integration tests following AAA pattern
-- **code-quality** - Enforces linting, static analysis, and security standards
-- **code-review** - Assists in performing formal file reviews
+- **code-review** - Agent for performing formal reviews using standardized
+  review processes
+- **developer** - General-purpose software development agent that applies
+  appropriate standards based on the work being performed
+- **implementation** - Orchestrator agent that manages quality implementations
+  through a formal state machine workflow
+- **quality** - Quality assurance agent that grades developer work against DEMA
+  Consulting standards and Continuous Compliance practices
 - **repo-consistency** - Ensures SonarMark remains consistent with TemplateDotNetTool template patterns
 
-## Agent Selection Guide
+## Quality Gate Enforcement (ALL Agents Must Verify)
 
-- Fix a bug → **@software-developer**
-- Add a new feature → **@requirements** → **@software-developer** → **@test-developer**
-- Write a test → **@test-developer**
-- Fix linting or static analysis issues → **@code-quality**
-- Update documentation → **@technical-writer**
-- Add or update requirements → **@requirements**
-- Ensure test coverage linkage in `requirements.yaml` → **@requirements**
-- Run security scanning or address CodeQL alerts → **@code-quality**
-- Perform a formal file review → **@code-review**
-- Propagate template changes → **@repo-consistency**
+Configuration files and scripts are self-documenting with their design intent and
+modification policies in header comments.
+
+1. **Linting Standards**: `./lint.sh` (Unix) or `lint.bat` (Windows) - comprehensive linting suite
+2. **Build Quality**: Zero warnings (`TreatWarningsAsErrors=true`)
+3. **Static Analysis**: SonarQube/CodeQL passing with no blockers
+4. **Requirements Traceability**: `dotnet reqstream --enforce` passing
+5. **Test Coverage**: All requirements linked to passing tests
+6. **Documentation Currency**: All docs current and generated
+7. **File Review Status**: All reviewable files have current reviews
 
 ## Tech Stack
 
@@ -81,8 +109,7 @@ filter ensures the CI evidence comes specifically from the required environment.
   agent context
 - **README.md**: Absolute URLs only (shipped in NuGet package)
 - **Other .md**: Reference-style links `[text][ref]` with `[ref]: url` at end
-- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI
-  workflows)
+- **All linters must pass locally**: markdownlint, cspell, yamllint (see `.vscode/tasks.json` or CI workflows)
 
 ## Build & Quality (Quick Reference)
 
@@ -90,23 +117,19 @@ filter ensures the CI evidence comes specifically from the required environment.
 # Standard build/test
 dotnet build --configuration Release && dotnet test --configuration Release
 
-# Pre-finalization checklist (in order):
-# 1. Build/test (zero warnings required)
-# 2. code_review tool
-# 3. codeql_checker tool
-# 4. All linters (markdownlint, cspell, yamllint)
-# 5. Requirements: dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
+# Linting
+./lint.sh
+
+# Requirements traceability
+dotnet reqstream --requirements requirements.yaml --tests "test-results/**/*.trx" --enforce
 ```
 
-## Agent Invocation Guidelines
+## Agent Report Files
 
-Delegate tasks to specialized agents for better results:
+Upon completion, create a report file at `.agent-logs/[agent-name]-[subject]-[unique-id].md` that includes:
 
-- **requirements** - For: developing requirements, ensuring test coverage linkage, determining test strategy
-- **technical-writer** - For: documentation updates/reviews, markdown/spell/YAML linting
-- **software-developer** - For: production code features, self-validation tests, refactoring for testability
-- **test-developer** - For: unit and integration tests, improving test coverage, test refactoring
-- **code-quality** - For: code quality reviews, linting/static analysis issues, security verification,
-  requirements traceability enforcement
-- **code-review** - For: performing formal file reviews against review-set definitions
-- **repo-consistency** - For: periodic reviews to ensure SonarMark follows TemplateDotNetTool patterns
+- A concise summary of the work performed
+- Any important decisions made and their rationale
+- Follow-up items, open questions, or TODOs
+
+Store agent logs in the `.agent-logs/` folder so they are ignored via `.gitignore` and excluded from linting and commits.
