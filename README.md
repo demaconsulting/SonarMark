@@ -240,7 +240,7 @@ By contributing to this project, you agree that your contributions will be licen
 - 🐛 **Report Bugs**: [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues)
 - 💡 **Request Features**: [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues)
 - ❓ **Ask Questions**: [GitHub Discussions](https://github.com/demaconsulting/SonarMark/discussions)
-- 📖 **Documentation**: [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md)
+- 📖 **Documentation**: [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/user_guide/introduction.md)
 - 🤝 **Contributing**: [Contributing Guide](https://github.com/demaconsulting/SonarMark/blob/main/CONTRIBUTING.md)
 
 ## Security
@@ -269,7 +269,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
-[link-guide]: https://github.com/demaconsulting/SonarMark/blob/main/docs/guide/guide.md
+[link-guide]: https://github.com/demaconsulting/SonarMark/blob/main/docs/user_guide/introduction.md
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
 [link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors
 [link-license]: https://github.com/demaconsulting/SonarMark/blob/main/LICENSE

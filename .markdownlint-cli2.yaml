@@ -11,6 +11,11 @@
 # - Do not relax rules to accommodate existing non-compliant files
 # - Consistency across repositories is critical for documentation quality
 
+noBanner: true
+
+# Disable the progress indicator on stdout
+noProgress: true
+
 config:
   # Enable all default rules
   default: true
@@ -27,7 +32,7 @@ config:
   MD013:
     line_length: 120
 
-  # Allow duplicate headers in sibling sections
+  # Allow duplicate headings in distinct sibling sections (needed for SonarMark guide structure)
   MD024:
     siblings_only: true
 
@@ -49,3 +54,4 @@ ignores:
   - "**/third-party/**"
   - "**/3rd-party/**"
   - "**/AGENT_REPORT_*.md"
+  - "**/.agent-logs/**"

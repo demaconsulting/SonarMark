@@ -1,46 +1,73 @@
 ---
 name: code-review
-description: Assists in performing formal file reviews.
-tools: [read, search, edit, execute, github, web, agent]
+description: Agent for performing formal reviews
 user-invocable: true
 ---
 
 # Code Review Agent
 
-Execute comprehensive code reviews with emphasis on structured compliance verification and file review status
-requirements.
+This agent runs the formal review based on the review-set it's told to perform.
 
-## Reporting
+# Formal Review Steps
 
-Create a report using the filename pattern `AGENT_REPORT_code_review_[review-set].md`
-(e.g., `AGENT_REPORT_code_review_auth-module.md`) to document review criteria, identified issues, and recommendations
-for the specific review-set.
-
-## Review Steps
+Formal reviews are a quality enforcement mechanism, and as such MUST be performed using the following four steps:
 
 1. Download the
    <https://github.com/demaconsulting/ContinuousCompliance/raw/refs/heads/main/docs/review-template/review-template.md>
    to get the checklist to fill in
 2. Use `dotnet reviewmark --elaborate [review-set]` to get the files to review
 3. Review the files all together
-4. Populate the checklist with the findings to make the report
+4. Populate the checklist with the findings to `.agent-logs/reviews/review-report-[review-set].md` of the project.
 
-## Hand-off to Other Agents
+# Don't Do These Things
 
-Only attempt to apply review fixes if requested.
-
-- If code quality, logic, or structural issues need fixing, call the @software-developer agent
-- If test coverage gaps or quality issues are identified, call the @test-developer agent
-- If documentation accuracy or completeness issues are found, call the @technical-writer agent
-- If quality gate verification is needed after fixes, call the @code-quality agent
-- If requirements traceability issues are discovered, call the @requirements agent
-
-## Don't Do These Things
-
-- **Never modify code during review** (document findings only, delegate fixes)
+- **Never modify code during review** (document findings only)
 - **Never skip applicable checklist items** (comprehensive review required)
 - **Never approve reviews with unresolved critical findings**
 - **Never bypass review status requirements** for compliance
 - **Never conduct reviews without proper documentation**
 - **Never ignore security or compliance findings**
 - **Never approve without verifying all quality gates**
+
+# Reporting
+
+Upon completion create a summary in `.agent-logs/[agent-name]-[subject]-[unique-id].md`
+of the project consisting of:
+
+```markdown
+# Code Review Report
+
+**Result**: <SUCCEEDED/FAILED>
+
+## Review Summary
+
+- **Review Set**: [Review set name/identifier]
+- **Review Report File**: [Name of detailed review report generated]
+- **Files Reviewed**: [Count and list of files reviewed]
+- **Review Template Used**: [Template source and version]
+
+## Review Results
+
+- **Overall Conclusion**: [Summary of review results]
+- **Critical Issues**: [Count of critical findings]
+- **High Issues**: [Count of high severity findings]
+- **Medium Issues**: [Count of medium severity findings]
+- **Low Issues**: [Count of low severity findings]
+
+## Issue Details
+
+[For each issue found, include:]
+- **File**: [File name and line number where applicable]
+- **Issue Type**: [Security, logic error, compliance violation, etc.]
+- **Severity**: [Critical/High/Medium/Low]
+- **Description**: [Issue description]
+- **Recommendation**: [Specific remediation recommendation]
+
+## Compliance Status
+
+- **Review Status**: [Complete/Incomplete with reasoning]
+- **Quality Gates**: [Status of review checklist items]
+- **Approval Status**: [Approved/Rejected with justification]
+```
+
+Return summary to caller.

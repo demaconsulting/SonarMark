@@ -46,6 +46,7 @@ package-lock.json
 
 # Agent communication files
 AGENT_REPORT_*.md
+.agent-logs/
 
 # Generated documentation
 docs/*.pdf
