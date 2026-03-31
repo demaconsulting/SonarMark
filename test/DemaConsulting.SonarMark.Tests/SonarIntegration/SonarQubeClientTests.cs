@@ -242,7 +242,7 @@ public class SonarQubeClientTests
             {
               "paging":{"pageIndex":2,"pageSize":100,"total":120},
               "hotspots":[
-                {"key":"hs-2","component":"comp","message":"Hot Spot Two","securityCategory":"sqli","vulnerabilityProbability":"MEDIUM"}
+                {"key":"hs-2","component":"comp","message":"Hot Spot Two","securityCategory":"sql-injection","vulnerabilityProbability":"MEDIUM"}
               ]
             }
             """));
