@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark.Tests;
+using DemaConsulting.SonarMark.SonarIntegration;
+
+namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
 
 /// <summary>
 ///     Tests for SonarHotSpot class

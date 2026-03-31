@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark;
+using DemaConsulting.SonarMark.SonarIntegration;
+
+namespace DemaConsulting.SonarMark.ReportGeneration;
 
 /// <summary>
 ///     Represents quality analysis results from SonarQube/SonarCloud

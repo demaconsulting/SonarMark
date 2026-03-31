@@ -21,8 +21,9 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using DemaConsulting.SonarMark.ReportGeneration;
 
-namespace DemaConsulting.SonarMark;
+namespace DemaConsulting.SonarMark.SonarIntegration;
 
 /// <summary>
 ///     Client for fetching quality information from SonarQube/SonarCloud analysis

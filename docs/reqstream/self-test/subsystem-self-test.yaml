@@ -1,0 +1,20 @@
+---
+# SonarMark SelfTest Subsystem Requirements
+#
+# PURPOSE:
+# - Define requirements for the SelfTest subsystem
+# - The SelfTest subsystem provides built-in validation without a live Sonar server
+#
+sections:
+  - title: SelfTest Subsystem
+    requirements:
+      - id: SonarMark-Subsystem-SelfTest
+        title: The SelfTest subsystem shall verify tool functionality using mock data without a live server.
+        justification: |
+          The SelfTest subsystem must be able to exercise the full analysis and reporting
+          pipeline using mock HTTP responses, proving that the tool works correctly in an
+          isolated environment without network access.
+        tests:
+          - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
+          - Validation_Run_WithSilentContext_CompletesWithZeroExitCode
+          - Validation_Run_ReportsFourPassedTests

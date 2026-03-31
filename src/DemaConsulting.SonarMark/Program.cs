@@ -19,6 +19,10 @@
 // SOFTWARE.
 
 using System.Reflection;
+using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.ReportGeneration;
+using DemaConsulting.SonarMark.SelfTest;
+using DemaConsulting.SonarMark.SonarIntegration;
 
 namespace DemaConsulting.SonarMark;
 

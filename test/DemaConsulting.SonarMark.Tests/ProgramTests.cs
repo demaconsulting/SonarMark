@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text;
+using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.SonarIntegration;
 
 namespace DemaConsulting.SonarMark.Tests;
 

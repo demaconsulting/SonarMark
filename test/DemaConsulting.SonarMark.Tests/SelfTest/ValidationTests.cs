@@ -18,7 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark.Tests;
+using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.SelfTest;
+
+namespace DemaConsulting.SonarMark.Tests.SelfTest;
 
 /// <summary>
 ///     Unit tests for the Validation class.

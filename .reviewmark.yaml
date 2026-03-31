@@ -29,8 +29,8 @@ reviews:
   - id: SonarMark-Context
     title: Review of SonarMark Context Unit
     paths:
-      - "docs/reqstream/unit-context.yaml"
-      - "docs/design/context.md"
+      - "docs/reqstream/cli/unit-context.yaml"
+      - "docs/design/cli/context.md"
       - "src/**/Context.cs"
       - "test/**/ContextTests.cs"
 
@@ -45,40 +45,40 @@ reviews:
   - id: SonarMark-Validation
     title: Review of SonarMark Validation Unit
     paths:
-      - "docs/reqstream/unit-validation.yaml"
-      - "docs/design/validation.md"
+      - "docs/reqstream/self-test/unit-validation.yaml"
+      - "docs/design/self-test/validation.md"
       - "src/**/Validation.cs"
       - "test/**/ValidationTests.cs"
 
   - id: SonarMark-SonarHotSpot
     title: Review of SonarMark SonarHotSpot Unit
     paths:
-      - "docs/reqstream/unit-sonar-hot-spot.yaml"
-      - "docs/design/sonar-hot-spot.md"
+      - "docs/reqstream/sonar-integration/unit-sonar-hot-spot.yaml"
+      - "docs/design/sonar-integration/sonar-hot-spot.md"
       - "src/**/SonarHotSpot.cs"
       - "test/**/SonarHotSpotTests.cs"
 
   - id: SonarMark-SonarIssue
     title: Review of SonarMark SonarIssue Unit
     paths:
-      - "docs/reqstream/unit-sonar-issue.yaml"
-      - "docs/design/sonar-issue.md"
+      - "docs/reqstream/sonar-integration/unit-sonar-issue.yaml"
+      - "docs/design/sonar-integration/sonar-issue.md"
       - "src/**/SonarIssue.cs"
       - "test/**/SonarIssueTests.cs"
 
   - id: SonarMark-SonarQualityResult
     title: Review of SonarMark SonarQualityResult Unit
     paths:
-      - "docs/reqstream/unit-sonar-quality-result.yaml"
-      - "docs/design/sonar-quality-result.md"
+      - "docs/reqstream/report-generation/unit-sonar-quality-result.yaml"
+      - "docs/design/report-generation/sonar-quality-result.md"
       - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
 
   - id: SonarMark-SonarQubeClient
     title: Review of SonarMark SonarQubeClient Unit
     paths:
-      - "docs/reqstream/unit-sonar-qube-client.yaml"
-      - "docs/design/sonar-qube-client.md"
+      - "docs/reqstream/sonar-integration/unit-sonar-qube-client.yaml"
+      - "docs/design/sonar-integration/sonar-qube-client.md"
       - "src/**/SonarQubeClient.cs"
       - "test/**/SonarQubeClientTests.cs"
 
@@ -86,9 +86,11 @@ reviews:
   - id: SonarMark-CLI
     title: Review of SonarMark CLI Subsystem
     paths:
-      - "docs/reqstream/unit-context.yaml"
+      - "docs/reqstream/cli/subsystem-cli.yaml"
+      - "docs/reqstream/cli/unit-context.yaml"
       - "docs/reqstream/unit-program.yaml"
-      - "docs/design/context.md"
+      - "docs/design/cli/cli.md"
+      - "docs/design/cli/context.md"
       - "docs/design/program.md"
       - "src/**/Context.cs"
       - "src/**/Program.cs"
@@ -98,12 +100,14 @@ reviews:
   - id: SonarMark-SonarIntegration
     title: Review of SonarMark SonarQube Integration Subsystem
     paths:
-      - "docs/reqstream/unit-sonar-qube-client.yaml"
-      - "docs/reqstream/unit-sonar-hot-spot.yaml"
-      - "docs/reqstream/unit-sonar-issue.yaml"
-      - "docs/design/sonar-qube-client.md"
-      - "docs/design/sonar-hot-spot.md"
-      - "docs/design/sonar-issue.md"
+      - "docs/reqstream/sonar-integration/subsystem-sonar-integration.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-qube-client.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-hot-spot.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-issue.yaml"
+      - "docs/design/sonar-integration/sonar-integration.md"
+      - "docs/design/sonar-integration/sonar-qube-client.md"
+      - "docs/design/sonar-integration/sonar-hot-spot.md"
+      - "docs/design/sonar-integration/sonar-issue.md"
       - "src/**/SonarQubeClient.cs"
       - "src/**/SonarHotSpot.cs"
       - "src/**/SonarIssue.cs"
@@ -114,10 +118,22 @@ reviews:
   - id: SonarMark-ReportGeneration
     title: Review of SonarMark Report Generation Subsystem
     paths:
-      - "docs/reqstream/unit-sonar-quality-result.yaml"
-      - "docs/design/sonar-quality-result.md"
+      - "docs/reqstream/report-generation/subsystem-report-generation.yaml"
+      - "docs/reqstream/report-generation/unit-sonar-quality-result.yaml"
+      - "docs/design/report-generation/report-generation.md"
+      - "docs/design/report-generation/sonar-quality-result.md"
       - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
+
+  - id: SonarMark-SelfTest
+    title: Review of SonarMark SelfTest Subsystem
+    paths:
+      - "docs/reqstream/self-test/subsystem-self-test.yaml"
+      - "docs/reqstream/self-test/unit-validation.yaml"
+      - "docs/design/self-test/self-test.md"
+      - "docs/design/self-test/validation.md"
+      - "src/**/Validation.cs"
+      - "test/**/ValidationTests.cs"
 
   # System review — end-to-end integrated system and platform support
   - id: SonarMark-System
@@ -136,17 +152,21 @@ reviews:
       - "test/**/AssemblyInfo.cs"
 
   # Requirements review — all requirements files
-  - id: SonarMark-Requirements
+  - id: SonarMark-AllRequirements
     title: Review of SonarMark Requirements
     paths:
       - "requirements.yaml"
-      - "docs/reqstream/unit-context.yaml"
+      - "docs/reqstream/cli/subsystem-cli.yaml"
+      - "docs/reqstream/cli/unit-context.yaml"
       - "docs/reqstream/unit-program.yaml"
-      - "docs/reqstream/unit-validation.yaml"
-      - "docs/reqstream/unit-sonar-qube-client.yaml"
-      - "docs/reqstream/unit-sonar-hot-spot.yaml"
-      - "docs/reqstream/unit-sonar-issue.yaml"
-      - "docs/reqstream/unit-sonar-quality-result.yaml"
+      - "docs/reqstream/self-test/subsystem-self-test.yaml"
+      - "docs/reqstream/self-test/unit-validation.yaml"
+      - "docs/reqstream/sonar-integration/subsystem-sonar-integration.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-qube-client.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-hot-spot.yaml"
+      - "docs/reqstream/sonar-integration/unit-sonar-issue.yaml"
+      - "docs/reqstream/report-generation/subsystem-report-generation.yaml"
+      - "docs/reqstream/report-generation/unit-sonar-quality-result.yaml"
       - "docs/reqstream/sonarmark-system.yaml"
       - "docs/reqstream/platform-requirements.yaml"
       - "docs/reqstream/ots-mstest.yaml"
@@ -160,12 +180,4 @@ reviews:
     title: Review of SonarMark Design
     paths:
       - "docs/reqstream/sonarmark-system.yaml"
-      - "docs/design/introduction.md"
-      - "docs/design/system.md"
-      - "docs/design/context.md"
-      - "docs/design/program.md"
-      - "docs/design/sonar-qube-client.md"
-      - "docs/design/sonar-hot-spot.md"
-      - "docs/design/sonar-issue.md"
-      - "docs/design/sonar-quality-result.md"
-      - "docs/design/validation.md"
+      - "docs/design/**/*.md"
