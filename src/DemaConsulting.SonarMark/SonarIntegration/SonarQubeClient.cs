@@ -132,7 +132,7 @@ internal sealed class SonarQubeClient : IDisposable
         var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={projectKey}";
 
         // Fetch component data from server
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw new InvalidOperationException(
@@ -141,7 +141,7 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
+        using var jsonDoc = JsonDocument.Parse(content);
 
         // Extract component element from response
         var root = jsonDoc.RootElement;
@@ -184,7 +184,7 @@ internal sealed class SonarQubeClient : IDisposable
         }
 
         // Fetch quality gate status from server
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw new InvalidOperationException(
@@ -193,7 +193,7 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
+        using var jsonDoc = JsonDocument.Parse(content);
 
         // Extract project status element from response
         var root = jsonDoc.RootElement;
@@ -475,7 +475,7 @@ internal sealed class SonarQubeClient : IDisposable
         var url = $"{serverUrl.TrimEnd('/')}/api/metrics/search";
 
         // Fetch metrics from server
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+        using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw new InvalidOperationException(
@@ -484,7 +484,7 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
+        using var jsonDoc = JsonDocument.Parse(content);
 
         // Extract metrics array from response
         var root = jsonDoc.RootElement;
