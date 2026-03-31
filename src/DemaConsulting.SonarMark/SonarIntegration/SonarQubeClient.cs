@@ -381,9 +381,9 @@ internal sealed class SonarQubeClient : IDisposable
                     $"HTTP {(int)response.StatusCode} error from server: {response.ReasonPhrase}");
             }
 
-            // Parse JSON response
+            // Parse JSON response and dispose the document after extracting needed data
             var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            var jsonDoc = JsonDocument.Parse(content);
+            using var jsonDoc = JsonDocument.Parse(content);
             var root = jsonDoc.RootElement;
 
             // Extract and accumulate items from the current page
