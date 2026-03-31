@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using DemaConsulting.SonarMark.SonarIntegration;
+
 namespace DemaConsulting.SonarMark.Cli;
 
 /// <summary>
@@ -98,7 +100,7 @@ internal sealed class Context : IDisposable
     /// <summary>
     ///     Gets the HTTP client factory for creating SonarQube clients (for testing).
     /// </summary>
-    internal Func<string?, SonarIntegration.SonarQubeClient>? HttpClientFactory { get; private init; }
+    internal Func<string?, SonarQubeClient>? HttpClientFactory { get; private init; }
 
     /// <summary>
     ///     Gets the proposed exit code for the application (0 for success, 1 for errors).
@@ -133,7 +135,7 @@ internal sealed class Context : IDisposable
     /// <param name="httpClientFactory">Optional HTTP client factory for testing.</param>
     /// <returns>A new Context instance.</returns>
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
-    public static Context Create(string[] args, Func<string?, SonarIntegration.SonarQubeClient>? httpClientFactory)
+    public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
     {
         // Validate that args is not null
         ArgumentNullException.ThrowIfNull(args);
