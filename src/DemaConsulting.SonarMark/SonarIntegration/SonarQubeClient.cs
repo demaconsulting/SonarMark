@@ -133,7 +133,11 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Fetch component data from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException(
+                $"HTTP {(int)response.StatusCode} error from server: {response.ReasonPhrase}");
+        }
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
@@ -181,7 +185,11 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Fetch quality gate status from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException(
+                $"HTTP {(int)response.StatusCode} error from server: {response.ReasonPhrase}");
+        }
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
@@ -243,17 +251,18 @@ internal sealed class SonarQubeClient : IDisposable
     }
 
     /// <summary>
-    ///     Gets issues from SonarQube/SonarCloud
+    ///     Gets issues from SonarQube/SonarCloud using server-side pagination
     /// </summary>
     /// <param name="serverUrl">Server URL</param>
     /// <param name="projectKey">Project key</param>
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>List of issues</returns>
-    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
+    /// <returns>List of all issues accumulated across all pages</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid or an HTTP error occurs</exception>
     /// <remarks>
-    ///     Page size is limited to 500 as per requirements. For projects with more than 500 issues,
-    ///     only the first 500 will be returned. Future enhancements could implement pagination.
+    ///     Issues are fetched with server-side pagination. The method loops until all pages have been
+    ///     retrieved, accumulating results into a single list. This ensures completeness regardless of
+    ///     how many items the server returns per page.
     /// </remarks>
     private async Task<List<SonarIssue>> GetIssuesAsync(
         string serverUrl,
@@ -261,31 +270,17 @@ internal sealed class SonarQubeClient : IDisposable
         string? branch,
         CancellationToken cancellationToken)
     {
-        // Build API URL with project key, issue statuses filter, and page size limit
-        // Note: Page size is limited to 500 as per requirements
-        var url =
-            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=500";
+        // Build base API URL with project key and issue statuses filter
+        var baseUrl =
+            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
-            url += $"&branch={Uri.EscapeDataString(branch)}";
+            baseUrl += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
-        // Fetch issues from server
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
-
-        // Parse JSON response
-        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
-
-        // Extract issues array from response
-        var root = jsonDoc.RootElement;
-        if (!root.TryGetProperty("issues", out var issuesElement))
-        {
-            throw new InvalidOperationException("Invalid issues response: missing 'issues' property");
-        }
-
-        return ParseIssues(issuesElement);
+        // Delegate to the shared pagination helper, accumulating all issue pages
+        return await FetchPaginatedAsync(baseUrl, "issues", ParseIssues, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     /// <summary>
@@ -324,17 +319,18 @@ internal sealed class SonarQubeClient : IDisposable
     }
 
     /// <summary>
-    ///     Gets security hot-spots from SonarQube/SonarCloud
+    ///     Gets security hot-spots from SonarQube/SonarCloud using server-side pagination
     /// </summary>
     /// <param name="serverUrl">Server URL</param>
     /// <param name="projectKey">Project key</param>
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>List of hot-spots</returns>
-    /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
+    /// <returns>List of all hot-spots accumulated across all pages</returns>
+    /// <exception cref="InvalidOperationException">Thrown when response is invalid or an HTTP error occurs</exception>
     /// <remarks>
-    ///     Page size is limited to 500 as per requirements. For projects with more than 500 hot-spots,
-    ///     only the first 500 will be returned. Future enhancements could implement pagination.
+    ///     Hot-spots are fetched with server-side pagination. The method loops until all pages have been
+    ///     retrieved, accumulating results into a single list. This ensures completeness regardless of
+    ///     how many items the server returns per page.
     /// </remarks>
     private async Task<List<SonarHotSpot>> GetHotSpotsAsync(
         string serverUrl,
@@ -342,30 +338,92 @@ internal sealed class SonarQubeClient : IDisposable
         string? branch,
         CancellationToken cancellationToken)
     {
-        // Build API URL with project key and page size limit
-        // Note: Page size is limited to 500 as per requirements
-        var url = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=500";
+        // Build base API URL with project key and page size
+        var baseUrl = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
-            url += $"&branch={Uri.EscapeDataString(branch)}";
+            baseUrl += $"&branch={Uri.EscapeDataString(branch)}";
         }
 
-        // Fetch hot-spots from server
-        var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        // Delegate to the shared pagination helper, accumulating all hot-spot pages
+        return await FetchPaginatedAsync(baseUrl, "hotspots", ParseHotSpots, cancellationToken)
+            .ConfigureAwait(false);
+    }
 
-        // Parse JSON response
-        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-        var jsonDoc = JsonDocument.Parse(content);
+    /// <summary>
+    ///     Fetches all pages from a paginated API endpoint and accumulates results
+    /// </summary>
+    /// <typeparam name="T">Type of item returned per page</typeparam>
+    /// <param name="baseUrl">Base URL including all query parameters except the page number</param>
+    /// <param name="itemsPropertyName">JSON property name that holds the items array on each page</param>
+    /// <param name="parseItems">Function that parses a JSON array element into a list of items</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>List of all items accumulated across all pages</returns>
+    /// <exception cref="InvalidOperationException">Thrown when an HTTP error occurs or the items property is missing</exception>
+    private async Task<List<T>> FetchPaginatedAsync<T>(
+        string baseUrl,
+        string itemsPropertyName,
+        Func<JsonElement, List<T>> parseItems,
+        CancellationToken cancellationToken)
+    {
+        // Accumulate results across all pages
+        var allItems = new List<T>();
+        var pageNumber = 1;
 
-        // Extract hot-spots array from response
-        var root = jsonDoc.RootElement;
-        if (!root.TryGetProperty("hotspots", out var hotSpotsElement))
+        do
         {
-            throw new InvalidOperationException("Invalid hot-spots response: missing 'hotspots' property");
-        }
+            // Fetch the current page from the server and dispose the response when done
+            var url = $"{baseUrl}&p={pageNumber}";
+            using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new InvalidOperationException(
+                    $"HTTP {(int)response.StatusCode} error from server: {response.ReasonPhrase}");
+            }
 
-        return ParseHotSpots(hotSpotsElement);
+            // Parse JSON response
+            var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            var jsonDoc = JsonDocument.Parse(content);
+            var root = jsonDoc.RootElement;
+
+            // Extract and accumulate items from the current page
+            if (!root.TryGetProperty(itemsPropertyName, out var itemsElement))
+            {
+                throw new InvalidOperationException(
+                    $"Invalid response: missing '{itemsPropertyName}' property");
+            }
+
+            allItems.AddRange(parseItems(itemsElement));
+
+            // Check paging information to determine if more pages remain
+            if (!root.TryGetProperty("paging", out var pagingElement))
+            {
+                break;
+            }
+
+            var pageIndex = pagingElement.TryGetProperty("pageIndex", out var pageIndexElement)
+                ? pageIndexElement.GetInt32()
+                : pageNumber;
+            var pageSize = pagingElement.TryGetProperty("pageSize", out var pageSizeElement)
+                ? pageSizeElement.GetInt32()
+                : 100;
+            var total = pagingElement.TryGetProperty("total", out var totalElement)
+                ? totalElement.GetInt32()
+                : 0;
+
+            // Stop when all pages have been retrieved
+            if (total > pageIndex * pageSize)
+            {
+                pageNumber++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        while (true);
+
+        return allItems;
     }
 
     /// <summary>
@@ -418,7 +476,11 @@ internal sealed class SonarQubeClient : IDisposable
 
         // Fetch metrics from server
         var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidOperationException(
+                $"HTTP {(int)response.StatusCode} error from server: {response.ReasonPhrase}");
+        }
 
         // Parse JSON response
         var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
