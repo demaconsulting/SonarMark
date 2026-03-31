@@ -9,7 +9,9 @@ sections:
   - title: ReportGeneration Subsystem
     requirements:
       - id: SonarMark-Subsystem-ReportGeneration
-        title: The ReportGeneration subsystem shall render quality gate results, issues, and hot-spots as a markdown report.
+        title: >-
+          The ReportGeneration subsystem shall render quality gate results,
+          issues, and hot-spots as a markdown report.
         justification: |
           The ReportGeneration subsystem must produce a well-structured GitHub-flavoured
           markdown document that includes quality gate status, conditions, issues, and

@@ -513,7 +513,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// </summary>
     /// <param name="authToken">Optional authentication token</param>
     /// <returns>Configured HTTP client</returns>
-    private static HttpClient CreateHttpClient(string? authToken)
+    internal static HttpClient CreateHttpClient(string? authToken)
     {
         var client = new HttpClient();
 

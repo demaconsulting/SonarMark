@@ -8,8 +8,8 @@ servers via their REST API, fetching quality gate status, issues, and security h
 ## Units
 
 | Unit | Source File | Purpose |
-|:-----|:-----------|:--------|
-| SonarQubeClient | `SonarIntegration/SonarQubeClient.cs` | HTTP API client, fetches quality gate, issues, and hot-spots |
+| :--- | :---------- | :------ |
+| SonarQubeClient | `SonarIntegration/SonarQubeClient.cs` | HTTP client; fetches quality gate, issues, hot-spots |
 | SonarHotSpot | `SonarIntegration/SonarHotSpot.cs` | Data record representing a SonarQube security hot-spot |
 | SonarIssue | `SonarIntegration/SonarIssue.cs` | Data record representing a SonarQube issue |
 

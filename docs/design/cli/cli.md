@@ -9,7 +9,7 @@ to the appropriate functionality.
 ## Units
 
 | Unit | Source File | Purpose |
-|:-----|:-----------|:--------|
+| :--- | :---------- | :------ |
 | Program | `Program.cs` | Entry point, dispatch, parameter validation, report writing |
 | Context | `Cli/Context.cs` | Argument parsing, output, log-file, enforce, results-file |
 

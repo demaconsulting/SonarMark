@@ -9,7 +9,9 @@ sections:
   - title: SonarIntegration Subsystem
     requirements:
       - id: SonarMark-Subsystem-SonarIntegration
-        title: The SonarIntegration subsystem shall retrieve quality gate status, issues, and hot-spots from SonarQube/SonarCloud.
+        title: >-
+          The SonarIntegration subsystem shall retrieve quality gate status,
+          issues, and hot-spots from SonarQube/SonarCloud.
         justification: |
           The SonarIntegration subsystem is responsible for all external communication
           with the SonarQube/SonarCloud server. It must fetch and aggregate quality gate

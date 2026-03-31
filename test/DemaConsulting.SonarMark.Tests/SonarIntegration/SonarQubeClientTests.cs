@@ -55,4 +55,31 @@ public class SonarQubeClientTests
         // Assert - verify client was created
         Assert.IsNotNull(client);
     }
+
+    /// <summary>
+    ///     Test that constructor with auth token sets the Authorization header
+    /// </summary>
+    [TestMethod]
+    public void SonarQubeClient_Constructor_WithToken_SetsAuthorizationHeader()
+    {
+        // Act - create an HttpClient via the factory method that the public constructor uses
+        using var httpClient = SonarQubeClient.CreateHttpClient("test-token");
+
+        // Assert - the Authorization header must be set and use Basic scheme
+        Assert.IsNotNull(httpClient.DefaultRequestHeaders.Authorization);
+        Assert.AreEqual("Basic", httpClient.DefaultRequestHeaders.Authorization!.Scheme);
+    }
+
+    /// <summary>
+    ///     Test that constructor without auth token does not set the Authorization header
+    /// </summary>
+    [TestMethod]
+    public void SonarQubeClient_Constructor_WithoutToken_NoAuthorizationHeader()
+    {
+        // Act - create an HttpClient via the factory method without a token
+        using var httpClient = SonarQubeClient.CreateHttpClient(null);
+
+        // Assert - no Authorization header should be present
+        Assert.IsNull(httpClient.DefaultRequestHeaders.Authorization);
+    }
 }

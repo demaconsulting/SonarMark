@@ -64,4 +64,3 @@ src/DemaConsulting.SonarMark/
 ```
 
 The test project mirrors the same layout under `test/DemaConsulting.SonarMark.Tests/`.
-

@@ -8,7 +8,7 @@ tool's own functionality without requiring a live SonarQube/SonarCloud server.
 ## Units
 
 | Unit | Source File | Purpose |
-|:-----|:-----------|:--------|
+| :--- | :---------- | :------ |
 | Validation | `SelfTest/Validation.cs` | Self-validation runner, writes TRX and JUnit result files |
 
 ## Interfaces

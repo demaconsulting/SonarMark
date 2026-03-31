@@ -31,7 +31,7 @@ sections:
           - SonarMark-Enforce-ExitCode
         tests:
           - IntegrationTest_VersionFlag_OutputsVersion
-          - IntegrationTest_HelpFlag_OutputsHelp
+          - IntegrationTest_HelpFlag_OutputsUsageInformation
           - IntegrationTest_SilentFlag_SuppressesOutput
-          - Context_Create_WithNoArgs_CreatesDefaultContext
-          - Context_Create_WithVersionFlag_SetsVersionProperty
+          - Context_Create_NoArguments_ReturnsDefaultContext
+          - Context_Create_VersionFlag_SetsVersionProperty

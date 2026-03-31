@@ -8,7 +8,7 @@ as a structured GitHub-flavoured markdown report.
 ## Units
 
 | Unit | Source File | Purpose |
-|:-----|:-----------|:--------|
+| :--- | :---------- | :------ |
 | SonarQualityResult | `ReportGeneration/SonarQualityResult.cs` | Aggregates results and renders the markdown report |
 
 ## Interfaces
