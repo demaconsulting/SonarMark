@@ -18,23 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark;
+namespace DemaConsulting.SonarMark.SonarIntegration;
 
 /// <summary>
-///     Represents a SonarQube issue
+///     Represents a SonarQube security hot-spot
 /// </summary>
-/// <param name="Key">Issue key</param>
-/// <param name="Rule">Rule key</param>
-/// <param name="Severity">Issue severity (e.g., BLOCKER, CRITICAL, MAJOR, MINOR, INFO)</param>
+/// <param name="Key">Hot-spot key</param>
 /// <param name="Component">Component key</param>
 /// <param name="Line">Line number (if applicable)</param>
-/// <param name="Message">Issue message</param>
-/// <param name="Type">Issue type (e.g., BUG, VULNERABILITY, CODE_SMELL)</param>
-internal sealed record SonarIssue(
+/// <param name="Message">Hot-spot message</param>
+/// <param name="SecurityCategory">Security category</param>
+/// <param name="VulnerabilityProbability">Vulnerability probability (e.g., HIGH, MEDIUM, LOW)</param>
+internal sealed record SonarHotSpot(
     string Key,
-    string Rule,
-    string Severity,
     string Component,
     int? Line,
     string Message,
-    string Type);
+    string SecurityCategory,
+    string VulnerabilityProbability);

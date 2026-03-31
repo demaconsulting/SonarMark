@@ -18,7 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark.Tests;
+using DemaConsulting.SonarMark.ReportGeneration;
+using DemaConsulting.SonarMark.SonarIntegration;
+
+namespace DemaConsulting.SonarMark.Tests.ReportGeneration;
 
 /// <summary>
 ///     Tests for SonarQualityResult class

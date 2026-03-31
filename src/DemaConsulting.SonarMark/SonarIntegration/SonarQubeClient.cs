@@ -21,8 +21,9 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using DemaConsulting.SonarMark.ReportGeneration;
 
-namespace DemaConsulting.SonarMark;
+namespace DemaConsulting.SonarMark.SonarIntegration;
 
 /// <summary>
 ///     Client for fetching quality information from SonarQube/SonarCloud analysis
@@ -512,7 +513,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// </summary>
     /// <param name="authToken">Optional authentication token</param>
     /// <returns>Configured HTTP client</returns>
-    private static HttpClient CreateHttpClient(string? authToken)
+    internal static HttpClient CreateHttpClient(string? authToken)
     {
         var client = new HttpClient();
 

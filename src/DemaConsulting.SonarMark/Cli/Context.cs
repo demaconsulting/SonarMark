@@ -18,7 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace DemaConsulting.SonarMark;
+using DemaConsulting.SonarMark.SonarIntegration;
+
+namespace DemaConsulting.SonarMark.Cli;
 
 /// <summary>
 ///     Context class that handles command-line arguments and program output.

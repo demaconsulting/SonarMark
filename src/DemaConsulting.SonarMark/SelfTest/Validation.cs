@@ -21,9 +21,12 @@
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
+using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.ReportGeneration;
+using DemaConsulting.SonarMark.SonarIntegration;
 using DemaConsulting.TestResults.IO;
 
-namespace DemaConsulting.SonarMark;
+namespace DemaConsulting.SonarMark.SelfTest;
 
 /// <summary>
 ///     Provides self-validation functionality for the SonarMark tool.

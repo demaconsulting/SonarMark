@@ -1,0 +1,35 @@
+---
+# SonarMark SonarIntegration Subsystem Requirements
+#
+# PURPOSE:
+# - Define requirements for the SonarIntegration subsystem
+# - The SonarIntegration subsystem communicates with SonarQube/SonarCloud REST API
+#
+sections:
+  - title: SonarIntegration Subsystem
+    requirements:
+      - id: SonarMark-Subsystem-SonarIntegration
+        title: >-
+          The SonarIntegration subsystem shall retrieve quality gate status,
+          issues, and hot-spots from SonarQube/SonarCloud.
+        justification: |
+          The SonarIntegration subsystem is responsible for all external communication
+          with the SonarQube/SonarCloud server. It must fetch and aggregate quality gate
+          status, issues, and security hot-spots into a single result object for downstream
+          report generation.
+        children:
+          - SonarMark-Server-QualityGate
+          - SonarMark-Server-Issues
+          - SonarMark-Server-HotSpots
+          - SonarMark-HotSpot-Record
+          - SonarMark-HotSpot-OptionalLine
+          - SonarMark-HotSpot-VulnerabilityProbability
+          - SonarMark-Issue-Record
+          - SonarMark-Issue-OptionalLine
+          - SonarMark-Issue-Severity
+        tests:
+          - SonarMark_QualityGateRetrieval
+          - SonarMark_IssuesRetrieval
+          - SonarMark_HotSpotsRetrieval
+          - SonarQubeClient_Constructor_WithToken_SetsAuthorizationHeader
+          - SonarQubeClient_Constructor_WithoutToken_NoAuthorizationHeader

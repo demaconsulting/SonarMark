@@ -19,6 +19,9 @@ sections:
           important metric for CI/CD enforcement decisions. Verifying end-to-end retrieval and reporting
           confirms that the CLI, HTTP client, data model, and report renderer all integrate correctly
           to deliver the quality gate result.
+        children:
+          - SonarMark-Subsystem-SonarIntegration
+          - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_QualityGateRetrieval
 
@@ -28,6 +31,9 @@ sections:
           Issues represent code quality defects identified by Sonar analysis. Verifying end-to-end
           retrieval and reporting confirms that all pagination, data mapping, and rendering components
           integrate correctly to deliver a complete issues list.
+        children:
+          - SonarMark-Subsystem-SonarIntegration
+          - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_IssuesRetrieval
 
@@ -37,6 +43,9 @@ sections:
           Security hot-spots require manual security review and must be reported separately from
           standard issues. Verifying end-to-end retrieval and reporting confirms that the security
           hot-spot data path through the system integrates correctly from API call to rendered report.
+        children:
+          - SonarMark-Subsystem-SonarIntegration
+          - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_HotSpotsRetrieval
 
@@ -47,5 +56,9 @@ sections:
           quality gate status, issues, and security hot-spots. Verifying this end-to-end confirms
           that all system components — CLI argument handling, server communication, data aggregation,
           and markdown rendering — operate correctly as an integrated whole.
+        children:
+          - SonarMark-Subsystem-Cli
+          - SonarMark-Subsystem-SonarIntegration
+          - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_MarkdownReportGeneration
