@@ -15,6 +15,10 @@ sections:
           markdown document that includes quality gate status, conditions, issues, and
           security hot-spots in a format suitable for inclusion in pull requests and
           documentation pipelines.
+        children:
+          - SonarMark-Report-QualityGate
+          - SonarMark-Report-Issues
+          - SonarMark-Report-HotSpots
         tests:
           - SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput
           - SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput

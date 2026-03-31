@@ -14,6 +14,21 @@ sections:
           The CLI subsystem is the entry point for SonarMark. It must correctly parse all
           supported command-line arguments and route execution to the appropriate handler
           (version, help, validation, or analysis) based on the parsed context.
+        children:
+          - SonarMark-Cli-Interface
+          - SonarMark-Cli-Version
+          - SonarMark-Cli-Help
+          - SonarMark-Cli-Silent
+          - SonarMark-Cli-Log
+          - SonarMark-Cli-Enforce
+          - SonarMark-Enforce-Mode
+          - SonarMark-Server-Connect
+          - SonarMark-Server-Auth
+          - SonarMark-Server-ProjectKey
+          - SonarMark-Server-Branch
+          - SonarMark-Report-Markdown
+          - SonarMark-Report-Depth
+          - SonarMark-Enforce-ExitCode
         tests:
           - IntegrationTest_VersionFlag_OutputsVersion
           - IntegrationTest_HelpFlag_OutputsHelp
