@@ -26,7 +26,7 @@ counting how many retries have occurred.
 
 ## RESEARCH State (start)
 
-Call the built-in @explore sub-agent with:
+Call the built-in explore sub-agent with:
 
 - **context**: the user's request and any current quality findings
 - **goal**: analyze the implementation state and develop a plan to implement the request
@@ -35,7 +35,7 @@ Once the explore sub-agent finishes, transition to the DEVELOPMENT state.
 
 ## DEVELOPMENT State
 
-Call the @developer sub-agent with:
+Call the developer sub-agent with:
 
 - **context** the user's request and the current implementation plan
 - **goal** implement the user's request and any identified quality fixes
@@ -47,7 +47,7 @@ Once the developer sub-agent finishes:
 
 ## QUALITY State
 
-Call the @quality sub-agent with:
+Call the quality sub-agent with:
 
 - **context** the user's request and the current implementation report
 - **goal** check the quality of the work performed for any issues
@@ -60,14 +60,14 @@ Once the quality sub-agent finishes:
 
 ### REPORT State (end)
 
-Upon completion create a summary in `.agent-logs/[agent-name]-[subject]-[unique-id].md`
+Upon completion create a summary in `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
 of the project consisting of:
 
 ```markdown
 # Implementation Orchestration Report
 
-**Result**: <SUCCEEDED/FAILED>
-**Final State**: <RESEARCH/DEVELOPMENT/QUALITY/REPORT>
+**Result**: (SUCCEEDED|FAILED)
+**Final State**: (RESEARCH|DEVELOPMENT|QUALITY|REPORT)
 **Retry Count**: <Number of quality retry cycles>
 
 ## State Machine Execution
