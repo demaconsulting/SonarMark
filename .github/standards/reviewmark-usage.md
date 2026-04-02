@@ -20,9 +20,10 @@ Configure reviews in `.reviewmark.yaml` at repository root:
 # Patterns identifying all files that require review
 needs-review:
   # Include core development artifacts
+  - "requirements.yaml"          # Root requirements file
+  - "docs/reqstream/**/*.yaml"   # Requirements files
+  - "docs/design/**/*.md"        # Design documentation
   - "**/*.cs"                    # All C# source and test files
-  - "**/*.md"                    # Requirements and design documentation
-  - "docs/reqstream/**/*.yaml"   # Requirements files only
 
   # Exclude build output and generated content
   - "!**/obj/**"                 # Exclude build output
@@ -38,10 +39,10 @@ reviews:
   - id: MyProduct-PasswordValidator
     title: Password Validator Unit Review
     paths:
-      - "src/Auth/PasswordValidator.cs"
-      - "docs/reqstream/auth-passwordvalidator-class.yaml"
-      - "test/Auth/PasswordValidatorTests.cs"
-      - "docs/design/password-validation.md"
+      - "docs/reqstream/authentication/password-validator.yaml"
+      - "docs/design/authentication/password-validator.md"
+      - "src/{ProjectName}/Authentication/PasswordValidator.cs"
+      - "test/{ProjectName}.Tests/Authentication/PasswordValidatorTests.cs"
 
   - id: MyProduct-AllRequirements
     title: All Requirements Review
@@ -59,7 +60,9 @@ and consistent review processes:
 
 Reviews system integration and operational validation:
 
-- **Files**: System-level requirements, design introduction, system design documents, integration tests
+- **Files**: System requirements (`docs/reqstream/system.yaml`), design introduction
+  (`docs/design/introduction.md`), system design (`docs/design/system.md`),
+  integration tests
 - **Purpose**: Validates system operates as designed and meets overall requirements
 - **Example**: `TemplateTool-System`
 
@@ -67,7 +70,7 @@ Reviews system integration and operational validation:
 
 Reviews architectural and design consistency:
 
-- **Files**: System-level requirements, platform requirements, all design documents
+- **Files**: System requirements, platform requirements, all design documents under `docs/design/`
 - **Purpose**: Ensures design completeness and architectural coherence
 - **Example**: `MyProduct-Design`
 
@@ -75,7 +78,7 @@ Reviews architectural and design consistency:
 
 Reviews requirements quality and traceability:
 
-- **Files**: All requirement files including root `requirements.yaml`
+- **Files**: All requirement files including root `requirements.yaml` and all files under `docs/reqstream/`
 - **Purpose**: Validates requirements structure, IDs, justifications, and test linkage
 - **Example**: `MyProduct-AllRequirements`
 
@@ -85,6 +88,11 @@ Reviews individual software unit implementation:
 
 - **Files**: Unit requirements, design documents, source code, unit tests
 - **Purpose**: Validates unit meets requirements and is properly implemented
+- **File Path Pattern**:
+  - Requirements: `docs/reqstream/{subsystem-name}/{unit-name}.yaml` or `docs/reqstream/{unit-name}.yaml`
+  - Design: `docs/design/{subsystem-name}/{unit-name}.md` or `docs/design/{unit-name}.md`
+  - Source: `src/{ProjectName}/{SubsystemName}/{UnitName}.cs`
+  - Tests: `test/{ProjectName}.Tests/{SubsystemName}/{UnitName}Tests.cs`
 - **Example**: `MyProduct-PasswordValidator`, `MyProduct-ConfigParser`
 
 ## [Product]-[Subsystem] Review
@@ -93,7 +101,33 @@ Reviews subsystem architecture and interfaces:
 
 - **Files**: Subsystem requirements, design documents, integration tests (usually no source code)
 - **Purpose**: Validates subsystem behavior and interface compliance
+- **File Path Pattern**:
+  - Requirements: `docs/reqstream/{subsystem-name}/{subsystem-name}.yaml`
+  - Design: `docs/design/{subsystem-name}/{subsystem-name}.md`
+  - Tests: `test/{ProjectName}.Tests/{SubsystemName}Integration/` or similar
 - **Example**: `MyProduct-Authentication`, `MyProduct-DataLayer`
+
+## [Product]-OTS Review
+
+Reviews OTS (Off-The-Shelf) software integration:
+
+- **Files**: OTS requirements and integration test evidence
+- **Purpose**: Validates OTS components meet integration requirements
+- **File Path Pattern**:
+  - Requirements: `docs/reqstream/ots/{ots-name}.yaml`
+  - Tests: Integration tests proving OTS functionality
+- **Example**: `MyProduct-SystemTextJson`, `MyProduct-EntityFramework`
+
+# File Pattern Best Practices
+
+Use "include-then-exclude" approach for `needs-review` patterns because it
+ensures comprehensive coverage while removing unwanted files:
+
+1. **Start broad**: Include all files of potential interest with generous patterns
+2. **Exclude overreach**: Use `!` patterns to remove build output, generated files, and temporary files
+3. **Test patterns**: Verify patterns match intended files using `dotnet reviewmark --elaborate`
+
+**Order matters**: Patterns are processed sequentially, excludes override earlier includes.
 
 # ReviewMark Commands
 
@@ -101,40 +135,14 @@ Essential ReviewMark commands for Continuous Compliance:
 
 ```bash
 # Lint review configuration for issues (run before use)
-dotnet reviewmark \
-  --lint
+dotnet reviewmark --lint
 
-# Generate review plan (shows coverage)
-dotnet reviewmark \
-  --plan docs/code_review_plan/plan.md
-
-# Generate review report (shows status)
-dotnet reviewmark \
-  --report docs/code_review_report/report.md
-
-# Enforce review compliance (use in CI/CD)
+# Generate review plan and report (use in CI/CD)
 dotnet reviewmark \
   --plan docs/code_review_plan/plan.md \
   --report docs/code_review_report/report.md \
   --enforce
 ```
-
-# File Pattern Best Practices
-
-Use "include-then-exclude" approach for `needs-review` patterns because it
-ensures comprehensive coverage while removing unwanted files:
-
-## Include-Then-Exclude Strategy
-
-1. **Start broad**: Include all files of potential interest with generous patterns
-2. **Exclude overreach**: Use `!` patterns to remove build output, generated files, and temporary files
-3. **Test patterns**: Verify patterns match intended files using `dotnet reviewmark --elaborate`
-
-## Pattern Guidelines
-
-- **Be generous with includes**: Better to include too much initially than miss important files
-- **Be specific with excludes**: Target exact paths and patterns that should never be reviewed
-- **Order matters**: Patterns are processed sequentially, excludes override earlier includes
 
 # Quality Checks
 
@@ -144,6 +152,7 @@ Before submitting ReviewMark configuration, verify:
 - [ ] `needs-review` patterns cover requirements, design, code, and tests with proper exclusions
 - [ ] Each review-set has unique `id` and groups architecturally related files
 - [ ] File patterns use correct glob syntax and match intended files
+- [ ] File paths reflect current naming conventions (kebab-case design/requirements folders, PascalCase source folders)
 - [ ] Evidence source properly configured (`none` for dev, `url` for production)
 - [ ] Environment variables used for credentials (never hardcoded)
 - [ ] ReviewMark enforcement configured: `dotnet reviewmark --enforce`

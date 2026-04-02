@@ -20,13 +20,13 @@ Perform software development tasks by determining and applying appropriate DEMA 
 
 # Reporting
 
-Upon completion create a summary in `.agent-logs/[agent-name]-[subject]-[unique-id].md`
+Upon completion create a summary in `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
 of the project consisting of:
 
 ```markdown
 # Developer Agent Report
 
-**Result**: <SUCCEEDED/FAILED>
+**Result**: (SUCCEEDED|FAILED)
 
 ## Work Summary
 

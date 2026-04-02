@@ -22,7 +22,7 @@ call .venv\Scripts\activate.bat
 pip install -r pip-requirements.txt --quiet --disable-pip-version-check
 
 REM Run spell check
-call npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,txt}"
+call npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,cpp,hpp,h,txt}"
 if errorlevel 1 set "LINT_ERROR=1"
 
 REM Run markdownlint check

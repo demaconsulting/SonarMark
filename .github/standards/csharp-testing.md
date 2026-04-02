@@ -56,7 +56,7 @@ reliable evidence.
 - **Verify Interactions**: Assert that expected method calls occurred with correct parameters
 - **Predictable Behavior**: Set up mocks to return known values for consistent test results
 
-# MSTest V4 Antipatterns
+# MSTest V4 Anti-patterns
 
 Avoid these common MSTest V4 patterns because they produce poor error messages or cause tests to be silently ignored.
 
@@ -116,4 +116,4 @@ Before submitting C# tests, verify:
 - [ ] External dependencies mocked with NSubstitute or equivalent
 - [ ] Tests linked to requirements with source filters where needed
 - [ ] Test results generate TRX format for ReqStream compatibility
-- [ ] MSTest V4 antipatterns avoided (proper assertions, public visibility, etc.)
+- [ ] MSTest V4 anti-patterns avoided (proper assertions, public visibility, etc.)
