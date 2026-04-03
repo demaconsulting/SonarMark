@@ -64,7 +64,7 @@ internal static class Validation
         };
 
         // Create mock HTTP client factory
-        var mockFactory = (string? _) => new SonarQubeClient(CreateMockHttpClient(), false);
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockHttpClient(), true);
 
         // Run core functionality tests
         RunQualityGateRetrievalTest(context, testResults, mockFactory);
@@ -620,7 +620,7 @@ internal static class Validation
                     Directory.Delete(DirectoryPath, true);
                 }
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or DirectoryNotFoundException)
             {
                 // Ignore cleanup errors during disposal
             }

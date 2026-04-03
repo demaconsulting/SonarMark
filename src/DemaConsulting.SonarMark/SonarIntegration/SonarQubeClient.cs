@@ -129,7 +129,7 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build API URL for component information
-        var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={projectKey}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={Uri.EscapeDataString(projectKey)}";
 
         // Fetch component data from server
         using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
@@ -177,7 +177,7 @@ internal sealed class SonarQubeClient : IDisposable
             CancellationToken cancellationToken)
     {
         // Build API URL with project key and optional branch parameter
-        var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={projectKey}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={Uri.EscapeDataString(projectKey)}";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             url += $"&branch={Uri.EscapeDataString(branch)}";
@@ -272,7 +272,7 @@ internal sealed class SonarQubeClient : IDisposable
     {
         // Build base API URL with project key and issue statuses filter
         var baseUrl =
-            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=100";
+            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={Uri.EscapeDataString(projectKey)}&issueStatuses=OPEN,CONFIRMED&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             baseUrl += $"&branch={Uri.EscapeDataString(branch)}";
@@ -339,7 +339,7 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build base API URL with project key and page size
-        var baseUrl = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=100";
+        var baseUrl = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={Uri.EscapeDataString(projectKey)}&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             baseUrl += $"&branch={Uri.EscapeDataString(branch)}";

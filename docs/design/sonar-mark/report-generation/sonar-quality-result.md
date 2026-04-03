@@ -37,9 +37,6 @@ output and parsed by tools that understand that format.
 
 ## Satisfies Requirements
 
-- `SonarMark-Server-QualityGate` — `QualityGateStatus` and `Conditions` hold the quality gate data
-- `SonarMark-Server-Issues` — `Issues` holds the list of fetched issues
-- `SonarMark-Server-HotSpots` — `HotSpots` holds the list of fetched hot-spots
 - `SonarMark-Report-Markdown` — `ToMarkdown` generates the markdown report content
 - `SonarMark-Report-Depth` — the `depth` parameter controls heading levels
 - `SonarMark-Report-QualityGate` — quality gate status and conditions are included in the report

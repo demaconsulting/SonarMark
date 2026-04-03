@@ -42,11 +42,8 @@ before attempting any network call. Missing required parameters are reported via
 - `SonarMark-Cli-Help` — `Run` prints help and returns when `context.Help` is true
 - `SonarMark-Server-Connect` — `ProcessSonarAnalysis` validates the `--server` parameter
 - `SonarMark-Server-Auth` — `SonarQubeClient` is created with the token from context
-- `SonarMark-Server-QualityGate` — `GetQualityResultByBranchAsync` fetches quality gate status
-- `SonarMark-Server-Issues` — quality result includes the issues collection
-- `SonarMark-Server-HotSpots` — quality result includes the hot-spots collection
 - `SonarMark-Server-ProjectKey` — `ProcessSonarAnalysis` validates the `--project-key` parameter
 - `SonarMark-Server-Branch` — branch is passed through to `GetQualityResultByBranchAsync`
 - `SonarMark-Report-Markdown` — `File.WriteAllText` writes the markdown report when `--report` is set
-- `SonarMark-Validation-Run` — `Run` delegates to `Validation.Run` when `context.Validate` is true
+- `SonarMark-Report-Depth` — `context.ReportDepth` is passed to `ToMarkdown` and shown in help text
 - `SonarMark-Enforce-ExitCode` — `context.ExitCode` is returned from `Main`
