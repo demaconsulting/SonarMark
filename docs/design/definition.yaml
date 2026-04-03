@@ -1,27 +1,28 @@
 ---
 resource-path:
   - docs/design
-  - docs/design/cli
-  - docs/design/sonar-integration
-  - docs/design/report-generation
-  - docs/design/self-test
+  - docs/design/sonar-mark
+  - docs/design/sonar-mark/cli
+  - docs/design/sonar-mark/sonar-integration
+  - docs/design/sonar-mark/report-generation
+  - docs/design/sonar-mark/self-test
   - docs/template
 
 input-files:
   - docs/design/title.txt
   - docs/design/introduction.md
-  - docs/design/system.md
-  - docs/design/program.md
-  - docs/design/cli/cli.md
-  - docs/design/cli/context.md
-  - docs/design/sonar-integration/sonar-integration.md
-  - docs/design/sonar-integration/sonar-qube-client.md
-  - docs/design/sonar-integration/sonar-hot-spot.md
-  - docs/design/sonar-integration/sonar-issue.md
-  - docs/design/report-generation/report-generation.md
-  - docs/design/report-generation/sonar-quality-result.md
-  - docs/design/self-test/self-test.md
-  - docs/design/self-test/validation.md
+  - docs/design/sonar-mark/sonar-mark.md
+  - docs/design/sonar-mark/program.md
+  - docs/design/sonar-mark/cli/cli.md
+  - docs/design/sonar-mark/cli/context.md
+  - docs/design/sonar-mark/sonar-integration/sonar-integration.md
+  - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md
+  - docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md
+  - docs/design/sonar-mark/sonar-integration/sonar-issue.md
+  - docs/design/sonar-mark/report-generation/report-generation.md
+  - docs/design/sonar-mark/report-generation/sonar-quality-result.md
+  - docs/design/sonar-mark/self-test/self-test.md
+  - docs/design/sonar-mark/self-test/validation.md
 template: template.html
 table-of-contents: true
 number-sections: true
