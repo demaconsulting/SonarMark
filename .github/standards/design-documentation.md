@@ -23,12 +23,13 @@ design to implementation:
 
 ```text
 docs/design/
-├── introduction.md             # Design overview with software structure
-├── system.md                   # System-level design documentation
-├── {subsystem-name}/           # Subsystem design documents (kebab-case folder names)
-│   ├── {subsystem-name}.md     # Subsystem overview and design
-│   └── {unit-name}.md          # Unit-level design documents
-└── {unit-name}.md              # Top-level unit design documents (if not in subsystem)
+├── introduction.md              # Design overview with software structure
+└── {system-name}/               # System-level design folder (one per system)
+    ├── {system-name}.md         # System-level design documentation
+    ├── {subsystem-name}/        # Subsystem design documents (kebab-case folder names)
+    │   ├── {subsystem-name}.md  # Subsystem overview and design
+    │   └── {unit-name}.md       # Unit-level design documents
+    └── {unit-name}.md           # Top-level unit design documents (if not in subsystem)
 ```
 
 ## introduction.md (MANDATORY)
@@ -56,13 +57,16 @@ to understand these classifications before creating this section.
 Example format:
 
 ```text
-ProjectName (System)
+Project1Name (System)
 ├── ComponentA (Subsystem)
 │   ├── ClassX (Unit)
 │   └── ClassY (Unit)
 ├── ComponentB (Subsystem)
 │   └── ClassZ (Unit)
 └── UtilityClass (Unit)
+
+Project2Name (System)
+└── HelperClass (Unit)
 ```
 
 ### Folder Layout Section (MANDATORY)
@@ -73,24 +77,29 @@ mirror the software structure, with file paths and brief descriptions.
 Example format:
 
 ```text
-src/ProjectName/
+src/Project1Name/
 ├── ComponentA/
-│   ├── ClassX.cs               — brief description
-│   └── ClassY.cs               — brief description
+│   ├── ClassX.cs               — Core business logic handler
+│   └── ClassY.cs               — Data validation service
 ├── ComponentB/
-│   └── ClassZ.cs               — brief description
-└── UtilityClass.cs             — brief description
+│   └── ClassZ.cs               — Integration interface
+└── UtilityClass.cs             — Common utility functions
+
+src/Project2Name/
+└── HelperClass.cs              — Helper functions
 ```
 
-## system.md (MANDATORY)
+## System Design Documentation (MANDATORY)
 
-The `system.md` file contains system-level design documentation including:
+For each system identified in the repository:
 
-- System architecture and major components
-- External interfaces and dependencies
-- Data flow and control flow
-- System-wide design constraints and decisions
-- Integration patterns and communication protocols
+- Create a kebab-case folder matching the system name
+- Include `{system-name}.md` with system-level design documentation such as:
+  - System architecture and major components
+  - External interfaces and dependencies
+  - Data flow and control flow
+  - System-wide design constraints and decisions
+  - Integration patterns and communication protocols
 
 ## Subsystem and Unit Design Documents
 
@@ -98,9 +107,9 @@ For each subsystem identified in the software structure:
 
 - Create a kebab-case folder matching the subsystem name (enables automated tooling)
 - Include `{subsystem-name}.md` with subsystem overview and design
-- Include unit design documents for complex units within the subsystem
+- Include unit design documents for ALL units within the subsystem
 
-For significant units requiring detailed design:
+For every unit identified in the software structure:
 
 - Document data models, algorithms, and key methods
 - Describe interactions with other units
@@ -124,8 +133,10 @@ implementation specification for formal code review:
 - **Implementation Detail**: Provide sufficient detail for code review and implementation
 - **Architectural Clarity**: Clearly define component boundaries and interfaces
 - **Traceability**: Link to requirements where applicable using ReqStream patterns
-- **Concrete Examples**: Use actual class names, method signatures, and data structures
-- **Current Information**: Keep synchronized with code changes and refactoring
+
+# Mermaid Diagram Integration
+
+Use Mermaid diagrams to supplement text descriptions (diagrams must not replace text content).
 
 # Quality Checks
 
@@ -133,10 +144,10 @@ Before submitting design documentation, verify:
 
 - [ ] `introduction.md` includes both Software Structure and Folder Layout sections
 - [ ] Software structure correctly categorizes items as System/Subsystem/Unit per `software-items.md`
-- [ ] Folder layout matches actual source code organization
-- [ ] `system.md` provides comprehensive system-level design
+- [ ] Folder layout mirrors software structure organization
+- [ ] Design documents provide sufficient detail for code review
+- [ ] System documentation provides comprehensive system-level design
 - [ ] Subsystem documentation folders use kebab-case names while mirroring source subsystem names and structure
-- [ ] Design documents contain sufficient implementation detail
 - [ ] All documents follow technical documentation formatting standards
 - [ ] Content is current with implementation and requirements
 - [ ] Documents are integrated into ReviewMark review-sets for formal review

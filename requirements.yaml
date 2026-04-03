@@ -15,28 +15,28 @@
 
 includes:
   # CLI subsystem
-  - docs/reqstream/cli/subsystem-cli.yaml
-  - docs/reqstream/cli/unit-context.yaml
-  # Program unit (at root, not in a subsystem folder)
-  - docs/reqstream/unit-program.yaml
+  - docs/reqstream/sonar-mark/cli/subsystem-cli.yaml
+  - docs/reqstream/sonar-mark/cli/unit-context.yaml
+  # Program unit (top-level unit, not in a subsystem)
+  - docs/reqstream/sonar-mark/unit-program.yaml
   # SonarQube Integration subsystem
-  - docs/reqstream/sonar-integration/subsystem-sonar-integration.yaml
-  - docs/reqstream/sonar-integration/unit-sonar-qube-client.yaml
-  - docs/reqstream/sonar-integration/unit-sonar-hot-spot.yaml
-  - docs/reqstream/sonar-integration/unit-sonar-issue.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/subsystem-sonar-integration.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-qube-client.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-hot-spot.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-issue.yaml
   # Report Generation subsystem
-  - docs/reqstream/report-generation/subsystem-report-generation.yaml
-  - docs/reqstream/report-generation/unit-sonar-quality-result.yaml
+  - docs/reqstream/sonar-mark/report-generation/subsystem-report-generation.yaml
+  - docs/reqstream/sonar-mark/report-generation/unit-sonar-quality-result.yaml
   # SelfTest subsystem
-  - docs/reqstream/self-test/subsystem-self-test.yaml
-  - docs/reqstream/self-test/unit-validation.yaml
+  - docs/reqstream/sonar-mark/self-test/subsystem-self-test.yaml
+  - docs/reqstream/sonar-mark/self-test/unit-validation.yaml
   # System-level requirements
-  - docs/reqstream/sonarmark-system.yaml
+  - docs/reqstream/sonar-mark/sonar-mark.yaml
   # Platform support requirements
-  - docs/reqstream/platform-requirements.yaml
+  - docs/reqstream/sonar-mark/platform-requirements.yaml
   # OTS software requirements (one per component)
-  - docs/reqstream/ots-mstest.yaml
-  - docs/reqstream/ots-reqstream.yaml
-  - docs/reqstream/ots-buildmark.yaml
-  - docs/reqstream/ots-versionmark.yaml
-  - docs/reqstream/ots-sarifmark.yaml
+  - docs/reqstream/ots/ots-mstest.yaml
+  - docs/reqstream/ots/ots-reqstream.yaml
+  - docs/reqstream/ots/ots-buildmark.yaml
+  - docs/reqstream/ots/ots-versionmark.yaml
+  - docs/reqstream/ots/ots-sarifmark.yaml

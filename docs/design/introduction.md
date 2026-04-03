@@ -64,3 +64,25 @@ src/DemaConsulting.SonarMark/
 ```
 
 The test project mirrors the same layout under `test/DemaConsulting.SonarMark.Tests/`.
+
+The design documentation mirrors the same structure under `docs/design/sonar-mark/`:
+
+```text
+docs/design/sonar-mark/
+├── sonar-mark.md                   — system-level design documentation
+├── program.md                      — entry point unit design
+├── cli/
+│   ├── cli.md                      — CLI subsystem overview
+│   └── context.md                  — Context unit design
+├── sonar-integration/
+│   ├── sonar-integration.md        — SonarQube integration subsystem overview
+│   ├── sonar-qube-client.md        — SonarQubeClient unit design
+│   ├── sonar-hot-spot.md           — SonarHotSpot unit design
+│   └── sonar-issue.md              — SonarIssue unit design
+├── report-generation/
+│   ├── report-generation.md        — report generation subsystem overview
+│   └── sonar-quality-result.md     — SonarQualityResult unit design
+└── self-test/
+    ├── self-test.md                — self-test subsystem overview
+    └── validation.md               — Validation unit design
+```

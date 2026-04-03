@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Comprehensive Linting Script
-# 
+#
 # PURPOSE:
 # - Run ALL lint checks when executed (no options or modes)
 # - Output lint failures directly for agent parsing
@@ -10,26 +10,47 @@
 
 lint_error=0
 
-# Install npm dependencies
-npm install --silent
+# === PYTHON SECTION ===
 
-# Create Python virtual environment (for yamllint)
+# Create python venv if necessary
 if [ ! -d ".venv" ]; then
-  python -m venv .venv
+    python -m venv .venv || { lint_error=1; skip_python=1; }
 fi
-source .venv/bin/activate
-pip install -r pip-requirements.txt --quiet --disable-pip-version-check
 
-# Run spell check
-npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,cpp,hpp,h,txt}" || lint_error=1
+# Activate python venv
+if [ "$skip_python" != "1" ]; then
+    source .venv/bin/activate || { lint_error=1; skip_python=1; }
+fi
 
-# Run markdownlint check
-npx markdownlint-cli2 "**/*.md" || lint_error=1
+# Install python tools
+if [ "$skip_python" != "1" ]; then
+    pip install -r pip-requirements.txt --quiet --disable-pip-version-check || { lint_error=1; skip_python=1; }
+fi
 
-# Run yamllint check
-yamllint . || lint_error=1
+# Run yamllint
+if [ "$skip_python" != "1" ]; then
+    yamllint . || lint_error=1
+fi
 
-# Run .NET formatting check (verifies no changes are needed)
+# === NPM SECTION ===
+
+# Install npm dependencies
+npm install --silent || { lint_error=1; skip_npm=1; }
+
+# Run cspell
+if [ "$skip_npm" != "1" ]; then
+    npx cspell --no-progress --no-color --quiet "**/*.{md,yaml,yml,json,cs,cpp,hpp,h,txt}" || lint_error=1
+fi
+
+# Run markdownlint-cli2
+if [ "$skip_npm" != "1" ]; then
+    npx markdownlint-cli2 "**/*.md" || lint_error=1
+fi
+
+# === DOTNET SECTION ===
+
+# Run dotnet format
 dotnet format --verify-no-changes || lint_error=1
 
+# Report result
 exit $lint_error
