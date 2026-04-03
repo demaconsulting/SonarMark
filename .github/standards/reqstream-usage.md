@@ -30,15 +30,17 @@ the source code structure because reviewers need clear navigation from
 requirements to design to implementation:
 
 ```text
-requirements.yaml                  # Root file (includes only)
+requirements.yaml                   # Root file (includes only)
 docs/reqstream/
-├── system.yaml                    # System-level requirements
-├── platform-requirements.yaml     # Platform support requirements
-├── {subsystem-name}/              # Subsystem requirements (kebab-case folders)
-│   └── {subsystem-name}.yaml      # Requirements for this subsystem
-├── {unit-name}.yaml               # Unit requirements (for top-level units)
-└── ots/                           # OTS software item requirements
-    └── {ots-name}.yaml            # Requirements for OTS components
+├── {system-name}/                  # System-level requirements folder (one per system)
+│   ├── {system-name}.yaml          # System-level requirements
+│   ├── platform-requirements.yaml  # Platform support requirements
+│   ├── {subsystem-name}/           # Subsystem requirements (kebab-case folders)
+│   │   ├── {subsystem-name}.yaml   # Requirements for this subsystem
+│   │   └── {unit-name}.yaml        # Requirements for units within this subsystem
+│   └── {unit-name}.yaml            # Requirements for top-level units (outside subsystems)
+└── ots/                            # OTS software items folder
+    └── {ots-name}.yaml             # Requirements for OTS components
 ```
 
 The folder structure MUST mirror the source code organization to maintain
@@ -62,7 +64,7 @@ for compliance auditing.
 sections:
   - title: Functional Requirements
     requirements:
-      - id: Project-Subsystem-Feature
+      - id: System-Subsystem-Feature
         title: The system shall perform the required function.
         justification: |
           Business rationale explaining why this requirement exists.
@@ -88,7 +90,7 @@ sections:
     sections:
       - title: System.Text.Json
         requirements:
-          - id: Project-SystemTextJson-ReadJson
+          - id: TemplateTool-SystemTextJson-ReadJson
             title: System.Text.Json shall be able to read JSON files.
             tests:
               - JsonReaderTests.TestReadValidJson
@@ -96,7 +98,7 @@ sections:
 
 # Semantic IDs (MANDATORY)
 
-Use meaningful IDs following `Project-Section-ShortDesc` pattern because
+Use meaningful IDs following `System-Section-ShortDesc` pattern because
 auditors need to understand requirements without cross-referencing:
 
 - **Good**: `TemplateTool-Core-DisplayHelp`
@@ -127,12 +129,6 @@ dotnet reqstream \
   --requirements requirements.yaml \
   --lint
 
-# Enforce requirements traceability (use in CI/CD)
-dotnet reqstream \
-  --requirements requirements.yaml \
-  --tests "artifacts/**/*.trx" \
-  --enforce
-
 # Generate requirements report
 dotnet reqstream \
   --requirements requirements.yaml \
@@ -154,7 +150,7 @@ dotnet reqstream \
 
 Before submitting requirements, verify:
 
-- [ ] All requirements have semantic IDs (`Project-Section-Feature` pattern)
+- [ ] All requirements have semantic IDs (`System-Section-Feature` pattern)
 - [ ] Every requirement links to at least one passing test
 - [ ] Platform-specific requirements use source filters (`platform@TestName`)
 - [ ] Requirements specify observable behavior (WHAT), not implementation (HOW)

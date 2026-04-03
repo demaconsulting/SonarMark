@@ -26,6 +26,13 @@ This assessment is a quality control system of the project and MUST be performed
 Upon completion create a summary in `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
 of the project consisting of:
 
+The **Result** field MUST reflect the quality validation outcome for orchestrator decision-making:
+
+- **Result: SUCCEEDED** - Only when Overall Grade is PASS (all compliance requirements met)
+- **Result: FAILED** - When Overall Grade is FAIL or NEEDS_WORK (compliance failures present)
+
+This ensures orchestrators properly halt workflows when quality gates fail.
+
 ```markdown
 # Quality Assessment Report
 
@@ -97,6 +104,13 @@ of the project consisting of:
 - Are auto-generated markdown files left unmodified? (PASS|FAIL|N/A) - [Evidence]
 - Do README.md files use absolute URLs and include concrete examples? (PASS|FAIL|N/A) - [Evidence]
 - Is documentation integrated into ReviewMark review-sets for formal review? (PASS|FAIL|N/A) - [Evidence]
+
+## Software Item Completeness: (PASS|FAIL|N/A)
+
+- Does every identified software unit have its own requirements file? (PASS|FAIL|N/A) - [Evidence]
+- Does every identified software unit have its own design document? (PASS|FAIL|N/A) - [Evidence]
+- Does every identified subsystem have its own requirements file? (PASS|FAIL|N/A) - [Evidence]
+- Does every identified subsystem have its own design document? (PASS|FAIL|N/A) - [Evidence]
 
 ## Process Compliance: (PASS|FAIL|N/A)
 
