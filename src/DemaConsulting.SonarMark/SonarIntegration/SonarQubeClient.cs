@@ -401,29 +401,36 @@ internal sealed class SonarQubeClient : IDisposable
                 break;
             }
 
-            var pageIndex = pagingElement.TryGetProperty("pageIndex", out var pageIndexElement)
-                ? pageIndexElement.GetInt32()
-                : pageNumber;
-            var pageSize = pagingElement.TryGetProperty("pageSize", out var pageSizeElement)
-                ? pageSizeElement.GetInt32()
-                : 100;
-            var total = pagingElement.TryGetProperty("total", out var totalElement)
-                ? totalElement.GetInt32()
-                : 0;
-
-            // Stop when all pages have been retrieved
-            if (total > pageIndex * pageSize)
-            {
-                pageNumber++;
-            }
-            else
+            if (!HasMorePages(pagingElement, pageNumber))
             {
                 break;
             }
+
+            pageNumber++;
         }
         while (true);
 
         return allItems;
+    }
+
+    /// <summary>
+    ///     Determines whether additional pages remain based on the paging element of a SonarQube API response.
+    /// </summary>
+    /// <param name="pagingElement">The paging JSON element from the API response.</param>
+    /// <param name="pageNumber">The current page number (used as fallback when pageIndex is absent).</param>
+    /// <returns>True if more pages remain; otherwise false.</returns>
+    private static bool HasMorePages(JsonElement pagingElement, int pageNumber)
+    {
+        var pageIndex = pagingElement.TryGetProperty("pageIndex", out var pageIndexElement)
+            ? pageIndexElement.GetInt32()
+            : pageNumber;
+        var pageSize = pagingElement.TryGetProperty("pageSize", out var pageSizeElement)
+            ? pageSizeElement.GetInt32()
+            : 100;
+        var total = pagingElement.TryGetProperty("total", out var totalElement)
+            ? totalElement.GetInt32()
+            : 0;
+        return total > pageIndex * pageSize;
     }
 
     /// <summary>

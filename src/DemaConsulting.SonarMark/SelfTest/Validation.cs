@@ -34,6 +34,11 @@ namespace DemaConsulting.SonarMark.SelfTest;
 internal static class Validation
 {
     /// <summary>
+    ///     MIME type for JSON content used in mock HTTP responses.
+    /// </summary>
+    private const string JsonContentType = "application/json";
+
+    /// <summary>
     ///     Special project key used for mock validation data.
     /// </summary>
     private const string MockProjectKey = "SonarMarkMockProject";
@@ -461,7 +466,7 @@ internal static class Validation
                     """;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                    Content = new StringContent(json, Encoding.UTF8, JsonContentType)
                 });
             }
 
@@ -493,7 +498,7 @@ internal static class Validation
                     """;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                    Content = new StringContent(json, Encoding.UTF8, JsonContentType)
                 });
             }
 
@@ -526,7 +531,7 @@ internal static class Validation
                     """;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                    Content = new StringContent(json, Encoding.UTF8, JsonContentType)
                 });
             }
 
@@ -549,7 +554,7 @@ internal static class Validation
                     """;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                    Content = new StringContent(json, Encoding.UTF8, JsonContentType)
                 });
             }
 
@@ -572,7 +577,7 @@ internal static class Validation
                     """;
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                    Content = new StringContent(json, Encoding.UTF8, JsonContentType)
                 });
             }
 
