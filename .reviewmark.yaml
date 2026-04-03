@@ -143,11 +143,6 @@ reviews:
     paths:
       - "docs/reqstream/sonar-mark/sonar-mark.yaml"
       - "docs/reqstream/sonar-mark/platform-requirements.yaml"
-      - "docs/reqstream/ots/ots-mstest.yaml"
-      - "docs/reqstream/ots/ots-reqstream.yaml"
-      - "docs/reqstream/ots/ots-buildmark.yaml"
-      - "docs/reqstream/ots/ots-versionmark.yaml"
-      - "docs/reqstream/ots/ots-sarifmark.yaml"
       - "docs/design/introduction.md"
       - "docs/design/sonar-mark/sonar-mark.md"
       - "test/**/IntegrationTests.cs"
@@ -166,4 +161,5 @@ reviews:
     title: Review of SonarMark Design
     paths:
       - "docs/reqstream/sonar-mark/sonar-mark.yaml"
+      - "README.md"
       - "docs/design/**/*.md"
