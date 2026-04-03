@@ -129,7 +129,7 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build API URL for component information
-        var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={projectKey}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/components/show?component={Uri.EscapeDataString(projectKey)}";
 
         // Fetch component data from server
         using var response = await _httpClient.GetAsync(url, cancellationToken).ConfigureAwait(false);
@@ -177,7 +177,7 @@ internal sealed class SonarQubeClient : IDisposable
             CancellationToken cancellationToken)
     {
         // Build API URL with project key and optional branch parameter
-        var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={projectKey}";
+        var url = $"{serverUrl.TrimEnd('/')}/api/qualitygates/project_status?projectKey={Uri.EscapeDataString(projectKey)}";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             url += $"&branch={Uri.EscapeDataString(branch)}";
@@ -272,7 +272,7 @@ internal sealed class SonarQubeClient : IDisposable
     {
         // Build base API URL with project key and issue statuses filter
         var baseUrl =
-            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=100";
+            $"{serverUrl.TrimEnd('/')}/api/issues/search?componentKeys={Uri.EscapeDataString(projectKey)}&issueStatuses=OPEN,CONFIRMED&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             baseUrl += $"&branch={Uri.EscapeDataString(branch)}";
@@ -339,7 +339,7 @@ internal sealed class SonarQubeClient : IDisposable
         CancellationToken cancellationToken)
     {
         // Build base API URL with project key and page size
-        var baseUrl = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={projectKey}&ps=100";
+        var baseUrl = $"{serverUrl.TrimEnd('/')}/api/hotspots/search?projectKey={Uri.EscapeDataString(projectKey)}&ps=100";
         if (!string.IsNullOrWhiteSpace(branch))
         {
             baseUrl += $"&branch={Uri.EscapeDataString(branch)}";
@@ -401,29 +401,36 @@ internal sealed class SonarQubeClient : IDisposable
                 break;
             }
 
-            var pageIndex = pagingElement.TryGetProperty("pageIndex", out var pageIndexElement)
-                ? pageIndexElement.GetInt32()
-                : pageNumber;
-            var pageSize = pagingElement.TryGetProperty("pageSize", out var pageSizeElement)
-                ? pageSizeElement.GetInt32()
-                : 100;
-            var total = pagingElement.TryGetProperty("total", out var totalElement)
-                ? totalElement.GetInt32()
-                : 0;
-
-            // Stop when all pages have been retrieved
-            if (total > pageIndex * pageSize)
-            {
-                pageNumber++;
-            }
-            else
+            if (!HasMorePages(pagingElement, pageNumber))
             {
                 break;
             }
+
+            pageNumber++;
         }
         while (true);
 
         return allItems;
+    }
+
+    /// <summary>
+    ///     Determines whether additional pages remain based on the paging element of a SonarQube API response.
+    /// </summary>
+    /// <param name="pagingElement">The paging JSON element from the API response.</param>
+    /// <param name="pageNumber">The current page number (used as fallback when pageIndex is absent).</param>
+    /// <returns>True if more pages remain; otherwise false.</returns>
+    private static bool HasMorePages(JsonElement pagingElement, int pageNumber)
+    {
+        var pageIndex = pagingElement.TryGetProperty("pageIndex", out var pageIndexElement)
+            ? pageIndexElement.GetInt32()
+            : pageNumber;
+        var pageSize = pagingElement.TryGetProperty("pageSize", out var pageSizeElement)
+            ? pageSizeElement.GetInt32()
+            : 100;
+        var total = pagingElement.TryGetProperty("total", out var totalElement)
+            ? totalElement.GetInt32()
+            : 0;
+        return total > pageIndex * pageSize;
     }
 
     /// <summary>
