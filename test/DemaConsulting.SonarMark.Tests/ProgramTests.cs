@@ -217,6 +217,42 @@ public class ProgramTests
     }
 
     /// <summary>
+    ///     Test that Run method with --report flag writes a markdown file
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithReportFile_WritesMarkdownToFile()
+    {
+        // Arrange - create a temporary report file path and a mock HTTP client factory
+        var reportPath = Path.Combine(Path.GetTempPath(), $"sonarmark_report_{Guid.NewGuid()}.md");
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
+
+        try
+        {
+            using var context = Context.Create(
+                ["--server", "https://mock.sonarqube.example", "--project-key", "test-project", "--report", reportPath],
+                mockFactory);
+
+            // Act - run the program with --report flag; it should write a markdown file
+            Program.Run(context);
+
+            // Assert - verify the report file was created and contains markdown content
+            // This test proves that --report writes a markdown file to the specified path
+            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            var content = File.ReadAllText(reportPath);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(content));
+            Assert.Contains("test-project", content);
+        }
+        finally
+        {
+            // Clean up temp file
+            if (File.Exists(reportPath))
+            {
+                File.Delete(reportPath);
+            }
+        }
+    }
+
+    /// <summary>
     ///     Creates a mock HttpClient that returns quality gate status ERROR for testing enforcement behavior.
     /// </summary>
     /// <returns>Mock HttpClient for enforcement testing.</returns>

@@ -30,8 +30,7 @@ sections:
           - SonarMark-Report-Depth
           - SonarMark-Enforce-ExitCode
         tests:
-          - IntegrationTest_VersionFlag_OutputsVersion
-          - IntegrationTest_HelpFlag_OutputsUsageInformation
-          - IntegrationTest_SilentFlag_SuppressesOutput
-          - Context_Create_NoArguments_ReturnsDefaultContext
-          - Context_Create_VersionFlag_SetsVersionProperty
+          - Cli_VersionDispatch_OutputsVersionString
+          - Cli_HelpDispatch_OutputsHelpText
+          - Cli_SilentMode_SuppressesOutput
+          - Cli_EnforceMode_SetsEnforceFlag

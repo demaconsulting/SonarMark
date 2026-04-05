@@ -260,6 +260,50 @@ public class SonarQubeClientTests
     }
 
     /// <summary>
+    ///     Test that quality gate status is correctly returned from the API response
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus()
+    {
+        // Arrange - build mock handler returning OK quality gate status
+        var handler = new MockHttpMessageHandler();
+
+        // Component show response
+        handler.EnqueueResponse(OkJson("""
+            {"component":{"key":"my-project","name":"My Project"}}
+            """));
+
+        // Quality gate status — reporting OK
+        handler.EnqueueResponse(OkJson("""
+            {"projectStatus":{"status":"OK","conditions":[]}}
+            """));
+
+        // Metrics search response
+        handler.EnqueueResponse(OkJson("""
+            {"metrics":[]}
+            """));
+
+        // Issues — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"issues":[]}
+            """));
+
+        // Hot-spots — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"hotspots":[]}
+            """));
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act - fetch quality result which retrieves quality gate status
+        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "my-project");
+
+        // Assert - quality gate status must be returned correctly from the mock response
+        Assert.AreEqual("OK", result.QualityGateStatus);
+    }
+
+    /// <summary>
     ///     Creates an <see cref="HttpResponseMessage"/> with HTTP 200 OK and JSON body content
     /// </summary>
     /// <param name="json">JSON string to use as response body</param>

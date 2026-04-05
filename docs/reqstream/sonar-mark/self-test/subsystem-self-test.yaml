@@ -20,6 +20,5 @@ sections:
           - SonarMark-Validation-TrxFormat
           - SonarMark-Validation-JUnitFormat
         tests:
-          - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
-          - Validation_Run_WithSilentContext_CompletesWithZeroExitCode
-          - Validation_Run_ReportsFourPassedTests
+          - SelfTest_RunValidation_AllTestsPass
+          - SelfTest_RunValidation_ProducesResultsFile

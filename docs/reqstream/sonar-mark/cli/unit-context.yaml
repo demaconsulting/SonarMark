@@ -16,7 +16,8 @@ sections:
           log parsing or where minimal output is preferred. It allows the tool to run without cluttering
           build logs while still performing its analysis and reporting functions.
         tests:
-          - IntegrationTest_SilentFlag_SuppressesOutput
+          - Context_Create_SilentFlag_SetsSilentProperty
+          - Context_WriteLine_SilentMode_DoesNotWriteToConsole
 
       - id: SonarMark-Cli-Log
         title: The tool shall support writing output to a log file.
