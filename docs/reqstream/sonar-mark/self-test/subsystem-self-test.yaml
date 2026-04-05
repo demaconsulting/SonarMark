@@ -15,6 +15,7 @@ sections:
           pipeline using mock HTTP responses, proving that the tool works correctly in an
           isolated environment without network access.
         children:
+          - SonarMark-Context-ResultsFile
           - SonarMark-Validation-Run
           - SonarMark-Validation-Results
           - SonarMark-Validation-TrxFormat
