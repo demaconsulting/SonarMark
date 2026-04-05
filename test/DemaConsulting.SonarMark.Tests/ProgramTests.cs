@@ -334,7 +334,8 @@ public class ProgramTests
             capturingHandler.CapturedRequests.Count > 0,
             "Expected at least one request to be made to the server");
         Assert.IsTrue(
-            capturingHandler.CapturedRequests.All(r => r.Authorization?.StartsWith("Basic ") == true),
+            capturingHandler.CapturedRequests.All(r =>
+                r.Authorization != null && r.Authorization.StartsWith("Basic ", StringComparison.Ordinal)),
             "Expected all server requests to include a Basic Authorization header");
     }
 
@@ -365,7 +366,7 @@ public class ProgramTests
         // proving that --branch is forwarded to the SonarQube API requests
         Assert.IsTrue(
             capturingHandler.CapturedRequests.Any(
-                r => r.Uri?.Contains("branch=feature-test") == true),
+                r => r.Uri != null && r.Uri.Contains("branch=feature-test", StringComparison.Ordinal)),
             "Expected at least one request URI to include the branch query parameter");
     }
 
