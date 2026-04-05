@@ -13,14 +13,11 @@ requirements.
 [TestMethod]
 public void ServiceName_MethodName_Scenario_ExpectedBehavior()
 {
-    // Arrange - (description)
-    // TODO: Set up test data, mocks, and system under test.
+    // Arrange: description of setup (omit if nothing to set up)
 
-    // Act - (description)
-    // TODO: Execute the action being tested
+    // Act: description of action (can combine with Assert when action occurs within assertion)
 
-    // Assert - (description)
-    // TODO: Verify expected outcomes and interactions
+    // Assert: description of verification
 }
 ```
 
@@ -28,7 +25,9 @@ public void ServiceName_MethodName_Scenario_ExpectedBehavior()
 
 Use descriptive test names because test names appear in requirements traceability matrices and compliance reports.
 
-- **Pattern**: `ClassName_MethodUnderTest_Scenario_ExpectedBehavior`
+- **System tests**: `{SystemName}_{Functionality}_{Scenario}_{ExpectedBehavior}`
+- **Subsystem tests**: `{SubsystemName}_{Functionality}_{Scenario}_{ExpectedBehavior}`  
+- **Unit tests**: `{ClassName}_{MethodUnderTest}_{Scenario}_{ExpectedBehavior}`
 - **Descriptive Scenarios**: Clearly describe the input condition being tested
 - **Expected Behavior**: State the expected outcome or exception
 
@@ -110,7 +109,7 @@ Use `Assert.StartsWith` instead, as it produces clearer failure messages:
 Before submitting C# tests, verify:
 
 - [ ] All tests follow AAA pattern with clear section comments
-- [ ] Test names follow `ClassName_MethodUnderTest_Scenario_ExpectedBehavior`
+- [ ] Test names follow hierarchical patterns defined in Test Naming Standards section
 - [ ] Each test verifies single, specific behavior (no shared state)
 - [ ] Both success and failure scenarios covered including edge cases
 - [ ] External dependencies mocked with NSubstitute or equivalent

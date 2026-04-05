@@ -31,20 +31,20 @@ of the project consisting of:
 
 ## Work Summary
 
-- **Files Modified**: [List of files created/modified/deleted]
-- **Languages Detected**: [Languages identified]
-- **Standards Applied**: [Standards files consulted]
+- **Files Modified**: {List of files created/modified/deleted}
+- **Languages Detected**: {Languages identified}
+- **Standards Applied**: {Standards files consulted}
 
 ## Tooling Executed
 
-- **Language Tools**: [Compilers, linters, formatters used]
-- **Compliance Tools**: [ReqStream, ReviewMark tools used]
-- **Validation Results**: [Tool execution results]
+- **Language Tools**: {Compilers, linters, formatters used}
+- **Compliance Tools**: {ReqStream, ReviewMark tools used}
+- **Validation Results**: {Tool execution results}
 
 ## Compliance Status
 
-- **Quality Checks**: [Standards quality checks status]
-- **Issues Resolved**: [Any problems encountered and resolved]
+- **Quality Checks**: {Standards quality checks status}
+- **Issues Resolved**: {Any problems encountered and resolved}
 ```
 
 Return this summary to the caller.
