@@ -294,6 +294,82 @@ public class ProgramTests
     }
 
     /// <summary>
+    ///     Test that Run method with a token passes an Authorization header to server requests.
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithToken_AddsAuthorizationHeaderToServerRequests()
+    {
+        // Arrange - create a capturing mock handler so we can inspect outgoing request headers
+        var capturingHandler = new CapturingMockHandler();
+        var mockFactory = (string? token) =>
+        {
+            // Build an HttpClient that both records requests and applies the supplied token as Basic auth
+            var httpClient = new HttpClient(capturingHandler);
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+                var authValue = Convert.ToBase64String(
+                    Encoding.ASCII.GetBytes($"{token}:"));
+                httpClient.DefaultRequestHeaders.Authorization =
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", authValue);
+            }
+
+            return new SonarQubeClient(httpClient, false);
+        };
+
+        using var context = Context.Create(
+            [
+                "--server", "https://mock.sonarqube.example",
+                "--project-key", "test-project",
+                "--token", "my-test-token",
+                "--silent"
+            ],
+            mockFactory);
+
+        // Act - run the program with a token flag
+        Program.Run(context);
+
+        // Assert - verify that all captured requests included a Basic Authorization header,
+        // proving that --token causes authentication to be forwarded to server requests
+        Assert.IsTrue(
+            capturingHandler.CapturedRequests.Count > 0,
+            "Expected at least one request to be made to the server");
+        Assert.IsTrue(
+            capturingHandler.CapturedRequests.All(r => r.Authorization?.StartsWith("Basic ") == true),
+            "Expected all server requests to include a Basic Authorization header");
+    }
+
+    /// <summary>
+    ///     Test that Run method with a branch flag includes the branch in server requests.
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithBranchFlag_IncludesBranchInServerRequest()
+    {
+        // Arrange - create a capturing mock handler so we can inspect outgoing request URIs
+        var capturingHandler = new CapturingMockHandler();
+        var mockFactory = (string? _) =>
+            new SonarQubeClient(new HttpClient(capturingHandler), false);
+
+        using var context = Context.Create(
+            [
+                "--server", "https://mock.sonarqube.example",
+                "--project-key", "test-project",
+                "--branch", "feature-test",
+                "--silent"
+            ],
+            mockFactory);
+
+        // Act - run the program with a branch flag
+        Program.Run(context);
+
+        // Assert - verify that at least one request included the branch as a query parameter,
+        // proving that --branch is forwarded to the SonarQube API requests
+        Assert.IsTrue(
+            capturingHandler.CapturedRequests.Any(
+                r => r.Uri?.Contains("branch=feature-test") == true),
+            "Expected at least one request URI to include the branch query parameter");
+    }
+
+    /// <summary>
     ///     Creates a mock HttpClient that returns quality gate status ERROR for testing enforcement behavior.
     /// </summary>
     /// <returns>Mock HttpClient for enforcement testing.</returns>
@@ -326,6 +402,78 @@ public class ProgramTests
             if (requestUri.Contains("/api/qualitygates/project_status"))
             {
                 var json = """{"projectStatus": {"status": "ERROR", "conditions": []}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/issues/search"))
+            {
+                var json = """{"issues": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/hotspots/search"))
+            {
+                var json = """{"hotspots": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/metrics/search"))
+            {
+                var json = """{"metrics": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        }
+    }
+
+    /// <summary>
+    ///     Mock HTTP handler that records requests and returns appropriate stub responses.
+    ///     Used to verify outgoing request properties (URI, headers) during Program unit tests.
+    /// </summary>
+    private sealed class CapturingMockHandler : HttpMessageHandler
+    {
+        /// <summary>
+        ///     Recorded (URI, Authorization-header) pairs for each request sent.
+        /// </summary>
+        public List<(string? Uri, string? Authorization)> CapturedRequests { get; } = [];
+
+        /// <inheritdoc/>
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            // Capture URI and Authorization header before the request is disposed
+            CapturedRequests.Add((
+                request.RequestUri?.ToString(),
+                request.Headers.Authorization?.ToString()));
+
+            var requestUri = request.RequestUri?.ToString() ?? string.Empty;
+
+            if (requestUri.Contains("/api/components/show"))
+            {
+                var json = """{"component": {"key": "test-project", "name": "Test Project"}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/qualitygates/project_status"))
+            {
+                var json = """{"projectStatus": {"status": "OK", "conditions": []}}""";
                 return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
                 {
                     Content = new StringContent(json, Encoding.UTF8, "application/json")

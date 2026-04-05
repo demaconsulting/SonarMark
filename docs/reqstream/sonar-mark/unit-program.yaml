@@ -45,7 +45,7 @@ sections:
           capability, the tool cannot fulfill its primary purpose of integrating Sonar analysis into
           development workflows.
         tests:
-          - Program_Run_WithNoArguments_OutputsBannerAndRequiresServerError
+          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
 
       - id: SonarMark-Server-Auth
         title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
@@ -54,7 +54,7 @@ sections:
           APIs. It provides better security than password-based authentication and is essential for
           automated environments where interactive authentication is not possible.
         tests:
-          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+          - Program_Run_WithToken_AddsAuthorizationHeaderToServerRequests
 
       - id: SonarMark-Server-ProjectKey
         title: The tool shall support filtering by project key.
@@ -72,7 +72,7 @@ sections:
           for multi-branch development workflows. This allows teams to check quality gates for feature
           branches, pull requests, and release branches independently.
         tests:
-          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+          - Program_Run_WithBranchFlag_IncludesBranchInServerRequest
 
       - id: SonarMark-Report-Markdown
         title: The tool shall generate markdown reports.
