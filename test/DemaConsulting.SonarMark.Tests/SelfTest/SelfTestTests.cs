@@ -36,7 +36,7 @@ public class SelfTestTests
     [TestInitialize]
     public void TestInitialize()
     {
-        _testDirectory = Path.Combine(Path.GetTempPath(), $"sonarmark_selftest_{Guid.NewGuid()}");
+        _testDirectory = Path.Combine(Path.GetTempPath(), $"sonarmark_self_test_{Guid.NewGuid()}");
         Directory.CreateDirectory(_testDirectory);
     }
 
@@ -75,7 +75,7 @@ public class SelfTestTests
     public void SelfTest_RunValidation_ProducesResultsFile()
     {
         // Arrange - configure a TRX results file path and silent output
-        var resultsPath = Path.Combine(_testDirectory, "selftest-results.trx");
+        var resultsPath = Path.Combine(_testDirectory, "self-test-results.trx");
         using var context = Context.Create(["--validate", "--silent", "--results", resultsPath]);
 
         // Act - run the full self-validation pipeline; the subsystem must write the results file
