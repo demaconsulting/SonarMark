@@ -58,11 +58,11 @@ public class SelfTestTests
     [TestMethod]
     public void SelfTest_RunValidation_AllTestsPass()
     {
-        // Arrange - silent context suppresses console output during subsystem test
-        using var context = Context.Create(["--silent"]);
+        // Arrange - configure validation mode and suppress console output during subsystem test
+        using var context = Context.Create(["--validate", "--silent"]);
 
         // Act - run the full self-validation pipeline through the Program entry point
-        Program.Run(Context.Create(["--validate", "--silent"]));
+        Program.Run(context);
 
         // Assert - all self-validation tests pass so the subsystem exit code is 0
         Assert.AreEqual(0, context.ExitCode);

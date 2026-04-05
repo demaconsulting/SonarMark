@@ -253,6 +253,47 @@ public class ProgramTests
     }
 
     /// <summary>
+    ///     Test that Run method with --report-depth flag writes a markdown file with the correct heading level.
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithReportDepth_WritesReportWithDepthHeadings()
+    {
+        // Arrange - create a temporary report file path and a mock HTTP client factory
+        var reportPath = Path.Combine(Path.GetTempPath(), $"sonarmark_report_{Guid.NewGuid()}.md");
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
+
+        try
+        {
+            using var context = Context.Create(
+                [
+                    "--server", "https://mock.sonarqube.example",
+                    "--project-key", "test-project",
+                    "--report", reportPath,
+                    "--report-depth", "2"
+                ],
+                mockFactory);
+
+            // Act - run the program with --report-depth 2; report headings must start at level 2
+            Program.Run(context);
+
+            // Assert - verify the report file uses level-2 headings (##) not level-1 headings (#)
+            // This test proves that --report-depth controls the markdown heading level in the output
+            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            var content = File.ReadAllText(reportPath);
+            Assert.Contains("## ", content);
+            Assert.IsFalse(content.StartsWith("# "), "Report must not start with a level-1 heading when --report-depth 2 is used");
+        }
+        finally
+        {
+            // Clean up temp file
+            if (File.Exists(reportPath))
+            {
+                File.Delete(reportPath);
+            }
+        }
+    }
+
+    /// <summary>
     ///     Creates a mock HttpClient that returns quality gate status ERROR for testing enforcement behavior.
     /// </summary>
     /// <returns>Mock HttpClient for enforcement testing.</returns>

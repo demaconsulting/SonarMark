@@ -92,7 +92,7 @@ sections:
           flexibility ensures reports can be integrated into various document structures without
           conflicting heading levels.
         tests:
-          - Program_Run_WithHelpFlag_OutputsBannerAndHelpText
+          - Program_Run_WithReportDepth_WritesReportWithDepthHeadings
 
       - id: SonarMark-Enforce-ExitCode
         title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
