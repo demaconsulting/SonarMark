@@ -24,7 +24,6 @@ sections:
           - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_QualityGateRetrieval
-          - IntegrationTest_EnforceFlag_IsAccepted
 
       - id: SonarMark-System-Issues
         title: The system shall retrieve issues from SonarQube/SonarCloud and include them in the report.
@@ -63,4 +62,3 @@ sections:
           - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_MarkdownReportGeneration
-          - IntegrationTest_ReportParameter_IsAccepted

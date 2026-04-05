@@ -69,28 +69,28 @@ reviews:
   - id: SonarMark-Cli
     title: Review of SonarMark CLI Subsystem
     paths:
-      - "docs/reqstream/sonar-mark/cli/subsystem-cli.yaml"
+      - "docs/reqstream/sonar-mark/cli/cli.yaml"
       - "docs/design/sonar-mark/cli/cli.md"
       - "test/**/Cli/CliTests.cs"
 
   - id: SonarMark-SonarIntegration
     title: Review of SonarMark SonarQube Integration Subsystem
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/subsystem-sonar-integration.yaml"
+      - "docs/reqstream/sonar-mark/sonar-integration/sonar-integration.yaml"
       - "docs/design/sonar-mark/sonar-integration/sonar-integration.md"
       - "test/**/SonarIntegration/SonarIntegrationTests.cs"
 
   - id: SonarMark-ReportGeneration
     title: Review of SonarMark Report Generation Subsystem
     paths:
-      - "docs/reqstream/sonar-mark/report-generation/subsystem-report-generation.yaml"
+      - "docs/reqstream/sonar-mark/report-generation/report-generation.yaml"
       - "docs/design/sonar-mark/report-generation/report-generation.md"
       - "test/**/ReportGeneration/ReportGenerationTests.cs"
 
   - id: SonarMark-SelfTest
     title: Review of SonarMark SelfTest Subsystem
     paths:
-      - "docs/reqstream/sonar-mark/self-test/subsystem-self-test.yaml"
+      - "docs/reqstream/sonar-mark/self-test/self-test.yaml"
       - "docs/design/sonar-mark/self-test/self-test.md"
       - "test/**/SelfTest/SelfTestTests.cs"
 
@@ -98,7 +98,7 @@ reviews:
   - id: SonarMark-Cli-Context
     title: Review of SonarMark Context Unit
     paths:
-      - "docs/reqstream/sonar-mark/cli/unit-context.yaml"
+      - "docs/reqstream/sonar-mark/cli/context.yaml"
       - "docs/design/sonar-mark/cli/context.md"
       - "src/**/Context.cs"
       - "test/**/ContextTests.cs"
@@ -106,7 +106,7 @@ reviews:
   - id: SonarMark-Program
     title: Review of SonarMark Program Unit
     paths:
-      - "docs/reqstream/sonar-mark/unit-program.yaml"
+      - "docs/reqstream/sonar-mark/program.yaml"
       - "docs/design/sonar-mark/program.md"
       - "src/**/Program.cs"
       - "test/**/ProgramTests.cs"
@@ -114,7 +114,7 @@ reviews:
   - id: SonarMark-SelfTest-Validation
     title: Review of SonarMark Validation Unit
     paths:
-      - "docs/reqstream/sonar-mark/self-test/unit-validation.yaml"
+      - "docs/reqstream/sonar-mark/self-test/validation.yaml"
       - "docs/design/sonar-mark/self-test/validation.md"
       - "src/**/Validation.cs"
       - "test/**/ValidationTests.cs"
@@ -122,7 +122,7 @@ reviews:
   - id: SonarMark-SonarIntegration-SonarHotSpot
     title: Review of SonarMark SonarHotSpot Unit
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/unit-sonar-hot-spot.yaml"
+      - "docs/reqstream/sonar-mark/sonar-integration/sonar-hot-spot.yaml"
       - "docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md"
       - "src/**/SonarHotSpot.cs"
       - "test/**/SonarHotSpotTests.cs"
@@ -130,7 +130,7 @@ reviews:
   - id: SonarMark-SonarIntegration-SonarIssue
     title: Review of SonarMark SonarIssue Unit
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/unit-sonar-issue.yaml"
+      - "docs/reqstream/sonar-mark/sonar-integration/sonar-issue.yaml"
       - "docs/design/sonar-mark/sonar-integration/sonar-issue.md"
       - "src/**/SonarIssue.cs"
       - "test/**/SonarIssueTests.cs"
@@ -138,7 +138,7 @@ reviews:
   - id: SonarMark-ReportGeneration-SonarQualityResult
     title: Review of SonarMark SonarQualityResult Unit
     paths:
-      - "docs/reqstream/sonar-mark/report-generation/unit-sonar-quality-result.yaml"
+      - "docs/reqstream/sonar-mark/report-generation/sonar-quality-result.yaml"
       - "docs/design/sonar-mark/report-generation/sonar-quality-result.md"
       - "src/**/SonarQualityResult.cs"
       - "test/**/SonarQualityResultTests.cs"
@@ -146,7 +146,7 @@ reviews:
   - id: SonarMark-SonarIntegration-SonarQubeClient
     title: Review of SonarMark SonarQubeClient Unit
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/unit-sonar-qube-client.yaml"
+      - "docs/reqstream/sonar-mark/sonar-integration/sonar-qube-client.yaml"
       - "docs/design/sonar-mark/sonar-integration/sonar-qube-client.md"
       - "src/**/SonarQubeClient.cs"
       - "test/**/SonarQubeClientTests.cs"
