@@ -28,8 +28,6 @@ sections:
           - SonarMark-Issue-OptionalLine
           - SonarMark-Issue-Severity
         tests:
-          - SonarMark_QualityGateRetrieval
-          - SonarMark_IssuesRetrieval
-          - SonarMark_HotSpotsRetrieval
-          - SonarQubeClient_Constructor_WithToken_SetsAuthorizationHeader
-          - SonarQubeClient_Constructor_WithoutToken_NoAuthorizationHeader
+          - SonarIntegration_FetchQualityResult_ReturnsQualityGateStatus
+          - SonarIntegration_FetchQualityResult_ReturnsIssues
+          - SonarIntegration_FetchQualityResult_ReturnsHotSpots

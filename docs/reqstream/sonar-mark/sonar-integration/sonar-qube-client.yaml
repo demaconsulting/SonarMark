@@ -16,7 +16,7 @@ sections:
           to the tool's enforcement capabilities. This information is essential for making pass/fail
           decisions in CI/CD pipelines and providing visibility into overall code quality.
         tests:
-          - SonarMark_QualityGateRetrieval
+          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
 
       - id: SonarMark-Server-Issues
         title: The tool shall fetch issues from SonarQube/SonarCloud.
@@ -25,7 +25,7 @@ sections:
           these issues allows developers to understand what needs to be fixed and provides the detailed
           information needed to improve code quality beyond just pass/fail status.
         tests:
-          - SonarMark_IssuesRetrieval
+          - SonarQubeClient_GetQualityResultByBranchAsync_IssuesPaginatedAcrossTwoPages_AccumulatesAllIssues
 
       - id: SonarMark-Server-HotSpots
         title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
@@ -34,4 +34,4 @@ sections:
           address potential security vulnerabilities. This is critical for maintaining secure applications
           and meeting security compliance requirements.
         tests:
-          - SonarMark_HotSpotsRetrieval
+          - SonarQubeClient_GetQualityResultByBranchAsync_HotSpotsPaginatedAcrossTwoPages_AccumulatesAllHotSpots

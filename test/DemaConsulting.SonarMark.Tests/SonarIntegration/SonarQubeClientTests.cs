@@ -19,7 +19,6 @@
 // SOFTWARE.
 
 using System.Net;
-using System.Text.Json;
 using DemaConsulting.SonarMark.SonarIntegration;
 
 namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
@@ -260,71 +259,50 @@ public class SonarQubeClientTests
     }
 
     /// <summary>
-    ///     Creates an <see cref="HttpResponseMessage"/> with HTTP 200 OK and JSON body content
+    ///     Test that quality gate status is correctly returned from the API response
     /// </summary>
-    /// <param name="json">JSON string to use as response body</param>
-    /// <returns>Configured HTTP response message</returns>
-    private static HttpResponseMessage OkJson(string json) =>
-        new(HttpStatusCode.OK)
-        {
-            Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json")
-        };
-
-    /// <summary>
-    ///     Test double for <see cref="HttpMessageHandler"/> that serves pre-queued responses in order
-    /// </summary>
-    private sealed class MockHttpMessageHandler : HttpMessageHandler
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus()
     {
-        /// <summary>
-        ///     Queue of responses to serve in FIFO order
-        /// </summary>
-        private readonly Queue<HttpResponseMessage> _responses = new();
+        // Arrange - build mock handler returning OK quality gate status
+        var handler = new MockHttpMessageHandler();
 
-        /// <summary>
-        ///     Enqueues a response to be returned by the next HTTP request
-        /// </summary>
-        /// <param name="response">Response to enqueue</param>
-        public void EnqueueResponse(HttpResponseMessage response) =>
-            _responses.Enqueue(response);
+        // Component show response
+        handler.EnqueueResponse(OkJson("""
+            {"component":{"key":"my-project","name":"My Project"}}
+            """));
 
-        /// <summary>
-        ///     Returns the next queued response, or throws if the queue is empty
-        /// </summary>
-        /// <param name="request">Incoming HTTP request (not used)</param>
-        /// <param name="cancellationToken">Cancellation token (not used)</param>
-        /// <returns>Next queued response</returns>
-        /// <exception cref="InvalidOperationException">Thrown when no more responses are queued</exception>
-        protected override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request,
-            CancellationToken cancellationToken)
-        {
-            // Dequeue and return the next pre-configured response
-            if (_responses.Count == 0)
-            {
-                throw new InvalidOperationException(
-                    $"MockHttpMessageHandler has no more queued responses. Request was: {request.RequestUri}");
-            }
+        // Quality gate status — reporting OK
+        handler.EnqueueResponse(OkJson("""
+            {"projectStatus":{"status":"OK","conditions":[]}}
+            """));
 
-            return Task.FromResult(_responses.Dequeue());
-        }
+        // Metrics search response
+        handler.EnqueueResponse(OkJson("""
+            {"metrics":[]}
+            """));
 
-        /// <summary>
-        ///     Disposes any responses that were queued but never dequeued
-        /// </summary>
-        /// <param name="disposing">True when called from Dispose(); false when called from finalizer</param>
-        protected override void Dispose(bool disposing)
-        {
-            // Drain and dispose any remaining queued response objects to avoid resource leaks
-            if (disposing)
-            {
-                while (_responses.Count > 0)
-                {
-                    _responses.Dequeue().Dispose();
-                }
-            }
+        // Issues — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"issues":[]}
+            """));
 
-            base.Dispose(disposing);
-        }
+        // Hot-spots — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"hotspots":[]}
+            """));
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act - fetch quality result which retrieves quality gate status
+        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "my-project");
+
+        // Assert - quality gate status must be returned correctly from the mock response
+        Assert.AreEqual("OK", result.QualityGateStatus);
     }
+
+    private static HttpResponseMessage OkJson(string json) =>
+        SonarIntegrationTestHelpers.OkJson(json);
 }
 

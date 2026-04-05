@@ -15,21 +15,21 @@
 
 includes:
   # CLI subsystem
-  - docs/reqstream/sonar-mark/cli/subsystem-cli.yaml
-  - docs/reqstream/sonar-mark/cli/unit-context.yaml
+  - docs/reqstream/sonar-mark/cli/cli.yaml
+  - docs/reqstream/sonar-mark/cli/context.yaml
   # Program unit (top-level unit, not in a subsystem)
-  - docs/reqstream/sonar-mark/unit-program.yaml
+  - docs/reqstream/sonar-mark/program.yaml
   # SonarQube Integration subsystem
-  - docs/reqstream/sonar-mark/sonar-integration/subsystem-sonar-integration.yaml
-  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-qube-client.yaml
-  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-hot-spot.yaml
-  - docs/reqstream/sonar-mark/sonar-integration/unit-sonar-issue.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/sonar-integration.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/sonar-qube-client.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/sonar-hot-spot.yaml
+  - docs/reqstream/sonar-mark/sonar-integration/sonar-issue.yaml
   # Report Generation subsystem
-  - docs/reqstream/sonar-mark/report-generation/subsystem-report-generation.yaml
-  - docs/reqstream/sonar-mark/report-generation/unit-sonar-quality-result.yaml
+  - docs/reqstream/sonar-mark/report-generation/report-generation.yaml
+  - docs/reqstream/sonar-mark/report-generation/sonar-quality-result.yaml
   # SelfTest subsystem
-  - docs/reqstream/sonar-mark/self-test/subsystem-self-test.yaml
-  - docs/reqstream/sonar-mark/self-test/unit-validation.yaml
+  - docs/reqstream/sonar-mark/self-test/self-test.yaml
+  - docs/reqstream/sonar-mark/self-test/validation.yaml
   # System-level requirements
   - docs/reqstream/sonar-mark/sonar-mark.yaml
   # Platform support requirements

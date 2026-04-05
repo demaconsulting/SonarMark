@@ -16,7 +16,8 @@ sections:
           log parsing or where minimal output is preferred. It allows the tool to run without cluttering
           build logs while still performing its analysis and reporting functions.
         tests:
-          - IntegrationTest_SilentFlag_SuppressesOutput
+          - Context_Create_SilentFlag_SetsSilentProperty
+          - Context_WriteLine_SilentMode_DoesNotWriteToConsole
 
       - id: SonarMark-Cli-Log
         title: The tool shall support writing output to a log file.
@@ -45,3 +46,14 @@ sections:
           argument parsing to enforcement logic.
         tests:
           - Context_Create_EnforceFlag_SetsEnforceProperty
+
+      - id: SonarMark-Context-ResultsFile
+        title: The tool shall accept the --results flag and expose the results file path for the validation pipeline.
+        justification: |
+          The Context unit must parse the --results argument and store the file path so that the
+          validation pipeline can write test results to the specified file. Separating argument
+          parsing (Context) from results writing (Validation) keeps each unit focused on a single
+          responsibility.
+        tests:
+          - Context_Create_ResultsFile_SetsResultsProperty
+          - Context_Create_MissingResultsFilename_ThrowsException

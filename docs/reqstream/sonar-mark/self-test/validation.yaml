@@ -16,14 +16,9 @@ sections:
           the tool itself and providing confidence in its operation before using it in production
           pipelines.
         tests:
-          - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
           - Validation_Run_WithSilentContext_CompletesWithZeroExitCode
           - Validation_Run_OutputsValidationHeader
           - Validation_Run_ReportsFourPassedTests
-          - SonarMark_QualityGateRetrieval
-          - SonarMark_IssuesRetrieval
-          - SonarMark_HotSpotsRetrieval
-          - SonarMark_MarkdownReportGeneration
 
       - id: SonarMark-Validation-Results
         title: The tool shall write validation results to test result files.
@@ -32,8 +27,6 @@ sections:
           frameworks and CI/CD tools. This enables validation outcomes to be tracked, reported, and
           integrated into build pipelines alongside other test results.
         tests:
-          - Context_Create_ResultsFile_SetsResultsProperty
-          - Context_Create_MissingResultsFilename_ThrowsException
           - Validation_Run_WithTrxResultsFile_WritesTrxFile
           - Validation_Run_WithXmlResultsFile_WritesJUnitFile
 
@@ -44,7 +37,6 @@ sections:
           Visual Studio. Supporting this format ensures compatibility with .NET development workflows
           and enables seamless integration with Azure DevOps and other Microsoft-based CI/CD systems.
         tests:
-          - Context_Create_ResultsFile_SetsResultsProperty
           - Validation_Run_WithTrxResultsFile_WritesTrxFile
 
       - id: SonarMark-Validation-JUnitFormat
@@ -54,5 +46,4 @@ sections:
           including Jenkins, GitLab CI, and GitHub Actions. Supporting this format ensures broad
           compatibility with diverse CI/CD environments beyond Microsoft ecosystems.
         tests:
-          - Context_Create_ResultsFile_SetsResultsProperty
           - Validation_Run_WithXmlResultsFile_WritesJUnitFile

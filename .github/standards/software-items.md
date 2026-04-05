@@ -18,6 +18,11 @@ Categorize all software into four primary groups:
 - **OTS Software Item**: Third-party component (library, framework, tool)
   providing functionality not developed in-house
 
+**Naming**: When names collide in hierarchy, add descriptive suffix to higher-level entity:
+
+- System: Application/Library/System (e.g. TestResults → TestResultsLibrary)
+- Subsystem: Subsystem (e.g. Linter → LinterSubsystem)
+
 # Categorization Guidelines
 
 Choose the appropriate category based on scope and testability:
