@@ -3,13 +3,13 @@
   "isRoot": true,
   "tools": {
     "dotnet-sonarscanner": {
-      "version": "11.2.0",
+      "version": "11.2.1",
       "commands": [
         "dotnet-sonarscanner"
       ]
     },
     "demaconsulting.spdxtool": {
-      "version": "2.9.0",
+      "version": "2.10.0",
       "commands": [
         "spdx-tool"
       ]
@@ -27,31 +27,31 @@
       ]
     },
     "demaconsulting.reqstream": {
-      "version": "1.5.0",
+      "version": "1.6.0",
       "commands": [
         "reqstream"
       ]
     },
     "demaconsulting.sarifmark": {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "commands": [
         "sarifmark"
       ]
     },
     "demaconsulting.buildmark": {
-      "version": "0.4.1",
+      "version": "0.5.0",
       "commands": [
         "buildmark"
       ]
     },
     "demaconsulting.versionmark": {
-      "version": "1.1.0",
+      "version": "1.2.0",
       "commands": [
         "versionmark"
       ]
     },
     "demaconsulting.reviewmark": {
-      "version": "0.2.0",
+      "version": "1.0.0",
       "commands": [
         "reviewmark"
       ]
