@@ -1,13 +1,22 @@
+---
+name: C# Testing
+description: Follow these standards when developing C# tests.
+globs: ["**/test/**/*.cs", "**/tests/**/*.cs", "**/*Tests.cs", "**/*Test.cs"]
+---
+
 # C# Testing Standards (MSTest)
 
 This document defines DEMA Consulting standards for C# test development using
 MSTest within Continuous Compliance environments.
 
-# AAA Pattern Implementation (MANDATORY)
+## Required Standards
 
-Structure all tests using Arrange-Act-Assert pattern because regulatory reviews
-require clear test logic that can be independently verified against
-requirements.
+Read these standards first before applying this standard:
+
+- **`testing-principles.md`** - Universal testing principles and dependency boundaries
+- **`csharp-language.md`** - C# language development standards
+
+# C# AAA Pattern Implementation
 
 ```csharp
 [TestMethod]
@@ -26,7 +35,7 @@ public void ServiceName_MethodName_Scenario_ExpectedBehavior()
 Use descriptive test names because test names appear in requirements traceability matrices and compliance reports.
 
 - **System tests**: `{SystemName}_{Functionality}_{Scenario}_{ExpectedBehavior}`
-- **Subsystem tests**: `{SubsystemName}_{Functionality}_{Scenario}_{ExpectedBehavior}`  
+- **Subsystem tests**: `{SubsystemName}_{Functionality}_{Scenario}_{ExpectedBehavior}`
 - **Unit tests**: `{ClassName}_{MethodUnderTest}_{Scenario}_{ExpectedBehavior}`
 - **Descriptive Scenarios**: Clearly describe the input condition being tested
 - **Expected Behavior**: State the expected outcome or exception
@@ -36,15 +45,6 @@ Use descriptive test names because test names appear in requirements traceabilit
 - `UserValidator_ValidateEmail_ValidFormat_ReturnsTrue`
 - `UserValidator_ValidateEmail_InvalidFormat_ThrowsArgumentException`
 - `PaymentProcessor_ProcessPayment_InsufficientFunds_ReturnsFailureResult`
-
-# Requirements Coverage
-
-Link tests to requirements because every requirement must have passing test evidence for compliance validation.
-
-- **ReqStream Integration**: Tests must be linkable in requirements YAML files
-- **Platform Filters**: Use source filters for platform-specific requirements (`windows@TestName`)
-- **TRX Format**: Generate test results in TRX format for ReqStream compatibility
-- **Coverage Completeness**: Test both success paths and error conditions
 
 # Mock Dependencies
 

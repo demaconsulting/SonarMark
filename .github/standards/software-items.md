@@ -1,3 +1,8 @@
+---
+name: Software Items
+description: Follow these standards when categorizing software components.
+---
+
 # Software Items Definition Standards
 
 This document defines DEMA Consulting standards for categorizing software
@@ -35,13 +40,16 @@ Choose the appropriate category based on scope and testability:
 ## Software Subsystem
 
 - Major architectural boundary (authentication, data layer, UI, communications)
+- Contains multiple software units working together
+- Typically maps to project folders or namespaces
 - Tested through subsystem integration tests
 
 ## Software Unit
 
 - Smallest independently testable component
-- Tested through unit tests with mocked dependencies
 - Typically a single class or cohesive set of functions
+- Methods within a class are NOT separate units
+- Tested through unit tests with mocked dependencies
 
 ## OTS Software Item
 

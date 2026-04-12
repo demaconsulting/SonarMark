@@ -1,3 +1,9 @@
+---
+name: Technical Documentation
+description: Follow these standards when creating technical documentation.
+globs: ["docs/**/*.md", "README.md"]
+---
+
 # Technical Documentation Standards
 
 This document defines DEMA Consulting standards for technical documentation
@@ -105,6 +111,13 @@ Write technical documentation for clarity and compliance verification:
   Outdated documentation invalidates compliance evidence.
 - **Traceable Content**: Link documentation to requirements and implementation
   where applicable for audit trails.
+
+## References Sections
+
+References in design/technical documents must point to **external specifications only**:
+
+- **INCLUDE**: Requirements documents, system specifications, program documents, standards (IEEE, ISO, etc.)
+- **NEVER INCLUDE**: Internal development standards (`.github/standards/` files) - these are agent guides
 
 # Markdown Format Requirements
 
