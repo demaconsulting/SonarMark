@@ -1,7 +1,19 @@
+---
+name: ReqStream Usage
+description: Follow these standards when managing requirements with ReqStream.
+globs: ["requirements.yaml", "docs/reqstream/**/*.yaml"]
+---
+
 # ReqStream Requirements Management Standards
 
 This document defines DEMA Consulting standards for requirements management
 using ReqStream within Continuous Compliance environments.
+
+## Required Standards
+
+Read these standards first before applying this standard:
+
+- **`software-items.md`** - Software categorization (System/Subsystem/Unit/OTS)
 
 # Core Principles
 
@@ -48,12 +60,12 @@ consistency with design documentation and enable automated tooling.
 
 # Requirement Hierarchies and Links
 
-When linking requirements between different software item levels, links MUST
-only flow downward in the hierarchy to maintain clear traceability:
+Requirements link downward only - higher-level requirements reference lower-level
+ones they decompose into:
 
 - **System requirements** → may link to subsystem or unit requirements
 - **Subsystem requirements** → may link to unit requirements within that subsystem
-- **Unit requirements** → should NOT link to higher-level requirements
+- **Unit requirements** → should NOT link upward to parent requirements
 
 This prevents circular dependencies and ensures clear hierarchical relationships
 for compliance auditing.
@@ -80,7 +92,7 @@ sections:
         justification: |
           Business rationale explaining why this requirement exists.
           Include regulatory or standard references where applicable.
-        children:  # Links to child requirements (optional)
+        children:  # Downward links to decomposed requirements (optional)
           - ChildSystem-Feature-Behavior
         tests:     # Links to test methods (required)
           - TestMethodName

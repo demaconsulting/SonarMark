@@ -1,4 +1,15 @@
+---
+name: ReviewMark Usage
+description: Follow these standards when configuring file reviews with ReviewMark.
+---
+
 # ReviewMark Usage Standard
+
+## Required Standards
+
+Read these standards first before applying this standard:
+
+- **`software-items.md`** - Software categorization (System/Subsystem/Unit/OTS)
 
 ## Purpose
 
