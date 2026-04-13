@@ -57,3 +57,14 @@ sections:
         tests:
           - Context_Create_ResultsFile_SetsResultsProperty
           - Context_Create_MissingResultsFilename_ThrowsException
+
+      - id: SonarMark-Context-ResultAlias
+        title: The tool shall accept --result as a legacy alias for --results to preserve backward compatibility.
+        justification: |
+          Existing automation scripts and CI pipelines may use --result (without the trailing 's') from
+          before the canonical --results spelling was established. Accepting the alias prevents breakage
+          for those consumers without requiring a coordinated migration, while new users are directed to
+          the canonical --results flag via documentation and help text.
+        tests:
+          - Context_Create_ResultAlias_SetsResultsProperty
+          - Context_Create_MissingResultAliasFilename_ThrowsException

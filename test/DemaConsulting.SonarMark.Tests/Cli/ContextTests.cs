@@ -461,4 +461,29 @@ public class ContextTests
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--results"]));
         Assert.Contains("--results requires a results filename argument", ex.Message);
     }
+
+    /// <summary>
+    ///     Test that --result (legacy alias) sets the ResultsFile property.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_ResultAlias_SetsResultsProperty()
+    {
+        // Act
+        using var context = Context.Create(["--result", "results.trx"]);
+
+        // Assert
+        Assert.AreEqual("results.trx", context.ResultsFile);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test that --result (legacy alias) requires a filename argument.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingResultAliasFilename_ThrowsException()
+    {
+        // Act/Assert
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--result"]));
+        Assert.Contains("--result requires a results filename argument", ex.Message);
+    }
 }
