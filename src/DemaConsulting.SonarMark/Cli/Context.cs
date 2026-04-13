@@ -337,6 +337,8 @@ internal sealed class Context : IDisposable
                     Branch = GetRequiredStringArgument(arg, args, index, "a branch name argument");
                     return index + 1;
 
+                // Accept --result as a legacy alias so older scripts continue working
+                case "--result":
                 case "--results":
                     ResultsFile = GetRequiredStringArgument(arg, args, index, "a results filename argument");
                     return index + 1;

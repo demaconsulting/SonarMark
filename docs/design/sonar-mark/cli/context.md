@@ -50,3 +50,16 @@ Using `IDisposable` rather than a finalizer is appropriate because the resource
 - `SonarMark-Validation-JUnitFormat` — JUnit XML file extension is accepted by `ResultsFile`
 - `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
 - `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
+- `SonarMark-Context-ResultAlias` — `--result` is accepted as a legacy alias for `--results`
+
+## Backward Compatibility
+
+### Legacy `--result` Alias
+
+The `ArgumentParser` accepts `--result` as a fall-through case immediately before `--results`
+in the switch statement. Both spellings invoke the same `GetRequiredStringArgument` call and
+set the same `ResultsFile` property, so downstream code is unaffected.
+
+This alias is intentionally omitted from help text and user-facing documentation because it
+exists only to avoid breaking existing automation scripts that pre-date the canonical
+`--results` spelling. New users and new scripts should always use `--results`.
