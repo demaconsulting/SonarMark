@@ -68,3 +68,17 @@ sections:
         tests:
           - Context_Create_ResultAlias_SetsResultsProperty
           - Context_Create_MissingResultAliasFilename_ThrowsException
+
+      - id: SonarMark-Context-Depth
+        title: The tool shall accept --depth as the primary depth option, with --report-depth as a deprecated alias.
+        justification: |
+          The --depth flag is the canonical spelling for configuring the markdown header depth of the
+          generated report. The --report-depth spelling is retained as a deprecated alias so that
+          existing automation scripts continue to work without modification. New users and new scripts
+          should use --depth. The Context unit parses both spellings and stores the value in the same
+          ReportDepth property so downstream code is unaffected by the alias.
+        tests:
+          - Context_Create_Depth_SetsReportDepthProperty
+          - Context_Create_MissingDepth_ThrowsException
+          - Context_Create_InvalidDepth_ThrowsException
+          - Context_Create_ReportDepthAlias_StillWorks
