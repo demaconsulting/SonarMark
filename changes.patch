@@ -1,0 +1,481 @@
+From 1389484c2be77fa7d6d6672e50ea0b948984212f Mon Sep 17 00:00:00 2001
+From: Developer Agent <agent@dema-consulting.com>
+Date: Tue, 14 Apr 2026 03:06:59 +0000
+Subject: [PATCH 1/2] Add --depth as primary option, keep --report-depth as
+ deprecated alias
+
+- Add '--depth' as the primary CLI option for setting markdown header depth
+- Keep '--report-depth' as a backwards-compatible alias (deprecated)
+- Update help text and documentation to show '--depth' as primary
+- Make Validation.cs PrintValidationHeader respect context.ReportDepth
+- Add unit tests for '--depth' in ContextTests, ValidationTests, ProgramTests
+- Add integration tests for '--depth' error cases
+- Add SonarMark-Validation-Depth requirement with test coverage
+- Update requirements traceability in program.yaml, validation.yaml, self-test.yaml
+
+Co-authored-by: Malcolmnixon <1863707+Malcolmnixon@users.noreply.github.com>
+---
+ README.md                                     |  3 +-
+ docs/reqstream/sonar-mark/program.yaml        |  1 +
+ .../sonar-mark/self-test/self-test.yaml       |  1 +
+ .../sonar-mark/self-test/validation.yaml      | 10 +++
+ docs/user_guide/introduction.md               |  8 ++-
+ src/DemaConsulting.SonarMark/Cli/Context.cs   |  1 +
+ src/DemaConsulting.SonarMark/Program.cs       |  3 +-
+ .../SelfTest/Validation.cs                    |  2 +-
+ .../Cli/ContextTests.cs                       | 50 +++++++++++++++
+ .../IntegrationTests.cs                       | 63 +++++++++++++++++++
+ .../ProgramTests.cs                           | 42 +++++++++++++
+ .../SelfTest/ValidationTests.cs               | 27 ++++++++
+ 12 files changed, 205 insertions(+), 6 deletions(-)
+
+diff --git a/README.md b/README.md
+index 0f08144..6d44a16 100644
+--- a/README.md
++++ b/README.md
+@@ -96,7 +96,8 @@ Options:
+   --branch <name>            Branch name to query (default: main branch)
+   --token <token>            Personal access token for SonarQube/SonarCloud
+   --report <file>            Export quality results to markdown file
+-  --report-depth <depth>     Markdown header depth for report (default: 1)
++  --depth <depth>            Markdown header depth for report (default: 1)
++  --report-depth <depth>     Alias for --depth (deprecated)
+ ```
+ 
+ ### Quick Start Examples
+diff --git a/docs/reqstream/sonar-mark/program.yaml b/docs/reqstream/sonar-mark/program.yaml
+index 774ecf1..caaaeee 100644
+--- a/docs/reqstream/sonar-mark/program.yaml
++++ b/docs/reqstream/sonar-mark/program.yaml
+@@ -93,6 +93,7 @@ sections:
+           conflicting heading levels.
+         tests:
+           - Program_Run_WithReportDepth_WritesReportWithDepthHeadings
++          - Program_Run_WithDepth_WritesReportWithDepthHeadings
+ 
+       - id: SonarMark-Enforce-ExitCode
+         title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
+diff --git a/docs/reqstream/sonar-mark/self-test/self-test.yaml b/docs/reqstream/sonar-mark/self-test/self-test.yaml
+index 75dcab5..926316d 100644
+--- a/docs/reqstream/sonar-mark/self-test/self-test.yaml
++++ b/docs/reqstream/sonar-mark/self-test/self-test.yaml
+@@ -17,6 +17,7 @@ sections:
+         children:
+           - SonarMark-Context-ResultsFile
+           - SonarMark-Validation-Run
++          - SonarMark-Validation-Depth
+           - SonarMark-Validation-Results
+           - SonarMark-Validation-TrxFormat
+           - SonarMark-Validation-JUnitFormat
+diff --git a/docs/reqstream/sonar-mark/self-test/validation.yaml b/docs/reqstream/sonar-mark/self-test/validation.yaml
+index 8c56b0b..532b938 100644
+--- a/docs/reqstream/sonar-mark/self-test/validation.yaml
++++ b/docs/reqstream/sonar-mark/self-test/validation.yaml
+@@ -20,6 +20,16 @@ sections:
+           - Validation_Run_OutputsValidationHeader
+           - Validation_Run_ReportsFourPassedTests
+ 
++      - id: SonarMark-Validation-Depth
++        title: The self-validation report shall respect the configured report depth.
++        justification: |
++          When the user specifies a report depth via --depth, the self-validation report header
++          should use the appropriate markdown heading level. This ensures consistency between
++          the regular analysis report and the self-validation report, and allows users to embed
++          the self-validation report at any heading level in their documentation.
++        tests:
++          - Validation_Run_WithDepth2_OutputsLevel2Header
++
+       - id: SonarMark-Validation-Results
+         title: The tool shall write validation results to test result files.
+         justification: |
+diff --git a/docs/user_guide/introduction.md b/docs/user_guide/introduction.md
+index fadb1ed..0b49e35 100644
+--- a/docs/user_guide/introduction.md
++++ b/docs/user_guide/introduction.md
+@@ -232,16 +232,18 @@ sonarmark --server https://sonarcloud.io \
+   --report quality-report.md
+ ```
+ 
+-### `--report-depth <depth>`
++### `--depth <depth>`
+ 
+ Set the markdown header depth for the report. Default is 1. Use this when embedding the report in larger documents.
+ 
++> **Note:** `--report-depth` is a deprecated alias for `--depth` and is kept for backwards compatibility.
++
+ ```bash
+ # Use level 2 headers (##) instead of level 1 (#)
+ sonarmark --server https://sonarcloud.io \
+   --project-key my-org_my-project \
+   --report quality-report.md \
+-  --report-depth 2
++  --depth 2
+ ```
+ 
+ ## Quality Enforcement
+@@ -529,7 +531,7 @@ Each test proves specific functionality works correctly:
+ ## Report Best Practices
+ 
+ - **Use meaningful filenames**: Include timestamps, branch names, or build numbers in report filenames
+-- **Adjust header depth**: Use `--report-depth` when embedding reports in larger documents
++- **Adjust header depth**: Use `--depth` when embedding reports in larger documents
+ - **Combine with logging**: Use `--log` to capture detailed execution information
+ 
+ ## Performance
+diff --git a/src/DemaConsulting.SonarMark/Cli/Context.cs b/src/DemaConsulting.SonarMark/Cli/Context.cs
+index 2830e88..b37302a 100644
+--- a/src/DemaConsulting.SonarMark/Cli/Context.cs
++++ b/src/DemaConsulting.SonarMark/Cli/Context.cs
+@@ -317,6 +317,7 @@ internal sealed class Context : IDisposable
+                     ReportFile = GetRequiredStringArgument(arg, args, index, "a filename argument");
+                     return index + 1;
+ 
++                case "--depth":
+                 case "--report-depth":
+                     ReportDepth = GetRequiredIntArgument(arg, args, index);
+                     return index + 1;
+diff --git a/src/DemaConsulting.SonarMark/Program.cs b/src/DemaConsulting.SonarMark/Program.cs
+index 39a32f3..c07f8e1 100644
+--- a/src/DemaConsulting.SonarMark/Program.cs
++++ b/src/DemaConsulting.SonarMark/Program.cs
+@@ -149,7 +149,8 @@ internal static class Program
+         context.WriteLine("  --branch <name>            Branch name to query (default: main branch)");
+         context.WriteLine("  --token <token>            Personal access token for SonarQube/SonarCloud");
+         context.WriteLine("  --report <file>            Export quality results to markdown file");
+-        context.WriteLine("  --report-depth <depth>     Markdown header depth for report (default: 1)");
++        context.WriteLine("  --depth <depth>            Markdown header depth for report (default: 1)");
++        context.WriteLine("  --report-depth <depth>     Alias for --depth (deprecated)");
+     }
+ 
+     /// <summary>
+diff --git a/src/DemaConsulting.SonarMark/SelfTest/Validation.cs b/src/DemaConsulting.SonarMark/SelfTest/Validation.cs
+index 636f38d..190d439 100644
+--- a/src/DemaConsulting.SonarMark/SelfTest/Validation.cs
++++ b/src/DemaConsulting.SonarMark/SelfTest/Validation.cs
+@@ -108,7 +108,7 @@ internal static class Validation
+     /// <param name="context">The context for output.</param>
+     private static void PrintValidationHeader(Context context)
+     {
+-        context.WriteLine("# DEMA Consulting SonarMark");
++        context.WriteLine($"{new string('#', context.ReportDepth)} DEMA Consulting SonarMark");
+         context.WriteLine("");
+         context.WriteLine("| Information         | Value                                              |");
+         context.WriteLine("| :------------------ | :------------------------------------------------- |");
+diff --git a/test/DemaConsulting.SonarMark.Tests/Cli/ContextTests.cs b/test/DemaConsulting.SonarMark.Tests/Cli/ContextTests.cs
+index 4f1e33d..8f884f1 100644
+--- a/test/DemaConsulting.SonarMark.Tests/Cli/ContextTests.cs
++++ b/test/DemaConsulting.SonarMark.Tests/Cli/ContextTests.cs
+@@ -205,6 +205,56 @@ public class ContextTests
+         Assert.Contains("--report-depth requires a positive integer", ex3.Message);
+     }
+ 
++    /// <summary>
++    ///     Test creating a context with --depth (primary option).
++    /// </summary>
++    [TestMethod]
++    public void Context_Create_Depth_SetsReportDepthProperty()
++    {
++        using var context = Context.Create(["--depth", "3"]);
++
++        Assert.AreEqual(3, context.ReportDepth);
++        Assert.AreEqual(0, context.ExitCode);
++    }
++
++    /// <summary>
++    ///     Test creating a context with missing --depth value.
++    /// </summary>
++    [TestMethod]
++    public void Context_Create_MissingDepth_ThrowsException()
++    {
++        var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth"]));
++        Assert.Contains("--depth requires a depth argument", ex.Message);
++    }
++
++    /// <summary>
++    ///     Test creating a context with invalid --depth value.
++    /// </summary>
++    [TestMethod]
++    public void Context_Create_InvalidDepth_ThrowsException()
++    {
++        var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
++        Assert.Contains("--depth requires a positive integer", ex1.Message);
++
++        var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "0"]));
++        Assert.Contains("--depth requires a positive integer", ex2.Message);
++
++        var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "-1"]));
++        Assert.Contains("--depth requires a positive integer", ex3.Message);
++    }
++
++    /// <summary>
++    ///     Test that --report-depth is still accepted as a backwards-compatible alias.
++    /// </summary>
++    [TestMethod]
++    public void Context_Create_ReportDepthAlias_StillWorks()
++    {
++        using var context = Context.Create(["--report-depth", "2"]);
++
++        Assert.AreEqual(2, context.ReportDepth);
++        Assert.AreEqual(0, context.ExitCode);
++    }
++
+     /// <summary>
+     ///     Test creating a context with token.
+     /// </summary>
+diff --git a/test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs b/test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs
+index 6022f4d..14d41a0 100644
+--- a/test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs
++++ b/test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs
+@@ -252,6 +252,69 @@ public class IntegrationTests
+         Assert.Contains("--report-depth requires a positive integer", output);
+     }
+ 
++    /// <summary>
++    ///     Test that --depth without value shows error
++    /// </summary>
++    [TestMethod]
++    public void IntegrationTest_DepthWithoutValue_ShowsError()
++    {
++        // Run the application with --depth but no value
++        var exitCode = Runner.Run(
++            out var output,
++            "dotnet",
++            _dllPath,
++            "--depth");
++
++        // Verify error exit code
++        Assert.AreEqual(1, exitCode);
++
++        // Verify that the error message mentions --depth
++        Assert.Contains("Error:", output);
++        Assert.Contains("--depth requires a depth argument", output);
++    }
++
++    /// <summary>
++    ///     Test that --depth with invalid value shows error
++    /// </summary>
++    [TestMethod]
++    public void IntegrationTest_DepthWithInvalidValue_ShowsError()
++    {
++        // Run the application with --depth and invalid value
++        var exitCode = Runner.Run(
++            out var output,
++            "dotnet",
++            _dllPath,
++            "--depth", "invalid");
++
++        // Verify error exit code
++        Assert.AreEqual(1, exitCode);
++
++        // Verify that the error message mentions --depth
++        Assert.Contains("Error:", output);
++        Assert.Contains("--depth requires a positive integer", output);
++    }
++
++    /// <summary>
++    ///     Test that --depth with zero shows error
++    /// </summary>
++    [TestMethod]
++    public void IntegrationTest_DepthWithZero_ShowsError()
++    {
++        // Run the application with --depth 0
++        var exitCode = Runner.Run(
++            out var output,
++            "dotnet",
++            _dllPath,
++            "--depth", "0");
++
++        // Verify error exit code
++        Assert.AreEqual(1, exitCode);
++
++        // Verify that the error message mentions --depth
++        Assert.Contains("Error:", output);
++        Assert.Contains("--depth requires a positive integer", output);
++    }
++
+     /// <summary>
+     ///     Test that token parameter is accepted
+     /// </summary>
+diff --git a/test/DemaConsulting.SonarMark.Tests/ProgramTests.cs b/test/DemaConsulting.SonarMark.Tests/ProgramTests.cs
+index f2c5059..23ce813 100644
+--- a/test/DemaConsulting.SonarMark.Tests/ProgramTests.cs
++++ b/test/DemaConsulting.SonarMark.Tests/ProgramTests.cs
+@@ -293,6 +293,48 @@ public class ProgramTests
+         }
+     }
+ 
++    /// <summary>
++    ///     Test that Run method with --depth flag (primary option) writes a markdown file with the correct heading level.
++    /// </summary>
++    [TestMethod]
++    public void Program_Run_WithDepth_WritesReportWithDepthHeadings()
++    {
++        // Arrange - create a temporary report file path and a mock HTTP client factory
++        var reportPath = Path.Combine(Path.GetTempPath(), $"sonarmark_report_{Guid.NewGuid()}.md");
++        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
++
++        try
++        {
++            using var context = Context.Create(
++                [
++                    "--server", "https://mock.sonarqube.example",
++                    "--project-key", "test-project",
++                    "--report", reportPath,
++                    "--depth", "2"
++                ],
++                mockFactory);
++
++            // Act - run the program with --depth 2; report headings must start at level 2
++            Program.Run(context);
++
++            // Assert - the report file must exist and contain level-2 headings
++            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
++            var content = File.ReadAllText(reportPath);
++            Assert.Contains("## ", content);
++
++            // This test proves that --depth controls the markdown heading level in the output
++            Assert.IsFalse(content.StartsWith("# "), "Report must not start with a level-1 heading when --depth 2 is used");
++        }
++        finally
++        {
++            // Clean up temp file
++            if (File.Exists(reportPath))
++            {
++                File.Delete(reportPath);
++            }
++        }
++    }
++
+     /// <summary>
+     ///     Test that Run method with a token passes an Authorization header to server requests.
+     /// </summary>
+diff --git a/test/DemaConsulting.SonarMark.Tests/SelfTest/ValidationTests.cs b/test/DemaConsulting.SonarMark.Tests/SelfTest/ValidationTests.cs
+index 688b19e..38ecd7a 100644
+--- a/test/DemaConsulting.SonarMark.Tests/SelfTest/ValidationTests.cs
++++ b/test/DemaConsulting.SonarMark.Tests/SelfTest/ValidationTests.cs
+@@ -110,6 +110,33 @@ public class ValidationTests
+         }
+     }
+ 
++    /// <summary>
++    ///     Test that Validation.Run respects the --depth option for the validation report header.
++    /// </summary>
++    [TestMethod]
++    public void Validation_Run_WithDepth2_OutputsLevel2Header()
++    {
++        // Arrange - capture stdout to verify header uses depth-2 heading
++        var originalOut = Console.Out;
++        using var output = new StringWriter();
++        Console.SetOut(output);
++
++        try
++        {
++            // Act - run self-validation with depth=2
++            using var context = Context.Create(["--depth", "2"]);
++            Validation.Run(context);
++
++            // Assert - header must use ## (level-2) heading
++            var outputText = output.ToString();
++            Assert.Contains("## DEMA Consulting SonarMark", outputText);
++        }
++        finally
++        {
++            Console.SetOut(originalOut);
++        }
++    }
++
+     /// <summary>
+     ///     Test that Validation.Run reports exactly 4 passed tests and 0 failures.
+     /// </summary>
+-- 
+2.53.0
+
+
+From ef36a1871e3b67d21368966c7af59113d5070cbf Mon Sep 17 00:00:00 2001
+From: Developer Agent <agent@dema-consulting.com>
+Date: Tue, 14 Apr 2026 03:24:13 +0000
+Subject: [PATCH 2/2] Add SonarMark-Context-Depth requirement and update design
+ docs
+
+Co-authored-by: Malcolmnixon <1863707+Malcolmnixon@users.noreply.github.com>
+---
+ docs/design/sonar-mark/cli/context.md          | 13 +++++++++++++
+ docs/design/sonar-mark/self-test/validation.md |  1 +
+ docs/reqstream/sonar-mark/cli/cli.yaml         |  1 +
+ docs/reqstream/sonar-mark/cli/context.yaml     | 14 ++++++++++++++
+ 4 files changed, 29 insertions(+)
+
+diff --git a/docs/design/sonar-mark/cli/context.md b/docs/design/sonar-mark/cli/context.md
+index 23a9d7d..13009db 100644
+--- a/docs/design/sonar-mark/cli/context.md
++++ b/docs/design/sonar-mark/cli/context.md
+@@ -51,6 +51,8 @@ Using `IDisposable` rather than a finalizer is appropriate because the resource
+ - `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
+ - `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
+ - `SonarMark-Context-ResultAlias` — `--result` is accepted as a legacy alias for `--results`
++- `SonarMark-Report-Depth` — `ReportDepth` property stores the parsed header depth value
++- `SonarMark-Context-Depth` — `--depth` is the canonical flag; `--report-depth` is a deprecated alias
+ 
+ ## Backward Compatibility
+ 
+@@ -63,3 +65,14 @@ set the same `ResultsFile` property, so downstream code is unaffected.
+ This alias is intentionally omitted from help text and user-facing documentation because it
+ exists only to avoid breaking existing automation scripts that pre-date the canonical
+ `--results` spelling. New users and new scripts should always use `--results`.
++
++### Legacy `--report-depth` Alias
++
++The `ArgumentParser` accepts `--report-depth` as a fall-through case immediately before
++`--depth` in the switch statement. Both spellings invoke the same `GetRequiredIntArgument`
++call and set the same `ReportDepth` property, so downstream code is unaffected.
++
++`--report-depth` is retained for backwards compatibility with existing automation scripts
++that pre-date the canonical `--depth` spelling. The help text and user-facing documentation
++now reference `--depth` as the primary option and note that `--report-depth` is deprecated.
++New users and new scripts should always use `--depth`.
+diff --git a/docs/design/sonar-mark/self-test/validation.md b/docs/design/sonar-mark/self-test/validation.md
+index a678d77..be49b1c 100644
+--- a/docs/design/sonar-mark/self-test/validation.md
++++ b/docs/design/sonar-mark/self-test/validation.md
+@@ -41,3 +41,4 @@ added or removed independently.
+ - `SonarMark-Validation-Results` — writes results to the file specified by `--results`
+ - `SonarMark-Validation-TrxFormat` — writes TRX format when the results file has a `.trx` extension
+ - `SonarMark-Validation-JUnitFormat` — writes JUnit XML when the results file has a `.xml` extension
++- `SonarMark-Validation-Depth` — `PrintValidationHeader` uses `context.ReportDepth` to set heading level
+diff --git a/docs/reqstream/sonar-mark/cli/cli.yaml b/docs/reqstream/sonar-mark/cli/cli.yaml
+index 489153f..07e0aa9 100644
+--- a/docs/reqstream/sonar-mark/cli/cli.yaml
++++ b/docs/reqstream/sonar-mark/cli/cli.yaml
+@@ -28,6 +28,7 @@ sections:
+           - SonarMark-Server-Branch
+           - SonarMark-Report-Markdown
+           - SonarMark-Report-Depth
++          - SonarMark-Context-Depth
+           - SonarMark-Enforce-ExitCode
+         tests:
+           - Cli_VersionDispatch_OutputsVersionString
+diff --git a/docs/reqstream/sonar-mark/cli/context.yaml b/docs/reqstream/sonar-mark/cli/context.yaml
+index 2f61c75..20a6e69 100644
+--- a/docs/reqstream/sonar-mark/cli/context.yaml
++++ b/docs/reqstream/sonar-mark/cli/context.yaml
+@@ -68,3 +68,17 @@ sections:
+         tests:
+           - Context_Create_ResultAlias_SetsResultsProperty
+           - Context_Create_MissingResultAliasFilename_ThrowsException
++
++      - id: SonarMark-Context-Depth
++        title: The tool shall accept --depth as the primary depth option, with --report-depth as a deprecated alias.
++        justification: |
++          The --depth flag is the canonical spelling for configuring the markdown header depth of the
++          generated report. The --report-depth spelling is retained as a deprecated alias so that
++          existing automation scripts continue to work without modification. New users and new scripts
++          should use --depth. The Context unit parses both spellings and stores the value in the same
++          ReportDepth property so downstream code is unaffected by the alias.
++        tests:
++          - Context_Create_Depth_SetsReportDepthProperty
++          - Context_Create_MissingDepth_ThrowsException
++          - Context_Create_InvalidDepth_ThrowsException
++          - Context_Create_ReportDepthAlias_StillWorks
+-- 
+2.53.0
+
