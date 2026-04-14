@@ -217,7 +217,7 @@ internal static class Program
             context.WriteLine($"Writing quality report to {context.ReportFile}...");
             try
             {
-                var markdown = qualityResult.ToMarkdown(context.ReportDepth);
+                var markdown = qualityResult.ToMarkdown(context.Depth);
                 File.WriteAllText(context.ReportFile, markdown);
                 context.WriteLine("Quality report generated successfully.");
             }

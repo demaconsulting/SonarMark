@@ -45,5 +45,5 @@ before attempting any network call. Missing required parameters are reported via
 - `SonarMark-Server-ProjectKey` — `ProcessSonarAnalysis` validates the `--project-key` parameter
 - `SonarMark-Server-Branch` — branch is passed through to `GetQualityResultByBranchAsync`
 - `SonarMark-Report-Markdown` — `File.WriteAllText` writes the markdown report when `--report` is set
-- `SonarMark-Report-Depth` — `context.ReportDepth` is passed to `ToMarkdown` and shown in help text
+- `SonarMark-Report-Depth` — `context.Depth` is passed to `ToMarkdown` and shown in help text
 - `SonarMark-Enforce-ExitCode` — `context.ExitCode` is returned from `Main`

@@ -76,9 +76,9 @@ sections:
           generated report. The --report-depth spelling is retained as a deprecated alias so that
           existing automation scripts continue to work without modification. New users and new scripts
           should use --depth. The Context unit parses both spellings and stores the value in the same
-          ReportDepth property so downstream code is unaffected by the alias.
+          Depth property so downstream code is unaffected by the alias.
         tests:
-          - Context_Create_Depth_SetsReportDepthProperty
+          - Context_Create_Depth_SetsDepthProperty
           - Context_Create_MissingDepth_ThrowsException
           - Context_Create_InvalidDepth_ThrowsException
           - Context_Create_ReportDepthAlias_StillWorks

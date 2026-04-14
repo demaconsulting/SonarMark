@@ -67,7 +67,7 @@ public class ContextTests
         Assert.IsFalse(context.Silent);
         Assert.IsFalse(context.Validate);
         Assert.IsNull(context.ReportFile);
-        Assert.AreEqual(1, context.ReportDepth);
+        Assert.AreEqual(1, context.Depth);
         Assert.IsNull(context.Token);
         Assert.IsNull(context.Server);
         Assert.IsNull(context.ProjectKey);
@@ -175,7 +175,7 @@ public class ContextTests
     {
         using var context = Context.Create(["--report-depth", "3"]);
 
-        Assert.AreEqual(3, context.ReportDepth);
+        Assert.AreEqual(3, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
 
@@ -209,11 +209,11 @@ public class ContextTests
     ///     Test creating a context with --depth (primary option).
     /// </summary>
     [TestMethod]
-    public void Context_Create_Depth_SetsReportDepthProperty()
+    public void Context_Create_Depth_SetsDepthProperty()
     {
         using var context = Context.Create(["--depth", "3"]);
 
-        Assert.AreEqual(3, context.ReportDepth);
+        Assert.AreEqual(3, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
 
@@ -251,7 +251,7 @@ public class ContextTests
     {
         using var context = Context.Create(["--report-depth", "2"]);
 
-        Assert.AreEqual(2, context.ReportDepth);
+        Assert.AreEqual(2, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
 

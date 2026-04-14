@@ -108,7 +108,7 @@ internal static class Validation
     /// <param name="context">The context for output.</param>
     private static void PrintValidationHeader(Context context)
     {
-        context.WriteLine($"{new string('#', context.ReportDepth)} DEMA Consulting SonarMark");
+        context.WriteLine($"{new string('#', context.Depth)} DEMA Consulting SonarMark");
         context.WriteLine("");
         context.WriteLine("| Information         | Value                                              |");
         context.WriteLine("| :------------------ | :------------------------------------------------- |");

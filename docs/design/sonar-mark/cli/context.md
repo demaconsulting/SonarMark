@@ -51,7 +51,7 @@ Using `IDisposable` rather than a finalizer is appropriate because the resource
 - `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
 - `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
 - `SonarMark-Context-ResultAlias` — `--result` is accepted as a legacy alias for `--results`
-- `SonarMark-Report-Depth` — `ReportDepth` property stores the parsed header depth value
+- `SonarMark-Report-Depth` — `Depth` property stores the parsed header depth value
 - `SonarMark-Context-Depth` — `--depth` is the canonical flag; `--report-depth` is a deprecated alias
 
 ## Backward Compatibility
@@ -70,7 +70,7 @@ exists only to avoid breaking existing automation scripts that pre-date the cano
 
 The `ArgumentParser` accepts `--report-depth` as a fall-through case immediately before
 `--depth` in the switch statement. Both spellings invoke the same `GetRequiredIntArgument`
-call and set the same `ReportDepth` property, so downstream code is unaffected.
+call and set the same `Depth` property, so downstream code is unaffected.
 
 `--report-depth` is retained for backwards compatibility with existing automation scripts
 that pre-date the canonical `--depth` spelling. The help text and user-facing documentation

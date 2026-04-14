@@ -19,5 +19,5 @@ configurable heading depth (1-6).
 ## Interactions
 
 1. `SonarQubeClient.GetQualityResultByBranchAsync` returns a populated `SonarQualityResult`
-2. `Program.ProcessSonarAnalysis` calls `SonarQualityResult.ToMarkdown(context.ReportDepth)`
+2. `Program.ProcessSonarAnalysis` calls `SonarQualityResult.ToMarkdown(context.Depth)`
 3. The resulting markdown is written to the file specified by `--report`
