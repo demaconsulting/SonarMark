@@ -168,10 +168,10 @@ public class ContextTests
     }
 
     /// <summary>
-    ///     Test creating a context with report depth.
+    ///     Test that the deprecated --report-depth flag sets the Depth property.
     /// </summary>
     [TestMethod]
-    public void Context_Create_ReportDepth_SetsReportDepthProperty()
+    public void Context_Create_ReportDepthAlias_SetsDepthProperty()
     {
         using var context = Context.Create(["--report-depth", "3"]);
 
@@ -196,13 +196,16 @@ public class ContextTests
     public void Context_Create_InvalidReportDepth_ThrowsException()
     {
         var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "invalid"]));
-        Assert.Contains("--report-depth requires a positive integer", ex1.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex1.Message);
 
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "0"]));
-        Assert.Contains("--report-depth requires a positive integer", ex2.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex2.Message);
 
         var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "-1"]));
-        Assert.Contains("--report-depth requires a positive integer", ex3.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex3.Message);
+
+        var ex4 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "7"]));
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex4.Message);
     }
 
     /// <summary>
@@ -234,13 +237,16 @@ public class ContextTests
     public void Context_Create_InvalidDepth_ThrowsException()
     {
         var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
-        Assert.Contains("--depth requires a positive integer", ex1.Message);
+        Assert.Contains("--depth requires a depth between 1 and 6", ex1.Message);
 
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "0"]));
-        Assert.Contains("--depth requires a positive integer", ex2.Message);
+        Assert.Contains("--depth requires a depth between 1 and 6", ex2.Message);
 
         var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "-1"]));
-        Assert.Contains("--depth requires a positive integer", ex3.Message);
+        Assert.Contains("--depth requires a depth between 1 and 6", ex3.Message);
+
+        var ex4 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "7"]));
+        Assert.Contains("--depth requires a depth between 1 and 6", ex4.Message);
     }
 
     /// <summary>

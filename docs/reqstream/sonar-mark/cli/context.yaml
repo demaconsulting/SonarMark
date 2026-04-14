@@ -81,4 +81,5 @@ sections:
           - Context_Create_Depth_SetsDepthProperty
           - Context_Create_MissingDepth_ThrowsException
           - Context_Create_InvalidDepth_ThrowsException
+          - Context_Create_ReportDepthAlias_SetsDepthProperty
           - Context_Create_ReportDepthAlias_StillWorks

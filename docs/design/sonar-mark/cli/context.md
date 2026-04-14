@@ -68,7 +68,7 @@ exists only to avoid breaking existing automation scripts that pre-date the cano
 
 ### Legacy `--report-depth` Alias
 
-The `ArgumentParser` accepts `--report-depth` as a fall-through case immediately before
+The `ArgumentParser` accepts `--report-depth` as a fall-through case immediately after
 `--depth` in the switch statement. Both spellings invoke the same `GetRequiredIntArgument`
 call and set the same `Depth` property, so downstream code is unaffected.
 

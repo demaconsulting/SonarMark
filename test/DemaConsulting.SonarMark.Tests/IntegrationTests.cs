@@ -228,7 +228,7 @@ public class IntegrationTests
 
         // Verify error message
         Assert.Contains("Error:", output);
-        Assert.Contains("--report-depth requires a positive integer", output);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>
@@ -249,7 +249,7 @@ public class IntegrationTests
 
         // Verify error message
         Assert.Contains("Error:", output);
-        Assert.Contains("--report-depth requires a positive integer", output);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>
@@ -291,7 +291,7 @@ public class IntegrationTests
 
         // Verify that the error message mentions --depth
         Assert.Contains("Error:", output);
-        Assert.Contains("--depth requires a positive integer", output);
+        Assert.Contains("--depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>
@@ -312,7 +312,7 @@ public class IntegrationTests
 
         // Verify that the error message mentions --depth
         Assert.Contains("Error:", output);
-        Assert.Contains("--depth requires a positive integer", output);
+        Assert.Contains("--depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>

@@ -381,9 +381,9 @@ internal sealed class Context : IDisposable
                 throw new ArgumentException($"{arg} requires a depth argument", nameof(args));
             }
 
-            if (!int.TryParse(args[index], out var value) || value < 1)
+            if (!int.TryParse(args[index], out var value) || value < 1 || value > 6)
             {
-                throw new ArgumentException($"{arg} requires a positive integer", nameof(args));
+                throw new ArgumentException($"{arg} requires a depth between 1 and 6", nameof(args));
             }
 
             return value;
