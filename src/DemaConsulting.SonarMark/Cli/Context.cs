@@ -317,6 +317,7 @@ internal sealed class Context : IDisposable
                     ReportFile = GetRequiredStringArgument(arg, args, index, "a filename argument");
                     return index + 1;
 
+                case "--depth":
                 case "--report-depth":
                     ReportDepth = GetRequiredIntArgument(arg, args, index);
                     return index + 1;

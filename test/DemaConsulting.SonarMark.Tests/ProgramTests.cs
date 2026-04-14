@@ -294,6 +294,48 @@ public class ProgramTests
     }
 
     /// <summary>
+    ///     Test that Run method with --depth flag (primary option) writes a markdown file with the correct heading level.
+    /// </summary>
+    [TestMethod]
+    public void Program_Run_WithDepth_WritesReportWithDepthHeadings()
+    {
+        // Arrange - create a temporary report file path and a mock HTTP client factory
+        var reportPath = Path.Combine(Path.GetTempPath(), $"sonarmark_report_{Guid.NewGuid()}.md");
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
+
+        try
+        {
+            using var context = Context.Create(
+                [
+                    "--server", "https://mock.sonarqube.example",
+                    "--project-key", "test-project",
+                    "--report", reportPath,
+                    "--depth", "2"
+                ],
+                mockFactory);
+
+            // Act - run the program with --depth 2; report headings must start at level 2
+            Program.Run(context);
+
+            // Assert - the report file must exist and contain level-2 headings
+            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            var content = File.ReadAllText(reportPath);
+            Assert.Contains("## ", content);
+
+            // This test proves that --depth controls the markdown heading level in the output
+            Assert.IsFalse(content.StartsWith("# "), "Report must not start with a level-1 heading when --depth 2 is used");
+        }
+        finally
+        {
+            // Clean up temp file
+            if (File.Exists(reportPath))
+            {
+                File.Delete(reportPath);
+            }
+        }
+    }
+
+    /// <summary>
     ///     Test that Run method with a token passes an Authorization header to server requests.
     /// </summary>
     [TestMethod]

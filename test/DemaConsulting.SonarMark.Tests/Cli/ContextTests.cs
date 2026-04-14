@@ -206,6 +206,56 @@ public class ContextTests
     }
 
     /// <summary>
+    ///     Test creating a context with --depth (primary option).
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_Depth_SetsReportDepthProperty()
+    {
+        using var context = Context.Create(["--depth", "3"]);
+
+        Assert.AreEqual(3, context.ReportDepth);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test creating a context with missing --depth value.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingDepth_ThrowsException()
+    {
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth"]));
+        Assert.Contains("--depth requires a depth argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context with invalid --depth value.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_InvalidDepth_ThrowsException()
+    {
+        var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
+        Assert.Contains("--depth requires a positive integer", ex1.Message);
+
+        var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "0"]));
+        Assert.Contains("--depth requires a positive integer", ex2.Message);
+
+        var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "-1"]));
+        Assert.Contains("--depth requires a positive integer", ex3.Message);
+    }
+
+    /// <summary>
+    ///     Test that --report-depth is still accepted as a backwards-compatible alias.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_ReportDepthAlias_StillWorks()
+    {
+        using var context = Context.Create(["--report-depth", "2"]);
+
+        Assert.AreEqual(2, context.ReportDepth);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
     ///     Test creating a context with token.
     /// </summary>
     [TestMethod]

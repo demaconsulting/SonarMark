@@ -232,16 +232,18 @@ sonarmark --server https://sonarcloud.io \
   --report quality-report.md
 ```
 
-### `--report-depth <depth>`
+### `--depth <depth>`
 
 Set the markdown header depth for the report. Default is 1. Use this when embedding the report in larger documents.
+
+> **Note:** `--report-depth` is a deprecated alias for `--depth` and is kept for backwards compatibility.
 
 ```bash
 # Use level 2 headers (##) instead of level 1 (#)
 sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
   --report quality-report.md \
-  --report-depth 2
+  --depth 2
 ```
 
 ## Quality Enforcement
@@ -529,7 +531,7 @@ Each test proves specific functionality works correctly:
 ## Report Best Practices
 
 - **Use meaningful filenames**: Include timestamps, branch names, or build numbers in report filenames
-- **Adjust header depth**: Use `--report-depth` when embedding reports in larger documents
+- **Adjust header depth**: Use `--depth` when embedding reports in larger documents
 - **Combine with logging**: Use `--log` to capture detailed execution information
 
 ## Performance

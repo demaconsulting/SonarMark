@@ -149,7 +149,8 @@ internal static class Program
         context.WriteLine("  --branch <name>            Branch name to query (default: main branch)");
         context.WriteLine("  --token <token>            Personal access token for SonarQube/SonarCloud");
         context.WriteLine("  --report <file>            Export quality results to markdown file");
-        context.WriteLine("  --report-depth <depth>     Markdown header depth for report (default: 1)");
+        context.WriteLine("  --depth <depth>            Markdown header depth for report (default: 1)");
+        context.WriteLine("  --report-depth <depth>     Alias for --depth (deprecated)");
     }
 
     /// <summary>

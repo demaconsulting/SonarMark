@@ -17,6 +17,7 @@ sections:
         children:
           - SonarMark-Context-ResultsFile
           - SonarMark-Validation-Run
+          - SonarMark-Validation-Depth
           - SonarMark-Validation-Results
           - SonarMark-Validation-TrxFormat
           - SonarMark-Validation-JUnitFormat

@@ -93,6 +93,7 @@ sections:
           conflicting heading levels.
         tests:
           - Program_Run_WithReportDepth_WritesReportWithDepthHeadings
+          - Program_Run_WithDepth_WritesReportWithDepthHeadings
 
       - id: SonarMark-Enforce-ExitCode
         title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
