@@ -228,7 +228,7 @@ public class IntegrationTests
 
         // Verify error message
         Assert.Contains("Error:", output);
-        Assert.Contains("--report-depth requires a positive integer", output);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>
@@ -249,7 +249,70 @@ public class IntegrationTests
 
         // Verify error message
         Assert.Contains("Error:", output);
-        Assert.Contains("--report-depth requires a positive integer", output);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", output);
+    }
+
+    /// <summary>
+    ///     Test that --depth without value shows error
+    /// </summary>
+    [TestMethod]
+    public void IntegrationTest_DepthWithoutValue_ShowsError()
+    {
+        // Run the application with --depth but no value
+        var exitCode = Runner.Run(
+            out var output,
+            "dotnet",
+            _dllPath,
+            "--depth");
+
+        // Verify error exit code
+        Assert.AreEqual(1, exitCode);
+
+        // Verify that the error message mentions --depth
+        Assert.Contains("Error:", output);
+        Assert.Contains("--depth requires a depth argument", output);
+    }
+
+    /// <summary>
+    ///     Test that --depth with invalid value shows error
+    /// </summary>
+    [TestMethod]
+    public void IntegrationTest_DepthWithInvalidValue_ShowsError()
+    {
+        // Run the application with --depth and invalid value
+        var exitCode = Runner.Run(
+            out var output,
+            "dotnet",
+            _dllPath,
+            "--depth", "invalid");
+
+        // Verify error exit code
+        Assert.AreEqual(1, exitCode);
+
+        // Verify that the error message mentions --depth
+        Assert.Contains("Error:", output);
+        Assert.Contains("--depth requires a depth between 1 and 6", output);
+    }
+
+    /// <summary>
+    ///     Test that --depth with zero shows error
+    /// </summary>
+    [TestMethod]
+    public void IntegrationTest_DepthWithZero_ShowsError()
+    {
+        // Run the application with --depth 0
+        var exitCode = Runner.Run(
+            out var output,
+            "dotnet",
+            _dllPath,
+            "--depth", "0");
+
+        // Verify error exit code
+        Assert.AreEqual(1, exitCode);
+
+        // Verify that the error message mentions --depth
+        Assert.Contains("Error:", output);
+        Assert.Contains("--depth requires a depth between 1 and 6", output);
     }
 
     /// <summary>

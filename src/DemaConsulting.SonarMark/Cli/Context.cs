@@ -70,7 +70,7 @@ internal sealed class Context : IDisposable
     /// <summary>
     ///     Gets the report markdown depth.
     /// </summary>
-    public int ReportDepth { get; private init; } = 1;
+    public int Depth { get; private init; } = 1;
 
     /// <summary>
     ///     Gets the personal access token for SonarQube/SonarCloud authentication.
@@ -153,7 +153,7 @@ internal sealed class Context : IDisposable
             Validate = parser.Validate,
             Enforce = parser.Enforce,
             ReportFile = parser.ReportFile,
-            ReportDepth = parser.ReportDepth,
+            Depth = parser.Depth,
             Token = parser.Token,
             Server = parser.Server,
             ProjectKey = parser.ProjectKey,
@@ -228,7 +228,7 @@ internal sealed class Context : IDisposable
         /// <summary>
         ///     Gets the report markdown depth.
         /// </summary>
-        public int ReportDepth { get; private set; } = 1;
+        public int Depth { get; private set; } = 1;
 
         /// <summary>
         ///     Gets the personal access token for SonarQube/SonarCloud authentication.
@@ -317,8 +317,9 @@ internal sealed class Context : IDisposable
                     ReportFile = GetRequiredStringArgument(arg, args, index, "a filename argument");
                     return index + 1;
 
+                case "--depth":
                 case "--report-depth":
-                    ReportDepth = GetRequiredIntArgument(arg, args, index);
+                    Depth = GetRequiredIntArgument(arg, args, index);
                     return index + 1;
 
                 case "--token":
@@ -380,9 +381,9 @@ internal sealed class Context : IDisposable
                 throw new ArgumentException($"{arg} requires a depth argument", nameof(args));
             }
 
-            if (!int.TryParse(args[index], out var value) || value < 1)
+            if (!int.TryParse(args[index], out var value) || value < 1 || value > 6)
             {
-                throw new ArgumentException($"{arg} requires a positive integer", nameof(args));
+                throw new ArgumentException($"{arg} requires a depth between 1 and 6", nameof(args));
             }
 
             return value;

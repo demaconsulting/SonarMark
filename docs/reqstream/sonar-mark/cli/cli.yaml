@@ -28,6 +28,7 @@ sections:
           - SonarMark-Server-Branch
           - SonarMark-Report-Markdown
           - SonarMark-Report-Depth
+          - SonarMark-Context-Depth
           - SonarMark-Enforce-ExitCode
         tests:
           - Cli_VersionDispatch_OutputsVersionString

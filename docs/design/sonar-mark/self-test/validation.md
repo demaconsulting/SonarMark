@@ -41,3 +41,4 @@ added or removed independently.
 - `SonarMark-Validation-Results` — writes results to the file specified by `--results`
 - `SonarMark-Validation-TrxFormat` — writes TRX format when the results file has a `.trx` extension
 - `SonarMark-Validation-JUnitFormat` — writes JUnit XML when the results file has a `.xml` extension
+- `SonarMark-Validation-Depth` — `PrintValidationHeader` uses `context.Depth` to set heading level

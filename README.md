@@ -96,7 +96,8 @@ Options:
   --branch <name>            Branch name to query (default: main branch)
   --token <token>            Personal access token for SonarQube/SonarCloud
   --report <file>            Export quality results to markdown file
-  --report-depth <depth>     Markdown header depth for report (default: 1)
+  --depth <depth>            Markdown header depth for report (default: 1)
+  --report-depth <depth>     Alias for --depth (deprecated)
 ```
 
 ### Quick Start Examples

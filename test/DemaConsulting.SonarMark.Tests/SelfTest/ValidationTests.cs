@@ -111,6 +111,33 @@ public class ValidationTests
     }
 
     /// <summary>
+    ///     Test that Validation.Run respects the --depth option for the validation report header.
+    /// </summary>
+    [TestMethod]
+    public void Validation_Run_WithDepth2_OutputsLevel2Header()
+    {
+        // Arrange - capture stdout to verify header uses depth-2 heading
+        var originalOut = Console.Out;
+        using var output = new StringWriter();
+        Console.SetOut(output);
+
+        try
+        {
+            // Act - run self-validation with depth=2
+            using var context = Context.Create(["--depth", "2"]);
+            Validation.Run(context);
+
+            // Assert - header must use ## (level-2) heading
+            var outputText = output.ToString();
+            Assert.Contains("## DEMA Consulting SonarMark", outputText);
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+        }
+    }
+
+    /// <summary>
     ///     Test that Validation.Run reports exactly 4 passed tests and 0 failures.
     /// </summary>
     [TestMethod]

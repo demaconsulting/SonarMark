@@ -67,7 +67,7 @@ public class ContextTests
         Assert.IsFalse(context.Silent);
         Assert.IsFalse(context.Validate);
         Assert.IsNull(context.ReportFile);
-        Assert.AreEqual(1, context.ReportDepth);
+        Assert.AreEqual(1, context.Depth);
         Assert.IsNull(context.Token);
         Assert.IsNull(context.Server);
         Assert.IsNull(context.ProjectKey);
@@ -168,14 +168,14 @@ public class ContextTests
     }
 
     /// <summary>
-    ///     Test creating a context with report depth.
+    ///     Test that the deprecated --report-depth flag sets the Depth property.
     /// </summary>
     [TestMethod]
-    public void Context_Create_ReportDepth_SetsReportDepthProperty()
+    public void Context_Create_ReportDepthAlias_SetsDepthProperty()
     {
         using var context = Context.Create(["--report-depth", "3"]);
 
-        Assert.AreEqual(3, context.ReportDepth);
+        Assert.AreEqual(3, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
 
@@ -196,13 +196,69 @@ public class ContextTests
     public void Context_Create_InvalidReportDepth_ThrowsException()
     {
         var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "invalid"]));
-        Assert.Contains("--report-depth requires a positive integer", ex1.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex1.Message);
 
         var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "0"]));
-        Assert.Contains("--report-depth requires a positive integer", ex2.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex2.Message);
 
         var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "-1"]));
-        Assert.Contains("--report-depth requires a positive integer", ex3.Message);
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex3.Message);
+
+        var ex4 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "7"]));
+        Assert.Contains("--report-depth requires a depth between 1 and 6", ex4.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context with --depth (primary option).
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_Depth_SetsDepthProperty()
+    {
+        using var context = Context.Create(["--depth", "3"]);
+
+        Assert.AreEqual(3, context.Depth);
+        Assert.AreEqual(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test creating a context with missing --depth value.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_MissingDepth_ThrowsException()
+    {
+        var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth"]));
+        Assert.Contains("--depth requires a depth argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context with invalid --depth value.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_InvalidDepth_ThrowsException()
+    {
+        var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
+        Assert.Contains("--depth requires a depth between 1 and 6", ex1.Message);
+
+        var ex2 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "0"]));
+        Assert.Contains("--depth requires a depth between 1 and 6", ex2.Message);
+
+        var ex3 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "-1"]));
+        Assert.Contains("--depth requires a depth between 1 and 6", ex3.Message);
+
+        var ex4 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "7"]));
+        Assert.Contains("--depth requires a depth between 1 and 6", ex4.Message);
+    }
+
+    /// <summary>
+    ///     Test that --report-depth is still accepted as a backwards-compatible alias.
+    /// </summary>
+    [TestMethod]
+    public void Context_Create_ReportDepthAlias_StillWorks()
+    {
+        using var context = Context.Create(["--report-depth", "2"]);
+
+        Assert.AreEqual(2, context.Depth);
+        Assert.AreEqual(0, context.ExitCode);
     }
 
     /// <summary>
