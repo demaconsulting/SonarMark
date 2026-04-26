@@ -11,6 +11,7 @@
 # - Do not relax rules to accommodate existing non-compliant files
 # - Consistency across repositories is critical for documentation quality
 
+# Disable the banner message (e.g., version info) on stdout
 noBanner: true
 
 # Disable the progress indicator on stdout
@@ -31,10 +32,6 @@ config:
   # Allow longer lines for URLs and technical content
   MD013:
     line_length: 120
-
-  # Allow duplicate headings in distinct sibling sections (needed for SonarMark guide structure)
-  MD024:
-    siblings_only: true
 
   # Allow multiple top-level headers per document
   MD025: false

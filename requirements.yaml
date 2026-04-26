@@ -35,8 +35,12 @@ includes:
   # Platform support requirements
   - docs/reqstream/sonar-mark/platform-requirements.yaml
   # OTS software requirements (one per component)
-  - docs/reqstream/ots/ots-mstest.yaml
-  - docs/reqstream/ots/ots-reqstream.yaml
-  - docs/reqstream/ots/ots-buildmark.yaml
-  - docs/reqstream/ots/ots-versionmark.yaml
-  - docs/reqstream/ots/ots-sarifmark.yaml
+  - docs/reqstream/ots/mstest.yaml
+  - docs/reqstream/ots/reqstream.yaml
+  - docs/reqstream/ots/buildmark.yaml
+  - docs/reqstream/ots/versionmark.yaml
+  - docs/reqstream/ots/sarifmark.yaml
+  - docs/reqstream/ots/reviewmark.yaml
+  - docs/reqstream/ots/pandoc.yaml
+  - docs/reqstream/ots/weasyprint.yaml
+  - docs/reqstream/ots/fileassert.yaml

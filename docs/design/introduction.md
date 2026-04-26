@@ -11,7 +11,10 @@ class in the codebase.
 
 ## Scope
 
-This design document covers the software units that make up SonarMark.
+This design document covers the software units that make up SonarMark. It
+describes the source code under `src/DemaConsulting.SonarMark/` only. Test
+projects, test infrastructure, and build scripts are explicitly out of scope
+and are not described here.
 
 ## Audience
 
@@ -62,8 +65,6 @@ src/DemaConsulting.SonarMark/
 └── SelfTest/
     └── Validation.cs               — self-validation runner, writes TRX and JUnit result files
 ```
-
-The test project mirrors the same layout under `test/DemaConsulting.SonarMark.Tests/`.
 
 The design documentation mirrors the same structure under `docs/design/sonar-mark/`:
 

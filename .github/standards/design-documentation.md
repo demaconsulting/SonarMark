@@ -6,10 +6,9 @@ globs: ["docs/design/**/*.md"]
 
 # Design Documentation Standards
 
-This document defines DEMA Consulting standards for design documentation
-within Continuous Compliance environments, extending the general technical
-documentation standards with specific requirements for software design
-artifacts.
+This document defines standards for design documentation within Continuous
+Compliance environments, extending the general technical documentation
+standards with specific requirements for software design artifacts.
 
 ## Required Standards
 
@@ -39,8 +38,9 @@ docs/design/
 ├── introduction.md              # Design overview with software structure
 └── {system-name}/               # System-level design folder (one per system)
     ├── {system-name}.md         # System-level design documentation
-    ├── {subsystem-name}/        # Subsystem design documents (kebab-case folder names)
+    ├── {subsystem-name}/        # Subsystem (kebab-case); may nest recursively
     │   ├── {subsystem-name}.md  # Subsystem overview and design
+    │   ├── {child-subsystem}/   # Child subsystem (same structure as parent)
     │   └── {unit-name}.md       # Unit-level design documents
     └── {unit-name}.md           # Top-level unit design documents (if not in subsystem)
 ```
@@ -74,6 +74,8 @@ Example format:
 ```text
 Project1Name (System)
 ├── ComponentA (Subsystem)
+│   ├── SubComponentP (Subsystem)
+│   │   └── ClassW (Unit)
 │   ├── ClassX (Unit)
 │   └── ClassY (Unit)
 ├── ComponentB (Subsystem)
@@ -94,14 +96,35 @@ Example format:
 ```text
 src/Project1Name/
 ├── ComponentA/
-│   ├── ClassX.cs               — Core business logic handler
-│   └── ClassY.cs               — Data validation service
+│   ├── SubComponentP/
+│   │   └── ClassW.cs           - Specialized processing engine
+│   ├── ClassX.cs               - Core business logic handler
+│   └── ClassY.cs               - Data validation service
 ├── ComponentB/
-│   └── ClassZ.cs               — Integration interface
-└── UtilityClass.cs             — Common utility functions
+│   └── ClassZ.cs               - Integration interface
+└── UtilityClass.cs             - Common utility functions
 
 src/Project2Name/
-└── HelperClass.cs              — Helper functions
+└── HelperClass.cs              - Helper functions
+```
+
+### Companion Artifact Structure (RECOMMENDED)
+
+Include a brief note explaining that each software item has parallel artifacts
+across the repository, so agents and reviewers can navigate from any one
+artifact to all related files:
+
+Example format:
+
+```text
+Each software item in the structure above has corresponding artifacts in
+parallel directory trees:
+
+- Requirements: `docs/reqstream/{system}/.../{item}.yaml` (kebab-case)
+- Design docs: `docs/design/{system}/.../{item}.md` (kebab-case)
+- Source code: `src/{System}/.../{Item}.{ext}` (cased per language - see `software-items.md`)
+- Tests: `test/{System}.Tests/.../{Item}Tests.{ext}` (cased per language - see `software-items.md`)
+- Review-sets: defined in `.reviewmark.yaml`
 ```
 
 ## System Design Documentation (MANDATORY)
@@ -133,12 +156,9 @@ For every unit identified in the software structure:
 
 # Software Items Integration (CRITICAL)
 
-Before creating design documentation, agents MUST:
-
-1. **Read `.github/standards/software-items.md`** to understand System/Subsystem/Unit classifications
-2. **Apply proper categorization** when creating software structure diagrams
-3. **Ensure consistency** between software structure and folder layout
-4. **Validate mapping** from design categories to source code organization
+Read `software-items.md` before creating design documentation - correct
+System/Subsystem/Unit categorization is required for software structure
+diagrams and folder layout.
 
 # Writing Guidelines
 

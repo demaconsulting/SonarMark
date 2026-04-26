@@ -35,10 +35,23 @@ Issues and hot-spots are rendered in compiler-style format
 (`component:line: severity: message`) so that they can be read alongside build
 output and parsed by tools that understand that format.
 
+## SonarQualityCondition
+
+`SonarQualityCondition` is an immutable positional record declared in the same
+file as `SonarQualityResult`. It represents one quality gate condition returned
+by the `/api/qualitygates/project_status` endpoint.
+
+| Parameter | C# Type | Description |
+| :---------- | :-------- | :------------ |
+| `Metric` | `string` | Metric key as returned by the API (e.g., `new_coverage`, `new_bugs`) |
+| `Comparator` | `string` | Comparison operator (e.g., `LT`, `GT`) |
+| `ErrorThreshold` | `string?` | Threshold value that triggers an error; `null` when not set |
+| `ActualValue` | `string?` | Actual metric value from the analysis; `null` when not available |
+| `Status` | `string` | Condition status returned by the API (e.g., `OK`, `WARN`, `ERROR`) |
+
 ## Satisfies Requirements
 
-- `SonarMark-Report-Markdown` — `ToMarkdown` generates the markdown report content
-- `SonarMark-Report-Depth` — the `depth` parameter controls heading levels
 - `SonarMark-Report-QualityGate` — quality gate status and conditions are included in the report
 - `SonarMark-Report-Issues` — issues are categorized and rendered in the report
 - `SonarMark-Report-HotSpots` — hot-spots are rendered in the report
+- `SonarMark-Report-DepthValidation` — `ToMarkdown` validates depth is in the range 1–6

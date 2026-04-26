@@ -304,5 +304,61 @@ public class SonarQubeClientTests
 
     private static HttpResponseMessage OkJson(string json) =>
         SonarIntegrationTestHelpers.OkJson(json);
+
+    /// <summary>
+    ///     Test that null server URL throws ArgumentNullException
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_NullServerUrl_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var client = new SonarQubeClient(new HttpClient(), false);
+
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<ArgumentNullException>(
+            async () => await client.GetQualityResultByBranchAsync(null!, "my-project"));
+    }
+
+    /// <summary>
+    ///     Test that whitespace server URL throws ArgumentException
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_WhitespaceServerUrl_ThrowsArgumentException()
+    {
+        // Arrange
+        using var client = new SonarQubeClient(new HttpClient(), false);
+
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<ArgumentException>(
+            async () => await client.GetQualityResultByBranchAsync("   ", "my-project"));
+    }
+
+    /// <summary>
+    ///     Test that null project key throws ArgumentNullException
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_NullProjectKey_ThrowsArgumentNullException()
+    {
+        // Arrange
+        using var client = new SonarQubeClient(new HttpClient(), false);
+
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<ArgumentNullException>(
+            async () => await client.GetQualityResultByBranchAsync("https://sonar.example.com", null!));
+    }
+
+    /// <summary>
+    ///     Test that whitespace project key throws ArgumentException
+    /// </summary>
+    [TestMethod]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_WhitespaceProjectKey_ThrowsArgumentException()
+    {
+        // Arrange
+        using var client = new SonarQubeClient(new HttpClient(), false);
+
+        // Act & Assert
+        await Assert.ThrowsExactlyAsync<ArgumentException>(
+            async () => await client.GetQualityResultByBranchAsync("https://sonar.example.com", "   "));
+    }
 }
 

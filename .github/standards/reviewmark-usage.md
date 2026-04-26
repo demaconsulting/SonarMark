@@ -20,8 +20,11 @@ review, organizes them into review-sets, and generates review plans and reports.
 
 - **Lint Configuration**: `dotnet reviewmark --lint`
 - **Elaborate Review-Set**: `dotnet reviewmark --elaborate {review-set}`
-- **Generate Plan**: `dotnet reviewmark --plan docs/code_review_plan/plan.md`
-- **Generate Report**: `dotnet reviewmark --report docs/code_review_report/report.md`
+- **Generate Plan**: `dotnet reviewmark --plan docs/code_review_plan/plan.md --enforce`
+
+> **Note**: `--enforce` causes the plan to fail with a non-zero exit code if any repository
+> files are not covered by a review-set. Uncovered files indicate a gap in review-set
+> configuration that should be addressed.
 
 ## Repository Structure
 
@@ -29,7 +32,6 @@ Required repository items for ReviewMark operation:
 
 - `.reviewmark.yaml` - Configuration for review-sets, file-patterns, and review evidence-source.
 - `docs/code_review_plan/` - Review planning artifacts
-- `docs/code_review_report/` - Review status reports
 
 # Review Definition Structure
 
@@ -76,9 +78,9 @@ When constructing review-sets, follow these principles to maintain manageable sc
 Organize review-sets using these standard patterns to ensure comprehensive coverage
 while keeping each review manageable in scope:
 
-**Note**: File path patterns shown below use C# naming conventions (PascalCase, `.cs` extensions).
-Other languages should adapt these patterns to their conventions (e.g., C++ might use
-`snake_case` with `.cpp`/`.hpp` extensions).
+**Naming conventions**: See `software-items.md` - kebab-case placeholders
+(e.g., `{system-name}`) are always kebab-case; cased placeholders
+(e.g., `{SystemName}`) follow your language's convention.
 
 ## `Purpose` Review (only one per repository)
 
@@ -107,7 +109,7 @@ Reviews system architecture and operational validation:
   - System requirements: `docs/reqstream/{system-name}/{system-name}.yaml`
   - Design introduction: `docs/design/introduction.md`
   - System design: `docs/design/{system-name}/{system-name}.md`
-  - System integration tests: `test/{SystemName}.Tests/{SystemName}Tests.cs`
+  - System integration tests: `test/{SystemName}.Tests/{SystemName}Tests.{ext}`
 
 ## `{System}-Design` Review (one per system)
 
@@ -134,7 +136,7 @@ Reviews requirements quality and traceability:
   - System requirements: `docs/reqstream/{system-name}/**/*.yaml`
   - OTS requirements: `docs/reqstream/ots/**/*.yaml` (if applicable)
 
-## `{System}-{Subsystem}` Review (one per subsystem)
+## `{System}-{Subsystem[-Child...]}` Review (one per subsystem at any depth)
 
 Reviews subsystem architecture and interfaces:
 
@@ -143,11 +145,11 @@ Reviews subsystem architecture and interfaces:
 - **Scope**: Excludes units under the subsystem, relying on subsystem design to describe
   what units it uses
 - **File Path Patterns**:
-  - Requirements: `docs/reqstream/{system-name}/{subsystem-name}/{subsystem-name}.yaml`
-  - Design: `docs/design/{system-name}/{subsystem-name}/{subsystem-name}.md`
-  - Tests: `test/{SystemName}.Tests/{SubsystemName}/{SubsystemName}Tests.cs`
+  - Requirements: `docs/reqstream/{system-name}/.../{subsystem-name}/{subsystem-name}.yaml`
+  - Design: `docs/design/{system-name}/.../{subsystem-name}/{subsystem-name}.md`
+  - Tests: `test/{SystemName}.Tests/.../{SubsystemName}/{SubsystemName}Tests.{ext}`
 
-## `{System}-{Subsystem}-{Unit}` Review (one per unit)
+## `{System}-{Subsystem[-Child...]}-{Unit}` Review (one per unit)
 
 Reviews individual software unit implementation:
 
@@ -155,13 +157,13 @@ Reviews individual software unit implementation:
 - **Title**: "Review that {System} {Subsystem} {Unit} Implementation is Correct"
 - **Scope**: Complete unit review including all artifacts
 - **File Path Patterns**:
-  - Requirements: `docs/reqstream/{system-name}/{subsystem-name}/{unit-name}.yaml` or
-    `docs/reqstream/{system-name}/{unit-name}.yaml`
-  - Design: `docs/design/{system-name}/{subsystem-name}/{unit-name}.md` or
-    `docs/design/{system-name}/{unit-name}.md`
-  - Source: `src/{SystemName}/{SubsystemName}/{UnitName}.cs` or `src/{SystemName}/{UnitName}.cs`
-  - Tests: `test/{SystemName}.Tests/{SubsystemName}/{UnitName}Tests.cs` or
-    `test/{SystemName}.Tests/{UnitName}Tests.cs`
+  - Requirements: `docs/reqstream/{system-name}/.../{unit-name}.yaml`
+  - Design: `docs/design/{system-name}/.../{unit-name}.md`
+  - Source: `src/{SystemName}/.../{UnitName}.{ext}`
+  - Tests: `test/{SystemName}.Tests/.../{UnitName}Tests.{ext}`
+
+**Note**: File path patterns use `{ext}` as a placeholder for language-specific
+extensions (`.cs`, `.cpp`/`.hpp`, `.py`, etc.). Adapt to your repository's languages.
 
 # Quality Checks
 
@@ -176,4 +178,3 @@ Before submitting ReviewMark configuration, verify:
 - [ ] Each review-set focuses on a single compliance question (single focus principle)
 - [ ] File patterns use correct glob syntax and match intended files
 - [ ] Review-set file counts remain manageable (context management principle)
-- [ ] Evidence source properly configured (`none` for dev, `url` for production)

@@ -45,3 +45,4 @@ return OutputFormatter.Format(validatedResults);
 
 - [ ] Zero compiler warnings (`TreatWarningsAsErrors=true`)
 - [ ] XmlDoc documentation complete on all members (public, internal, protected, private)
+- [ ] `dotnet format` applied (run `pwsh ./fix.ps1`)

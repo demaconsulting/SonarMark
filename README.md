@@ -21,7 +21,7 @@ documentation workflows.
 ## Features
 
 - 📊 **Quality Gate Reports** - Retrieve and report quality gate status with detailed conditions
-- 🐛 **Issue Analysis** - Fetch and categorize issues by type and severity
+- 🐛 **Issue Analysis** - Fetch and list issues by type and severity
 - 🔒 **Security Hot-Spots** - Identify and report security vulnerabilities requiring review
 - 📝 **Markdown Output** - Generate human-readable markdown reports for easy sharing
 - 🚀 **CI/CD Integration** - Enforce quality gates and fail builds on quality issues

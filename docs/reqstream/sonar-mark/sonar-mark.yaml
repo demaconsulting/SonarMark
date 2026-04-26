@@ -62,3 +62,28 @@ sections:
           - SonarMark-Subsystem-ReportGeneration
         tests:
           - SonarMark_MarkdownReportGeneration
+
+      - id: SonarMark-System-Validation
+        title: The system shall run self-validation tests and report results when --validate is supplied.
+        justification: |
+          Self-validation mode lets users verify that SonarMark is functioning correctly without
+          requiring a live SonarQube/SonarCloud server. Verifying this end-to-end confirms that the
+          CLI dispatch, self-test runner, and result reporting all integrate correctly and that the
+          shipped binary is fully testable in isolated environments.
+        children:
+          - SonarMark-Subsystem-SelfTest
+        tests:
+          - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
+
+      - id: SonarMark-System-Enforce
+        title: The system shall return a non-zero exit code when --enforce is supplied and the quality gate fails.
+        justification: |
+          Enforcement mode allows SonarMark to act as a build quality gate in CI/CD pipelines,
+          failing the build automatically when the Sonar quality gate status is not passing. Verifying
+          this end-to-end confirms that the --enforce flag is correctly parsed, propagated to the
+          report generation layer, and results in an appropriate process exit code.
+        children:
+          - SonarMark-Subsystem-Cli
+          - SonarMark-Subsystem-ReportGeneration
+        tests:
+          - IntegrationTest_EnforceFlag_IsAccepted

@@ -34,7 +34,9 @@ file organization patterns, and tooling requirements.
 - [ ] Cross-hierarchy test dependencies documented in design documentation
 - [ ] All tests follow AAA pattern with descriptive comments
 - [ ] Test names follow hierarchical naming conventions for requirement linkage
-- [ ] Tests linkable to requirements through ReqStream
+- [ ] Every requirement has at least one linked passing test
+- [ ] Tests without a corresponding requirement are accepted as valid
+  (corner-case, defensive, and regression tests need not link to a requirement)
 - [ ] Platform-specific tests use appropriate source filters
 - [ ] Both success and error scenarios covered
 - [ ] External dependencies properly mocked for isolation

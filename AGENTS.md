@@ -1,11 +1,4 @@
-# Agent Quick Reference
-
-Comprehensive guidance for AI agents working on repositories following Continuous Compliance practices.
-
 # Project Structure
-
-The following is the basic folder structure of the project. Agents should use this information when searching for
-existing files and to know where to make new files.
 
 ```text
 ├── docs/
@@ -16,12 +9,20 @@ existing files and to know where to make new files.
 │   ├── design/
 │   ├── requirements_doc/
 │   ├── requirements_report/
-│   └── reqstream/
+│   ├── reqstream/
+│   └── user_guide/
 ├── src/
-│   └── {project}/
+│   └── DemaConsulting.SonarMark/
 └── test/
-    └── {test-project}/
+    └── DemaConsulting.SonarMark.Tests/
 ```
+
+# Codebase Navigation (ALL Agents)
+
+When working with source code, design, or requirements artifacts, read
+`docs/design/introduction.md` first. It provides the software structure,
+folder layout, and companion artifact locations. Use it as the primary map
+before searching the filesystem.
 
 # Key Configuration Files
 
@@ -29,99 +30,120 @@ existing files and to know where to make new files.
 - **`.editorconfig`** - Code formatting rules
 - **`.clang-format`** - C/C++ formatting (if applicable)
 - **`.cspell.yaml`** - Spell-check configuration and technical term dictionary
-- **`.markdownlint-cli2.yaml`** - Markdown linting rules
-- **`.yamllint.yaml`** - YAML linting configuration
+- **`.markdownlint-cli2.yaml`** - Markdown formatting rules
+- **`.yamllint.yaml`** - YAML formatting configuration
 - **`.reviewmark.yaml`** - File review definitions and tracking
 - **`nuget.config`** - NuGet package sources (if .NET)
-- **`package.json`** - Node.js dependencies for linting tools
+- **`package.json`** - Node.js dependencies for formatting tools
 - **`requirements.yaml`** - Root requirements file with includes
-- **`pip-requirements.txt`** - Python dependencies for yamllint
-- **`lint.sh` / `lint.bat`** - Cross-platform comprehensive linting scripts
+- **`pip-requirements.txt`** - Python dependencies for yamllint and yamlfix
+- **`fix.ps1`** - Applies all auto-fixers silently (dotnet format, markdown, YAML). Always exits 0.
+- **`build.ps1`** - Builds the solution and runs all tests.
 
 # Standards Application (ALL Agents Must Follow)
 
-Before performing any work, agents must read and apply the relevant standards from `.github/standards/`:
+Before performing any work, agents must read and apply the relevant standards
+from `.github/standards/`. Use this matrix to determine which to load:
 
-- **`coding-principles.md`** - For universal coding standards (literate programming, architecture principles)
-- **`testing-principles.md`** - For universal testing standards (dependency boundaries, AAA pattern)
-- **`csharp-language.md`** - For C# code development (formatting, XML docs, C#-specific guidance)
-- **`csharp-testing.md`** - For C# test development (AAA pattern, naming, MSTest anti-patterns)
-- **`design-documentation.md`** - For design documentation (software structure diagrams, system.md, hierarchy)
-- **`reqstream-usage.md`** - For requirements management (traceability, semantic IDs, source filters)
-- **`reviewmark-usage.md`** - For file review management (review-sets, file patterns, enforcement)
-- **`software-items.md`** - For software categorization (system/subsystem/unit/OTS classification)
-- **`technical-documentation.md`** - For documentation creation and maintenance (structure, Pandoc, best practices)
+| Work involves...     | Load these standards                                                         |
+|----------------------|------------------------------------------------------------------------------|
+| Any code             | `coding-principles.md`                                                       |
+| C# code              | `coding-principles.md`, `csharp-language.md`                                 |
+| Any tests            | `testing-principles.md`                                                      |
+| C# tests             | `testing-principles.md`, `csharp-testing.md`                                 |
+| Requirements         | `requirements-principles.md`, `software-items.md`, `reqstream-usage.md`      |
+| Design docs          | `software-items.md`, `design-documentation.md`, `technical-documentation.md` |
+| Review configuration | `software-items.md`, `reviewmark-usage.md`                                   |
+| Any documentation    | `technical-documentation.md`                                                 |
 
-Load only the standards relevant to your specific task scope and apply their
-quality checks and guidelines throughout your work.
+Load only the standards relevant to your specific task scope.
 
 # Agent Delegation Guidelines
 
 The default agent should handle simple, straightforward tasks directly.
 Delegate to specialized agents only for specific scenarios:
 
+- **Pre-PR lint cleanup** (fix all lint issues before pull request) → Call the lint-fix agent
 - **Light development work** (small fixes, simple features) → Call the developer agent
-- **Light quality checking** (linting, basic validation) → Call the quality agent
+- **Light quality checking** (basic validation) → Call the quality agent
 - **Formal feature implementation** (complex, multi-step) → Call the implementation agent
 - **Formal bug resolution** (complex debugging, systematic fixes) → Call the implementation agent
-- **Formal reviews** (compliance verification, detailed analysis) → Call the code-review agent
+- **Formal reviews** (compliance verification, detailed analysis) → Call the formal-review agent
 - **Template consistency** (downstream repository alignment) → Call the repo-consistency agent
 
 ## Available Specialized Agents
 
+- **lint-fix** - Pre-PR lint sweep agent that loops running `pwsh ./lint.ps1`,
+  fixing issues until the repository is lint-clean
 - **developer** - General-purpose software development agent that applies appropriate
   standards based on the work being performed
-- **code-review** - Agent for performing formal reviews using standardized review processes
+- **formal-review** - Agent for performing formal reviews using standardized review processes
 - **implementation** - Orchestrator agent that manages quality implementations
   through a formal state machine workflow
-- **quality** - Quality assurance agent that grades developer work against DEMA
-  Consulting standards and Continuous Compliance practices
+- **quality** - Quality assurance agent that grades developer work against project
+  standards and Continuous Compliance practices
 - **repo-consistency** - Ensures downstream repositories remain consistent with
   the TemplateDotNetTool template patterns and best practices
 
-# Linting (Required Before Quality Gates)
+# Agent Reporting (Specialized Agents Must Follow)
 
-1. **Markdown Auto-fix**: `npx markdownlint-cli2 --fix **/*.md` (fixes most markdown issues except line length)
-2. **Dotnet Auto-fix**: `dotnet format` (reformats .NET languages)
-3. **Run full check**: `lint.bat` (Windows) or `lint.sh` (Unix)
-4. **Fix remaining**: Address line length, spelling, YAML syntax manually
-5. **Verify clean**: Re-run until 0 errors before quality validation
+Specialized agents (lint-fix, developer, quality, implementation,
+formal-review, repo-consistency) MUST generate a completion report:
 
-## Linting Tools (ALL Must Pass)
+1. Save to `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
+   where `{subject}` is a kebab-case task summary (max 5 words) and
+   `{unique-id}` is a short unique suffix (e.g., 8-char hex or timestamp)
+2. Start with `**Result**: (SUCCEEDED|FAILED)` as the first metadata field
+3. Include the agent-specific report sections defined in each agent's prompt
+4. Return the summary to the caller
 
-- **markdownlint-cli2**: Markdown style and formatting enforcement
-- **cspell**: Spell-checking across all text files (use `.cspell.yaml` for technical terms)
-- **yamllint**: YAML structure and formatting validation
-- **Language-specific linters**: Based on repository technology stack
+Result semantics for orchestrator decision-making:
 
-# Quality Gate Enforcement (ALL Agents Must Verify)
+- **SUCCEEDED**: Work completed and all applicable quality gates met
+- **FAILED**: Work could not be completed or quality gates not met
+- **INCOMPLETE**: Work cannot proceed without information only the user can
+  provide (implementation agent only)
 
-Configuration files and scripts are self-documenting with their design intent and
-modification policies in header comments.
+# Formatting (After Making Changes)
 
-1. **Build Quality**: Zero warnings (`TreatWarningsAsErrors=true`)
-2. **Static Analysis**: SonarQube/CodeQL passing with no blockers
-3. **Requirements Traceability**: `dotnet reqstream --enforce` passing
-4. **Test Coverage**: All requirements linked to passing tests
-5. **Documentation Currency**: All docs current and generated
-6. **File Review Status**: All reviewable files have current reviews
+After making changes, run the auto-fix pass. This applies all available fixers
+silently and **always exits 0** — agents do not need to respond to its output.
+
+```pwsh
+pwsh ./fix.ps1
+```
+
+This automatically handles: `dotnet format`, markdown formatting, and YAML
+formatting. Full lint compliance is a **pre-PR responsibility**, not an agent
+responsibility — invoke the lint-fix agent once before submitting a pull request.
+
+## CI Quality Tools
+
+CI runs `lint.ps1` which checks: markdownlint-cli2, cspell, yamllint, dotnet format,
+reqstream, versionmark, and reviewmark.
+
+# Scope Discipline (ALL Agents Must Follow)
+
+- **Minimum necessary changes**: Only modify files directly required by the task
+- **No speculative refactoring**: Do not refactor code adjacent to the change
+  unless the task explicitly requests it
+- **No drive-by fixes**: If you discover pre-existing issues in files you are
+  reading but not modifying, document them in the report but do not fix them
+- **Declare scope upfront**: Before making changes, determine which files will be
+  modified. Any file outside this scope requires explicit justification.
+
+# Protected Configuration Files
+
+These files contain carefully designed configuration with documented intent
+in header comments. Agents MUST NOT modify them unless the task explicitly
+requires it and the modification preserves the documented design intent:
+
+- `.reviewmark.yaml`, `.cspell.yaml`, `.editorconfig`
+- `.markdownlint-cli2.yaml`, `.yamllint.yaml`
+- `requirements.yaml`, `fix.ps1`, `lint.ps1`
 
 # Continuous Compliance Overview
 
-This repository follows the DEMA Consulting Continuous Compliance
-<https://github.com/demaconsulting/ContinuousCompliance> approach, which enforces quality and
-compliance gates on every CI/CD run instead of as a last-mile activity.
-
-## Core Principles
-
-- **Requirements Traceability**: Every requirement MUST link to passing tests
-- **Quality Gates**: All quality checks must pass before merge
-- **Documentation Currency**: All docs auto-generated and kept current
-- **Automated Evidence**: Full audit trail generated with every build
-
-## Requirements & Compliance
-
-- **ReqStream**: Requirements traceability enforcement (`dotnet reqstream --enforce`)
-- **ReviewMark**: File review status enforcement
-- **BuildMark**: Tool version documentation
-- **VersionMark**: Version tracking across CI/CD jobs
+This repository follows the [Continuous Compliance](https://github.com/demaconsulting/ContinuousCompliance)
+approach. Tools: **ReqStream** (requirements traceability), **ReviewMark** (file review enforcement),
+**BuildMark** (tool versions), **VersionMark** (version tracking).

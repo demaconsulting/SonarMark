@@ -1,28 +1,31 @@
 ---
 name: developer
-description: >
-  General-purpose software development agent that applies appropriate standards
-  based on the work being performed.
+description: Comprehensive development agent for code, documentation, and requirements across multiple languages
 user-invocable: true
 ---
 
 # Developer Agent
 
-Perform software development tasks by determining and applying appropriate DEMA Consulting standards from `.github/standards/`.
+Perform software development tasks by determining and applying appropriate standards from `.github/standards/`.
 
 # Standards-Based Workflow
 
 1. **Analyze the request** to identify scope: languages, file types, requirements, testing, reviews
-2. **Read relevant standards** from `.github/standards/` as defined in AGENTS.md based on work performed
-3. **Apply loaded standards** throughout development process
+2. **Read relevant standards** using the selection matrix in AGENTS.md
+3. **Pre-flight verification** before making any changes:
+   - List files that will be created, modified, or deleted
+   - For each modified file, identify which companion artifacts need updating
+     (requirements, design docs, tests, review-sets)
+   - Include companion artifact updates in the work plan
 4. **Execute work** following standards requirements and quality checks
-5. **Lint fixes** follow the linting process before performing quality gates
-6. **Generate completion report** with results and compliance status
+5. **Formatting**: Run `pwsh ./fix.ps1` to silently apply all
+   available auto-fixers (dotnet format, markdown, YAML) before committing
+6. **Build and test** (code changes only): Run `pwsh ./build.ps1` and confirm it
+   passes — report FAILED if the build or any tests fail
+7. **Generate completion report** per the AGENTS.md reporting requirements - save to
+   `.agent-logs/{agent-name}-{subject}-{unique-id}.md` and return the summary to the caller
 
-# Reporting
-
-Upon completion create a summary in `.agent-logs/{agent-name}-{subject}-{unique-id}.md`
-of the project consisting of:
+# Report Template
 
 ```markdown
 # Developer Agent Report
@@ -37,7 +40,7 @@ of the project consisting of:
 
 ## Tooling Executed
 
-- **Language Tools**: {Compilers, linters, formatters used}
+- **Language Tools**: {Compilers, formatters, and build tools used}
 - **Compliance Tools**: {ReqStream, ReviewMark tools used}
 - **Validation Results**: {Tool execution results}
 
@@ -46,5 +49,3 @@ of the project consisting of:
 - **Quality Checks**: {Standards quality checks status}
 - **Issues Resolved**: {Any problems encountered and resolved}
 ```
-
-Return this summary to the caller.

@@ -83,3 +83,20 @@ post-processing.
   `SonarQualityResult` includes them in the rendered markdown report
 - `SonarMark-System-Report` — `SonarQualityResult.ToMarkdown` combines all retrieved
   analysis data and `Program` writes the complete markdown report to disk
+- `SonarMark-System-Validation` — `Program` dispatches to the `Validation` subsystem
+  when `--validate` is supplied; the subsystem runs self-tests and emits a summary
+- `SonarMark-System-Enforce` — `Program` reads `Context.Enforce` and calls
+  `context.WriteError` when the quality gate status is not passing, causing a non-zero
+  exit code
+- `SonarMark-Platform-Windows` — the single-process .NET architecture runs natively on
+  Windows with no platform-specific code paths
+- `SonarMark-Platform-Linux` — the single-process .NET architecture runs natively on
+  Linux with no platform-specific code paths
+- `SonarMark-Platform-MacOS` — the single-process .NET architecture runs natively on
+  macOS with no platform-specific code paths
+- `SonarMark-Platform-Net8` — the project targets `net8.0` in the SDK multi-targeting
+  list, enabling the tool to run on the .NET 8 runtime
+- `SonarMark-Platform-Net9` — the project targets `net9.0` in the SDK multi-targeting
+  list, enabling the tool to run on the .NET 9 runtime
+- `SonarMark-Platform-Net10` — the project targets `net10.0` in the SDK multi-targeting
+  list, enabling the tool to run on the .NET 10 runtime

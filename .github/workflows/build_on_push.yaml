@@ -2,10 +2,10 @@
 name: Build on Push
 
 on:
-  push:                 # On push to any branch
-  workflow_dispatch:    # Allow manual trigger
-  schedule:             # 5PM UTC every Monday
-    - cron: '0 17 * * 1'
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 17 * * 1'  # 5PM UTC every Monday
 
 jobs:
   build:

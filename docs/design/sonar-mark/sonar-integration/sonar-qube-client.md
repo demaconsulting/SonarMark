@@ -26,7 +26,32 @@ format.
 
 All network methods are `async` and accept a `CancellationToken`. The primary
 public method `GetQualityResultByBranchAsync` composes several internal async
-calls to retrieve conditions, issues, and hot-spots in a logical sequence.
+calls in a fixed sequence:
+
+1. **Project name retrieval** — calls `/api/components/show?component={projectKey}`
+   to obtain the human-readable project name. The response JSON must contain a
+   `component.name` string; if missing, the method falls back to the raw project
+   key. If the HTTP request fails (non-2xx), an `InvalidOperationException` is
+   thrown. If the JSON response is malformed, a `JsonException` may be thrown
+   (see Error Handling below).
+
+2. **Quality gate status** — calls
+   `/api/qualitygates/project_status?projectKey={projectKey}` (with optional
+   `&branch=` parameter) to retrieve the overall gate status and its conditions.
+
+3. **Metric name resolution** — calls `/api/metrics/search` to build a dictionary
+   mapping internal metric keys (e.g., `new_coverage`) to human-readable display
+   names (e.g., `Coverage on New Code`). This dictionary is passed to
+   `SonarQualityResult` so the report can render friendly metric labels.
+
+4. **Issues** — paginates through `/api/issues/search` until all pages are
+   consumed.
+
+5. **Hot-spots** — paginates through `/api/hotspots/search` until all pages are
+   consumed.
+
+Results from all five calls are assembled into a single `SonarQualityResult`
+instance and returned to the caller.
 
 ### Pagination
 
@@ -39,6 +64,11 @@ This ensures completeness regardless of how many items the server returns per pa
 HTTP errors (non-2xx responses) are surfaced as `InvalidOperationException` with
 a message that includes the HTTP status code, so callers can distinguish API
 errors from network errors and report them appropriately.
+
+`JsonDocument.Parse()` is called on every API response. If the server returns a
+syntactically invalid JSON body, `JsonDocument.Parse` throws a `JsonException`.
+This exception is not caught by `SonarQubeClient` and propagates to the caller,
+indicating a malformed or unexpected server response.
 
 ## Satisfies Requirements
 

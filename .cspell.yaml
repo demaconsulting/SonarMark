@@ -14,17 +14,12 @@ language: en
 
 # Project-specific technical terms and tool names
 words:
-  - Anson
-  - Blockquotes
   - buildmark
   - BuildMark
-  - build_notes
   - buildtransitive
-  - camelcase
   - CodeQL
   - contentfiles
   - copilot
-  - coveragexml
   - cspell
   - csproj
   - csharpsquid
@@ -40,16 +35,12 @@ words:
   - dotnet
   - dotnettool
   - editorconfig
-  - errorlevel
-  - filepart
+  - fileassert
   - finalizer
   - fsproj
-  - Gidget
   - gitattributes
   - hotspots
-  - ibiqlik
   - LINQ
-  - maintainer
   - markdownlint
   - mstest
   - myterm
@@ -82,13 +73,6 @@ words:
   - spdx
   - spdxtool
   - testname
-  - code_quality
-  - code_review_plan
-  - code_review_report
-  - requirements_doc
-  - requirements_report
-  - trace_matrix
-  - triaging
   - trx
   - vbproj
   - vcxproj
@@ -96,6 +80,7 @@ words:
   - VersionMark
   - Weasyprint
   - weasyprinttool
+  - yamlfix
   - yamllint
 
 # Exclude common build artifacts, dependencies, and vendored third-party code

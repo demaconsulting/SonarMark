@@ -14,9 +14,15 @@ Continuous Compliance environments.
 
 All code MUST follow literate programming principles:
 
-- **Intent Comments**: Every function/method begins with a comment explaining WHY (not what)
-- **Logical Separation**: Complex functions use comments to separate logical blocks
+- **Intent Documentation**: Function and method documentation (XmlDoc, Doxygen,
+  JSDoc, etc.) MUST explain WHY the function exists and its design purpose -
+  not just restate what it does - because reviewers must verify implementation
+  matches design intent without reading the full codebase
+- **Logical Separation**: Complex functions use block comments to separate and
+  describe logical steps within the implementation
 - **Public Documentation**: All public interfaces have comprehensive documentation
+  because consumers and auditors rely on interface contracts for integration
+  and compliance verification
 - **Clarity Over Cleverness**: Code should be immediately understandable by team members
 
 ## Universal Code Architecture Principles
@@ -28,9 +34,8 @@ All code MUST follow literate programming principles:
 - **Pure Functions**: Minimize side effects and hidden state
 - **Clear Interfaces**: Well-defined API contracts
 - **Separation of Concerns**: Business logic separate from infrastructure
-- **Repository Structure Adherence**: Before creating any new files, analyze the repository structure to
-  understand established directory conventions and file placement patterns. Place new files in locations
-  consistent with existing patterns.
+- **Repository Structure Adherence**: Analyze existing directory conventions
+  before creating files; place new files consistent with established patterns
 
 ### Compliance-Ready Code Structure
 
@@ -53,7 +58,8 @@ All code MUST follow literate programming principles:
 - **Skip Literate Coding**: Don't skip literate programming comments - they are required for maintainability
 - **Ignore Compiler Warnings**: Don't ignore compiler warnings - they exist for quality enforcement
 - **Hidden Dependencies**: Don't create untestable code with hidden dependencies
-- **Hidden Functionality**: Don't implement functionality without requirement traceability
+- **Hidden Functionality**: Don't implement functionality without requirement
+  traceability because untraced functionality cannot be validated during audits
 - **Monolithic Functions**: Don't write monolithic functions with multiple responsibilities
 - **Overcomplicated Solutions**: Don't make solutions more complex than necessary - favor simplicity and clarity
 - **Premature Optimization**: Don't optimize for performance before establishing correctness
@@ -62,9 +68,5 @@ All code MUST follow literate programming principles:
 
 # Language-Specific Implementation
 
-For each detected language:
-
-- **Load Standards**: Read the appropriate `{language}-language.md` file from `.github/standards/`
-- **Apply Tooling**: Use language-specific formatting, linting, and build tools
-- **Follow Conventions**: Apply language-specific naming, patterns, and best practices
-- **Generate Documentation**: Use language-appropriate documentation format (XmlDoc, Doxygen, JSDoc, etc.)
+For each detected language, read `{language}-language.md` from `.github/standards/`
+and apply its standards, tooling, and conventions.
