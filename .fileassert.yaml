@@ -168,7 +168,7 @@ tests:
             - field: "Author"
               contains: "DEMA Consulting"
             - field: "Subject"
-              contains: "design document"
+              contains: "Design Specification"
           pages:
             min: 3
           text:
@@ -201,7 +201,7 @@ tests:
             - field: "Author"
               contains: "DEMA Consulting"
             - field: "Subject"
-              contains: "Reference Implementation"
+              contains: "SonarQube/SonarCloud Reporting"
           pages:
             min: 3
           text:
