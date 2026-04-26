@@ -101,9 +101,9 @@ public class CliTests
             using var context = Context.Create(["--silent"]);
             Program.Run(context);
 
-            // Assert - silent mode must suppress banner/version output
+            // Assert - silent mode must suppress all standard output
             var outputText = output.ToString();
-            Assert.DoesNotContain("SonarMark version", outputText);
+            Assert.IsTrue(string.IsNullOrWhiteSpace(outputText));
         }
         finally
         {
@@ -112,16 +112,20 @@ public class CliTests
     }
 
     /// <summary>
-    ///     Test that --enforce is parsed and made available through the CLI subsystem.
+    ///     Test that --enforce is parsed and the flag is exposed through the CLI subsystem after dispatch.
     /// </summary>
     [TestMethod]
     public void Cli_EnforceMode_SetsEnforceFlag()
     {
-        // Arrange - create context with --enforce (and required --server so we do not fail before enforce check)
-        // We expect an error about missing --project-key, but Enforce must be true by the time Context is created
+        // Arrange - create context with --enforce and --server so dispatch reaches the project-key check
         using var context = Context.Create(["--enforce", "--server", "https://mock.example.com"]);
 
-        // Assert - the Enforce flag must be set to true after CLI argument parsing
+        // Act - run through Program dispatch; we expect an error about missing --project-key,
+        // but Enforce must be true on the Context that was dispatched
+        Program.Run(context);
+
+        // Assert - the Enforce flag must be set to true and dispatch must have been attempted
         Assert.IsTrue(context.Enforce);
+        Assert.AreEqual(1, context.ExitCode);
     }
 }

@@ -128,9 +128,10 @@ public class ReportGenerationTests
         // Act - render the subsystem output as markdown
         var markdown = result.ToMarkdown(1);
 
-        // Assert - hot-spot vulnerability probability and category must appear in the rendered report
+        // Assert - hot-spot vulnerability probability, category, and security category must appear in the rendered report
         Assert.IsNotNull(markdown);
         Assert.Contains("Review this security hot-spot", markdown);
         Assert.Contains("HIGH", markdown);
+        Assert.Contains("xss", markdown);
     }
 }

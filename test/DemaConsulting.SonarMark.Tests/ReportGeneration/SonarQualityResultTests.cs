@@ -518,6 +518,35 @@ public class SonarQualityResultTests
     }
 
     /// <summary>
+    ///     Test CleanComponent fall-through path where component has no project key prefix
+    /// </summary>
+    [TestMethod]
+    public void SonarQualityResult_ToMarkdown_ComponentWithoutProjectKeyPrefix_PassesThroughUnchanged()
+    {
+        // Arrange - component does not start with "{ProjectKey}:"
+        IReadOnlyList<SonarIssue> issues =
+        [
+            new("key1", "rule:S1234", "MAJOR", "external-component", null, "Some issue", "BUG")
+        ];
+
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            [],
+            new Dictionary<string, string>(),
+            issues,
+            []);
+
+        // Act
+        var markdown = result.ToMarkdown(1);
+
+        // Assert - component without prefix is passed through unchanged
+        Assert.Contains("external-component: MAJOR BUG [rule:S1234] Some issue", markdown);
+    }
+
+    /// <summary>
     ///     Test SonarQualityCondition can be created with all properties
     /// </summary>
     [TestMethod]

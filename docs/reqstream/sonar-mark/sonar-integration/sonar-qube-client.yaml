@@ -35,3 +35,21 @@ sections:
           and meeting security compliance requirements.
         tests:
           - SonarQubeClient_GetQualityResultByBranchAsync_HotSpotsPaginatedAcrossTwoPages_AccumulatesAllHotSpots
+
+      - id: SonarMark-Server-ProjectName
+        title: The tool shall retrieve the project name from SonarQube/SonarCloud.
+        justification: |
+          Using the server-side project name in the report header makes reports immediately identifiable
+          without requiring callers to supply display names separately. The API call to
+          /api/components/show provides the canonical name configured in the SonarQube/SonarCloud project.
+        tests:
+          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+
+      - id: SonarMark-Server-MetricNames
+        title: The tool shall retrieve human-readable metric names from SonarQube/SonarCloud.
+        justification: |
+          Metric keys returned by the quality gate API (e.g., new_coverage) are internal identifiers
+          not suitable for display. Fetching the metric name dictionary from /api/metrics/search allows
+          the report to show friendly labels (e.g., Coverage on New Code) without hardcoding a mapping.
+        tests:
+          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus

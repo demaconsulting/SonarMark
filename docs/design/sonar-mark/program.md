@@ -35,6 +35,20 @@ printing, so that the operating system or CI runner can produce an event log ent
 before attempting any network call. Missing required parameters are reported via
 `context.WriteError`, which sets the error flag and drives the non-zero exit code.
 
+### HttpClientFactory Injection
+
+`ProcessSonarAnalysis` obtains its `SonarQubeClient` instance through
+`context.HttpClientFactory`, a `Func<string?, SonarQubeClient>` delegate held on
+`Context`. This delegate is the testability seam: integration tests supply a factory
+that returns a mock client pre-loaded with canned responses, while production code
+leaves the property `null`.
+
+When `HttpClientFactory` is `null` (the normal production path), the method falls back
+to `new SonarQubeClient(context.Token)`, which creates a real HTTP client authenticated
+with the provided token. This design keeps `Program` free of any direct reference to the
+test infrastructure and avoids the need to sub-class or wrap `SonarQubeClient` for
+testing purposes.
+
 ## Satisfies Requirements
 
 - `SonarMark-Cli-Interface` — `Main` is the CLI entry point

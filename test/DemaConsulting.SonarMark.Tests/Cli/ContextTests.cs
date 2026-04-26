@@ -60,8 +60,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_NoArguments_ReturnsDefaultContext()
     {
+        // Act
         using var context = Context.Create([]);
 
+        // Assert
         Assert.IsFalse(context.Version);
         Assert.IsFalse(context.Help);
         Assert.IsFalse(context.Silent);
@@ -81,6 +83,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_VersionFlag_SetsVersionProperty()
     {
+        // Act/Assert
         using var context1 = Context.Create(["-v"]);
         Assert.IsTrue(context1.Version);
         Assert.AreEqual(0, context1.ExitCode);
@@ -96,6 +99,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_HelpFlags_SetsHelpProperty()
     {
+        // Act/Assert
         using var context1 = Context.Create(["-?"]);
         Assert.IsTrue(context1.Help);
         Assert.AreEqual(0, context1.ExitCode);
@@ -115,8 +119,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_SilentFlag_SetsSilentProperty()
     {
+        // Act
         using var context = Context.Create(["--silent"]);
 
+        // Assert
         Assert.IsTrue(context.Silent);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -127,8 +133,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ValidateFlag_SetsValidateProperty()
     {
+        // Act
         using var context = Context.Create(["--validate"]);
 
+        // Assert
         Assert.IsTrue(context.Validate);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -139,8 +147,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_EnforceFlag_SetsEnforceProperty()
     {
+        // Act
         using var context = Context.Create(["--enforce"]);
 
+        // Assert
         Assert.IsTrue(context.Enforce);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -151,8 +161,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ReportFile_SetsReportProperty()
     {
+        // Act
         using var context = Context.Create(["--report", "report.md"]);
 
+        // Assert
         Assert.AreEqual("report.md", context.ReportFile);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -163,6 +175,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingReportFilename_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report"]));
         Assert.Contains("--report requires a filename argument", ex.Message);
     }
@@ -173,8 +186,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ReportDepthAlias_SetsDepthProperty()
     {
+        // Act
         using var context = Context.Create(["--report-depth", "3"]);
 
+        // Assert
         Assert.AreEqual(3, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -185,6 +200,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingReportDepth_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth"]));
         Assert.Contains("--report-depth requires a depth argument", ex.Message);
     }
@@ -195,6 +211,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_InvalidReportDepth_ThrowsException()
     {
+        // Act/Assert
         var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--report-depth", "invalid"]));
         Assert.Contains("--report-depth requires a depth between 1 and 6", ex1.Message);
 
@@ -214,8 +231,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_Depth_SetsDepthProperty()
     {
+        // Act
         using var context = Context.Create(["--depth", "3"]);
 
+        // Assert
         Assert.AreEqual(3, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -226,6 +245,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingDepth_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth"]));
         Assert.Contains("--depth requires a depth argument", ex.Message);
     }
@@ -236,6 +256,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_InvalidDepth_ThrowsException()
     {
+        // Act/Assert
         var ex1 = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
         Assert.Contains("--depth requires a depth between 1 and 6", ex1.Message);
 
@@ -255,8 +276,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ReportDepthAlias_StillWorks()
     {
+        // Act
         using var context = Context.Create(["--report-depth", "2"]);
 
+        // Assert
         Assert.AreEqual(2, context.Depth);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -267,8 +290,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_Token_SetsTokenProperty()
     {
+        // Act
         using var context = Context.Create(["--token", "test-token-123"]);
 
+        // Assert
         Assert.AreEqual("test-token-123", context.Token);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -279,6 +304,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingToken_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--token"]));
         Assert.Contains("--token requires a token argument", ex.Message);
     }
@@ -289,8 +315,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_Server_SetsServerProperty()
     {
+        // Act
         using var context = Context.Create(["--server", "https://sonarcloud.io"]);
 
+        // Assert
         Assert.AreEqual("https://sonarcloud.io", context.Server);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -301,6 +329,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingServer_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--server"]));
         Assert.Contains("--server requires a server URL argument", ex.Message);
     }
@@ -311,8 +340,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ProjectKey_SetsProjectKeyProperty()
     {
+        // Act
         using var context = Context.Create(["--project-key", "my-project"]);
 
+        // Assert
         Assert.AreEqual("my-project", context.ProjectKey);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -323,6 +354,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingProjectKey_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--project-key"]));
         Assert.Contains("--project-key requires a project key argument", ex.Message);
     }
@@ -333,8 +365,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_Branch_SetsBranchProperty()
     {
+        // Act
         using var context = Context.Create(["--branch", "main"]);
 
+        // Assert
         Assert.AreEqual("main", context.Branch);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -345,6 +379,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingBranch_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--branch"]));
         Assert.Contains("--branch requires a branch name argument", ex.Message);
     }
@@ -355,6 +390,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingLogFilename_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--log"]));
         Assert.Contains("--log requires a filename argument", ex.Message);
     }
@@ -365,6 +401,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_UnsupportedArgument_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--unsupported"]));
         Assert.Contains("Unsupported argument '--unsupported'", ex.Message);
     }
@@ -375,15 +412,18 @@ public class ContextTests
     [TestMethod]
     public void Context_WriteLine_NormalMode_WritesToConsole()
     {
+        // Arrange
         var originalOut = Console.Out;
         using var output = new StringWriter();
         Console.SetOut(output);
 
         try
         {
+            // Act
             using var context = Context.Create([]);
             context.WriteLine("Test message");
 
+            // Assert
             Assert.AreEqual("Test message" + Environment.NewLine, output.ToString());
         }
         finally
@@ -398,15 +438,18 @@ public class ContextTests
     [TestMethod]
     public void Context_WriteLine_SilentMode_DoesNotWriteToConsole()
     {
+        // Arrange
         var originalOut = Console.Out;
         using var output = new StringWriter();
         Console.SetOut(output);
 
         try
         {
+            // Act
             using var context = Context.Create(["--silent"]);
             context.WriteLine("Test message");
 
+            // Assert
             Assert.AreEqual(string.Empty, output.ToString());
         }
         finally
@@ -421,15 +464,18 @@ public class ContextTests
     [TestMethod]
     public void Context_WriteError_NormalMode_WritesToConsole()
     {
+        // Arrange
         var originalError = Console.Error;
         using var error = new StringWriter();
         Console.SetError(error);
 
         try
         {
+            // Act
             using var context = Context.Create([]);
             context.WriteError("Error message");
 
+            // Assert
             Assert.AreEqual("Error message" + Environment.NewLine, error.ToString());
             Assert.AreEqual(1, context.ExitCode);
         }
@@ -445,15 +491,18 @@ public class ContextTests
     [TestMethod]
     public void Context_WriteError_SilentMode_DoesNotWriteToConsole()
     {
+        // Arrange
         var originalOut = Console.Out;
         using var output = new StringWriter();
         Console.SetOut(output);
 
         try
         {
+            // Act
             using var context = Context.Create(["--silent"]);
             context.WriteError("Error message");
 
+            // Assert
             Assert.AreEqual(string.Empty, output.ToString());
             Assert.AreEqual(1, context.ExitCode);
         }
@@ -469,14 +518,17 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_WithLogFile_WritesToLogFile()
     {
+        // Arrange
         var logPath = Path.Combine(_testDirectory, "test.log");
 
+        // Act
         using (var context = Context.Create(["--log", logPath, "--silent"]))
         {
             context.WriteLine("Normal message");
             context.WriteError("Error message");
         }
 
+        // Assert
         Assert.IsTrue(File.Exists(logPath));
         var logContent = File.ReadAllText(logPath);
         Assert.Contains("Normal message", logContent);
@@ -489,9 +541,11 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_InvalidLogFilePath_ThrowsException()
     {
+        // Arrange
         // Use an invalid path that will fail to create
         var invalidPath = Path.Combine("/invalid/directory/that/does/not/exist", "test.log");
 
+        // Act/Assert
         var ex = Assert.ThrowsExactly<InvalidOperationException>(() => Context.Create(["--log", invalidPath]));
         Assert.Contains("Failed to open log file", ex.Message);
     }
@@ -502,8 +556,10 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_ResultsFile_SetsResultsProperty()
     {
+        // Act
         using var context = Context.Create(["--results", "results.trx"]);
 
+        // Assert
         Assert.AreEqual("results.trx", context.ResultsFile);
         Assert.AreEqual(0, context.ExitCode);
     }
@@ -514,6 +570,7 @@ public class ContextTests
     [TestMethod]
     public void Context_Create_MissingResultsFilename_ThrowsException()
     {
+        // Act/Assert
         var ex = Assert.ThrowsExactly<ArgumentException>(() => Context.Create(["--results"]));
         Assert.Contains("--results requires a results filename argument", ex.Message);
     }

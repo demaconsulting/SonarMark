@@ -23,10 +23,19 @@ line, message, security category, and vulnerability probability. Additional fiel
 returned by the API are ignored to keep the model focused and reduce coupling to the
 API response schema.
 
+## Fields
+
+| Field | C# Type | Description |
+|:------|:--------|:------------|
+| `Key` | `string` | Unique identifier for the hot-spot |
+| `Component` | `string` | Fully-qualified component path including project key prefix |
+| `Line` | `int?` | Source line number; `null` when the hot-spot has no line association |
+| `Message` | `string` | Human-readable description of the hot-spot |
+| `SecurityCategory` | `string` | Security category key (e.g., `sql-injection`, `xss`) |
+| `VulnerabilityProbability` | `string` | Probability level returned by the API (e.g., `HIGH`, `MEDIUM`, `LOW`) |
+
 ## Satisfies Requirements
 
 - `SonarMark-HotSpot-Record` — holds the data for one hot-spot fetched from the server
 - `SonarMark-HotSpot-OptionalLine` — captures the optional line number field
 - `SonarMark-HotSpot-VulnerabilityProbability` — captures the vulnerability probability field
-- `SonarMark-Server-HotSpots` — holds the data for one hot-spot fetched from the server
-- `SonarMark-Report-HotSpots` — provides the fields rendered in the hot-spots section of the report

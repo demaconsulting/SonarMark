@@ -93,6 +93,10 @@ public class SonarHotSpotTests
 
         // Assert
         Assert.AreEqual("hs-key-789", hotSpot.Key);
+        Assert.AreEqual("test_project:src/Helper.cs", hotSpot.Component);
+        Assert.AreEqual(10, hotSpot.Line);
+        Assert.AreEqual("Potential security issue", hotSpot.Message);
+        Assert.AreEqual("xss", hotSpot.SecurityCategory);
         Assert.AreEqual("LOW", hotSpot.VulnerabilityProbability);
     }
 }

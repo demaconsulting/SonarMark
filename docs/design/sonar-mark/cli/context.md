@@ -10,6 +10,27 @@ typed properties used by the rest of the application.
 `Context` implements `IDisposable` to ensure the log-file stream writer is properly
 closed when the application exits.
 
+## Public Members
+
+### WriteLine
+
+`void WriteLine(string message)` writes a line of text to the standard output stream
+unless `Silent` mode is active. When a log file is open, the message is also mirrored
+to the log file. Callers never need to check `Silent` themselves.
+
+### WriteError
+
+`void WriteError(string message)` writes a line of text to the standard error stream
+(regardless of `Silent` mode for error routing purposes — the current implementation
+suppresses standard-output only), mirrors it to the log file when open, and sets the
+internal `_hasErrors` flag so that `ExitCode` returns `1` after the call.
+
+### ExitCode
+
+`int ExitCode` is a read-only property that returns `1` if `WriteError` has been called
+at least once during the lifetime of the context, and `0` otherwise. `Program.Main`
+returns this value as the process exit code so that CI pipelines can detect failures.
+
 ## Design Decisions
 
 ### Factory Method Pattern
@@ -50,6 +71,7 @@ Using `IDisposable` rather than a finalizer is appropriate because the resource
 - `SonarMark-Validation-JUnitFormat` — JUnit XML file extension is accepted by `ResultsFile`
 - `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
 - `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
+- `SonarMark-Context-ResultsFile` — `--results` flag is parsed and stored as `ResultsFile`
 - `SonarMark-Context-ResultAlias` — `--result` is accepted as a legacy alias for `--results`
 - `SonarMark-Report-Depth` — `Depth` property stores the parsed header depth value
 - `SonarMark-Context-Depth` — `--depth` is the canonical flag; `--report-depth` is a deprecated alias
