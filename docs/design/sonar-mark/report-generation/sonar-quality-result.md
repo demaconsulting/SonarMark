@@ -42,7 +42,7 @@ file as `SonarQualityResult`. It represents one quality gate condition returned
 by the `/api/qualitygates/project_status` endpoint.
 
 | Parameter | C# Type | Description |
-|:----------|:--------|:------------|
+| :---------- | :-------- | :------------ |
 | `Metric` | `string` | Metric key as returned by the API (e.g., `new_coverage`, `new_bugs`) |
 | `Comparator` | `string` | Comparison operator (e.g., `LT`, `GT`) |
 | `ErrorThreshold` | `string?` | Threshold value that triggers an error; `null` when not set |

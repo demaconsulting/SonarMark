@@ -26,7 +26,7 @@ API response schema.
 ## Fields
 
 | Field | C# Type | Description |
-|:------|:--------|:------------|
+| :----- | :------- | :----------- |
 | `Key` | `string` | Unique identifier for the hot-spot |
 | `Component` | `string` | Fully-qualified component path including project key prefix |
 | `Line` | `int?` | Source line number; `null` when the hot-spot has no line association |

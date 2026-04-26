@@ -258,7 +258,7 @@ sonarmark --server https://sonarcloud.io \
   --enforce
 ```
 
-## Self-Validation
+## Validation Options
 
 ### `--validate`
 
