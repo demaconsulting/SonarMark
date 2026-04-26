@@ -28,12 +28,12 @@ Validation failures are surfaced through the `Context` output mechanism:
 
 - Individual test failures are reported via `context.WriteError`, which sets the internal
   `_hasErrors` flag and causes `context.ExitCode` to return `1`.
-- If result-file writing fails (e.g., the output path is not writable), an
-  `InvalidOperationException` is thrown and propagates to `Program.Main`, which
-  catches it, prints the message, and returns exit code `1`.
-- The subsystem does not swallow exceptions from the mocked `SonarQubeClient`;
-  any unexpected exception propagates to `Main` and is re-thrown after printing
-  so that CI runners receive a non-zero exit code.
+- If result-file writing fails (e.g., the output path is not writable or the format is
+  unsupported), the exception is caught internally and reported via `context.WriteError`
+  rather than propagating to `Program.Main`.
+- If an unexpected exception occurs during an individual test, `RunValidationTest` catches
+  it, records the failure via `context.WriteError`, and allows the remaining tests to
+  continue so that CI runners receive accurate pass/fail counts.
 
 ## Satisfies Requirements
 

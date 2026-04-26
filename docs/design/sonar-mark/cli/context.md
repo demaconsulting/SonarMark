@@ -21,8 +21,7 @@ to the log file. Callers never need to check `Silent` themselves.
 ### WriteError
 
 `void WriteError(string message)` writes a line of text to the standard error stream
-(regardless of `Silent` mode for error routing purposes — the current implementation
-suppresses standard-output only), mirrors it to the log file when open, and sets the
+unless `Silent` mode is active, mirrors it to the log file when open, and sets the
 internal `_hasErrors` flag so that `ExitCode` returns `1` after the call.
 
 ### ExitCode
