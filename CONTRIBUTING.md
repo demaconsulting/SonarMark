@@ -79,12 +79,6 @@ We follow a standard GitHub workflow for contributions:
    dotnet test --configuration Release
    ```
 
-5. Run self-validation tests:
-
-   ```bash
-   dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
-   ```
-
 ## Coding Standards
 
 ### General Guidelines
@@ -173,7 +167,8 @@ dotnet test --collect "XPlat Code Coverage"
 
 ```bash
 # Run self-validation tests
-dotnet run --project src/DemaConsulting.SonarMark --configuration Release --framework net10.0 --no-build -- --validate
+dotnet run --project src/DemaConsulting.SonarMark \
+  --configuration Release --framework net10.0 --no-build -- --validate
 ```
 
 ### Test Execution Strategy
@@ -254,15 +249,13 @@ All tests must pass with zero warnings.
 
 ### 2. Linting
 
-Use the lint script which installs dependencies and runs all linters:
+```pwsh
+# After making changes: applies dotnet format, markdown, and YAML fixes silently
+pwsh ./fix.ps1
 
-```bash
-./lint.sh           # Linux/macOS (or: bash ./lint.sh)
-cmd /c lint.bat     # Windows (Command Prompt)
-./lint.bat          # Windows (PowerShell)
+# Before submitting a pull request: all linters must pass
+pwsh ./lint.ps1
 ```
-
-All linters must pass with no errors or warnings.
 
 ### 3. Code Coverage
 

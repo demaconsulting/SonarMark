@@ -74,7 +74,7 @@ jobs:
 
       - name: Publish to NuGet.org
         if: inputs.publish == 'publish'
-        run: |
+        run: |-
           set -e
           dotnet nuget push artifacts/*.nupkg \
             --api-key ${{ secrets.DEMACONSULTINGNUGETKEY }} \

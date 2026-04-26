@@ -6,7 +6,7 @@ globs: ["**/test/**/*.cs", "**/tests/**/*.cs", "**/*Tests.cs", "**/*Test.cs"]
 
 # C# Testing Standards (MSTest)
 
-This document defines DEMA Consulting standards for C# test development using
+This document defines standards for C# test development using
 MSTest within Continuous Compliance environments.
 
 ## Required Standards

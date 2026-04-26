@@ -19,7 +19,8 @@ jobs:
       contents: read
     steps:
       # === INSTALL DEPENDENCIES ===
-      # This section installs all required dependencies for quality checks.
+      # This section installs all required dependencies and tools for quality checks.
+      # Downstream projects: Add any additional dependency installations here.
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -33,8 +34,19 @@ jobs:
         run: >
           dotnet tool restore
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24.x
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
       # === CAPTURE TOOL VERSIONS ===
-      # This section captures the versions of all tools used in the quality checks.
+      # This section captures the versions of all tools used in the build process.
+      # Downstream projects: Add any additional tools to capture here.
 
       - name: Capture tool versions
         shell: bash
@@ -47,30 +59,27 @@ jobs:
           echo "✓ Tool versions captured"
 
       # === CAPTURE OTS SELF-VALIDATION RESULTS ===
-      # This section captures self-validation results from OTS tools.
+      # This section runs the self-validation of each OTS tool and saves TRX results
+      # so that OTS Software Requirements in requirements.yaml can be satisfied.
+      # Downstream projects: Add any additional OTS tool self-validation steps here.
 
       - name: Run VersionMark self-validation
-        run: dotnet versionmark --validate --results artifacts/versionmark-self-validation-quality.trx
+        run: >
+          dotnet versionmark
+          --validate
+          --results artifacts/versionmark-self-validation-quality.trx
 
       # === RUN QUALITY CHECKS ===
-      # This section runs all quality checks for the project.
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: lts/*
-
-      - name: Setup Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.14'
+      # This section runs the linting and quality checks for the project.
+      # Downstream projects: Add any additional quality check steps here.
 
       - name: Run linters
-        shell: bash
-        run: bash ./lint.sh
+        shell: pwsh
+        run: ./lint.ps1
 
       # === UPLOAD ARTIFACTS ===
-      # This section uploads all quality artifacts.
+      # This section uploads all generated artifacts for use by downstream jobs.
+      # Downstream projects: Add any additional artifact uploads here.
 
       - name: Upload quality artifacts
         uses: actions/upload-artifact@v7
@@ -78,13 +87,15 @@ jobs:
           name: artifacts-quality
           path: artifacts/
 
-  # Builds and unit-tests the project on supported operating systems with SonarCloud analysis.
+  # Builds and unit-tests the project on supported operating systems to ensure
+  # unit-tests operate on all platforms and to run SonarScanner for generating
+  # the code quality report.
   build:
     name: Build ${{ matrix.os }}
     needs: quality-checks
     permissions:
-      contents: read       # To read repository contents
-      pull-requests: write  # To write pull requests analysis results and artifacts
+      contents: read
+      pull-requests: write
 
     strategy:
       matrix:
@@ -95,7 +106,8 @@ jobs:
     steps:
 
       # === INSTALL DEPENDENCIES ===
-      # This section installs all required dependencies for the build.
+      # This section installs all required dependencies and tools for building the project.
+      # Downstream projects: Add any additional dependency installations here.
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -116,6 +128,7 @@ jobs:
 
       # === CAPTURE TOOL VERSIONS ===
       # This section captures the versions of all tools used in the build process.
+      # Downstream projects: Add any additional tools to capture here.
 
       - name: Capture tool versions
         shell: bash
@@ -131,13 +144,19 @@ jobs:
           echo "✓ Tool versions captured"
 
       # === CAPTURE OTS SELF-VALIDATION RESULTS ===
-      # This section captures self-validation results from OTS tools.
+      # This section runs the self-validation of each OTS tool and saves TRX results
+      # so that OTS Software Requirements in requirements.yaml can be satisfied.
+      # Downstream projects: Add any additional OTS tool self-validation steps here.
 
       - name: Run VersionMark self-validation
-        run: dotnet versionmark --validate --results artifacts/versionmark-self-validation-${{ matrix.os }}.trx
+        run: >
+          dotnet versionmark
+          --validate
+          --results artifacts/versionmark-self-validation-${{ matrix.os }}.trx
 
       # === BUILD AND TEST ===
       # This section builds and tests the project.
+      # Downstream projects: Add any additional build or test steps here.
 
       - name: Restore Dependencies
         run: >
@@ -186,10 +205,12 @@ jobs:
           dotnet pack
           --no-build
           --no-restore
+          --configuration Release
           --property:PackageVersion=${{ inputs.version }}
 
       # === UPLOAD ARTIFACTS ===
-      # This section uploads all build artifacts.
+      # This section uploads all generated artifacts for use by downstream jobs.
+      # Downstream projects: Add any additional artifact uploads here.
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
@@ -205,7 +226,8 @@ jobs:
             src/DemaConsulting.SonarMark/bin/Release/*.nupkg
             src/DemaConsulting.SonarMark/bin/Release/*.snupkg
 
-  # Performs security analysis using CodeQL.
+  # Runs CodeQL security and quality analysis, gathering results to include
+  # in the code quality report.
   codeql:
     name: CodeQL Analysis
     runs-on: ubuntu-latest
@@ -217,7 +239,8 @@ jobs:
 
     steps:
       # === INSTALL DEPENDENCIES ===
-      # This section installs all required dependencies for CodeQL analysis.
+      # This section installs all required dependencies and tools for CodeQL analysis.
+      # Downstream projects: Add any additional dependency installations here.
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -249,7 +272,8 @@ jobs:
           dotnet restore
 
       # === BUILD AND ANALYZE ===
-      # This section builds the project and runs CodeQL analysis.
+      # This section builds the project and performs CodeQL analysis.
+      # Downstream projects: Add any additional analysis steps here.
 
       - name: Build
         run: >
@@ -266,7 +290,8 @@ jobs:
           upload: false
 
       # === UPLOAD ARTIFACTS ===
-      # This section uploads all CodeQL artifacts.
+      # This section uploads all generated artifacts for use by downstream jobs.
+      # Downstream projects: Add any additional artifact uploads here.
 
       - name: Upload CodeQL artifacts
         uses: actions/upload-artifact@v7
@@ -274,7 +299,9 @@ jobs:
           name: artifacts-codeql
           path: artifacts/
 
-  # Tests the packaged tool on multiple OS and .NET versions.
+  # Performs integration testing on a matrix of operating systems and .NET runtimes,
+  # involving basic tool execution and running self-validation to ensure compatibility
+  # across different platforms and runtime versions.
   integration-test:
     name: Integration Test ${{ matrix.os }} .NET ${{ matrix.dotnet-version }}
     runs-on: ${{ matrix.os }}
@@ -290,6 +317,7 @@ jobs:
     steps:
       # === INSTALL DEPENDENCIES ===
       # This section installs all required dependencies and tools for integration testing.
+      # Downstream projects: Add any additional dependency installations here.
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -324,6 +352,7 @@ jobs:
 
       # === CAPTURE TOOL VERSIONS ===
       # This section captures the versions of all tools used in the integration tests.
+      # Downstream projects: Add any additional tools to capture here.
 
       - name: Capture tool versions
         shell: bash
@@ -341,6 +370,7 @@ jobs:
 
       # === RUN INTEGRATION TESTS ===
       # This section runs the integration tests for the tool.
+      # Downstream projects: Add any additional integration test steps here.
 
       - name: Test version display
         shell: bash
@@ -382,17 +412,18 @@ jobs:
           echo "Report summary:"
           cat "analysis-report-${{ matrix.os }}-${{ matrix.dotnet-version }}.md"
 
-      - name: Run SonarMark self-validation
+      - name: Run self-validation
         shell: bash
         run: |
-          echo "Running SonarMark self-validation..."
+          echo "Running self-validation..."
           sonarmark --validate \
-            --results artifacts/sonarmark-self-validation-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx \
+            --results artifacts/validation-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}.trx \
             || { echo "✗ Self-validation failed"; exit 1; }
           echo "✓ Self-validation succeeded"
 
       # === UPLOAD ARTIFACTS ===
       # This section uploads all generated artifacts for use by downstream jobs.
+      # Downstream projects: Add any additional artifact uploads here.
 
       - name: Upload validation artifacts
         if: always()
@@ -401,9 +432,10 @@ jobs:
           name: artifacts-validation-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
           path: artifacts/
 
-  # Generates all documentation including requirements, trace matrix, and build notes.
+  # Builds the supporting documentation including user guides, requirements,
+  # trace matrices, code quality reports, and build notes.
   build-docs:
-    name: Build Documentation
+    name: Build Documents
     runs-on: windows-latest
     needs: [build, integration-test, codeql]
     permissions:
@@ -412,6 +444,7 @@ jobs:
     steps:
       # === CHECKOUT AND DOWNLOAD ARTIFACTS ===
       # This section retrieves the code and all necessary artifacts from previous jobs.
+      # Downstream projects: Add any additional artifact downloads here.
 
       - name: Checkout
         uses: actions/checkout@v6
@@ -424,14 +457,9 @@ jobs:
           merge-multiple: true
         continue-on-error: true
 
-      - name: Download SonarMark package
-        uses: actions/download-artifact@v8
-        with:
-          name: packages-ubuntu-latest
-          path: packages
-
       # === INSTALL DEPENDENCIES ===
       # This section installs all required dependencies and tools for document generation.
+      # Downstream projects: Add any additional dependency installations here.
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -446,124 +474,47 @@ jobs:
       - name: Install npm dependencies
         run: npm install
 
-      - name: Install SonarMark from package
-        shell: bash
-        run: |
-          echo "Installing SonarMark version ${{ inputs.version }}"
-          dotnet tool install --global \
-            --add-source packages \
-            --version ${{ inputs.version }} \
-            DemaConsulting.SonarMark
-
       - name: Restore Tools
         run: dotnet tool restore
 
       # === CAPTURE TOOL VERSIONS ===
       # This section captures the versions of all tools used in the build process.
+      # Downstream projects: Add any additional tools to capture here.
 
       - name: Capture tool versions for build-docs
         shell: bash
         run: |
+          mkdir -p artifacts
           echo "Capturing tool versions..."
           dotnet versionmark --capture --job-id "build-docs" \
             --output "artifacts/versionmark-build-docs.json" -- \
-            dotnet git node npm pandoc weasyprint sarifmark sonarmark reqstream buildmark versionmark reviewmark
+            dotnet git node npm pandoc weasyprint sarifmark sonarmark reqstream \
+              buildmark versionmark reviewmark fileassert
           echo "✓ Tool versions captured"
 
-      # === CAPTURE OTS SELF-VALIDATION RESULTS ===
-      # This section captures self-validation results from OTS tools.
-
-      - name: Run ReqStream self-validation
-        run: dotnet reqstream --validate --results artifacts/reqstream-self-validation.trx
+      # === COMPILE BUILD NOTES ===
+      # This section generates the Build Notes document. BuildMark and VersionMark self-validations
+      # run here to co-locate their evidence with the document that depends on their output.
+      # Pandoc converts the markdown to HTML, WeasyPrint renders the HTML to PDF, and FileAssert
+      # validates the outputs contain expected content.
+      # Downstream projects: Add any additional build notes steps here.
 
       - name: Run BuildMark self-validation
-        run: dotnet buildmark --validate --results artifacts/buildmark-self-validation.trx
+        run: >
+          dotnet buildmark
+          --validate
+          --results artifacts/buildmark-self-validation.trx
 
       - name: Run VersionMark self-validation
-        run: dotnet versionmark --validate --results artifacts/versionmark-self-validation.trx
-
-      - name: Run SarifMark self-validation
-        run: dotnet sarifmark --validate --results artifacts/sarifmark-self-validation.trx
-
-      - name: Run SonarMark self-validation
-        run: sonarmark --validate --results artifacts/sonarmark-self-validation.trx
-
-      - name: Run ReviewMark self-validation
-        run: dotnet reviewmark --validate --results artifacts/reviewmark-self-validation.trx
-
-      # === GENERATE MARKDOWN REPORTS ===
-      # This section generates all markdown reports from various tools and sources.
-
-      - name: Generate Requirements Report and Trace Matrix
         run: >
-          dotnet reqstream
-          --requirements requirements.yaml
-          --tests "artifacts/**/*.trx"
-          --report docs/requirements_doc/requirements.md
-          --justifications docs/requirements_doc/justifications.md
-          --matrix docs/requirements_report/trace_matrix.md
-          --enforce
-
-      - name: Generate CodeQL Quality Report with SarifMark
-        shell: bash
-        run: >
-          dotnet sarifmark
-          --sarif artifacts/csharp.sarif
-          --report docs/code_quality/codeql-quality.md
-          --heading "SonarMark CodeQL Analysis"
-          --report-depth 1
-
-      - name: Display CodeQL Quality Report
-        shell: bash
-        run: |
-          echo "=== CodeQL Quality Report ==="
-          cat docs/code_quality/codeql-quality.md
-
-      - name: Generate Code Quality Report with SonarMark
-        shell: bash
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >
-          sonarmark
-          --server https://sonarcloud.io
-          --project-key demaconsulting_SonarMark
-          --branch ${{ github.ref_name }}
-          --token "$SONAR_TOKEN"
-          --report docs/code_quality/sonar-quality.md
-          --report-depth 1
-
-      - name: Display SonarCloud Quality Report
-        shell: bash
-        run: |
-          echo "=== SonarCloud Quality Report ==="
-          cat docs/code_quality/sonar-quality.md
-
-      - name: Generate Review Plan and Review Report with ReviewMark
-        shell: bash
-        # TODO: Add --enforce once reviews branch is populated with review evidence PDFs and index.json
-        run: >
-          dotnet reviewmark
-          --plan docs/code_review_plan/plan.md
-          --plan-depth 1
-          --report docs/code_review_report/report.md
-          --report-depth 1
-
-      - name: Display Review Plan
-        shell: bash
-        run: |
-          echo "=== Review Plan ==="
-          cat docs/code_review_plan/plan.md
-
-      - name: Display Review Report
-        shell: bash
-        run: |
-          echo "=== Review Report ==="
-          cat docs/code_review_report/report.md
+          dotnet versionmark
+          --validate
+          --results artifacts/versionmark-self-validation.trx
 
       - name: Generate Build Notes with BuildMark
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        shell: bash
         run: >
           dotnet buildmark
           --build-version ${{ inputs.version }}
@@ -590,48 +541,80 @@ jobs:
           echo "=== Tool Versions Report ==="
           cat docs/build_notes/versions.md
 
-      # === GENERATE HTML DOCUMENTS WITH PANDOC ===
-      # This section converts markdown documents to HTML using Pandoc.
-
-      - name: Generate Guide HTML with Pandoc
-        shell: bash
-        run: >
-          dotnet pandoc
-          --defaults docs/user_guide/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/user_guide/guide.html
-
-      - name: Generate Requirements HTML with Pandoc
-        shell: bash
-        run: >
-          dotnet pandoc
-          --defaults docs/requirements_doc/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/requirements_doc/requirements.html
-
-      - name: Generate Trace Matrix HTML with Pandoc
-        shell: bash
-        run: >
-          dotnet pandoc
-          --defaults docs/requirements_report/definition.yaml
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --metadata version="${{ inputs.version }}"
-          --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/requirements_report/trace_matrix.html
-
       - name: Generate Build Notes HTML with Pandoc
         shell: bash
         run: >
           dotnet pandoc
           --defaults docs/build_notes/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --filter node_modules/.bin/mermaid-filter.cmd
-          --output docs/build_notes/buildnotes.html
+          --output docs/build_notes/build_notes.html
+
+      - name: Generate Build Notes PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/build_notes/build_notes.html
+          "docs/SonarMark Build Notes.pdf"
+
+      - name: Assert Build Notes Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-build-notes.trx
+          build-notes
+
+      # === COMPILE CODE QUALITY REPORT ===
+      # This section generates the Code Quality document. SarifMark and SonarMark self-validations
+      # run here to co-locate their evidence with the document that depends on their output.
+      # Pandoc converts the markdown to HTML, WeasyPrint renders the HTML to PDF, and FileAssert
+      # validates the outputs contain expected content.
+      # Downstream projects: Add any additional code quality steps here.
+
+      - name: Run SarifMark self-validation
+        run: >
+          dotnet sarifmark
+          --validate
+          --results artifacts/sarifmark-self-validation.trx
+
+      - name: Run SonarMark self-validation
+        run: >
+          dotnet sonarmark
+          --validate
+          --results artifacts/sonarmark-self-validation.trx
+
+      - name: Generate CodeQL Quality Report with SarifMark
+        run: >
+          dotnet sarifmark
+          --sarif artifacts/csharp.sarif
+          --report docs/code_quality/codeql-quality.md
+          --heading "SonarMark CodeQL Analysis"
+          --report-depth 1
+
+      - name: Display CodeQL Quality Report
+        shell: bash
+        run: |
+          echo "=== CodeQL Quality Report ==="
+          cat docs/code_quality/codeql-quality.md
+
+      - name: Generate SonarCloud Quality Report
+        shell: bash
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          dotnet sonarmark
+          --server https://sonarcloud.io
+          --project-key demaconsulting_SonarMark
+          --branch ${{ github.ref_name }}
+          --token "$SONAR_TOKEN"
+          --report docs/code_quality/sonar-quality.md
+          --report-depth 1
+
+      - name: Display SonarCloud Quality Report
+        shell: bash
+        run: |
+          echo "=== SonarCloud Quality Report ==="
+          cat docs/code_quality/sonar-quality.md
 
       - name: Generate Code Quality HTML with Pandoc
         shell: bash
@@ -643,6 +626,54 @@ jobs:
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/code_quality/quality.html
 
+      - name: Generate Code Quality PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_quality/quality.html
+          "docs/SonarMark Code Quality.pdf"
+
+      - name: Assert Code Quality Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-code-quality.trx
+          code-quality
+
+      # === COMPILE CODE REVIEW ===
+      # This section generates the Code Review Plan and Report documents. ReviewMark
+      # self-validation runs here to co-locate its evidence with the documents that depend
+      # on its output. Pandoc converts the markdown to HTML, WeasyPrint renders the HTML to
+      # PDF, and FileAssert validates the outputs contain expected content.
+      # Downstream projects: Add any additional code review steps here.
+
+      - name: Run ReviewMark self-validation
+        run: >
+          dotnet reviewmark
+          --validate
+          --results artifacts/reviewmark-self-validation.trx
+
+      - name: Generate Review Plan and Review Report with ReviewMark
+        shell: bash
+        # TODO: Add --enforce once reviews branch is populated with review evidence PDFs and index.json
+        run: >
+          dotnet reviewmark
+          --plan docs/code_review_plan/plan.md
+          --plan-depth 1
+          --report docs/code_review_report/report.md
+          --report-depth 1
+
+      - name: Display Review Plan
+        shell: bash
+        run: |
+          echo "=== Review Plan ==="
+          cat docs/code_review_plan/plan.md
+
+      - name: Display Review Report
+        shell: bash
+        run: |
+          echo "=== Review Report ==="
+          cat docs/code_review_report/report.md
+
       - name: Generate Review Plan HTML with Pandoc
         shell: bash
         run: >
@@ -652,6 +683,13 @@ jobs:
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/code_review_plan/plan.html
+
+      - name: Generate Review Plan PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_review_plan/plan.html
+          "docs/SonarMark Review Plan.pdf"
 
       - name: Generate Review Report HTML with Pandoc
         shell: bash
@@ -663,6 +701,24 @@ jobs:
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/code_review_report/report.html
 
+      - name: Generate Review Report PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/code_review_report/report.html
+          "docs/SonarMark Review Report.pdf"
+
+      - name: Assert Code Review Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-code-review.trx
+          code-review
+
+      # === COMPILE DESIGN DOCUMENT ===
+      # This section generates the Design document using Pandoc and WeasyPrint.
+      # FileAssert validates that the HTML and PDF outputs contain expected content.
+      # Downstream projects: Add any additional design document steps here.
+
       - name: Generate Design HTML with Pandoc
         shell: bash
         run: >
@@ -673,72 +729,133 @@ jobs:
           --metadata date="$(date +'%Y-%m-%d')"
           --output docs/design/design.html
 
-      # === GENERATE PDF DOCUMENTS WITH WEASYPRINT ===
-      # This section converts HTML documents to PDF using Weasyprint.
-
-      - name: Generate Guide PDF with Weasyprint
+      - name: Generate Design PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/user_guide/guide.html
+          docs/design/design.html
+          "docs/SonarMark Software Design.pdf"
+
+      - name: Assert Design Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-design.trx
+          design
+
+      # === COMPILE USER GUIDE ===
+      # This section generates the User Guide document using Pandoc and WeasyPrint.
+      # FileAssert validates that the HTML and PDF outputs contain expected content.
+      # Downstream projects: Add any additional user guide steps here.
+
+      - name: Generate User Guide HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/user_guide/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/user_guide/user_guide.html
+
+      - name: Generate User Guide PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/user_guide/user_guide.html
           "docs/SonarMark User Guide.pdf"
 
-      - name: Generate Requirements PDF with Weasyprint
+      - name: Assert User Guide Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-user-guide.trx
+          user-guide
+
+      # === FILEASSERT SELF-VALIDATION ===
+      # By this point Pandoc and WeasyPrint have each produced 6 validated documents
+      # (Build Notes, Code Quality, Review Plan, Review Report, Design, User Guide),
+      # providing strong OTS evidence for both tools before ReqStream runs. FileAssert
+      # self-validation confirms the assertion tool itself is operational.
+      # Downstream projects: Add any additional FileAssert self-validation steps here.
+
+      - name: Run FileAssert self-validation
+        run: >
+          dotnet fileassert
+          --validate
+          --results artifacts/fileassert-self-validation.trx
+
+      # === COMPILE REQUIREMENTS AND TRACE MATRIX ===
+      # This section generates the Requirements and Trace Matrix documents. ReqStream
+      # self-validation runs here, then ReqStream --enforce consumes all previously generated
+      # TRX evidence (including FileAssert results for Pandoc, WeasyPrint, and FileAssert OTS
+      # requirements). Pandoc and WeasyPrint compile the final documents, and FileAssert
+      # validates their outputs. These final assertions do not contribute to OTS evidence but
+      # confirm the requirements pipeline produced well-formed documents.
+      # Downstream projects: Add any additional requirements steps here.
+
+      - name: Run ReqStream self-validation
+        run: >
+          dotnet reqstream
+          --validate
+          --results artifacts/reqstream-self-validation.trx
+
+      - name: Generate Requirements Report, Justifications, and Trace Matrix
+        run: >
+          dotnet reqstream
+          --requirements requirements.yaml
+          --tests "artifacts/**/*.trx"
+          --report docs/requirements_doc/requirements.md
+          --justifications docs/requirements_doc/justifications.md
+          --matrix docs/requirements_report/trace_matrix.md
+          --enforce
+
+      - name: Generate Requirements HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_doc/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_doc/requirements.html
+
+      - name: Generate Requirements PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
           docs/requirements_doc/requirements.html
           "docs/SonarMark Requirements.pdf"
 
-      - name: Generate Trace Matrix PDF with Weasyprint
+      - name: Generate Trace Matrix HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/requirements_report/definition.yaml
+          --filter node_modules/.bin/mermaid-filter.cmd
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/requirements_report/trace_matrix.html
+
+      - name: Generate Trace Matrix PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
           docs/requirements_report/trace_matrix.html
           "docs/SonarMark Trace Matrix.pdf"
 
-      - name: Generate Build Notes PDF with Weasyprint
+      - name: Assert Requirements Documents with FileAssert
         run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/build_notes/buildnotes.html
-          "docs/SonarMark Build Notes.pdf"
-
-      - name: Generate Code Quality PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/code_quality/quality.html
-          "docs/SonarMark Code Quality.pdf"
-
-      - name: Generate Review Plan PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/code_review_plan/plan.html
-          "docs/SonarMark Review Plan.pdf"
-
-      - name: Generate Review Report PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/code_review_report/report.html
-          "docs/SonarMark Review Report.pdf"
-
-      - name: Generate Design PDF with Weasyprint
-        run: >
-          dotnet weasyprint
-          --pdf-variant pdf/a-3u
-          docs/design/design.html
-          "docs/SonarMark Design.pdf"
+          dotnet fileassert
+          --results artifacts/fileassert-requirements.trx
+          requirements
 
       # === UPLOAD ARTIFACTS ===
       # This section uploads all generated documentation artifacts.
+      # Downstream projects: Add any additional artifact uploads here.
 
       - name: Upload documentation
         uses: actions/upload-artifact@v7
         with:
           name: documents
-          path: |
+          path: |-
             docs/*.pdf
             docs/build_notes.md
