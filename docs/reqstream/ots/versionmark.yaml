@@ -1,8 +1,5 @@
 ---
-# VersionMark OTS Software Requirements
-#
-# Requirements for the VersionMark version tracking tool functionality.
-
+# VersionMark OTS requirements
 sections:
   - title: OTS Software Requirements
     sections:

@@ -1,3 +1,2 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-[assembly: DoNotParallelize]
+// Copyright (c) DemaConsulting. All rights reserved.
+// Licensed under the MIT License.

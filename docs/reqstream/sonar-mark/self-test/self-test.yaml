@@ -1,26 +1,23 @@
 ---
-# SonarMark SelfTest Subsystem Requirements
-#
-# PURPOSE:
-# - Define requirements for the SelfTest subsystem
-# - The SelfTest subsystem provides built-in validation without a live Sonar server
-#
+# SonarMark SelfTest subsystem requirements
 sections:
-  - title: SelfTest Subsystem
-    requirements:
-      - id: SonarMark-Subsystem-SelfTest
-        title: The SelfTest subsystem shall verify tool functionality using mock data without a live server.
-        justification: |
-          The SelfTest subsystem must be able to exercise the full analysis and reporting
-          pipeline using mock HTTP responses, proving that the tool works correctly in an
-          isolated environment without network access.
-        children:
-          - SonarMark-Context-ResultsFile
-          - SonarMark-Validation-Run
-          - SonarMark-Validation-Depth
-          - SonarMark-Validation-Results
-          - SonarMark-Validation-TrxFormat
-          - SonarMark-Validation-JUnitFormat
-        tests:
-          - SelfTest_RunValidation_AllTestsPass
-          - SelfTest_RunValidation_ProducesResultsFile
+  - title: SonarMark Requirements
+    sections:
+      - title: SelfTest Requirements
+        requirements:
+          - id: SonarMark-SelfTest-Orchestrate
+            title: The SelfTest subsystem shall verify tool functionality using mock
+              data without a live server.
+            justification: |
+              The SelfTest subsystem must be able to exercise the full analysis and reporting
+              pipeline using mock HTTP responses, proving that the tool works correctly in an
+              isolated environment without network access.
+            children:
+              - SonarMark-Validation-Run
+              - SonarMark-Validation-Depth
+              - SonarMark-Validation-Results
+              - SonarMark-Validation-TrxFormat
+              - SonarMark-Validation-JUnitFormat
+            tests:
+              - SelfTest_RunValidation_AllTestsPass
+              - SelfTest_RunValidation_ProducesResultsFile

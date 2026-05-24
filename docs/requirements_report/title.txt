@@ -1,14 +1,15 @@
 ---
-title: SonarMark Trace Matrix
-subtitle: Test Traceability Matrix for the SonarMark Tool
-author: DEMA Consulting
-description: Test Traceability Matrix for the SonarMark Tool
+title: "SonarMark Trace Matrix"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Trace Matrix for SonarMark"
 lang: en-US
 keywords:
-  - SonarMark
+  - Requirements
   - Trace Matrix
-  - Traceability
-  - Testing
+  - SonarMark
+  - SonarQube
+  - SonarCloud
   - .NET
   - Command-Line Tool
 ---

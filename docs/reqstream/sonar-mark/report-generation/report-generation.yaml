@@ -1,27 +1,25 @@
 ---
-# SonarMark ReportGeneration Subsystem Requirements
-#
-# PURPOSE:
-# - Define requirements for the ReportGeneration subsystem
-# - The ReportGeneration subsystem renders quality results to markdown
-#
+# SonarMark ReportGeneration subsystem requirements
 sections:
-  - title: ReportGeneration Subsystem
-    requirements:
-      - id: SonarMark-Subsystem-ReportGeneration
-        title: >-
-          The ReportGeneration subsystem shall render quality gate results,
-          issues, and hot-spots as a markdown report.
-        justification: |
-          The ReportGeneration subsystem must produce a well-structured GitHub-flavoured
-          markdown document that includes quality gate status, conditions, issues, and
-          security hot-spots in a format suitable for inclusion in pull requests and
-          documentation pipelines.
-        children:
-          - SonarMark-Report-QualityGate
-          - SonarMark-Report-Issues
-          - SonarMark-Report-HotSpots
-        tests:
-          - ReportGeneration_QualityGateReport_IncludesStatusAndConditions
-          - ReportGeneration_IssuesReport_CategorizesByTypeAndSeverity
-          - ReportGeneration_HotSpotsReport_IncludesPriorityAndCategory
+  - title: SonarMark Requirements
+    sections:
+      - title: ReportGeneration Requirements
+        requirements:
+          - id: SonarMark-ReportGeneration-Orchestrate
+            title: >-
+              The ReportGeneration subsystem shall render quality gate results,
+              issues, and hot-spots as a markdown report.
+            justification: |
+              The ReportGeneration subsystem must produce a well-structured GitHub-flavoured
+              markdown document that includes quality gate status, conditions, issues, and
+              security hot-spots in a format suitable for inclusion in pull requests and
+              documentation pipelines.
+            children:
+              - SonarMark-Report-QualityGate
+              - SonarMark-Report-Issues
+              - SonarMark-Report-HotSpots
+              - SonarMark-Report-QualityCondition
+            tests:
+              - ReportGeneration_QualityGateReport_IncludesStatusAndConditions
+              - ReportGeneration_IssuesReport_CategorizesByTypeAndSeverity
+              - ReportGeneration_HotSpotsReport_IncludesPriorityAndCategory

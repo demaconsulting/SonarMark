@@ -18,34 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using Xunit;
+
 namespace DemaConsulting.SonarMark.Tests;
 
 /// <summary>
 ///     Integration tests that run the SonarMark application through dotnet
 /// </summary>
-[TestClass]
 public class IntegrationTests
 {
-    private string _dllPath = string.Empty;
+    private readonly string _dllPath;
 
     /// <summary>
     ///     Initialize test by locating the SonarMark DLL
     /// </summary>
-    [TestInitialize]
-    public void TestInitialize()
+    public IntegrationTests()
     {
         // The DLL should be in the same directory as the test assembly
         // because the test project references the main project
         var baseDir = AppContext.BaseDirectory;
         _dllPath = Path.Combine(baseDir, "DemaConsulting.SonarMark.dll");
 
-        Assert.IsTrue(File.Exists(_dllPath), $"Could not find SonarMark DLL at {_dllPath}");
+        Assert.True(File.Exists(_dllPath), $"Could not find SonarMark DLL at {_dllPath}");
     }
 
     /// <summary>
     ///     Test that version flag outputs version information
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_VersionFlag_OutputsVersion()
     {
         // Run the application with --version flag
@@ -56,17 +56,17 @@ public class IntegrationTests
             "--version");
 
         // Verify success
-        Assert.AreEqual(0, exitCode);
+        Assert.Equal(0, exitCode);
 
         // Verify version is output
-        Assert.IsFalse(string.IsNullOrWhiteSpace(output));
+        Assert.False(string.IsNullOrWhiteSpace(output));
         Assert.DoesNotContain("Error", output);
     }
 
     /// <summary>
     ///     Test that help flag outputs usage information
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_HelpFlag_OutputsUsageInformation()
     {
         // Run the application with --help flag
@@ -77,7 +77,7 @@ public class IntegrationTests
             "--help");
 
         // Verify success
-        Assert.AreEqual(0, exitCode);
+        Assert.Equal(0, exitCode);
 
         // Verify usage information
         Assert.Contains("Usage: sonarmark", output);
@@ -91,7 +91,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that validate flag outputs not implemented message
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_ValidateFlag_OutputsHeaderAndSummary()
     {
         // Run the application with --validate flag
@@ -102,7 +102,7 @@ public class IntegrationTests
             "--validate");
 
         // Verify success
-        Assert.AreEqual(0, exitCode);
+        Assert.Equal(0, exitCode);
 
         // Verify validation runs successfully
         Assert.Contains("# DEMA Consulting SonarMark", output);
@@ -112,7 +112,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that missing server parameter shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_MissingServerParameter_ShowsError()
     {
         // Run the application without required parameters
@@ -122,7 +122,7 @@ public class IntegrationTests
             _dllPath);
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("--server parameter is required", output);
@@ -131,7 +131,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that missing project-key parameter shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_MissingProjectKeyParameter_ShowsError()
     {
         // Run the application with server but without project-key
@@ -142,7 +142,7 @@ public class IntegrationTests
             "--server", "https://sonarcloud.io");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("--project-key parameter is required", output);
@@ -151,7 +151,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that silent flag suppresses output
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_SilentFlag_SuppressesOutput()
     {
         // Run the application with --silent flag
@@ -162,7 +162,7 @@ public class IntegrationTests
             "--silent");
 
         // Verify error exit code (missing required parameters)
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify no banner in output
         Assert.DoesNotContain("SonarMark version", output);
@@ -171,7 +171,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that invalid argument shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_InvalidArgument_ShowsError()
     {
         // Run the application with invalid argument
@@ -182,7 +182,7 @@ public class IntegrationTests
             "--invalid-argument");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("Error:", output);
@@ -192,7 +192,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that report-depth without value shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_ReportDepthWithoutValue_ShowsError()
     {
         // Run the application with --report-depth but no value
@@ -203,7 +203,7 @@ public class IntegrationTests
             "--report-depth");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("Error:", output);
@@ -213,7 +213,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that report-depth with invalid value shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_ReportDepthWithInvalidValue_ShowsError()
     {
         // Run the application with --report-depth and invalid value
@@ -224,7 +224,7 @@ public class IntegrationTests
             "--report-depth", "invalid");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("Error:", output);
@@ -234,7 +234,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that report-depth with zero shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_ReportDepthWithZero_ShowsError()
     {
         // Run the application with --report-depth 0
@@ -245,7 +245,7 @@ public class IntegrationTests
             "--report-depth", "0");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify error message
         Assert.Contains("Error:", output);
@@ -255,7 +255,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that --depth without value shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_DepthWithoutValue_ShowsError()
     {
         // Run the application with --depth but no value
@@ -266,7 +266,7 @@ public class IntegrationTests
             "--depth");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify that the error message mentions --depth
         Assert.Contains("Error:", output);
@@ -276,7 +276,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that --depth with invalid value shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_DepthWithInvalidValue_ShowsError()
     {
         // Run the application with --depth and invalid value
@@ -287,7 +287,7 @@ public class IntegrationTests
             "--depth", "invalid");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify that the error message mentions --depth
         Assert.Contains("Error:", output);
@@ -297,7 +297,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that --depth with zero shows error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_DepthWithZero_ShowsError()
     {
         // Run the application with --depth 0
@@ -308,7 +308,7 @@ public class IntegrationTests
             "--depth", "0");
 
         // Verify error exit code
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify that the error message mentions --depth
         Assert.Contains("Error:", output);
@@ -318,7 +318,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that token parameter is accepted
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_TokenParameter_IsAccepted()
     {
         // Run the application with token parameter
@@ -329,7 +329,7 @@ public class IntegrationTests
             "--token", "test-token");
 
         // Verify error exit code (missing server and project-key)
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify it's not an argument error
         Assert.DoesNotContain("Unsupported argument", output);
@@ -338,7 +338,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that branch parameter is accepted
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_BranchParameter_IsAccepted()
     {
         // Run the application with branch parameter
@@ -349,7 +349,7 @@ public class IntegrationTests
             "--branch", "main");
 
         // Verify error exit code (missing server and project-key)
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify it's not an argument error
         Assert.DoesNotContain("Unsupported argument", output);
@@ -358,7 +358,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that enforce flag is accepted
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_EnforceFlag_IsAccepted()
     {
         // Run the application with enforce flag
@@ -369,7 +369,7 @@ public class IntegrationTests
             "--enforce");
 
         // Verify error exit code (missing server and project-key)
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify it's not an argument error
         Assert.DoesNotContain("Unsupported argument", output);
@@ -378,7 +378,7 @@ public class IntegrationTests
     /// <summary>
     ///     Test that report parameter is accepted
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void IntegrationTest_ReportParameter_IsAccepted()
     {
         // Run the application with report parameter
@@ -389,7 +389,7 @@ public class IntegrationTests
             "--report", "output.md");
 
         // Verify error exit code (missing server and project-key)
-        Assert.AreEqual(1, exitCode);
+        Assert.Equal(1, exitCode);
 
         // Verify it's not an argument error
         Assert.DoesNotContain("Unsupported argument", output);

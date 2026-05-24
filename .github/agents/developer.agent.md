@@ -14,6 +14,10 @@ Perform software development tasks by determining and applying appropriate stand
 2. **Read relevant standards** using the selection matrix in AGENTS.md
 3. **Pre-flight verification** before making any changes:
    - List files that will be created, modified, or deleted
+   - For each file to be **created**, check whether a counterpart exists in the
+     template (URL in the `# Reference Template` section of `AGENTS.md`).
+     If one exists, fetch it as the starting point; adjust placeholder names and heading
+     depth to match the target path before writing the file
    - For each modified file, identify which companion artifacts need updating
      (requirements, design docs, tests, review-sets)
    - Include companion artifact updates in the work plan
@@ -21,7 +25,7 @@ Perform software development tasks by determining and applying appropriate stand
 5. **Formatting**: Run `pwsh ./fix.ps1` to silently apply all
    available auto-fixers (dotnet format, markdown, YAML) before committing
 6. **Build and test** (code changes only): Run `pwsh ./build.ps1` and confirm it
-   passes — report FAILED if the build or any tests fail
+   passes - report FAILED if the build or any tests fail
 7. **Generate completion report** per the AGENTS.md reporting requirements - save to
    `.agent-logs/{agent-name}-{subject}-{unique-id}.md` and return the summary to the caller
 

@@ -34,6 +34,19 @@ internal static class Program
     /// <summary>
     ///     Gets the application version string.
     /// </summary>
+    /// <value>
+    ///     Version string resolved via a three-step fallback chain: (1)
+    ///     <see cref="AssemblyInformationalVersionAttribute"/> (set by the SDK from the project version on
+    ///     publish), (2) <see cref="System.Version.ToString()"/> from the assembly name as a fallback for
+    ///     development builds, (3) the literal <c>"0.0.0"</c> as a last-resort sentinel so callers never
+    ///     receive <see langword="null"/> or an empty string.
+    /// </value>
+    /// <remarks>
+    ///     The three-level fallback exists because <see cref="AssemblyInformationalVersionAttribute"/> is
+    ///     only populated for published artifacts; development and test builds may not carry it. Using
+    ///     <c>"0.0.0"</c> as the final sentinel ensures the <c>--version</c> flag always produces
+    ///     machine-parseable output regardless of build context.
+    /// </remarks>
     public static string Version
     {
         get
@@ -48,8 +61,24 @@ internal static class Program
     /// <summary>
     ///     Main entry point for the application.
     /// </summary>
+    /// <remarks>
+    ///     Exception handling follows a two-tier strategy: anticipated operational failures
+    ///     (<see cref="ArgumentException"/> for invalid arguments, <see cref="InvalidOperationException"/>
+    ///     for runtime failures such as a failed file open) are caught and reported cleanly so CI runners
+    ///     receive a well-formed exit code. Truly unexpected exceptions are printed to
+    ///     <see cref="Console.Error"/> and re-thrown so the OS or CI event log can capture the full stack
+    ///     trace — swallowing them would make root-cause analysis much harder.
+    /// </remarks>
     /// <param name="args">Command line arguments.</param>
-    /// <returns>Exit code.</returns>
+    /// <returns>
+    ///     Exit code: <c>0</c> on success; <c>1</c> when an <see cref="ArgumentException"/> or
+    ///     <see cref="InvalidOperationException"/> is caught; non-zero (OS-determined) when an unexpected
+    ///     <see cref="Exception"/> is re-thrown.
+    /// </returns>
+    /// <exception cref="Exception">
+    ///     Re-thrown when an unexpected exception escapes <see cref="Run"/> — only anticipated exception
+    ///     types are swallowed; all others propagate so the host environment can log them.
+    /// </exception>
     private static int Main(string[] args)
     {
         try
@@ -86,6 +115,14 @@ internal static class Program
     /// <summary>
     ///     Runs the program logic based on the provided context.
     /// </summary>
+    /// <remarks>
+    ///     Dispatches to exactly one of four paths in fixed priority order:
+    ///     (1) <c>--version</c> — prints the version string and returns immediately, intentionally
+    ///     skipping the banner so scripts can consume the output without noise;
+    ///     (2) banner then <c>--help</c> — prints the application banner followed by usage text;
+    ///     (3) <c>--validate</c> — runs the self-validation suite via <see cref="Validation.Run"/>;
+    ///     (4) SonarQube analysis — calls <see cref="ProcessSonarAnalysis"/> with the current context.
+    /// </remarks>
     /// <param name="context">The context containing command line arguments and program state.</param>
     public static void Run(Context context)
     {
@@ -120,6 +157,11 @@ internal static class Program
     /// <summary>
     ///     Prints the application banner.
     /// </summary>
+    /// <remarks>
+    ///     All output is routed through <paramref name="context"/> rather than written directly to
+    ///     <see cref="Console"/>, preserving the silent-mode contract so callers running with
+    ///     <c>--silent</c> suppress the banner without any special casing here.
+    /// </remarks>
     /// <param name="context">The context for output.</param>
     private static void PrintBanner(Context context)
     {
@@ -131,6 +173,11 @@ internal static class Program
     /// <summary>
     ///     Prints usage information.
     /// </summary>
+    /// <remarks>
+    ///     All output is routed through <paramref name="context"/> rather than written directly to
+    ///     <see cref="Console"/>, preserving the silent-mode contract so callers running with
+    ///     <c>--silent</c> suppress help output without any special casing here.
+    /// </remarks>
     /// <param name="context">The context for output.</param>
     private static void PrintHelp(Context context)
     {
@@ -156,6 +203,31 @@ internal static class Program
     /// <summary>
     ///     Processes SonarQube analysis results and generates reports as requested.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Missing required parameters (<c>--server</c> and <c>--project-key</c>) are detected with
+    ///         early-return guards so every subsequent step can assume valid inputs without defensive
+    ///         null checks throughout the method body.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="InvalidOperationException"/> is caught around the fetch call because
+    ///         <see cref="SonarQubeClient"/> wraps all non-success HTTP responses and API parse failures
+    ///         in that type, providing a single predictable catch point for all server-communication
+    ///         failures.
+    ///     </para>
+    ///     <para>
+    ///         The report-write path uses a generic <c>catch (Exception)</c> block rather than a
+    ///         narrower type because file-system I/O can raise <see cref="System.IO.IOException"/>,
+    ///         <see cref="UnauthorizedAccessException"/>, and other unrelated types; catching them all
+    ///         here prevents a report-write failure from crashing the process after a successful fetch.
+    ///     </para>
+    ///     <para>
+    ///         <c>.GetAwaiter().GetResult()</c> is used to bridge the async
+    ///         <see cref="SonarQubeClient.GetQualityResultByBranchAsync"/> call into the synchronous
+    ///         console-application entry point. A console app has no <c>SynchronizationContext</c>, so
+    ///         this pattern is safe and avoids the overhead of making the entire call chain async.
+    ///     </para>
+    /// </remarks>
     /// <param name="context">The context containing command line arguments and program state.</param>
     private static void ProcessSonarAnalysis(Context context)
     {

@@ -1,41 +1,45 @@
-# SonarHotSpot
+### SonarHotSpot
 
-## Overview
+#### Purpose
 
-`SonarHotSpot` is an immutable record type that represents a single security
-hot-spot returned by the SonarQube/SonarCloud API. It holds the minimum set of
-fields needed to render a useful entry in the markdown report: key, component,
-line (optional), message, security category, and vulnerability probability.
+`SonarHotSpot` is an immutable positional record that represents a single security hot-spot
+returned by the SonarQube/SonarCloud API. It holds the minimum set of fields needed to render
+a useful entry in the markdown report.
 
-## Design Decisions
+#### Data Model
 
-### Record Type
+**Key**: `string` — unique identifier for the hot-spot as returned by the API.
 
-`SonarHotSpot` is declared as a `record` (positional record) rather than a class.
-Records provide value-based equality, concise syntax for immutable data, and
-built-in `ToString` with property names — all appropriate for a data-transfer
-object whose sole job is to carry API response data.
+**Component**: `string` — fully-qualified component path including the project key prefix
+(e.g., `my-project:src/Foo.cs`).
 
-### Minimal Fields
+**Line**: `int?` — source line number; `null` when the hot-spot has no line association.
 
-Only the fields actually used in the markdown report are captured: key, component,
-line, message, security category, and vulnerability probability. Additional fields
-returned by the API are ignored to keep the model focused and reduce coupling to the
-API response schema.
+**Message**: `string` — human-readable description of the hot-spot.
 
-## Fields
+**SecurityCategory**: `string` — security category key as returned by the API
+(e.g., `sql-injection`, `xss`).
 
-| Field | C# Type | Description |
-| :----- | :------- | :----------- |
-| `Key` | `string` | Unique identifier for the hot-spot |
-| `Component` | `string` | Fully-qualified component path including project key prefix |
-| `Line` | `int?` | Source line number; `null` when the hot-spot has no line association |
-| `Message` | `string` | Human-readable description of the hot-spot |
-| `SecurityCategory` | `string` | Security category key (e.g., `sql-injection`, `xss`) |
-| `VulnerabilityProbability` | `string` | Probability level returned by the API (e.g., `HIGH`, `MEDIUM`, `LOW`) |
+**VulnerabilityProbability**: `string` — probability level returned by the API
+(e.g., `HIGH`, `MEDIUM`, `LOW`).
 
-## Satisfies Requirements
+#### Key Methods
 
-- `SonarMark-HotSpot-Record` — holds the data for one hot-spot fetched from the server
-- `SonarMark-HotSpot-OptionalLine` — captures the optional line number field
-- `SonarMark-HotSpot-VulnerabilityProbability` — captures the vulnerability probability field
+N/A - `SonarHotSpot` is a positional record with no defined methods beyond the
+compiler-generated constructor, `Equals`, `GetHashCode`, and `ToString`.
+
+#### Error Handling
+
+N/A - `SonarHotSpot` is a passive data record. All field values are provided by the caller
+(`SonarQubeClient.ParseHotSpot`) and no validation is performed on construction.
+
+#### Dependencies
+
+N/A - `SonarHotSpot` has no dependencies beyond the .NET runtime.
+
+#### Callers
+
+- **SonarQubeClient** — creates `SonarHotSpot` records in `ParseHotSpot` from the API
+  response.
+- **SonarQualityResult** — holds and renders the `IReadOnlyList<SonarHotSpot>` in
+  `AppendHotSpotsSection`.

@@ -175,6 +175,11 @@ internal sealed class Context : IDisposable
     ///     Opens the log file for writing
     /// </summary>
     /// <param name="logFile">Log file path</param>
+    /// <exception cref="InvalidOperationException">
+    ///     Thrown when the log file cannot be opened due to file-system errors such as
+    ///     <see cref="IOException" />, <see cref="UnauthorizedAccessException" />, or
+    ///     invalid path characters.
+    /// </exception>
     private void OpenLogFile(string logFile)
     {
         try
@@ -264,6 +269,10 @@ internal sealed class Context : IDisposable
         ///     Parses command-line arguments
         /// </summary>
         /// <param name="args">Command-line arguments.</param>
+        /// <exception cref="ArgumentException">
+        ///     Thrown for unrecognized flags, missing required argument values, or
+        ///     out-of-range depth values (not 1–6).
+        /// </exception>
         public void ParseArguments(string[] args)
         {
             // Iterate through all arguments, processing each one
@@ -282,6 +291,10 @@ internal sealed class Context : IDisposable
         /// <param name="args">All arguments</param>
         /// <param name="index">Current index</param>
         /// <returns>Updated index</returns>
+        /// <exception cref="ArgumentException">
+        ///     Thrown for unrecognized flags, missing required argument values, or
+        ///     out-of-range depth values (not 1–6).
+        /// </exception>
         private int ParseArgument(string arg, string[] args, int index)
         {
             switch (arg)
@@ -357,6 +370,10 @@ internal sealed class Context : IDisposable
         /// <param name="index">Current index</param>
         /// <param name="description">Description of what's required</param>
         /// <returns>Argument value</returns>
+        /// <exception cref="ArgumentException">
+        ///     Thrown when no value follows the argument (i.e., <paramref name="index" /> is
+        ///     beyond the end of <paramref name="args" />).
+        /// </exception>
         private static string GetRequiredStringArgument(string arg, string[] args, int index, string description)
         {
             if (index >= args.Length)
@@ -374,6 +391,10 @@ internal sealed class Context : IDisposable
         /// <param name="args">All arguments</param>
         /// <param name="index">Current index</param>
         /// <returns>Argument value</returns>
+        /// <exception cref="ArgumentException">
+        ///     Thrown when no value follows the argument or when the value is not a valid
+        ///     integer in the range 1–6.
+        /// </exception>
         private static int GetRequiredIntArgument(string arg, string[] args, int index)
         {
             if (index >= args.Length)
@@ -394,6 +415,10 @@ internal sealed class Context : IDisposable
     ///     Writes a line of output to the console and log file (if logging is enabled).
     /// </summary>
     /// <param name="message">The message to write.</param>
+    /// <remarks>
+    ///     When <see cref="Silent" /> is <see langword="true" /> the message is suppressed from
+    ///     the console but still written to the log file if one is open.
+    /// </remarks>
     public void WriteLine(string message)
     {
         // Write to console unless silent mode is enabled
@@ -410,6 +435,11 @@ internal sealed class Context : IDisposable
     ///     Writes an error message to the error console and log file (if logging is enabled).
     /// </summary>
     /// <param name="message">The error message to write.</param>
+    /// <remarks>
+    ///     Sets the internal error flag so that <see cref="ExitCode" /> returns 1. When
+    ///     <see cref="Silent" /> is <see langword="true" /> the message is suppressed from the
+    ///     console but still written to the log file if one is open.
+    /// </remarks>
     public void WriteError(string message)
     {
         // Mark that we have encountered errors

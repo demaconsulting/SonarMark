@@ -73,7 +73,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Appends the header section with project name, dashboard link, and quality gate status
+    ///     Builds the top-level heading, dashboard hyperlink, and quality gate status summary — the three
+    ///     constant elements every report must open with to orient the reader and provide a direct link to
+    ///     the live project dashboard.
     /// </summary>
     /// <param name="sb">String builder to append to</param>
     /// <param name="heading">Heading prefix (e.g., "#" or "##")</param>
@@ -94,7 +96,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Appends the conditions section if there are any conditions
+    ///     Renders the quality gate conditions as a markdown table providing metric names, thresholds,
+    ///     actual values, and per-condition status; skipped entirely when no conditions are defined so
+    ///     reports for projects without a configured quality gate remain uncluttered.
     /// </summary>
     /// <param name="sb">String builder to append to</param>
     /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
@@ -122,7 +126,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Appends a single condition row to the table
+    ///     Formats one quality gate condition as a markdown table row, substituting the human-readable
+    ///     metric name from <see cref="MetricNames"/> when available so the report is readable without
+    ///     knowledge of internal SonarQube metric keys.
     /// </summary>
     /// <param name="sb">String builder to append to</param>
     /// <param name="condition">Condition to format</param>
@@ -141,7 +147,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Appends the issues section with count and details
+    ///     Renders the issues section with a summary count followed by per-issue compiler-style location
+    ///     lines; always emits the count line (even when zero) so the section is never absent from the
+    ///     report and consumers can rely on its presence.
     /// </summary>
     /// <param name="sb">String builder to append to</param>
     /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
@@ -167,7 +175,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Appends the security hot-spots section with count and details
+    ///     Renders the security hot-spots section with a summary count followed by per-hot-spot
+    ///     compiler-style location lines, following the same layout contract as the issues section for
+    ///     consistency.
     /// </summary>
     /// <param name="sb">String builder to append to</param>
     /// <param name="subHeading">Sub-heading prefix (e.g., "##" or "###")</param>
@@ -210,7 +220,9 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Cleans the component path by removing the project key prefix
+    ///     Strips the SonarQube project-key prefix from a component path so report consumers see relative
+    ///     source paths rather than opaque compound keys (e.g., <c>src/File.cs</c> instead of
+    ///     <c>my-project:src/File.cs</c>).
     /// </summary>
     /// <param name="component">Component path from SonarQube</param>
     /// <returns>Cleaned component path</returns>
@@ -219,7 +231,7 @@ internal sealed record SonarQualityResult(
         var prefix = $"{ProjectKey}:";
         if (component.StartsWith(prefix, StringComparison.Ordinal))
         {
-            return component.Substring(prefix.Length);
+            return component[prefix.Length..];
         }
 
         return component;

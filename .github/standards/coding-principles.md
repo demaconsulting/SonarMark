@@ -3,11 +3,6 @@ name: Coding Principles
 description: Follow these standards when developing any software code.
 ---
 
-# Coding Principles Standards
-
-This document defines universal coding principles and quality standards for software development within
-Continuous Compliance environments.
-
 # Core Principles
 
 ## Literate Coding
@@ -20,10 +15,33 @@ All code MUST follow literate programming principles:
   matches design intent without reading the full codebase
 - **Logical Separation**: Complex functions use block comments to separate and
   describe logical steps within the implementation
-- **Public Documentation**: All public interfaces have comprehensive documentation
-  because consumers and auditors rely on interface contracts for integration
-  and compliance verification
+- **Full Symbol Documentation**: ALL symbols have comprehensive documentation —
+  not just the public interface, because reviewers and auditors must verify every
+  implementation detail. Access-level specifics vary by language; see the language-specific standard.
 - **Clarity Over Cleverness**: Code should be immediately understandable by team members
+
+## API Documentation
+
+Good API documentation enables consumers, reviewers, and agents to use an
+interface correctly without reading the implementation:
+
+- **Self-Contained**: Each member's documentation must be fully understandable
+  in isolation - consumers must not need to read the implementation to call it
+  correctly
+- **Intent-Focused**: Explain WHY the member exists and WHAT problem it solves,
+  not just restate the name - this lets reviewers verify the implementation
+  matches design intent
+- **Parameter and Return Contracts**: Document valid ranges, null handling, and
+  boundary cases - agents and consumers rely on these contracts to call the API
+  correctly
+- **Error Conditions**: Document every exception or error code, the condition
+  that triggers it, and how the caller should respond - undocumented errors
+  cannot be handled correctly
+- **Side Effects**: Document I/O, state mutation, resource allocation, or
+  network calls - hidden side effects cause integration bugs that are hard to
+  diagnose
+- **Thread Safety**: State whether the API is safe for concurrent use - missing
+  this forces consumers to read the implementation or risk data races
 
 ## Universal Code Architecture Principles
 
@@ -55,13 +73,13 @@ All code MUST follow literate programming principles:
 
 ## Universal Anti-Patterns
 
-- **Skip Literate Coding**: Don't skip literate programming comments - they are required for maintainability
-- **Ignore Compiler Warnings**: Don't ignore compiler warnings - they exist for quality enforcement
+- **Skip Literate Coding**: Don't skip literate programming comments
+- **Ignore Compiler Warnings**: Don't ignore compiler warnings
 - **Hidden Dependencies**: Don't create untestable code with hidden dependencies
 - **Hidden Functionality**: Don't implement functionality without requirement
   traceability because untraced functionality cannot be validated during audits
 - **Monolithic Functions**: Don't write monolithic functions with multiple responsibilities
-- **Overcomplicated Solutions**: Don't make solutions more complex than necessary - favor simplicity and clarity
+- **Overcomplicated Solutions**: Don't make solutions more complex than necessary
 - **Premature Optimization**: Don't optimize for performance before establishing correctness
 - **Copy-Paste Programming**: Don't duplicate logic - extract common functionality into reusable components
 - **Magic Numbers**: Don't use unexplained constants - either name them or add clear comments

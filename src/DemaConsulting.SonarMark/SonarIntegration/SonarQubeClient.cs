@@ -73,7 +73,10 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="branch">Branch name (optional)</param>
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality analysis results including quality gate status, conditions, issues, and hot-spots</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="serverUrl"/> or <paramref name="projectKey"/> is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="serverUrl"/> or <paramref name="projectKey"/> is empty or whitespace.</exception>
     /// <exception cref="InvalidOperationException">Thrown when request fails</exception>
+    /// <exception cref="JsonException">Thrown when a response body contains malformed JSON.</exception>
     public async Task<SonarQualityResult> GetQualityResultByBranchAsync(
         string serverUrl,
         string projectKey,
@@ -123,6 +126,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Project name</returns>
     /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
+    /// <exception cref="JsonException">Thrown when the response body contains malformed JSON.</exception>
     private async Task<string> GetProjectNameByKeyAsync(
         string serverUrl,
         string projectKey,
@@ -156,8 +160,9 @@ internal sealed class SonarQubeClient : IDisposable
             throw new InvalidOperationException("Invalid component response: missing 'name' property");
         }
 
-        // Return project name, or fallback to project key if name is null/empty
-        return nameElement.GetString() ?? projectKey;
+        // Return project name, or fallback to project key if name is null or empty
+        var name = nameElement.GetString();
+        return string.IsNullOrEmpty(name) ? projectKey : name;
     }
 
     /// <summary>
@@ -169,6 +174,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Quality gate status and conditions</returns>
     /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
+    /// <exception cref="JsonException">Thrown when the response body contains malformed JSON.</exception>
     private async Task<(string QualityGateStatus, List<SonarQualityCondition> Conditions)>
         GetQualityGateStatusByBranchAsync(
             string serverUrl,
@@ -360,6 +366,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>List of all items accumulated across all pages</returns>
     /// <exception cref="InvalidOperationException">Thrown when an HTTP error occurs or the items property is missing</exception>
+    /// <exception cref="JsonException">Thrown when a response body contains malformed JSON.</exception>
     private async Task<List<T>> FetchPaginatedAsync<T>(
         string baseUrl,
         string itemsPropertyName,
@@ -474,6 +481,7 @@ internal sealed class SonarQubeClient : IDisposable
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Dictionary mapping metric keys to friendly names</returns>
     /// <exception cref="InvalidOperationException">Thrown when response is invalid</exception>
+    /// <exception cref="JsonException">Thrown when the response body contains malformed JSON.</exception>
     private async Task<IReadOnlyDictionary<string, string>> GetMetricNamesByServerAsync(
         string serverUrl,
         CancellationToken cancellationToken)

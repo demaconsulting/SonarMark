@@ -44,6 +44,8 @@ words:
   - markdownlint
   - mstest
   - myterm
+  - xunit
+  - Xunit
   - ncipollo
   - nuget
   - nupkg
@@ -64,6 +66,7 @@ words:
   - SBOM
   - semver
   - snupkg
+  - Postconditions
   - Sonar
   - SonarCloud
   - SonarMark
@@ -95,4 +98,5 @@ ignorePaths:
   - "**/.agent-logs/**"
   - "**/bin/**"
   - "**/obj/**"
+  - "**/generated/**"
   - package-lock.json

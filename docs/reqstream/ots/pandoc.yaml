@@ -1,8 +1,5 @@
 ---
-# Pandoc OTS Software Requirements
-#
-# Requirements for the Pandoc document conversion tool functionality.
-
+# Pandoc OTS requirements
 sections:
   - title: OTS Software Requirements
     sections:

@@ -1,14 +1,15 @@
 ---
-title: SonarMark Design
-subtitle: Software Design Specification for the SonarMark Tool
-author: DEMA Consulting
-description: Software Design Specification for the SonarMark Tool
+title: "SonarMark Software Design Document"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Software Design Document for SonarMark"
 lang: en-US
 keywords:
   - SonarMark
   - Design
-  - Specification
+  - Software Design Document
   - .NET
-  - YAML
+  - SonarQube
+  - SonarCloud
   - Command-Line Tool
 ---

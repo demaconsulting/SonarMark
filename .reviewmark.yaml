@@ -6,14 +6,16 @@
 # Patterns identifying all files that require review.
 # Processed in order; prefix a pattern with '!' to exclude.
 needs-review:
-  - "README.md"                  # Project readme
-  - "**/*.cs"                    # All C# source and test files
-  - "requirements.yaml"          # Root requirements file
-  - "docs/reqstream/**/*.yaml"   # Requirements files
-  - "docs/user_guide/**/*.md"    # User guide documents
-  - "docs/design/**/*.md"        # Design documents
-  - "!**/obj/**"                 # Exclude build output
-  - "!**/bin/**"                 # Exclude build output
+  - README.md  # Project readme
+  - docs/user_guide/**/*.md  # User guide documents
+  - '**/*.cs'                    # All C# source and test files
+  - requirements.yaml  # Root requirements file
+  - docs/reqstream/**/*.yaml  # Requirements files
+  - docs/design/**/*.md  # Design documents
+  - docs/verification/**/*.md  # Verification documents
+  - '!**/obj/**'                 # Exclude build output
+  - '!**/bin/**'                 # Exclude build output
+  - '!**/generated/**'           # Exclude generated output
 
 # Evidence source: review data and index.json are located in the 'reviews' branch
 # of this repository, accessed through the GitHub public HTTPS raw content access.
@@ -29,121 +31,133 @@ reviews:
   - id: Purpose
     title: Review that Advertised Features Match System Design
     paths:
-      - "README.md"
-      - "docs/user_guide/**/*.md"
-      - "docs/reqstream/sonar-mark/sonar-mark.yaml"
-      - "docs/design/introduction.md"
-      - "docs/design/sonar-mark/sonar-mark.md"
-
-  # SonarMark-Architecture Review (one per system)
+      - README.md
+      - docs/user_guide/**/*.md
+      - docs/reqstream/sonar-mark/sonar-mark.yaml
+      - docs/design/introduction.md
+      - docs/design/sonar-mark.md
   - id: SonarMark-Architecture
     title: Review that SonarMark Architecture Satisfies Requirements
     paths:
-      - "docs/reqstream/sonar-mark/sonar-mark.yaml"
-      - "docs/design/introduction.md"
-      - "docs/design/sonar-mark/sonar-mark.md"
-      - "test/**/IntegrationTests.cs"
-      - "test/**/Runner.cs"
-      - "test/**/AssemblyInfo.cs"
+      - docs/reqstream/sonar-mark/sonar-mark.yaml
+      - docs/design/introduction.md
+      - docs/design/sonar-mark.md
+      - docs/verification/introduction.md
+      - docs/verification/sonar-mark.md
+      - test/**/IntegrationTests.cs
+      - test/**/Runner.cs
+      - test/**/AssemblyInfo.cs
 
   # SonarMark-Design Review (one per system)
   - id: SonarMark-Design
     title: Review that SonarMark Design is Consistent and Complete
     paths:
-      - "docs/reqstream/sonar-mark/sonar-mark.yaml"
-      - "docs/reqstream/sonar-mark/platform-requirements.yaml"
-      - "docs/design/**/*.md"
+      - docs/reqstream/sonar-mark/sonar-mark.yaml
+      - docs/reqstream/sonar-mark/platform-requirements.yaml
+      - docs/design/introduction.md
+      - docs/design/sonar-mark.md
+      - docs/design/sonar-mark/**/*.md
+
+  # SonarMark-Verification Review (one per system)
+  - id: SonarMark-Verification
+    title: Review that SonarMark Verification is Consistent and Complete
+    paths:
+      - docs/reqstream/sonar-mark/sonar-mark.yaml
+      - docs/verification/introduction.md
+      - docs/verification/sonar-mark.md
 
   # SonarMark-AllRequirements Review (one per system)
   - id: SonarMark-AllRequirements
     title: Review that All SonarMark Requirements are Complete
     paths:
-      - "requirements.yaml"
-      - "docs/reqstream/**/*.yaml"
+      - requirements.yaml
+      - docs/reqstream/**/*.yaml
 
-  # Subsystem reviews — subsystem req + design + subsystem test file only (NO unit source files)
+  # Subsystem reviews -- subsystem req + design + subsystem test file only (NO unit source files)
   - id: SonarMark-Cli
     title: Review that SonarMark Cli Satisfies Subsystem Requirements
     paths:
-      - "docs/reqstream/sonar-mark/cli/cli.yaml"
-      - "docs/design/sonar-mark/cli/cli.md"
-      - "test/**/Cli/CliTests.cs"
+      - docs/reqstream/sonar-mark/cli/cli.yaml
+      - docs/design/sonar-mark/cli.md
+      - test/**/Cli/CliTests.cs
 
   - id: SonarMark-SonarIntegration
     title: Review that SonarMark SonarIntegration Satisfies Subsystem Requirements
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/sonar-integration.yaml"
-      - "docs/design/sonar-mark/sonar-integration/sonar-integration.md"
-      - "test/**/SonarIntegration/SonarIntegrationTests.cs"
-      - "test/**/SonarIntegration/SonarIntegrationTestHelpers.cs"
+      - docs/reqstream/sonar-mark/sonar-integration/sonar-integration.yaml
+      - docs/design/sonar-mark/sonar-integration.md
+      - test/**/SonarIntegration/SonarIntegrationTests.cs
+      - test/**/SonarIntegration/SonarIntegrationTestHelpers.cs
 
   - id: SonarMark-ReportGeneration
     title: Review that SonarMark ReportGeneration Satisfies Subsystem Requirements
     paths:
-      - "docs/reqstream/sonar-mark/report-generation/report-generation.yaml"
-      - "docs/design/sonar-mark/report-generation/report-generation.md"
-      - "test/**/ReportGeneration/ReportGenerationTests.cs"
+      - docs/reqstream/sonar-mark/report-generation/report-generation.yaml
+      - docs/design/sonar-mark/report-generation.md
+      - test/**/ReportGeneration/ReportGenerationTests.cs
 
   - id: SonarMark-SelfTest
     title: Review that SonarMark SelfTest Satisfies Subsystem Requirements
     paths:
-      - "docs/reqstream/sonar-mark/self-test/self-test.yaml"
-      - "docs/design/sonar-mark/self-test/self-test.md"
-      - "test/**/SelfTest/SelfTestTests.cs"
+      - docs/reqstream/sonar-mark/self-test/self-test.yaml
+      - docs/design/sonar-mark/self-test.md
+      - test/**/SelfTest/SelfTestTests.cs
 
-  # Unit reviews — include actual source code + unit tests
+  # Unit reviews -- include actual source code + unit tests
   - id: SonarMark-Cli-Context
     title: Review that SonarMark Cli Context Implementation is Correct
     paths:
-      - "docs/reqstream/sonar-mark/cli/context.yaml"
-      - "docs/design/sonar-mark/cli/context.md"
-      - "src/**/Context.cs"
-      - "test/**/ContextTests.cs"
+      - docs/reqstream/sonar-mark/cli/context.yaml
+      - docs/design/sonar-mark/cli/context.md
+      - src/**/Context.cs
+      - test/**/ContextTests.cs
 
   - id: SonarMark-Program
     title: Review that SonarMark Program Implementation is Correct
     paths:
-      - "docs/reqstream/sonar-mark/program.yaml"
-      - "docs/design/sonar-mark/program.md"
-      - "src/**/Program.cs"
-      - "test/**/ProgramTests.cs"
+      - docs/reqstream/sonar-mark/program.yaml
+      - docs/design/sonar-mark/program.md
+      - src/**/Program.cs
+      - test/**/ProgramTests.cs
 
   - id: SonarMark-SelfTest-Validation
     title: Review that SonarMark SelfTest Validation Implementation is Correct
     paths:
-      - "docs/reqstream/sonar-mark/self-test/validation.yaml"
-      - "docs/design/sonar-mark/self-test/validation.md"
-      - "src/**/Validation.cs"
-      - "test/**/ValidationTests.cs"
+      - docs/reqstream/sonar-mark/self-test/validation.yaml
+      - docs/design/sonar-mark/self-test/validation.md
+      - src/**/Validation.cs
+      - test/**/ValidationTests.cs
 
   - id: SonarMark-SonarIntegration-SonarHotSpot
     title: Review that SonarMark SonarIntegration SonarHotSpot Implementation is Correct
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/sonar-hot-spot.yaml"
-      - "docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md"
-      - "src/**/SonarHotSpot.cs"
-      - "test/**/SonarHotSpotTests.cs"
+      - docs/reqstream/sonar-mark/sonar-integration/sonar-hot-spot.yaml
+      - docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md
+      - src/**/SonarHotSpot.cs
+      - test/**/SonarHotSpotTests.cs
 
   - id: SonarMark-SonarIntegration-SonarIssue
     title: Review that SonarMark SonarIntegration SonarIssue Implementation is Correct
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/sonar-issue.yaml"
-      - "docs/design/sonar-mark/sonar-integration/sonar-issue.md"
-      - "src/**/SonarIssue.cs"
-      - "test/**/SonarIssueTests.cs"
+      - docs/reqstream/sonar-mark/sonar-integration/sonar-issue.yaml
+      - docs/design/sonar-mark/sonar-integration/sonar-issue.md
+      - src/**/SonarIssue.cs
+      - test/**/SonarIssueTests.cs
 
   - id: SonarMark-ReportGeneration-SonarQualityResult
-    title: Review that SonarMark ReportGeneration SonarQualityResult Implementation is Correct
+    title: Review that SonarMark ReportGeneration SonarQualityResult Implementation
+      is Correct
     paths:
-      - "docs/reqstream/sonar-mark/report-generation/sonar-quality-result.yaml"
-      - "docs/design/sonar-mark/report-generation/sonar-quality-result.md"
-      - "src/**/SonarQualityResult.cs"
-      - "test/**/SonarQualityResultTests.cs"
+      - docs/reqstream/sonar-mark/report-generation/sonar-quality-result.yaml
+      - docs/design/sonar-mark/report-generation/sonar-quality-result.md
+      - src/**/SonarQualityResult.cs
+      - test/**/SonarQualityResultTests.cs
 
   - id: SonarMark-SonarIntegration-SonarQubeClient
-    title: Review that SonarMark SonarIntegration SonarQubeClient Implementation is Correct
+    title: Review that SonarMark SonarIntegration SonarQubeClient Implementation is
+      Correct
     paths:
-      - "docs/reqstream/sonar-mark/sonar-integration/sonar-qube-client.yaml"
-      - "docs/design/sonar-mark/sonar-integration/sonar-qube-client.md"
-      - "src/**/SonarQubeClient.cs"
-      - "test/**/SonarQubeClientTests.cs"
+      - docs/reqstream/sonar-mark/sonar-integration/sonar-qube-client.yaml
+      - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md
+      - src/**/SonarQubeClient.cs
+      - test/**/SonarQubeClientTests.cs

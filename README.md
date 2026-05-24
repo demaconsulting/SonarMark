@@ -28,6 +28,9 @@ documentation workflows.
 - 🌐 **Multi-Platform** - Support for .NET 8, 9, and 10 across Windows, Linux, and macOS
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
+
+### Project Quality Practices
+
 - 🔍 **Linting Enforcement** - markdownlint, cspell, and yamllint enforced on every CI run
 - 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following
   the [Continuous Compliance][link-continuous-compliance] methodology
@@ -218,6 +221,16 @@ Found 1 security hot-spot
 src/Database.cs(88): HIGH [sql-injection] Make sure using this SQL query is safe
 ```
 
+## Building
+
+```pwsh
+pwsh ./build.ps1
+```
+
+## User Guide
+
+The SonarMark User Guide is available on the [SonarMark releases page](https://github.com/demaconsulting/SonarMark/releases).
+
 ## Contributing
 
 Contributions are welcome! We appreciate your interest in improving SonarMark.
@@ -241,7 +254,7 @@ By contributing to this project, you agree that your contributions will be licen
 - 🐛 **Report Bugs**: [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues)
 - 💡 **Request Features**: [GitHub Issues](https://github.com/demaconsulting/SonarMark/issues)
 - ❓ **Ask Questions**: [GitHub Discussions](https://github.com/demaconsulting/SonarMark/discussions)
-- 📖 **Documentation**: [Usage Guide](https://github.com/demaconsulting/SonarMark/blob/main/docs/user_guide/introduction.md)
+- 📖 **Documentation**: [User Guide](https://github.com/demaconsulting/SonarMark/releases)
 - 🤝 **Contributing**: [Contributing Guide](https://github.com/demaconsulting/SonarMark/blob/main/CONTRIBUTING.md)
 
 ## Security
@@ -270,7 +283,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
-[link-guide]: https://github.com/demaconsulting/SonarMark/blob/main/docs/user_guide/introduction.md
+[link-guide]: https://github.com/demaconsulting/SonarMark/releases
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
 [link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors
 [link-license]: https://github.com/demaconsulting/SonarMark/blob/main/LICENSE

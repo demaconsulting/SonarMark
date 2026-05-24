@@ -1,89 +1,96 @@
 ---
-# SonarMark System Integration Requirements
-#
-# PURPOSE:
-# - Define requirements for the SonarMark system as a whole
-# - These are end-to-end requirements verified by running the complete application
-#   against a live SonarQube/SonarCloud instance and capturing the results
-#
-# These requirements are distinct from unit requirements in that they verify the
-# integrated system behavior — all software units working together correctly.
-#
+# SonarMark system-level requirements
 sections:
-  - title: System Integration
+  - title: SonarMark Requirements
     requirements:
-      - id: SonarMark-System-QualityGate
-        title: The system shall retrieve quality gate status from SonarQube/SonarCloud and include it in the report.
+      - id: SonarMark-Core-QualityGate
+        title: The system shall retrieve quality gate status from SonarQube/SonarCloud
+          and include it in the report.
         justification: |
           Quality gate status is the primary outcome of a SonarQube/SonarCloud analysis and the most
           important metric for CI/CD enforcement decisions. Verifying end-to-end retrieval and reporting
           confirms that the CLI, HTTP client, data model, and report renderer all integrate correctly
           to deliver the quality gate result.
+          Note: this requirement intentionally combines retrieval and reporting into one statement because
+          the combined behavior is the single observable end-to-end outcome that matters for system
+          integration; reviewers should not split this into two separate requirements.
         children:
-          - SonarMark-Subsystem-SonarIntegration
-          - SonarMark-Subsystem-ReportGeneration
+          - SonarMark-SonarIntegration-Orchestrate
+          - SonarMark-ReportGeneration-Orchestrate
         tests:
           - SonarMark_QualityGateRetrieval
 
-      - id: SonarMark-System-Issues
-        title: The system shall retrieve issues from SonarQube/SonarCloud and include them in the report.
+      - id: SonarMark-Core-Issues
+        title: The system shall retrieve issues from SonarQube/SonarCloud and include
+          them in the report.
         justification: |
           Issues represent code quality defects identified by Sonar analysis. Verifying end-to-end
           retrieval and reporting confirms that all pagination, data mapping, and rendering components
           integrate correctly to deliver a complete issues list.
+          Note: this requirement intentionally combines retrieval and reporting into one statement because
+          the combined behavior is the single observable end-to-end outcome that matters for system
+          integration; reviewers should not split this into two separate requirements.
         children:
-          - SonarMark-Subsystem-SonarIntegration
-          - SonarMark-Subsystem-ReportGeneration
+          - SonarMark-SonarIntegration-Orchestrate
+          - SonarMark-ReportGeneration-Orchestrate
         tests:
           - SonarMark_IssuesRetrieval
 
-      - id: SonarMark-System-HotSpots
-        title: The system shall retrieve security hot-spots from SonarQube/SonarCloud and include them in the report.
+      - id: SonarMark-Core-HotSpots
+        title: The system shall retrieve security hot-spots from SonarQube/SonarCloud
+          and include them in the report.
         justification: |
           Security hot-spots require manual security review and must be reported separately from
           standard issues. Verifying end-to-end retrieval and reporting confirms that the security
           hot-spot data path through the system integrates correctly from API call to rendered report.
+          Note: this requirement intentionally combines retrieval and reporting into one statement because
+          the combined behavior is the single observable end-to-end outcome that matters for system
+          integration; reviewers should not split this into two separate requirements.
         children:
-          - SonarMark-Subsystem-SonarIntegration
-          - SonarMark-Subsystem-ReportGeneration
+          - SonarMark-SonarIntegration-Orchestrate
+          - SonarMark-ReportGeneration-Orchestrate
         tests:
           - SonarMark_HotSpotsRetrieval
 
-      - id: SonarMark-System-Report
-        title: The system shall generate a complete markdown report combining all retrieved analysis data.
+      - id: SonarMark-Core-Report
+        title: The system shall generate a complete markdown report combining all
+          retrieved analysis data.
         justification: |
           The primary deliverable of SonarMark is a comprehensive markdown report that combines
           quality gate status, issues, and security hot-spots. Verifying this end-to-end confirms
-          that all system components — CLI argument handling, server communication, data aggregation,
-          and markdown rendering — operate correctly as an integrated whole.
+          that all system components - CLI argument handling, server communication, data aggregation,
+          and markdown rendering - operate correctly as an integrated whole.
         children:
-          - SonarMark-Subsystem-Cli
-          - SonarMark-Subsystem-SonarIntegration
-          - SonarMark-Subsystem-ReportGeneration
+          - SonarMark-Cli-Orchestrate
+          - SonarMark-SonarIntegration-Orchestrate
+          - SonarMark-ReportGeneration-Orchestrate
         tests:
           - SonarMark_MarkdownReportGeneration
 
-      - id: SonarMark-System-Validation
-        title: The system shall run self-validation tests and report results when --validate is supplied.
+      - id: SonarMark-Core-Validation
+        title: The system shall run self-validation tests and report results when
+          --validate is supplied.
         justification: |
           Self-validation mode lets users verify that SonarMark is functioning correctly without
           requiring a live SonarQube/SonarCloud server. Verifying this end-to-end confirms that the
           CLI dispatch, self-test runner, and result reporting all integrate correctly and that the
           shipped binary is fully testable in isolated environments.
         children:
-          - SonarMark-Subsystem-SelfTest
+          - SonarMark-SelfTest-Orchestrate
         tests:
           - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
 
-      - id: SonarMark-System-Enforce
-        title: The system shall return a non-zero exit code when --enforce is supplied and the quality gate fails.
+      - id: SonarMark-Core-Enforce
+        title: The system shall return a non-zero exit code when --enforce is supplied
+          and the quality gate fails.
         justification: |
           Enforcement mode allows SonarMark to act as a build quality gate in CI/CD pipelines,
           failing the build automatically when the Sonar quality gate status is not passing. Verifying
           this end-to-end confirms that the --enforce flag is correctly parsed, propagated to the
           report generation layer, and results in an appropriate process exit code.
         children:
-          - SonarMark-Subsystem-Cli
-          - SonarMark-Subsystem-ReportGeneration
+          - SonarMark-Cli-Orchestrate
+          - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
+          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode

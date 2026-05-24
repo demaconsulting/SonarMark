@@ -1,99 +1,144 @@
-# Context
+### Context
 
-## Overview
+#### Purpose
 
-The `Context` class parses command-line arguments, manages console output (including
-silent mode and log-file redirection), and tracks whether any errors have been reported.
-It acts as the bridge between the raw argument array passed to `Main` and the strongly
-typed properties used by the rest of the application.
+`Context` parses command-line arguments, manages console output (including silent mode and
+log-file redirection), and tracks whether any errors have been reported. It is the bridge
+between the raw argument array passed to `Main` and the strongly typed properties used by
+the rest of the application. `Context` implements `IDisposable` to ensure the log-file
+stream writer is closed when the application exits.
 
-`Context` implements `IDisposable` to ensure the log-file stream writer is properly
-closed when the application exits.
+#### Data Model
 
-## Public Members
+**Version**: `bool` — `true` when `--version` or `-v` was supplied; causes `Run` to print
+the version string and return immediately.
 
-### WriteLine
+**Help**: `bool` — `true` when `--help`, `-h`, or `-?` was supplied; causes `Run` to print
+help text and return.
 
-`void WriteLine(string message)` writes a line of text to the standard output stream
-unless `Silent` mode is active. When a log file is open, the message is also mirrored
-to the log file. Callers never need to check `Silent` themselves.
+**Silent**: `bool` — `true` when `--silent` was supplied; suppresses all console output from
+`WriteLine` and `WriteError`.
 
-### WriteError
+**Validate**: `bool` — `true` when `--validate` was supplied; causes `Run` to invoke
+`Validation.Run`.
 
-`void WriteError(string message)` writes a line of text to the standard error stream
-unless `Silent` mode is active, mirrors it to the log file when open, and sets the
-internal `_hasErrors` flag so that `ExitCode` returns `1` after the call.
+**Enforce**: `bool` — `true` when `--enforce` was supplied; causes `ProcessSonarAnalysis` to
+report an error when the quality gate status is `ERROR`.
 
-### ExitCode
+**ReportFile**: `string?` — path supplied with `--report`; `null` when not provided.
 
-`int ExitCode` is a read-only property that returns `1` if `WriteError` has been called
-at least once during the lifetime of the context, and `0` otherwise. `Program.Main`
-returns this value as the process exit code so that CI pipelines can detect failures.
+**Depth**: `int` — markdown heading depth from `--depth` (or deprecated `--report-depth`);
+defaults to 1; valid range is 1–6.
 
-## Design Decisions
+**Token**: `string?` — PAT from `--token`; `null` when not provided; passed to
+`SonarQubeClient` for HTTP Basic authentication.
 
-### Factory Method Pattern
+**Server**: `string?` — SonarQube/SonarCloud server URL from `--server`; `null` when not
+provided.
 
-`Context` uses a `Create` factory method rather than a public constructor. This
-separates object construction (argument parsing, file opening) from the data the
-object holds, and allows the internal `ArgumentParser` helper to be reused or
-tested independently.
+**ProjectKey**: `string?` — SonarQube/SonarCloud project key from `--project-key`; `null`
+when not provided.
 
-### Internal ArgumentParser
+**Branch**: `string?` — branch name from `--branch`; `null` when not provided, in which case
+the server uses its default branch.
 
-The `ArgumentParser` nested class performs the switch-based parsing loop. Keeping it
-private to `Context` prevents it from leaking into the public API while still
-allowing the factory method to call it. All validation logic (e.g., missing argument
-values, non-integer depth) is handled here and surfaced as `ArgumentException`.
+**ResultsFile**: `string?` — path supplied with `--results` (or legacy `--result`); `null`
+when not provided; used by `Validation.WriteResultsFile`.
 
-### Output Routing
+**HttpClientFactory**: `Func<string?, SonarQubeClient>?` — optional factory injected via
+`Context.Create(args, factory)`; used by integration tests to supply a mock client; `null`
+on the production path.
 
-`WriteLine` and `WriteError` honour the `Silent` flag so callers never need
-to check it themselves. Both methods also mirror output to the log file when one
-has been opened. `WriteError` additionally sets the `_hasErrors` flag, which drives
-the `ExitCode` property.
+**ExitCode**: `int` — read-only property; returns 1 when `_hasErrors` is `true`, 0 otherwise.
 
-### IDisposable for Log File
+**_hasErrors**: `bool` — private field; set by `WriteError`; drives `ExitCode`.
 
-The log-file stream writer is held as a nullable field and released in `Dispose`.
-Using `IDisposable` rather than a finalizer is appropriate because the resource
-(an open file handle) must be released deterministically at application exit.
+**_logWriter**: `StreamWriter?` — private field; non-null when a log file is open; released
+in `Dispose`.
 
-## Satisfies Requirements
+#### Key Methods
 
-- `SonarMark-Cli-Interface` — `Context.Create` parses the full set of supported flags
-- `SonarMark-Cli-Silent` — `Silent` property suppresses console output
-- `SonarMark-Cli-Log` — `OpenLogFile` writes all output to a log file
-- `SonarMark-Cli-Enforce` — `Enforce` property enables quality gate enforcement
-- `SonarMark-Validation-Results` — `ResultsFile` property specifies where results are written
-- `SonarMark-Validation-TrxFormat` — TRX file extension is accepted by `ResultsFile`
-- `SonarMark-Validation-JUnitFormat` — JUnit XML file extension is accepted by `ResultsFile`
-- `SonarMark-Enforce-Mode` — `Enforce` flag is parsed and stored
-- `SonarMark-Enforce-ExitCode` — `ExitCode` returns 1 when `_hasErrors` is true
-- `SonarMark-Context-ResultsFile` — `--results` flag is parsed and stored as `ResultsFile`
-- `SonarMark-Context-ResultAlias` — `--result` is accepted as a legacy alias for `--results`
-- `SonarMark-Report-Depth` — `Depth` property stores the parsed header depth value
-- `SonarMark-Context-Depth` — `--depth` is the canonical flag; `--report-depth` is a deprecated alias
+**Create(string[] args)**: Factory method — parses arguments and returns a new `Context`.
 
-## Backward Compatibility
+- *Parameters*: `string[] args` — raw command-line arguments.
+- *Returns*: `Context` — fully initialized instance.
+- *Preconditions*: `args` must not be null; throws `ArgumentNullException` otherwise.
+- *Postconditions*: All properties are populated from parsed arguments; log file is open if
+  `--log` was supplied.
 
-### Legacy `--result` Alias
+Delegates to `ArgumentParser.ParseArguments`, constructs a `Context` via object initializer,
+and calls `OpenLogFile` when a log path was parsed.
 
-The `ArgumentParser` accepts `--result` as a fall-through case immediately before `--results`
-in the switch statement. Both spellings invoke the same `GetRequiredStringArgument` call and
-set the same `ResultsFile` property, so downstream code is unaffected.
+**Create(string[] args, Func\<string?, SonarQubeClient\>? httpClientFactory)**: Overload that
+additionally accepts an HTTP client factory for test injection.
 
-This alias is intentionally omitted from help text and user-facing documentation because it
-exists only to avoid breaking existing automation scripts that pre-date the canonical
-`--results` spelling. New users and new scripts should always use `--results`.
+- *Parameters*: `string[] args` — raw command-line arguments; `Func<string?, SonarQubeClient>?
+  httpClientFactory` — optional mock factory.
+- *Returns*: `Context` — fully initialized instance with the factory stored in
+  `HttpClientFactory`.
+- *Preconditions*: `args` must not be null; throws `ArgumentNullException` otherwise.
+- *Postconditions*: Same as the single-argument overload; `HttpClientFactory` is set.
 
-### Legacy `--report-depth` Alias
+**WriteLine(string message)**: Writes a line to stdout (unless silent) and to the log file
+(if open).
 
-The `ArgumentParser` accepts `--report-depth` as a fall-through case immediately after
-`--depth` in the switch statement. Both spellings invoke the same `GetRequiredIntArgument`
-call and set the same `Depth` property, so downstream code is unaffected.
+- *Parameters*: `string message` — text to write.
+- *Returns*: `void`.
+- *Preconditions*: None.
+- *Postconditions*: Message is written to at least one destination unless both `Silent` is
+  true and no log file is open.
 
-`--report-depth` is retained for backwards compatibility with existing automation scripts
-that pre-date the canonical `--depth` spelling. The help text and user-facing documentation
-now reference `--depth` as the primary option and note that `--report-depth` is deprecated.
-New users and new scripts should always use `--depth`.
+**WriteError(string message)**: Writes a line to stderr in red (unless silent), mirrors to
+the log file, and sets `_hasErrors`.
+
+- *Parameters*: `string message` — error text to write.
+- *Returns*: `void`.
+- *Preconditions*: None.
+- *Postconditions*: `_hasErrors` is `true`; `ExitCode` will return 1.
+
+**Dispose**: Releases the log-file stream writer.
+
+- *Parameters*: None.
+- *Returns*: `void`.
+- *Preconditions*: None.
+- *Postconditions*: `_logWriter` is `null`; the log-file handle is closed.
+
+**OpenLogFile(string logFile)**: Opens the specified path for writing and stores the resulting
+`StreamWriter` in `_logWriter`.
+
+- *Parameters*: `string logFile` — file-system path to the log file.
+- *Returns*: `void`.
+- *Preconditions*: `logFile` must be a valid, writable path.
+- *Postconditions*: `_logWriter` is non-null; subsequent `WriteLine`/`WriteError` calls mirror
+  output to the file.
+- *Exceptions*: Wraps any file-system exception (e.g., `IOException`,
+  `UnauthorizedAccessException`) in `InvalidOperationException` with a descriptive message.
+
+**ArgumentParser** (nested private class): Encapsulates all switch-based argument parsing so
+that `Context.Create` remains a thin factory method.
+
+- **ParseArguments(string[] args)**: Iterates over `args` and calls `ParseArgument` for each
+  token; throws `ArgumentException` for unrecognized flags or missing values.
+- **ParseArgument(string arg, string[] args, int index)**: Dispatches on `arg` via `switch`;
+  calls `GetRequiredStringArgument` or `GetRequiredIntArgument` for flags that take a value;
+  returns the updated index.
+- **GetRequiredStringArgument(...)**: Validates that a following token exists and returns it;
+  throws `ArgumentException` otherwise.
+- **GetRequiredIntArgument(...)**: Validates that a following token exists, parses it as an
+  integer in [1, 6], and returns the value; throws `ArgumentException` otherwise.
+
+#### Error Handling
+
+`ArgumentParser.ParseArguments` throws `ArgumentException` for unrecognized flags, missing
+required argument values, and out-of-range depth values (not 1–6). These propagate to
+`Program.Main`, which catches and reports them. `OpenLogFile` wraps any file-system exception
+in an `InvalidOperationException` with context, which also propagates to `Main`.
+
+#### Dependencies
+
+- **SonarQubeClient** — referenced only through the `HttpClientFactory` delegate type stored
+  on `Context`; no direct instantiation within this unit.
+
+#### Callers
+
+- **Program** — creates `Context` via `Context.Create` and passes it to all subsystems.

@@ -23,13 +23,20 @@ namespace DemaConsulting.SonarMark.SonarIntegration;
 /// <summary>
 ///     Represents a SonarQube issue
 /// </summary>
-/// <param name="Key">Issue key</param>
-/// <param name="Rule">Rule key</param>
-/// <param name="Severity">Issue severity (e.g., BLOCKER, CRITICAL, MAJOR, MINOR, INFO)</param>
-/// <param name="Component">Component key</param>
-/// <param name="Line">Line number (if applicable)</param>
-/// <param name="Message">Issue message</param>
-/// <param name="Type">Issue type (e.g., BUG, VULNERABILITY, CODE_SMELL)</param>
+/// <remarks>
+///     Immutable data carrier populated from the SonarQube API by
+///     <see cref="SonarQubeClient.ParseIssue"/> and consumed by
+///     <see cref="DemaConsulting.SonarMark.ReportGeneration.SonarQualityResult"/> for report
+///     rendering via <c>AppendIssuesSection</c>. Immutability makes the record inherently
+///     thread-safe; no locking is required when multiple threads read from the same instance.
+/// </remarks>
+/// <param name="Key">Unique issue identifier as returned by the SonarQube API; non-null.</param>
+/// <param name="Rule">Rule key identifying the violated rule (e.g., <c>csharpsquid:S1234</c>); non-null string as returned by the API.</param>
+/// <param name="Severity">Severity level as returned by the API (<c>BLOCKER</c>, <c>CRITICAL</c>, <c>MAJOR</c>, <c>MINOR</c>, <c>INFO</c>); non-null.</param>
+/// <param name="Component">Component key identifying the source file; non-null string as returned by the API.</param>
+/// <param name="Line">Source line number; null when the issue applies to the file as a whole.</param>
+/// <param name="Message">Human-readable description of the issue; non-null string as returned by the API.</param>
+/// <param name="Type">Issue type as returned by the API (<c>BUG</c>, <c>VULNERABILITY</c>, <c>CODE_SMELL</c>); non-null.</param>
 internal sealed record SonarIssue(
     string Key,
     string Rule,

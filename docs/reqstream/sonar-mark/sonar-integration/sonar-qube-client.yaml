@@ -1,55 +1,57 @@
 ---
-# SonarMark SonarQubeClient Requirements
-#
-# PURPOSE:
-# - Define requirements for the SonarQubeClient software unit
-# - SonarQubeClient makes HTTP API calls to SonarQube/SonarCloud to fetch
-#   quality gate status, issues, and security hot-spots with full pagination
-#
+# SonarMark SonarIntegration SonarQubeClient unit requirements
 sections:
-  - title: SonarQubeClient
-    requirements:
-      - id: SonarMark-Server-QualityGate
-        title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
-        justification: |
-          Quality gate status indicates whether code meets the defined quality standards and is fundamental
-          to the tool's enforcement capabilities. This information is essential for making pass/fail
-          decisions in CI/CD pipelines and providing visibility into overall code quality.
-        tests:
-          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+  - title: SonarMark Requirements
+    sections:
+      - title: SonarIntegration Requirements
+        sections:
+          - title: SonarQubeClient Requirements
+            requirements:
+              - id: SonarMark-Server-QualityGate
+                title: The tool shall fetch quality gate status from SonarQube/SonarCloud.
+                justification: |
+                  Quality gate status indicates whether code meets the defined quality standards and is fundamental
+                  to the tool's enforcement capabilities. This information is essential for making pass/fail
+                  decisions in CI/CD pipelines and providing visibility into overall code quality.
+                tests:
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
 
-      - id: SonarMark-Server-Issues
-        title: The tool shall fetch issues from SonarQube/SonarCloud.
-        justification: |
-          Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
-          these issues allows developers to understand what needs to be fixed and provides the detailed
-          information needed to improve code quality beyond just pass/fail status.
-        tests:
-          - SonarQubeClient_GetQualityResultByBranchAsync_IssuesPaginatedAcrossTwoPages_AccumulatesAllIssues
+              - id: SonarMark-Server-Issues
+                title: The tool shall fetch issues from SonarQube/SonarCloud.
+                justification: |
+                  Issues represent code quality problems identified by Sonar analysis. Fetching and reporting
+                  these issues allows developers to understand what needs to be fixed and provides the detailed
+                  information needed to improve code quality beyond just pass/fail status.
+                tests:
+                  - SonarQubeClient_GetQualityResultByBranchAsync_IssuesPaginatedAcrossTwoPages_AccumulatesAllIssues
 
-      - id: SonarMark-Server-HotSpots
-        title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
-        justification: |
-          Security hot-spots highlight code that requires security review, helping teams identify and
-          address potential security vulnerabilities. This is critical for maintaining secure applications
-          and meeting security compliance requirements.
-        tests:
-          - SonarQubeClient_GetQualityResultByBranchAsync_HotSpotsPaginatedAcrossTwoPages_AccumulatesAllHotSpots
+              - id: SonarMark-Server-HotSpots
+                title: The tool shall fetch security hot-spots from SonarQube/SonarCloud.
+                justification: |
+                  Security hot-spots highlight code that requires security review, helping teams identify and
+                  address potential security vulnerabilities. This is critical for maintaining secure applications
+                  and meeting security compliance requirements.
+                tests:
+                  - SonarQubeClient_GetQualityResultByBranchAsync_HotSpotsPaginatedAcrossTwoPages_AccumulatesAllHotSpots
 
-      - id: SonarMark-Server-ProjectName
-        title: The tool shall retrieve the project name from SonarQube/SonarCloud.
-        justification: |
-          Using the server-side project name in the report header makes reports immediately identifiable
-          without requiring callers to supply display names separately. The API call to
-          /api/components/show provides the canonical name configured in the SonarQube/SonarCloud project.
-        tests:
-          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+              - id: SonarMark-Server-ProjectName
+                title: The tool shall retrieve the project name from SonarQube/SonarCloud.
+                justification: |
+                  Using the server-side project name in the report header makes reports immediately
+                  identifiable without requiring callers to supply display names separately. The API
+                  call to /api/components/show provides the canonical name configured in the
+                  SonarQube/SonarCloud project, ensuring the displayed name always matches the
+                  authoritative project record rather than a caller-supplied string.
+                tests:
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
 
-      - id: SonarMark-Server-MetricNames
-        title: The tool shall retrieve human-readable metric names from SonarQube/SonarCloud.
-        justification: |
-          Metric keys returned by the quality gate API (e.g., new_coverage) are internal identifiers
-          not suitable for display. Fetching the metric name dictionary from /api/metrics/search allows
-          the report to show friendly labels (e.g., Coverage on New Code) without hardcoding a mapping.
-        tests:
-          - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+              - id: SonarMark-Server-MetricNames
+                title: The tool shall retrieve human-readable metric names from SonarQube/SonarCloud.
+                justification: |
+                  Metric keys returned by the quality gate API (e.g., new_coverage) are internal
+                  identifiers not suitable for display in reports. Fetching the metric name dictionary
+                  from /api/metrics/search allows the conditions table to show friendly labels (e.g.,
+                  Coverage on New Code) without hardcoding a mapping, keeping the tool compatible with
+                  any server configuration or custom metric definitions.
+                tests:
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsFriendlyMetricNames

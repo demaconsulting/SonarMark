@@ -23,12 +23,18 @@ namespace DemaConsulting.SonarMark.SonarIntegration;
 /// <summary>
 ///     Represents a SonarQube security hot-spot
 /// </summary>
-/// <param name="Key">Hot-spot key</param>
-/// <param name="Component">Component key</param>
-/// <param name="Line">Line number (if applicable)</param>
-/// <param name="Message">Hot-spot message</param>
-/// <param name="SecurityCategory">Security category</param>
-/// <param name="VulnerabilityProbability">Vulnerability probability (e.g., HIGH, MEDIUM, LOW)</param>
+/// <remarks>
+///     Immutable data carrier populated from the SonarQube API by <see cref="SonarQubeClient"/>
+///     and consumed by <see cref="DemaConsulting.SonarMark.ReportGeneration.SonarQualityResult"/>
+///     for report rendering. Immutability makes the record inherently thread-safe; no locking is
+///     required when multiple threads read from the same instance.
+/// </remarks>
+/// <param name="Key">Unique hot-spot identifier as returned by the SonarQube API; non-null.</param>
+/// <param name="Component">Component key identifying the source file; non-null string as returned by the API.</param>
+/// <param name="Line">Source line number; null when the hot-spot applies to the file as a whole rather than a specific line.</param>
+/// <param name="Message">Human-readable description of the hot-spot; non-null string as returned by the API.</param>
+/// <param name="SecurityCategory">Security category key (e.g., <c>sql-injection</c>, <c>weak-cryptography</c>); non-null string as returned by the API.</param>
+/// <param name="VulnerabilityProbability">Likelihood that the hot-spot is an actual vulnerability (e.g., <c>HIGH</c>, <c>MEDIUM</c>, <c>LOW</c>); non-null string as returned by the API.</param>
 internal sealed record SonarHotSpot(
     string Key,
     string Component,

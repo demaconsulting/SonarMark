@@ -20,22 +20,22 @@
 
 using DemaConsulting.SonarMark.Cli;
 using DemaConsulting.SonarMark.SelfTest;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SelfTest;
 
 /// <summary>
 ///     Unit tests for the Validation class.
 /// </summary>
-[TestClass]
-public class ValidationTests
+[Collection("NonParallelTests")]
+public sealed class ValidationTests : IDisposable
 {
-    private string _testDirectory = string.Empty;
+    private readonly string _testDirectory;
 
     /// <summary>
     ///     Initialize test by creating a temporary test directory.
     /// </summary>
-    [TestInitialize]
-    public void TestInitialize()
+    public ValidationTests()
     {
         _testDirectory = Path.Combine(Path.GetTempPath(), $"sonarmark_test_{Guid.NewGuid()}");
         Directory.CreateDirectory(_testDirectory);
@@ -44,47 +44,47 @@ public class ValidationTests
     /// <summary>
     ///     Clean up test by deleting the temporary test directory.
     /// </summary>
-    [TestCleanup]
-    public void TestCleanup()
+    public void Dispose()
     {
         if (Directory.Exists(_testDirectory))
         {
             Directory.Delete(_testDirectory, recursive: true);
         }
+
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
     ///     Test that Validation.Run throws ArgumentNullException when context is null.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithNullContext_ThrowsArgumentNullException()
     {
         // Arrange - null context is the subject of this test
 
         // Act / Assert - calling Run with null should throw ArgumentNullException
-        Assert.ThrowsExactly<ArgumentNullException>(() => Validation.Run(null!));
+        Assert.Throws<ArgumentNullException>(() => Validation.Run(null!));
     }
 
     /// <summary>
     ///     Test that Validation.Run completes successfully with a silent context.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithSilentContext_CompletesWithZeroExitCode()
     {
         // Arrange - silent context suppresses console output; no results file needed
         using var context = Context.Create(["--silent"]);
-
         // Act - run self-validation
         Validation.Run(context);
 
         // Assert - all 4 self-validation tests pass, so exit code stays 0
-        Assert.AreEqual(0, context.ExitCode);
+        Assert.Equal(0, context.ExitCode);
     }
 
     /// <summary>
     ///     Test that Validation.Run prints the expected header text to stdout.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_OutputsValidationHeader()
     {
         // Arrange - capture stdout to verify header content
@@ -95,7 +95,6 @@ public class ValidationTests
         try
         {
             using var context = Context.Create([]);
-
             // Act - run self-validation so the header is emitted
             Validation.Run(context);
 
@@ -113,7 +112,7 @@ public class ValidationTests
     /// <summary>
     ///     Test that Validation.Run respects the --depth option for the validation report header.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithDepth2_OutputsLevel2Header()
     {
         // Arrange - capture stdout to verify header uses depth-2 heading
@@ -140,7 +139,7 @@ public class ValidationTests
     /// <summary>
     ///     Test that Validation.Run reports exactly 4 passed tests and 0 failures.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_ReportsFourPassedTests()
     {
         // Arrange - capture stdout to inspect the summary lines
@@ -151,7 +150,6 @@ public class ValidationTests
         try
         {
             using var context = Context.Create([]);
-
             // Act - run all 4 internal self-validation tests
             Validation.Run(context);
 
@@ -170,18 +168,17 @@ public class ValidationTests
     /// <summary>
     ///     Test that Validation.Run writes a valid TRX file when the results path ends with .trx.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithTrxResultsFile_WritesTrxFile()
     {
         // Arrange - provide a .trx results path so TRX output is triggered
         var trxPath = Path.Combine(_testDirectory, "results.trx");
         using var context = Context.Create(["--silent", "--results", trxPath]);
-
         // Act - run self-validation which should write the TRX file
         Validation.Run(context);
 
         // Assert - the file must exist and reference the self-validation suite name
-        Assert.IsTrue(File.Exists(trxPath));
+        Assert.True(File.Exists(trxPath));
         var content = File.ReadAllText(trxPath);
         Assert.Contains("SonarMark Self-Validation", content);
     }
@@ -189,18 +186,17 @@ public class ValidationTests
     /// <summary>
     ///     Test that Validation.Run writes a valid JUnit XML file when the results path ends with .xml.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithXmlResultsFile_WritesJUnitFile()
     {
         // Arrange - provide a .xml results path so JUnit XML output is triggered
         var xmlPath = Path.Combine(_testDirectory, "results.xml");
         using var context = Context.Create(["--silent", "--results", xmlPath]);
-
         // Act - run self-validation which should write the JUnit XML file
         Validation.Run(context);
 
         // Assert - the file must exist and reference the self-validation suite name
-        Assert.IsTrue(File.Exists(xmlPath));
+        Assert.True(File.Exists(xmlPath));
         var content = File.ReadAllText(xmlPath);
         Assert.Contains("SonarMark Self-Validation", content);
     }
@@ -208,7 +204,7 @@ public class ValidationTests
     /// <summary>
     ///     Test that Validation.Run reports an error and sets exit code 1 for an unsupported results extension.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Validation_Run_WithUnsupportedResultsExtension_ReportsError()
     {
         // Arrange - capture both stdout (suppress noise) and stderr (capture error message)
@@ -224,12 +220,11 @@ public class ValidationTests
             // A .csv extension is not a recognized results format
             var csvPath = Path.Combine(_testDirectory, "results.csv");
             using var context = Context.Create(["--results", csvPath]);
-
             // Act - run self-validation; the unsupported extension should trigger WriteError
             Validation.Run(context);
 
             // Assert - exit code must be 1 and the error message must describe the problem
-            Assert.AreEqual(1, context.ExitCode);
+            Assert.Equal(1, context.ExitCode);
             Assert.Contains("Unsupported results file format", error.ToString());
         }
         finally

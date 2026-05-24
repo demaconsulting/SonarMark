@@ -13,7 +13,7 @@ Interview the user and produce evolving architecture documentation with prioriti
 # Standards
 
 Read `.github/standards/software-items.md` before starting. Use its definitions
-(Software Package, System, Subsystem, Unit, OTS) as vocabulary throughout.
+(Software Package, System, Subsystem, Unit, OTS, Shared Package) as vocabulary throughout.
 
 # Approach
 

@@ -1,0 +1,14 @@
+---
+title: "SonarMark Verification Design Document"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Verification Design Document for SonarMark"
+lang: en-US
+keywords:
+  - Verification
+  - Testing
+  - SonarMark
+  - SonarQube
+  - SonarCloud
+  - .NET
+---

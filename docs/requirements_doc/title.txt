@@ -1,14 +1,14 @@
 ---
-title: SonarMark Requirements
-subtitle: Requirements Specification for the SonarMark Tool
-author: DEMA Consulting
-description: Requirements Specification for the SonarMark Tool
+title: "SonarMark Requirements Document"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Requirements Document for SonarMark"
 lang: en-US
 keywords:
   - SonarMark
   - Requirements
-  - Specification
   - .NET
-  - YAML
+  - SonarQube
+  - SonarCloud
   - Command-Line Tool
 ---

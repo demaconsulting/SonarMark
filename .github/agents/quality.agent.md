@@ -54,21 +54,13 @@ Priority-ordered list of issues that MUST be resolved for the next retry:
 
 ## Requirements Compliance: (PASS|FAIL|N/A)
 
-- Were requirements updated to reflect functional changes?
-- Were new requirements created for new features?
-- Do requirement IDs follow semantic naming standards?
-- Do requirement files follow kebab-case naming convention?
-- Are requirement files organized under `docs/reqstream/` with proper folder structure?
-- Are OTS requirements properly placed in `docs/reqstream/ots/` subfolder?
-- Were source filters applied appropriately for platform-specific requirements?
+- Were requirements created/updated for all functional changes?
+- Were source filters applied for platform-specific requirements?
 - Is requirements traceability maintained to tests?
 
 ## Design Documentation Compliance: (PASS|FAIL|N/A)
 
-- Were design documents updated for architectural changes?
-- Were new design artifacts created for new components?
-- Do design folder names use kebab-case convention matching source structure?
-- Are design files properly named ({subsystem-name}.md, {unit-name}.md patterns)?
+- Were design artifacts created/updated for all new or changed components?
 - Is `docs/design/introduction.md` present with required Software Structure section?
 - Are design decisions documented with rationale?
 - Is system/subsystem/unit categorization maintained?
@@ -76,55 +68,50 @@ Priority-ordered list of issues that MUST be resolved for the next retry:
 
 ## Code Quality Compliance: (PASS|FAIL|N/A)
 
-- Are language-specific standards followed (from applicable standards files)?
-- Are quality checks from standards files satisfied?
-- Is code properly categorized (system/subsystem/unit/OTS)?
-- Is appropriate separation of concerns maintained?
-- Was language-specific build tooling executed and passing?
+- Do language-specific quality checks from loaded standards pass?
+- Is code properly categorized (system/subsystem/unit/OTS/Shared Package)?
+- Does the build pass?
 
 ## Testing Compliance: (PASS|FAIL|N/A)
 
 - Were tests created/updated for all functional changes?
 - Is test coverage maintained for all requirements?
-- Are testing standards followed (AAA pattern, etc.)?
-- Do tests respect software item hierarchy boundaries (System/Subsystem/Unit scope)?
+- Do tests respect software item hierarchy boundaries?
 - Are cross-hierarchy test dependencies documented in design docs?
-- Does test categorization align with code structure?
-- Do all tests pass without failures?
+- Do all tests pass?
 
 ## Review Management Compliance: (PASS|FAIL|N/A)
 
-- Were review-sets updated for structural changes (new/deleted systems, subsystems, or units)?
-- Do file patterns follow include-then-exclude approach?
+- Were review-sets updated for structural changes?
 - Is review scope appropriate for change magnitude?
-- Was ReviewMark tooling executed and passing?
-- Were review artifacts generated correctly?
+- Does ReviewMark pass?
 
 ## Documentation Compliance: (PASS|FAIL|N/A)
 
-- Was README.md updated for user-facing changes?
-- Were user guides updated for feature changes?
+- Were README.md and user guides updated for user-facing changes?
 - Does API documentation reflect code changes?
 - Was compliance documentation generated?
-- Does documentation follow standards formatting?
-- Is documentation organized under `docs/` following standard folder structure?
-- Do Pandoc collections include proper `introduction.md` with Purpose and Scope sections?
 - Are auto-generated markdown files left unmodified?
-- Do README.md files use absolute URLs and include concrete examples?
-- Is documentation integrated into ReviewMark review-sets for formal review?
+- Is documentation integrated into ReviewMark review-sets?
 
 ## Software Item Completeness: (PASS|FAIL|N/A)
+
+- Load `software-items.md` before evaluating this section.
 
 - Does every identified software unit have its own requirements file?
 - Does every identified software unit have its own design document?
 - Does every identified subsystem have its own requirements file?
 - Does every identified subsystem have its own design document?
 
+## Repository Structure Compliance: (PASS|FAIL|N/A)
+
+- Load `repository-map.md` from the template URL in the `# Reference Template`
+  section of `AGENTS.md` before evaluating this section.
+
+- Are parallel artifact trees in sync (reqstream/design/verification/src/test)?
+- Does the repository conform to the template `repository-map.md`?
+
 ## Process Compliance: (PASS|FAIL|N/A)
 
-- Was Continuous Compliance workflow followed?
-- Did all quality gates execute successfully?
-- Were appropriate tools used for validation?
-- Were standards consistently applied across work?
-- Was compliance evidence generated and preserved?
+- Was compliance evidence (test results, review artifacts, generated docs) generated and preserved?
 ```

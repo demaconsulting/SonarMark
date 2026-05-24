@@ -19,19 +19,19 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
 
 /// <summary>
 ///     Tests for SonarIssue class
 /// </summary>
-[TestClass]
 public class SonarIssueTests
 {
     /// <summary>
     ///     Test that SonarIssue can be created with all properties
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarIssue_Constructor_AllProperties_CreatesInstance()
     {
         // Arrange & Act
@@ -45,19 +45,19 @@ public class SonarIssueTests
             "BUG");
 
         // Assert
-        Assert.AreEqual("issue-key-123", issue.Key);
-        Assert.AreEqual("csharpsquid:S1234", issue.Rule);
-        Assert.AreEqual("MAJOR", issue.Severity);
-        Assert.AreEqual("test_project:src/File.cs", issue.Component);
-        Assert.AreEqual(42, issue.Line);
-        Assert.AreEqual("Issue message", issue.Message);
-        Assert.AreEqual("BUG", issue.Type);
+        Assert.Equal("issue-key-123", issue.Key);
+        Assert.Equal("csharpsquid:S1234", issue.Rule);
+        Assert.Equal("MAJOR", issue.Severity);
+        Assert.Equal("test_project:src/File.cs", issue.Component);
+        Assert.Equal(42, issue.Line);
+        Assert.Equal("Issue message", issue.Message);
+        Assert.Equal("BUG", issue.Type);
     }
 
     /// <summary>
     ///     Test that SonarIssue can be created with null line number
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarIssue_Constructor_NullLine_CreatesInstance()
     {
         // Arrange & Act
@@ -71,19 +71,19 @@ public class SonarIssueTests
             "CODE_SMELL");
 
         // Assert
-        Assert.AreEqual("issue-key-456", issue.Key);
-        Assert.AreEqual("csharpsquid:S5678", issue.Rule);
-        Assert.AreEqual("MINOR", issue.Severity);
-        Assert.AreEqual("test_project:src/Global.cs", issue.Component);
-        Assert.IsNull(issue.Line);
-        Assert.AreEqual("Global issue", issue.Message);
-        Assert.AreEqual("CODE_SMELL", issue.Type);
+        Assert.Equal("issue-key-456", issue.Key);
+        Assert.Equal("csharpsquid:S5678", issue.Rule);
+        Assert.Equal("MINOR", issue.Severity);
+        Assert.Equal("test_project:src/Global.cs", issue.Component);
+        Assert.Null(issue.Line);
+        Assert.Equal("Global issue", issue.Message);
+        Assert.Equal("CODE_SMELL", issue.Type);
     }
 
     /// <summary>
     ///     Test that SonarIssue supports BLOCKER severity
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarIssue_Constructor_BlockerSeverity_CreatesInstance()
     {
         // Arrange & Act
@@ -97,15 +97,15 @@ public class SonarIssueTests
             "BUG");
 
         // Assert
-        Assert.AreEqual("issue-key-789", issue.Key);
-        Assert.AreEqual("BLOCKER", issue.Severity);
-        Assert.AreEqual("BUG", issue.Type);
+        Assert.Equal("issue-key-789", issue.Key);
+        Assert.Equal("BLOCKER", issue.Severity);
+        Assert.Equal("BUG", issue.Type);
     }
 
     /// <summary>
     ///     Test that SonarIssue supports CRITICAL severity
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarIssue_Constructor_CriticalSeverity_CreatesInstance()
     {
         // Arrange & Act
@@ -119,15 +119,15 @@ public class SonarIssueTests
             "VULNERABILITY");
 
         // Assert
-        Assert.AreEqual("issue-key-abc", issue.Key);
-        Assert.AreEqual("CRITICAL", issue.Severity);
-        Assert.AreEqual("VULNERABILITY", issue.Type);
+        Assert.Equal("issue-key-abc", issue.Key);
+        Assert.Equal("CRITICAL", issue.Severity);
+        Assert.Equal("VULNERABILITY", issue.Type);
     }
 
     /// <summary>
     ///     Test that SonarIssue supports INFO severity
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarIssue_Constructor_InfoSeverity_CreatesInstance()
     {
         // Arrange & Act
@@ -141,8 +141,9 @@ public class SonarIssueTests
             "CODE_SMELL");
 
         // Assert
-        Assert.AreEqual("issue-key-def", issue.Key);
-        Assert.AreEqual("INFO", issue.Severity);
-        Assert.AreEqual("CODE_SMELL", issue.Type);
+        Assert.Equal("issue-key-def", issue.Key);
+        Assert.Equal("INFO", issue.Severity);
+        Assert.Equal("CODE_SMELL", issue.Type);
     }
 }
+
