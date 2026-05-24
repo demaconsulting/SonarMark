@@ -7,7 +7,7 @@ sections:
         sections:
           - title: SonarIssue Requirements
             requirements:
-              - id: SonarMark-Issue-Record
+              - id: SonarMark-SonarIntegration-SonarIssue-Record
                 title: >-
                   The SonarIssue shall represent a SonarQube issue with its key, rule,
                   severity,
@@ -20,7 +20,7 @@ sections:
                 tests:
                   - SonarIssue_Constructor_AllProperties_CreatesInstance
 
-              - id: SonarMark-Issue-OptionalLine
+              - id: SonarMark-SonarIntegration-SonarIssue-OptionalLine
                 title: The SonarIssue shall support an optional line number for issues
                   not associated with a specific line.
                 justification: |
@@ -30,7 +30,7 @@ sections:
                 tests:
                   - SonarIssue_Constructor_NullLine_CreatesInstance
 
-              - id: SonarMark-Issue-Severity
+              - id: SonarMark-SonarIntegration-SonarIssue-Severity
                 title: The SonarIssue shall capture the severity level to enable severity-based
                   categorization in reports.
                 justification: |

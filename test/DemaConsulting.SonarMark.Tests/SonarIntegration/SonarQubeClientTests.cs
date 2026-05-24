@@ -258,7 +258,7 @@ public class SonarQubeClientTests
     ///     Test that quality gate status is correctly returned from the API response
     /// </summary>
     [Fact]
-    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus()
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ValidQualityGateResponse_ReturnsQualityGateStatus()
     {
         // Arrange - build mock handler returning OK quality gate status
         var handler = new MockHttpMessageHandler();
@@ -303,7 +303,7 @@ public class SonarQubeClientTests
     ///     Test that human-readable metric names are correctly mapped from the API response
     /// </summary>
     [Fact]
-    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ReturnsFriendlyMetricNames()
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames()
     {
         // Arrange - build mock handler returning a metrics response with a known key→name entry
         var handler = new MockHttpMessageHandler();

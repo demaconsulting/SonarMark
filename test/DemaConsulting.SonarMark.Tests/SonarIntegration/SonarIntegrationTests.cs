@@ -32,7 +32,7 @@ public class SonarIntegrationTests
     ///     Test that the subsystem fetches quality gate status from the server.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsQualityGateStatus()
+    public async Task SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus()
     {
         // Arrange - build mock handler returning OK quality gate status
         var handler = new MockHttpMessageHandler();
@@ -77,7 +77,7 @@ public class SonarIntegrationTests
     ///     Test that the subsystem fetches issues from the server and includes them in the result.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsIssues()
+    public async Task SonarIntegration_FetchQualityResult_MockedIssueInResponse_ReturnsIssues()
     {
         // Arrange - build mock handler returning one issue
         var handler = new MockHttpMessageHandler();
@@ -128,7 +128,7 @@ public class SonarIntegrationTests
     ///     Test that the subsystem fetches hot-spots from the server and includes them in the result.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsHotSpots()
+    public async Task SonarIntegration_FetchQualityResult_MockedHotSpotInResponse_ReturnsHotSpots()
     {
         // Arrange - build mock handler returning one hot-spot
         var handler = new MockHttpMessageHandler();
@@ -179,7 +179,7 @@ public class SonarIntegrationTests
     ///     Test that a null/empty server URL causes ArgumentException before any HTTP call.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_NullServerUrl_ThrowsArgumentException()
+    public async Task SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException()
     {
         // Arrange - mock handler is never called because validation happens first
         var handler = new MockHttpMessageHandler();
@@ -195,7 +195,7 @@ public class SonarIntegrationTests
     ///     Test that a non-2xx HTTP response raises InvalidOperationException through the subsystem.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_NonSuccessHttpResponse_ThrowsInvalidOperationException()
+    public async Task SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException()
     {
         // Arrange - configure mock to return HTTP 500 on first API call
         var handler = new MockHttpMessageHandler();
@@ -215,7 +215,7 @@ public class SonarIntegrationTests
     ///     Test that a malformed JSON response raises JsonException through the subsystem.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_MalformedJsonResponse_ThrowsJsonException()
+    public async Task SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException()
     {
         // Arrange - configure mock to return HTTP 200 with invalid JSON body
         var handler = new MockHttpMessageHandler();

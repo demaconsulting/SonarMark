@@ -19,6 +19,7 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.SelfTest;
 using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SelfTest;
@@ -50,6 +51,16 @@ public sealed class SelfTestTests : IDisposable
         }
 
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Test that Validation.Run throws ArgumentNullException when context is null.
+    /// </summary>
+    [Fact]
+    public void SelfTest_RunValidation_NullContext_ThrowsArgumentNullException()
+    {
+        // Act / Assert - passing a null context must throw ArgumentNullException before any validation work
+        Assert.Throws<ArgumentNullException>(() => Validation.Run(null!));
     }
 
     /// <summary>
@@ -85,5 +96,24 @@ public sealed class SelfTestTests : IDisposable
         Assert.True(File.Exists(resultsPath), $"Expected results file at {resultsPath}");
         var content = File.ReadAllText(resultsPath);
         Assert.Contains("SonarMark Self-Validation", content);
+    }
+
+    /// <summary>
+    ///     Test that the SelfTest subsystem produces a valid JUnit XML results file.
+    /// </summary>
+    [Fact]
+    public void SelfTest_RunValidation_WithJUnitResultsPath_ProducesJUnitResultsFile()
+    {
+        // Arrange - configure a JUnit XML results file path and silent output
+        var resultsPath = Path.Combine(_testDirectory, "self-test-results.xml");
+        using var context = Context.Create(["--validate", "--silent", "--results", resultsPath]);
+
+        // Act - run the full self-validation pipeline; the subsystem must write the JUnit results file
+        Program.Run(context);
+
+        // Assert - the JUnit XML results file must exist and contain expected test suite content
+        Assert.True(File.Exists(resultsPath), $"Expected JUnit results file at {resultsPath}");
+        var content = File.ReadAllText(resultsPath);
+        Assert.Contains("testsuite", content);
     }
 }

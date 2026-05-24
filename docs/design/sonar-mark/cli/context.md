@@ -30,8 +30,9 @@ report an error when the quality gate status is `ERROR`.
 **Depth**: `int` — markdown heading depth from `--depth` (or deprecated `--report-depth`);
 defaults to 1; valid range is 1–6.
 
-**Token**: `string?` — PAT from `--token`; `null` when not provided; passed to
-`SonarQubeClient` for HTTP Basic authentication.
+**Token**: `string?` — PAT resolved in priority order: (1) value supplied with `--token`; (2)
+value of the `SONAR_TOKEN` environment variable when `--token` is absent; `null` when neither
+source provides a value. Passed to `SonarQubeClient` for HTTP Basic authentication.
 
 **Server**: `string?` — SonarQube/SonarCloud server URL from `--server`; `null` when not
 provided.

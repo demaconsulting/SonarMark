@@ -23,7 +23,9 @@ using DemaConsulting.SonarMark.SonarIntegration;
 namespace DemaConsulting.SonarMark.ReportGeneration;
 
 /// <summary>
-///     Represents quality analysis results from SonarQube/SonarCloud
+///     Aggregates all data returned by a SonarQube/SonarCloud quality gate query and renders it as a markdown
+///     report via <see cref="ToMarkdown"/>; serves as the hand-off point between the SonarIntegration and
+///     ReportGeneration subsystems.
 /// </summary>
 /// <param name="ServerUrl">Server URL</param>
 /// <param name="ProjectKey">Project key</param>
@@ -204,7 +206,8 @@ internal sealed record SonarQualityResult(
     }
 
     /// <summary>
-    ///     Formats a count with proper pluralization and "Found" prefix
+    ///     Centralizes the 'Found N item(s)' phrasing so all count lines use consistent wording and correct
+    ///     pluralization without duplicating logic across callers.
     /// </summary>
     /// <param name="count">The count value</param>
     /// <param name="singularNoun">The singular form of the noun</param>
@@ -239,7 +242,8 @@ internal sealed record SonarQualityResult(
 }
 
 /// <summary>
-///     Represents a single quality gate condition
+///     Represents a single quality gate condition within a <see cref="SonarQualityResult"/>; carries the raw
+///     metric key, comparator, threshold, and actual value that the rendering pipeline maps into one table row.
 /// </summary>
 /// <param name="Metric">Metric key (e.g., "new_coverage", "new_bugs")</param>
 /// <param name="Comparator">Comparison operator (e.g., "LT", "GT")</param>

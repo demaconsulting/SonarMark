@@ -19,6 +19,11 @@ conditions, metric name dictionary, issues list, and hot-spots list, and exposes
   gate status, a conditions table, an issues list, and a security hot-spots list.
 - *Constraints*: Throws `ArgumentOutOfRangeException` when `depth` is outside the range 1–6.
 
+> **Cross-subsystem dependency**: `SonarQualityResult` consumes the `SonarIssue` and
+> `SonarHotSpot` record types defined in the `SonarIntegration` subsystem. These types are
+> passed in at construction time and are referenced only as data records; no methods on those
+> types are called during rendering.
+
 ### Design
 
 1. `SonarQubeClient.GetQualityResultByBranchAsync` returns a `SonarQualityResult` populated

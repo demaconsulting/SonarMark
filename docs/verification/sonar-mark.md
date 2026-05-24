@@ -3,7 +3,7 @@
 ## Verification Approach
 
 SonarMark is verified through three complementary test layers, all executed by the
-`test/DemaConsulting.SonarMark.Tests` MSTest project using the .NET test runner:
+`test/DemaConsulting.SonarMark.Tests` xUnit project using the .NET test runner:
 
 - **Integration tests** (`IntegrationTests.cs`) launch the compiled `DemaConsulting.SonarMark.dll` as
   a child process via `dotnet` and assert on exit code and console output. These tests exercise the full
@@ -61,6 +61,6 @@ that the CLI dispatch, self-test runner, and output pipeline integrate correctly
 This scenario is tested by `IntegrationTest_ValidateFlag_OutputsHeaderAndSummary`.
 
 **EnforceFlagIsAccepted**: When invoked with `--enforce`, the system accepts the flag without treating it
-as an unknown argument, confirming that the enforcement path is wired through the CLI and exits with a
-non-zero code only when quality gate status is failing.
+as an unknown argument, confirming that the enforcement argument is recognized and does not produce an
+"Unsupported argument" error.
 This scenario is tested by `IntegrationTest_EnforceFlag_IsAccepted`.

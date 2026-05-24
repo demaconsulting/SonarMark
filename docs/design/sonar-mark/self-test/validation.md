@@ -35,8 +35,10 @@ totals, and calls `WriteResultsFile` if a results path is set.
   mockFactory`; `string testName`; `string? reportFileName`; `Func<string, string?, string?>
   validator`.
 - *Returns*: `void`.
-- *Preconditions*: All parameters must be non-null.
+- *Preconditions*: All parameters except `reportFileName` must be non-null; `reportFileName` may be null to suppress report generation.
 - *Postconditions*: A `TestResult` record has been appended to `testResults`.
+
+Implemented via private helpers `CreateTestResult`, `FinalizeTestResult`, and `HandleTestException`.
 
 Creates a `TemporaryDirectory`, builds CLI arguments (`--silent`, `--log`, `--server`,
 `--project-key`, and optionally `--report`), creates a `Context` with the mock factory,

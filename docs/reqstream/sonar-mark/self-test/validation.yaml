@@ -16,8 +16,8 @@ sections:
                   pipelines.
                 tests:
                   - Validation_Run_WithSilentContext_CompletesWithZeroExitCode
-                  - Validation_Run_OutputsValidationHeader
-                  - Validation_Run_ReportsFourPassedTests
+                  - Validation_Run_DefaultContext_OutputsValidationHeader
+                  - Validation_Run_FourInternalTests_ReportsFourPassedTests
 
               - id: SonarMark-Validation-Depth
                 title: The self-validation report shall respect the configured report

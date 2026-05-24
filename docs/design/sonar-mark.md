@@ -77,8 +77,7 @@ specified alongside `--validate`.
 ## Dependencies
 
 - **DemaConsulting.TestResults**: provides `TestResults`, `TestResult`, `TestOutcome`, and
-  `TestResultsIO` types used by the SelfTest subsystem — see *DemaConsulting.TestResults
-  Integration Design*
+  `TestResultsIO` types used by the SelfTest subsystem — see *DemaConsulting.TestResults*
 
 ## Risk Control Measures
 

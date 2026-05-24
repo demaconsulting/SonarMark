@@ -120,6 +120,13 @@ internal sealed class Context : IDisposable
     /// <param name="args">Command-line arguments.</param>
     /// <returns>A new Context instance.</returns>
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
+    /// <remarks>
+    ///     This factory method is the primary public entry point for creating a <see cref="Context" />.
+    ///     It delegates to <see cref="Create(string[], Func{string?, SonarQubeClient}?)" /> with a
+    ///     <see langword="null" /> HTTP client factory, which causes the production
+    ///     <see cref="SonarQubeClient" /> to be used. Tests that need to inject a mock client should
+    ///     use the two-argument overload instead.
+    /// </remarks>
     public static Context Create(string[] args)
     {
         // Validate that args is not null
@@ -135,6 +142,18 @@ internal sealed class Context : IDisposable
     /// <param name="httpClientFactory">Optional HTTP client factory for testing.</param>
     /// <returns>A new Context instance.</returns>
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
+    /// <remarks>
+    ///     This overload supports test injection of a mock <see cref="SonarQubeClient" /> without
+    ///     modifying production code paths. The <paramref name="httpClientFactory" /> delegate is
+    ///     stored on the returned <see cref="Context" /> and called by
+    ///     <c>Program.ProcessSonarAnalysis</c> when creating the HTTP client; passing
+    ///     <see langword="null" /> restores the production behavior of constructing a real client.
+    ///     <para>
+    ///         Token resolution order: if <c>--token</c> is not supplied on the command line,
+    ///         the <c>SONAR_TOKEN</c> environment variable is read as a fallback. The explicit
+    ///         flag always takes priority over the environment variable.
+    ///     </para>
+    /// </remarks>
     public static Context Create(string[] args, Func<string?, SonarQubeClient>? httpClientFactory)
     {
         // Validate that args is not null
@@ -144,7 +163,7 @@ internal sealed class Context : IDisposable
         var parser = new ArgumentParser();
         parser.ParseArguments(args);
 
-        // Create context with parsed arguments
+        // Create context with parsed arguments, falling back to SONAR_TOKEN environment variable if --token not supplied
         var result = new Context
         {
             Version = parser.Version,
@@ -154,7 +173,7 @@ internal sealed class Context : IDisposable
             Enforce = parser.Enforce,
             ReportFile = parser.ReportFile,
             Depth = parser.Depth,
-            Token = parser.Token,
+            Token = parser.Token ?? Environment.GetEnvironmentVariable("SONAR_TOKEN"),
             Server = parser.Server,
             ProjectKey = parser.ProjectKey,
             Branch = parser.Branch,
@@ -438,7 +457,9 @@ internal sealed class Context : IDisposable
     /// <remarks>
     ///     Sets the internal error flag so that <see cref="ExitCode" /> returns 1. When
     ///     <see cref="Silent" /> is <see langword="true" /> the message is suppressed from the
-    ///     console but still written to the log file if one is open.
+    ///     console but still written to the log file if one is open. When not in silent mode,
+    ///     the error output is rendered in red (<see cref="ConsoleColor.Red" />) on the console
+    ///     to make it visually distinct from normal output.
     /// </remarks>
     public void WriteError(string message)
     {

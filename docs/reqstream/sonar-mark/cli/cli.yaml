@@ -13,24 +13,24 @@ sections:
               supported command-line arguments and route execution to the appropriate handler
               (version, help, validation, or analysis) based on the parsed context.
             children:
-              - SonarMark-Program-Interface
-              - SonarMark-Program-Version
-              - SonarMark-Program-Help
               - SonarMark-Cli-Context-Silent
               - SonarMark-Cli-Context-Log
               - SonarMark-Cli-Context-Enforce
-              - SonarMark-Program-Connect
-              - SonarMark-Program-Auth
-              - SonarMark-Program-ProjectKey
-              - SonarMark-Program-Branch
-              - SonarMark-Program-Markdown
-              - SonarMark-Program-Depth
               - SonarMark-Cli-Context-Depth
               - SonarMark-Cli-Context-ResultsFile
               - SonarMark-Cli-Context-ResultAlias
-              - SonarMark-Program-ExitCode
+              - SonarMark-Cli-Context-Version
+              - SonarMark-Cli-Context-Help
+              - SonarMark-Cli-Context-Validate
+              - SonarMark-Cli-Context-Report
+              - SonarMark-Cli-Context-Token
+              - SonarMark-Cli-Context-TokenEnv
+              - SonarMark-Cli-Context-Server
+              - SonarMark-Cli-Context-ProjectKey
+              - SonarMark-Cli-Context-Branch
             tests:
-              - Cli_VersionDispatch_OutputsVersionString
-              - Cli_HelpDispatch_OutputsHelpText
-              - Cli_SilentMode_SuppressesOutput
-              - Cli_EnforceMode_SetsEnforceFlag
+              - Cli_VersionDispatch_WithVersionFlag_OutputsVersionString
+              - Cli_HelpDispatch_WithHelpFlag_OutputsHelpText
+              - Cli_SilentMode_WithSilentFlag_SuppressesOutput
+              - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
+              - Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException

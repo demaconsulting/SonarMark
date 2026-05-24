@@ -129,6 +129,18 @@ sections:
                   - Context_Create_Token_SetsTokenProperty
                   - Context_Create_MissingToken_ThrowsException
 
+              - id: SonarMark-Cli-Context-TokenEnv
+                title: The tool shall fall back to the SONAR_TOKEN environment variable
+                  when --token is not supplied on the command line.
+                justification: |
+                  CI/CD systems commonly inject secrets via environment variables rather than
+                  command-line arguments to avoid exposing tokens in process listings and shell
+                  history. Reading SONAR_TOKEN as a fallback means pipelines do not need to
+                  explicitly pass the token flag, while the explicit --token flag always takes
+                  priority so local overrides remain possible.
+                tests:
+                  - Context_Create_WithTokenEnvVar_ReturnsTokenFromEnvironment
+
               - id: SonarMark-Cli-Context-Server
                 title: The tool shall accept the --server flag with a required URL
                   value and expose it for use by the SonarQube HTTP client.

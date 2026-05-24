@@ -14,6 +14,11 @@ issues, and security hot-spots for a given project and branch, and assembles the
 **_ownsHttpClient**: `bool` — when `true`, `Dispose` releases `_httpClient`; when `false`
 (test injection path), the caller retains ownership and `Dispose` is a no-op for the client.
 
+**Thread Safety**: `SonarQubeClient` is safe for concurrent calls to
+`GetQualityResultByBranchAsync` on the same instance. `HttpClient` supports concurrent HTTP
+requests, and all shared fields are read-only after construction. `Dispose` must not be called
+while any async operation is outstanding.
+
 #### Key Methods
 
 **GetQualityResultByBranchAsync**: Orchestrates all API calls and returns the combined result.
@@ -61,6 +66,38 @@ Calls `/api/qualitygates/project_status?projectKey={projectKey}` with an optiona
 - *Postconditions*: Returns a non-null dictionary; may be empty if the API returns no metrics.
 
 Calls `/api/metrics/search`.
+
+**GetIssuesAsync**: Fetches all open and confirmed issues for the project using pagination.
+
+- *Parameters*: `string serverUrl`, `string projectKey`, `string? branch`, `CancellationToken`.
+- *Returns*: `Task<List<SonarIssue>>` — all issues accumulated across all pages.
+- *Preconditions*: None.
+- *Postconditions*: Returns all matching issues; the list may be empty when no issues are present.
+
+Calls `/api/issues/search?componentKeys={projectKey}&issueStatuses=OPEN,CONFIRMED&ps=100` with an
+optional `&branch={branch}` parameter. Delegates to `FetchPaginatedAsync` for pagination.
+
+**GetHotSpotsAsync**: Fetches all security hot-spots for the project using pagination.
+
+- *Parameters*: `string serverUrl`, `string projectKey`, `string? branch`, `CancellationToken`.
+- *Returns*: `Task<List<SonarHotSpot>>` — all hot-spots accumulated across all pages.
+- *Preconditions*: None.
+- *Postconditions*: Returns all matching hot-spots; the list may be empty when no hot-spots are
+  present.
+
+Calls `/api/hotspots/search?projectKey={projectKey}&ps=100` with an optional
+`&branch={branch}` parameter. Delegates to `FetchPaginatedAsync` for pagination.
+
+**CreateHttpClient**: Factory method that creates and configures the underlying `HttpClient`.
+
+- *Parameters*: `string? authToken` — optional Personal Access Token (PAT).
+- *Returns*: `HttpClient` — configured HTTP client, with or without an `Authorization` header.
+- *Visibility*: `internal static` — accessible to tests without exposing public API surface.
+
+When `authToken` is non-null and non-whitespace, encodes `"{authToken}:"` as Base64 (ASCII) and
+sets the `Authorization: Basic {encoded}` request header on the returned client. When `authToken`
+is null or whitespace, no authorization header is set. Called directly by tests to verify that
+the correct authentication header is constructed.
 
 **FetchPaginatedAsync**: Generic pagination helper used for issues and hot-spots.
 

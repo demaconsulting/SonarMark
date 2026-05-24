@@ -93,4 +93,3 @@ sections:
           - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
-          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode

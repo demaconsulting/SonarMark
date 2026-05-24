@@ -21,10 +21,13 @@ sections:
               - SonarMark-HotSpot-Record
               - SonarMark-HotSpot-OptionalLine
               - SonarMark-HotSpot-VulnerabilityProbability
-              - SonarMark-Issue-Record
-              - SonarMark-Issue-OptionalLine
-              - SonarMark-Issue-Severity
+              - SonarMark-SonarIntegration-SonarIssue-Record
+              - SonarMark-SonarIntegration-SonarIssue-OptionalLine
+              - SonarMark-SonarIntegration-SonarIssue-Severity
             tests:
-              - SonarIntegration_FetchQualityResult_ReturnsQualityGateStatus
-              - SonarIntegration_FetchQualityResult_ReturnsIssues
-              - SonarIntegration_FetchQualityResult_ReturnsHotSpots
+              - SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus
+              - SonarIntegration_FetchQualityResult_MockedIssueInResponse_ReturnsIssues
+              - SonarIntegration_FetchQualityResult_MockedHotSpotInResponse_ReturnsHotSpots
+              - SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException
+              - SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException
+              - SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException

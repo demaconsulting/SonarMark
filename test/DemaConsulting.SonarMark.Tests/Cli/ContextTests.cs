@@ -69,12 +69,14 @@ public sealed class ContextTests : IDisposable
         Assert.False(context.Help);
         Assert.False(context.Silent);
         Assert.False(context.Validate);
+        Assert.False(context.Enforce);
         Assert.Null(context.ReportFile);
         Assert.Equal(1, context.Depth);
         Assert.Null(context.Token);
         Assert.Null(context.Server);
         Assert.Null(context.ProjectKey);
         Assert.Null(context.Branch);
+        Assert.Null(context.ResultsFile);
         Assert.Equal(0, context.ExitCode);
     }
 
@@ -286,6 +288,31 @@ public sealed class ContextTests : IDisposable
         // Assert
         Assert.Equal("test-token-123", context.Token);
         Assert.Equal(0, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test that SONAR_TOKEN environment variable is used as fallback when --token is not supplied.
+    /// </summary>
+    [Fact]
+    public void Context_Create_WithTokenEnvVar_ReturnsTokenFromEnvironment()
+    {
+        // Arrange - set the SONAR_TOKEN environment variable and ensure it is removed after the test
+        var previous = Environment.GetEnvironmentVariable("SONAR_TOKEN");
+        Environment.SetEnvironmentVariable("SONAR_TOKEN", "env-token-abc");
+
+        try
+        {
+            // Act - create context without --token; the env var must be used as fallback
+            using var context = Context.Create([]);
+
+            // Assert - Token must be populated from the environment variable
+            Assert.Equal("env-token-abc", context.Token);
+        }
+        finally
+        {
+            // Restore the previous environment variable value
+            Environment.SetEnvironmentVariable("SONAR_TOKEN", previous);
+        }
     }
 
     /// <summary>

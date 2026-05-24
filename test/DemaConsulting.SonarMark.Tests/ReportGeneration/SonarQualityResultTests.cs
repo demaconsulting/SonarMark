@@ -175,7 +175,7 @@ public class SonarQualityResultTests
     ///     Test ToMarkdown with null threshold and actual values
     /// </summary>
     [Fact]
-    public void SonarQualityResult_ToMarkdown_NullThresholdAndActual_ExcludesNullValues()
+    public void SonarQualityResult_ToMarkdown_NullThresholdAndActual_RendersEmptyCells()
     {
         // Arrange
         IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", null, null, "OK")];

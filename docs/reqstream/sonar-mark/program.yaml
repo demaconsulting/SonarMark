@@ -100,3 +100,9 @@ sections:
               to automatically detect and halt builds when quality standards are not met.
             tests:
               - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+
+          - id: SonarMark-Program-Validate
+            title: The program shall provide a self-validation mode when invoked with
+              the validate command.
+            tests:
+              - Program_Run_WithValidateFlag_RunsValidationSuccessfully

@@ -17,7 +17,8 @@ and keeps `Context.Create` as a thin factory method.
   a fully populated `Context` instance. `WriteLine` writes to stdout (and log file if open);
   `WriteError` writes to stderr in red, mirrors to log, and sets the error flag. `ExitCode`
   returns 0 or 1. Implements `IDisposable` to release the log-file writer.
-- *Constraints*: `Context.Create` throws `ArgumentException` on invalid arguments.
+- *Constraints*: `Context.Create` throws `ArgumentNullException` when `args` is null and
+  throws `ArgumentException` on invalid arguments.
   `OpenLogFile` throws `InvalidOperationException` if the file cannot be opened. `Context`
   must be disposed to release the log-file handle.
 

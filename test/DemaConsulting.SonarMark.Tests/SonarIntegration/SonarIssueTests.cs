@@ -24,7 +24,8 @@ using Xunit;
 namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
 
 /// <summary>
-///     Tests for SonarIssue class
+///     Verifies that <see cref="SonarIssue"/> correctly stores all API-sourced issue fields and supports
+///     nullable line numbers across all severity levels.
 /// </summary>
 public class SonarIssueTests
 {
@@ -98,7 +99,11 @@ public class SonarIssueTests
 
         // Assert
         Assert.Equal("issue-key-789", issue.Key);
+        Assert.Equal("csharpsquid:S9999", issue.Rule);
         Assert.Equal("BLOCKER", issue.Severity);
+        Assert.Equal("test_project:src/Critical.cs", issue.Component);
+        Assert.Equal(10, issue.Line);
+        Assert.Equal("Critical issue", issue.Message);
         Assert.Equal("BUG", issue.Type);
     }
 
@@ -120,7 +125,11 @@ public class SonarIssueTests
 
         // Assert
         Assert.Equal("issue-key-abc", issue.Key);
+        Assert.Equal("csharpsquid:S8888", issue.Rule);
         Assert.Equal("CRITICAL", issue.Severity);
+        Assert.Equal("test_project:src/Important.cs", issue.Component);
+        Assert.Equal(20, issue.Line);
+        Assert.Equal("Critical security issue", issue.Message);
         Assert.Equal("VULNERABILITY", issue.Type);
     }
 
@@ -142,7 +151,11 @@ public class SonarIssueTests
 
         // Assert
         Assert.Equal("issue-key-def", issue.Key);
+        Assert.Equal("csharpsquid:S7777", issue.Rule);
         Assert.Equal("INFO", issue.Severity);
+        Assert.Equal("test_project:src/Helper.cs", issue.Component);
+        Assert.Equal(5, issue.Line);
+        Assert.Equal("Informational message", issue.Message);
         Assert.Equal("CODE_SMELL", issue.Type);
     }
 }

@@ -19,7 +19,9 @@ sections:
               - SonarMark-Report-Issues
               - SonarMark-Report-HotSpots
               - SonarMark-Report-QualityCondition
+              - SonarMark-Report-DepthValidation
             tests:
               - ReportGeneration_QualityGateReport_IncludesStatusAndConditions
               - ReportGeneration_IssuesReport_CategorizesByTypeAndSeverity
               - ReportGeneration_HotSpotsReport_IncludesPriorityAndCategory
+              - ReportGeneration_ToMarkdown_InvalidDepth_ThrowsArgumentOutOfRangeException

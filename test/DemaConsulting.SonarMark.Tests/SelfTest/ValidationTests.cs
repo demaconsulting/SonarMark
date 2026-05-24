@@ -85,7 +85,7 @@ public sealed class ValidationTests : IDisposable
     ///     Test that Validation.Run prints the expected header text to stdout.
     /// </summary>
     [Fact]
-    public void Validation_Run_OutputsValidationHeader()
+    public void Validation_Run_DefaultContext_OutputsValidationHeader()
     {
         // Arrange - capture stdout to verify header content
         var originalOut = Console.Out;
@@ -140,7 +140,7 @@ public sealed class ValidationTests : IDisposable
     ///     Test that Validation.Run reports exactly 4 passed tests and 0 failures.
     /// </summary>
     [Fact]
-    public void Validation_Run_ReportsFourPassedTests()
+    public void Validation_Run_FourInternalTests_ReportsFourPassedTests()
     {
         // Arrange - capture stdout to inspect the summary lines
         var originalOut = Console.Out;

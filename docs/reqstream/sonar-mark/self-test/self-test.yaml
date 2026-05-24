@@ -19,5 +19,7 @@ sections:
               - SonarMark-Validation-TrxFormat
               - SonarMark-Validation-JUnitFormat
             tests:
+              - SelfTest_RunValidation_NullContext_ThrowsArgumentNullException
               - SelfTest_RunValidation_AllTestsPass
               - SelfTest_RunValidation_ProducesResultsFile
+              - SelfTest_RunValidation_WithJUnitResultsPath_ProducesJUnitResultsFile

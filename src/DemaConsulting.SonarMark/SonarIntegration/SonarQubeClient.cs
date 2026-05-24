@@ -32,6 +32,13 @@ namespace DemaConsulting.SonarMark.SonarIntegration;
 ///     This client's primary responsibility is to retrieve analysis quality results
 ///     including quality gate status and conditions. It handles waiting for tasks
 ///     to complete and fetching associated quality data.
+///     <para>
+///         Thread safety: concurrent calls to <see cref="GetQualityResultByBranchAsync"/>
+///         on the same instance are permitted. <see cref="System.Net.Http.HttpClient"/>
+///         supports concurrent HTTP requests, and all fields are read-only after
+///         construction. <see cref="Dispose"/> must not be called while any async
+///         operation is outstanding.
+///     </para>
 /// </remarks>
 internal sealed class SonarQubeClient : IDisposable
 {

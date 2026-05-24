@@ -135,5 +135,28 @@ public class ReportGenerationTests
         Assert.Contains("HIGH", markdown);
         Assert.Contains("xss", markdown);
     }
+
+    /// <summary>
+    ///     Test that ToMarkdown throws ArgumentOutOfRangeException for invalid depth values.
+    /// </summary>
+    [Fact]
+    public void ReportGeneration_ToMarkdown_InvalidDepth_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange - create a minimal quality result
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            [],
+            new Dictionary<string, string>(),
+            [],
+            []);
+
+        // Act / Assert - depth values outside [1, 6] must throw ArgumentOutOfRangeException
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(-1));
+    }
 }
 

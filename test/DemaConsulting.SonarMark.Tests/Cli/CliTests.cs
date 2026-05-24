@@ -33,7 +33,7 @@ public class CliTests
     ///     Test that --version is dispatched correctly through the CLI subsystem and outputs the version string.
     /// </summary>
     [Fact]
-    public void Cli_VersionDispatch_OutputsVersionString()
+    public void Cli_VersionDispatch_WithVersionFlag_OutputsVersionString()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -61,7 +61,7 @@ public class CliTests
     ///     Test that --help is dispatched correctly through the CLI subsystem and outputs help text.
     /// </summary>
     [Fact]
-    public void Cli_HelpDispatch_OutputsHelpText()
+    public void Cli_HelpDispatch_WithHelpFlag_OutputsHelpText()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -89,7 +89,7 @@ public class CliTests
     ///     Test that --silent mode suppresses output through the CLI subsystem.
     /// </summary>
     [Fact]
-    public void Cli_SilentMode_SuppressesOutput()
+    public void Cli_SilentMode_WithSilentFlag_SuppressesOutput()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -116,7 +116,7 @@ public class CliTests
     ///     Test that --enforce is parsed and the flag is exposed through the CLI subsystem after dispatch.
     /// </summary>
     [Fact]
-    public void Cli_EnforceMode_SetsEnforceFlag()
+    public void Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag()
     {
         // Arrange - create context with --enforce and --server so dispatch reaches the project-key check
         using var context = Context.Create(["--enforce", "--server", "https://mock.example.com"]);
@@ -134,7 +134,7 @@ public class CliTests
     ///     Test that an unrecognized argument throws ArgumentException.
     /// </summary>
     [Fact]
-    public void Cli_InvalidArgument_ThrowsArgumentException()
+    public void Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException()
     {
         // Act / Assert - unsupported flag must throw ArgumentException before any dispatch occurs
         Assert.Throws<ArgumentException>(() => Context.Create(["--unknown-flag"]));

@@ -110,7 +110,9 @@ sonarmark --server https://sonarcloud.io \
 
 #### `--token <token>`
 
-Personal access token for authentication. Can also be provided via the `SONAR_TOKEN` environment variable.
+Personal access token for authentication. When `--token` is not supplied, SonarMark
+automatically reads the `SONAR_TOKEN` environment variable as a fallback. The explicit
+flag always takes priority over the environment variable.
 
 ```bash
 # Using command-line argument
@@ -118,7 +120,12 @@ sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \
   --token squ_abc123...
 
-# Passing a token from an environment variable
+# Using SONAR_TOKEN environment variable (no --token flag needed)
+export SONAR_TOKEN=squ_abc123...
+sonarmark --server https://sonarcloud.io \
+  --project-key my-org_my-project
+
+# Passing a token from an environment variable explicitly
 export SONAR_TOKEN=squ_abc123...
 sonarmark --server https://sonarcloud.io \
   --project-key my-org_my-project \

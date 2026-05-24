@@ -14,7 +14,7 @@ sections:
                   to the tool's enforcement capabilities. This information is essential for making pass/fail
                   decisions in CI/CD pipelines and providing visibility into overall code quality.
                 tests:
-                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ValidQualityGateResponse_ReturnsQualityGateStatus
 
               - id: SonarMark-Server-Issues
                 title: The tool shall fetch issues from SonarQube/SonarCloud.
@@ -43,7 +43,7 @@ sections:
                   SonarQube/SonarCloud project, ensuring the displayed name always matches the
                   authoritative project record rather than a caller-supplied string.
                 tests:
-                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsQualityGateStatus
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ValidQualityGateResponse_ReturnsQualityGateStatus
 
               - id: SonarMark-Server-MetricNames
                 title: The tool shall retrieve human-readable metric names from SonarQube/SonarCloud.
@@ -54,4 +54,4 @@ sections:
                   Coverage on New Code) without hardcoding a mapping, keeping the tool compatible with
                   any server configuration or custom metric definitions.
                 tests:
-                  - SonarQubeClient_GetQualityResultByBranchAsync_ReturnsFriendlyMetricNames
+                  - SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames
