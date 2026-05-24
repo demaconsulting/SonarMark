@@ -429,8 +429,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: artifacts-validation-${{ matrix.os }}-dotnet${{ matrix.dotnet-version
-            }}
+          name: artifacts-validation-${{ matrix.os }}-dotnet${{ matrix.dotnet-version }}
           path: artifacts/
 
   # Builds the supporting documentation including user guides, requirements,
@@ -493,12 +492,25 @@ jobs:
               buildmark versionmark reviewmark fileassert
           echo "✓ Tool versions captured"
 
+      # === PREPARE DOCUMENT OUTPUT ===
+      # Creates the shared docs/generated/ folder that all document sections write PDFs into.
+      # This step is intentionally separate from the document sections so any individual
+      # section can be commented out without breaking the shared output directory.
+
+      - name: Create documents output directory
+        shell: bash
+        run: mkdir -p docs/generated
+
       # === COMPILE BUILD NOTES ===
       # This section generates the Build Notes document. BuildMark and VersionMark self-validations
       # run here to co-locate their evidence with the document that depends on their output.
       # Pandoc converts the markdown to HTML, WeasyPrint renders the HTML to PDF, and FileAssert
       # validates the outputs contain expected content.
       # Downstream projects: Add any additional build notes steps here.
+
+      - name: Create build notes output directories
+        shell: bash
+        run: mkdir -p docs/build_notes/generated
 
       - name: Run BuildMark self-validation
         run: >
@@ -519,20 +531,20 @@ jobs:
         run: >
           dotnet buildmark
           --build-version ${{ inputs.version }}
-          --report docs/build_notes.md
+          --report docs/build_notes/generated/build_notes.md
           --report-depth 1
 
       - name: Display Build Notes Report
         shell: bash
         run: |
           echo "=== Build Notes Report ==="
-          cat docs/build_notes.md
+          cat docs/build_notes/generated/build_notes.md
 
       - name: Publish Tool Versions
         shell: bash
         run: |
           echo "Publishing tool versions..."
-          dotnet versionmark --publish --report docs/build_notes/versions.md --report-depth 1 \
+          dotnet versionmark --publish --report docs/build_notes/generated/versions.md --report-depth 1 \
             -- "artifacts/**/versionmark-*.json"
           echo "✓ Tool versions published"
 
@@ -540,7 +552,7 @@ jobs:
         shell: bash
         run: |
           echo "=== Tool Versions Report ==="
-          cat docs/build_notes/versions.md
+          cat docs/build_notes/generated/versions.md
 
       - name: Generate Build Notes HTML with Pandoc
         shell: bash
@@ -550,14 +562,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/build_notes/build_notes.html
+          --output docs/build_notes/generated/build_notes.html
 
       - name: Generate Build Notes PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/build_notes/build_notes.html
-          "docs/SonarMark Build Notes.pdf"
+          docs/build_notes/generated/build_notes.html
+          "docs/generated/SonarMark Build Notes.pdf"
 
       - name: Assert Build Notes Documents with FileAssert
         run: >
@@ -565,12 +577,20 @@ jobs:
           --results artifacts/fileassert-build-notes.trx
           build-notes
 
+      - name: Copy Build Notes report to docs/generated
+        shell: bash
+        run: cp docs/build_notes/generated/build_notes.md docs/generated/build_notes.md
+
       # === COMPILE CODE QUALITY REPORT ===
       # This section generates the Code Quality document. SarifMark and SonarMark self-validations
       # run here to co-locate their evidence with the document that depends on their output.
       # Pandoc converts the markdown to HTML, WeasyPrint renders the HTML to PDF, and FileAssert
       # validates the outputs contain expected content.
       # Downstream projects: Add any additional code quality steps here.
+
+      - name: Create code quality output directory
+        shell: bash
+        run: mkdir -p docs/code_quality/generated
 
       - name: Run SarifMark self-validation
         run: >
@@ -588,7 +608,7 @@ jobs:
         run: >
           dotnet sarifmark
           --sarif artifacts/csharp.sarif
-          --report docs/code_quality/codeql-quality.md
+          --report docs/code_quality/generated/codeql-quality.md
           --heading "SonarMark CodeQL Analysis"
           --report-depth 1
 
@@ -596,7 +616,7 @@ jobs:
         shell: bash
         run: |
           echo "=== CodeQL Quality Report ==="
-          cat docs/code_quality/codeql-quality.md
+          cat docs/code_quality/generated/codeql-quality.md
 
       - name: Generate SonarCloud Quality Report
         shell: bash
@@ -608,14 +628,14 @@ jobs:
           --project-key demaconsulting_SonarMark
           --branch ${{ github.ref_name }}
           --token "$SONAR_TOKEN"
-          --report docs/code_quality/sonar-quality.md
+          --report docs/code_quality/generated/sonar-quality.md
           --report-depth 1
 
       - name: Display SonarCloud Quality Report
         shell: bash
         run: |
           echo "=== SonarCloud Quality Report ==="
-          cat docs/code_quality/sonar-quality.md
+          cat docs/code_quality/generated/sonar-quality.md
 
       - name: Generate Code Quality HTML with Pandoc
         shell: bash
@@ -625,14 +645,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/code_quality/quality.html
+          --output docs/code_quality/generated/quality.html
 
       - name: Generate Code Quality PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/code_quality/quality.html
-          "docs/SonarMark Code Quality.pdf"
+          docs/code_quality/generated/quality.html
+          "docs/generated/SonarMark Code Quality.pdf"
 
       - name: Assert Code Quality Documents with FileAssert
         run: >
@@ -647,6 +667,10 @@ jobs:
       # PDF, and FileAssert validates the outputs contain expected content.
       # Downstream projects: Add any additional code review steps here.
 
+      - name: Create code review output directories
+        shell: bash
+        run: mkdir -p docs/code_review_plan/generated docs/code_review_report/generated
+
       - name: Run ReviewMark self-validation
         run: >
           dotnet reviewmark
@@ -658,22 +682,22 @@ jobs:
         # TODO: Add --enforce once reviews branch is populated with review evidence PDFs and index.json
         run: >
           dotnet reviewmark
-          --plan docs/code_review_plan/plan.md
+          --plan docs/code_review_plan/generated/plan.md
           --plan-depth 1
-          --report docs/code_review_report/report.md
+          --report docs/code_review_report/generated/report.md
           --report-depth 1
 
       - name: Display Review Plan
         shell: bash
         run: |
           echo "=== Review Plan ==="
-          cat docs/code_review_plan/plan.md
+          cat docs/code_review_plan/generated/plan.md
 
       - name: Display Review Report
         shell: bash
         run: |
           echo "=== Review Report ==="
-          cat docs/code_review_report/report.md
+          cat docs/code_review_report/generated/report.md
 
       - name: Generate Review Plan HTML with Pandoc
         shell: bash
@@ -683,14 +707,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/code_review_plan/plan.html
+          --output docs/code_review_plan/generated/plan.html
 
       - name: Generate Review Plan PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/code_review_plan/plan.html
-          "docs/SonarMark Review Plan.pdf"
+          docs/code_review_plan/generated/plan.html
+          "docs/generated/SonarMark Review Plan.pdf"
 
       - name: Generate Review Report HTML with Pandoc
         shell: bash
@@ -700,14 +724,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/code_review_report/report.html
+          --output docs/code_review_report/generated/report.html
 
       - name: Generate Review Report PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/code_review_report/report.html
-          "docs/SonarMark Review Report.pdf"
+          docs/code_review_report/generated/report.html
+          "docs/generated/SonarMark Review Report.pdf"
 
       - name: Assert Code Review Documents with FileAssert
         run: >
@@ -720,6 +744,10 @@ jobs:
       # FileAssert validates that the HTML and PDF outputs contain expected content.
       # Downstream projects: Add any additional design document steps here.
 
+      - name: Create design output directory
+        shell: bash
+        run: mkdir -p docs/design/generated
+
       - name: Generate Design HTML with Pandoc
         shell: bash
         run: >
@@ -728,14 +756,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/design/design.html
+          --output docs/design/generated/design.html
 
       - name: Generate Design PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/design/design.html
-          "docs/SonarMark Software Design.pdf"
+          docs/design/generated/design.html
+          "docs/generated/SonarMark Software Design.pdf"
 
       - name: Assert Design Documents with FileAssert
         run: >
@@ -743,10 +771,45 @@ jobs:
           --results artifacts/fileassert-design.trx
           design
 
+      # === COMPILE VERIFICATION DOCUMENT ===
+      # This section generates the Verification document using Pandoc and WeasyPrint.
+      # FileAssert validates that the HTML and PDF outputs contain expected content.
+      # Downstream projects: Add any additional verification steps here.
+
+      - name: Create verification output directory
+        shell: bash
+        run: mkdir -p docs/verification/generated
+
+      - name: Generate Verification HTML with Pandoc
+        shell: bash
+        run: >
+          dotnet pandoc
+          --defaults docs/verification/definition.yaml
+          --metadata version="${{ inputs.version }}"
+          --metadata date="$(date +'%Y-%m-%d')"
+          --output docs/verification/generated/verification.html
+
+      - name: Generate Verification PDF with WeasyPrint
+        run: >
+          dotnet weasyprint
+          --pdf-variant pdf/a-3u
+          docs/verification/generated/verification.html
+          "docs/generated/SonarMark Software Verification Design.pdf"
+
+      - name: Assert Verification Documents with FileAssert
+        run: >
+          dotnet fileassert
+          --results artifacts/fileassert-verification.trx
+          verification
+
       # === COMPILE USER GUIDE ===
       # This section generates the User Guide document using Pandoc and WeasyPrint.
       # FileAssert validates that the HTML and PDF outputs contain expected content.
       # Downstream projects: Add any additional user guide steps here.
+
+      - name: Create user guide output directory
+        shell: bash
+        run: mkdir -p docs/user_guide/generated
 
       - name: Generate User Guide HTML with Pandoc
         shell: bash
@@ -756,14 +819,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/user_guide/user_guide.html
+          --output docs/user_guide/generated/user_guide.html
 
       - name: Generate User Guide PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/user_guide/user_guide.html
-          "docs/SonarMark User Guide.pdf"
+          docs/user_guide/generated/user_guide.html
+          "docs/generated/SonarMark User Guide.pdf"
 
       - name: Assert User Guide Documents with FileAssert
         run: >
@@ -772,8 +835,8 @@ jobs:
           user-guide
 
       # === FILEASSERT SELF-VALIDATION ===
-      # By this point Pandoc and WeasyPrint have each produced 6 validated documents
-      # (Build Notes, Code Quality, Review Plan, Review Report, Design, User Guide),
+      # By this point Pandoc and WeasyPrint have each produced 7 validated documents
+      # (Build Notes, Code Quality, Review Plan, Review Report, Design, Verification, User Guide),
       # providing strong OTS evidence for both tools before ReqStream runs. FileAssert
       # self-validation confirms the assertion tool itself is operational.
       # Downstream projects: Add any additional FileAssert self-validation steps here.
@@ -793,6 +856,10 @@ jobs:
       # confirm the requirements pipeline produced well-formed documents.
       # Downstream projects: Add any additional requirements steps here.
 
+      - name: Create requirements output directories
+        shell: bash
+        run: mkdir -p docs/requirements_doc/generated docs/requirements_report/generated
+
       - name: Run ReqStream self-validation
         run: >
           dotnet reqstream
@@ -804,9 +871,9 @@ jobs:
           dotnet reqstream
           --requirements requirements.yaml
           --tests "artifacts/**/*.trx"
-          --report docs/requirements_doc/requirements.md
-          --justifications docs/requirements_doc/justifications.md
-          --matrix docs/requirements_report/trace_matrix.md
+          --report docs/requirements_doc/generated/requirements.md
+          --justifications docs/requirements_doc/generated/justifications.md
+          --matrix docs/requirements_report/generated/trace_matrix.md
           --enforce
 
       - name: Generate Requirements HTML with Pandoc
@@ -817,14 +884,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/requirements_doc/requirements.html
+          --output docs/requirements_doc/generated/requirements.html
 
       - name: Generate Requirements PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/requirements_doc/requirements.html
-          "docs/SonarMark Requirements.pdf"
+          docs/requirements_doc/generated/requirements.html
+          "docs/generated/SonarMark Requirements.pdf"
 
       - name: Generate Trace Matrix HTML with Pandoc
         shell: bash
@@ -834,14 +901,14 @@ jobs:
           --filter node_modules/.bin/mermaid-filter.cmd
           --metadata version="${{ inputs.version }}"
           --metadata date="$(date +'%Y-%m-%d')"
-          --output docs/requirements_report/trace_matrix.html
+          --output docs/requirements_report/generated/trace_matrix.html
 
       - name: Generate Trace Matrix PDF with WeasyPrint
         run: >
           dotnet weasyprint
           --pdf-variant pdf/a-3u
-          docs/requirements_report/trace_matrix.html
-          "docs/SonarMark Trace Matrix.pdf"
+          docs/requirements_report/generated/trace_matrix.html
+          "docs/generated/SonarMark Trace Matrix.pdf"
 
       - name: Assert Requirements Documents with FileAssert
         run: >
@@ -857,6 +924,4 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: documents
-          path: |-
-            docs/*.pdf
-            docs/build_notes.md
+          path: docs/generated/*
