@@ -234,7 +234,7 @@ tests:
             - field: Author
               contains: DEMA Consulting
             - field: Subject
-              contains: SonarQube/SonarCloud Reporting
+              contains: User Guide
           pages:
             min: 3
           text:
@@ -302,7 +302,7 @@ tests:
             - field: Author
               contains: DEMA Consulting
             - field: Subject
-              contains: Traceability
+              contains: Trace Matrix
           pages:
             min: 1
           text:
