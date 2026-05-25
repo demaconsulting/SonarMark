@@ -19,22 +19,22 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.SelfTest;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SelfTest;
 
 /// <summary>
 ///     Subsystem tests for the SelfTest subsystem (Validation running end-to-end self-validation pipeline).
 /// </summary>
-[TestClass]
-public class SelfTestTests
+public sealed class SelfTestTests : IDisposable
 {
-    private string _testDirectory = string.Empty;
+    private readonly string _testDirectory;
 
     /// <summary>
     ///     Initialize test by creating a temporary test directory.
     /// </summary>
-    [TestInitialize]
-    public void TestInitialize()
+    public SelfTestTests()
     {
         _testDirectory = Path.Combine(Path.GetTempPath(), $"sonarmark_self_test_{Guid.NewGuid()}");
         Directory.CreateDirectory(_testDirectory);
@@ -43,19 +43,30 @@ public class SelfTestTests
     /// <summary>
     ///     Clean up test by deleting the temporary test directory.
     /// </summary>
-    [TestCleanup]
-    public void TestCleanup()
+    public void Dispose()
     {
         if (Directory.Exists(_testDirectory))
         {
             Directory.Delete(_testDirectory, recursive: true);
         }
+
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    ///     Test that Validation.Run throws ArgumentNullException when context is null.
+    /// </summary>
+    [Fact]
+    public void SelfTest_RunValidation_NullContext_ThrowsArgumentNullException()
+    {
+        // Act / Assert - passing a null context must throw ArgumentNullException before any validation work
+        Assert.Throws<ArgumentNullException>(() => Validation.Run(null!));
     }
 
     /// <summary>
     ///     Test that the SelfTest subsystem completes all self-validation tests with exit code 0.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SelfTest_RunValidation_AllTestsPass()
     {
         // Arrange - configure validation mode and suppress console output during subsystem test
@@ -65,13 +76,13 @@ public class SelfTestTests
         Program.Run(context);
 
         // Assert - all self-validation tests pass so the subsystem exit code is 0
-        Assert.AreEqual(0, context.ExitCode);
+        Assert.Equal(0, context.ExitCode);
     }
 
     /// <summary>
     ///     Test that the SelfTest subsystem produces a valid results file.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SelfTest_RunValidation_ProducesResultsFile()
     {
         // Arrange - configure a TRX results file path and silent output
@@ -82,8 +93,27 @@ public class SelfTestTests
         Program.Run(context);
 
         // Assert - the results file must exist and contain self-validation test suite content
-        Assert.IsTrue(File.Exists(resultsPath), $"Expected results file at {resultsPath}");
+        Assert.True(File.Exists(resultsPath), $"Expected results file at {resultsPath}");
         var content = File.ReadAllText(resultsPath);
         Assert.Contains("SonarMark Self-Validation", content);
+    }
+
+    /// <summary>
+    ///     Test that the SelfTest subsystem produces a valid JUnit XML results file.
+    /// </summary>
+    [Fact]
+    public void SelfTest_RunValidation_WithJUnitResultsPath_ProducesJUnitResultsFile()
+    {
+        // Arrange - configure a JUnit XML results file path and silent output
+        var resultsPath = Path.Combine(_testDirectory, "self-test-results.xml");
+        using var context = Context.Create(["--validate", "--silent", "--results", resultsPath]);
+
+        // Act - run the full self-validation pipeline; the subsystem must write the JUnit results file
+        Program.Run(context);
+
+        // Assert - the JUnit XML results file must exist and contain expected test suite content
+        Assert.True(File.Exists(resultsPath), $"Expected JUnit results file at {resultsPath}");
+        var content = File.ReadAllText(resultsPath);
+        Assert.Contains("testsuite", content);
     }
 }

@@ -19,20 +19,20 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
 
 /// <summary>
 ///     Subsystem tests for the SonarIntegration subsystem (SonarQubeClient, SonarIssue, SonarHotSpot working together).
 /// </summary>
-[TestClass]
 public class SonarIntegrationTests
 {
     /// <summary>
     ///     Test that the subsystem fetches quality gate status from the server.
     /// </summary>
-    [TestMethod]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsQualityGateStatus()
+    [Fact]
+    public async Task SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus()
     {
         // Arrange - build mock handler returning OK quality gate status
         var handler = new MockHttpMessageHandler();
@@ -66,18 +66,18 @@ public class SonarIntegrationTests
         using var client = new SonarQubeClient(httpClient, false);
 
         // Act - fetch quality result through the subsystem
-        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project");
+        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project", cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert - quality gate status must be propagated from server response through subsystem
-        Assert.AreEqual("OK", result.QualityGateStatus);
-        Assert.AreEqual("Test Project", result.ProjectName);
+        Assert.Equal("OK", result.QualityGateStatus);
+        Assert.Equal("Test Project", result.ProjectName);
     }
 
     /// <summary>
     ///     Test that the subsystem fetches issues from the server and includes them in the result.
     /// </summary>
-    [TestMethod]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsIssues()
+    [Fact]
+    public async Task SonarIntegration_FetchQualityResult_MockedIssueInResponse_ReturnsIssues()
     {
         // Arrange - build mock handler returning one issue
         var handler = new MockHttpMessageHandler();
@@ -116,19 +116,19 @@ public class SonarIntegrationTests
         using var client = new SonarQubeClient(httpClient, false);
 
         // Act - fetch quality result through the subsystem
-        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project");
+        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project", cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert - the issue must be included in the result
-        Assert.HasCount(1, result.Issues);
-        Assert.AreEqual("issue-1", result.Issues[0].Key);
-        Assert.AreEqual("MAJOR", result.Issues[0].Severity);
+        Assert.Single(result.Issues);
+        Assert.Equal("issue-1", result.Issues[0].Key);
+        Assert.Equal("MAJOR", result.Issues[0].Severity);
     }
 
     /// <summary>
     ///     Test that the subsystem fetches hot-spots from the server and includes them in the result.
     /// </summary>
-    [TestMethod]
-    public async Task SonarIntegration_FetchQualityResult_ReturnsHotSpots()
+    [Fact]
+    public async Task SonarIntegration_FetchQualityResult_MockedHotSpotInResponse_ReturnsHotSpots()
     {
         // Arrange - build mock handler returning one hot-spot
         var handler = new MockHttpMessageHandler();
@@ -167,14 +167,74 @@ public class SonarIntegrationTests
         using var client = new SonarQubeClient(httpClient, false);
 
         // Act - fetch quality result through the subsystem
-        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project");
+        var result = await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project", cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert - the hot-spot must be included in the result
-        Assert.HasCount(1, result.HotSpots);
-        Assert.AreEqual("hs-1", result.HotSpots[0].Key);
-        Assert.AreEqual("HIGH", result.HotSpots[0].VulnerabilityProbability);
+        Assert.Single(result.HotSpots);
+        Assert.Equal("hs-1", result.HotSpots[0].Key);
+        Assert.Equal("HIGH", result.HotSpots[0].VulnerabilityProbability);
+    }
+
+    /// <summary>
+    ///     Test that a null/empty server URL causes ArgumentException before any HTTP call.
+    /// </summary>
+    [Fact]
+    public async Task SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException()
+    {
+        // Arrange - mock handler is never called because validation happens first
+        var handler = new MockHttpMessageHandler();
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act / Assert - null server URL must throw before any HTTP call is made
+        await Assert.ThrowsAnyAsync<ArgumentException>(
+            async () => await client.GetQualityResultByBranchAsync(null!, "test-project", cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    /// <summary>
+    ///     Test that a non-2xx HTTP response raises InvalidOperationException through the subsystem.
+    /// </summary>
+    [Fact]
+    public async Task SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException()
+    {
+        // Arrange - configure mock to return HTTP 500 on first API call
+        var handler = new MockHttpMessageHandler();
+        handler.EnqueueResponse(new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+        {
+            ReasonPhrase = "Internal Server Error"
+        });
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act / Assert - non-success HTTP response must propagate as InvalidOperationException
+        await Assert.ThrowsAsync<InvalidOperationException>(
+            async () => await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project", cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    /// <summary>
+    ///     Test that a malformed JSON response raises JsonException through the subsystem.
+    /// </summary>
+    [Fact]
+    public async Task SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException()
+    {
+        // Arrange - configure mock to return HTTP 200 with invalid JSON body
+        var handler = new MockHttpMessageHandler();
+        handler.EnqueueResponse(new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.OK)
+        {
+            Content = new System.Net.Http.StringContent(
+                "{ this is not valid json !!!",
+                System.Text.Encoding.UTF8,
+                "application/json")
+        });
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act / Assert - malformed JSON must propagate as JsonException
+        await Assert.ThrowsAnyAsync<System.Text.Json.JsonException>(
+            async () => await client.GetQualityResultByBranchAsync("https://sonar.example.com", "test-project", cancellationToken: TestContext.Current.CancellationToken));
     }
 
     private static HttpResponseMessage OkJson(string json) =>
         SonarIntegrationTestHelpers.OkJson(json);
 }
+

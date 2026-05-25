@@ -20,6 +20,8 @@ Before reviewing, read these standards to inform review judgments:
   hierarchy and categorization review judgments
 - **`design-documentation.md`** - defines mandatory sections, structural conventions,
   and coverage expected at each level; informs all design documentation review judgments
+- **`verification-documentation.md`** - defines mandatory sections, structural conventions,
+  and coverage expected at each level; informs all verification design review judgments
 
 For review sets that include source code or tests, also consult the relevant
 standards from the selection matrix in AGENTS.md.

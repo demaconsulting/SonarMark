@@ -2,19 +2,20 @@ using System.Net;
 using System.Text;
 using DemaConsulting.SonarMark.Cli;
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests;
 
 /// <summary>
 ///     Tests for Program class
 /// </summary>
-[TestClass]
+[Collection("NonParallelTests")]
 public class ProgramTests
 {
     /// <summary>
     ///     Test that Version property is not empty
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Version_WhenAccessed_ReturnsNonEmptyString()
     {
         // Arrange - no setup needed
@@ -24,13 +25,13 @@ public class ProgramTests
 
         // Assert - verify version is not empty
         // This test proves that the Program.Version property returns a valid non-empty version string
-        Assert.IsFalse(string.IsNullOrWhiteSpace(version));
+        Assert.False(string.IsNullOrWhiteSpace(version));
     }
 
     /// <summary>
     ///     Test that Run method with version flag outputs only version
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithVersionFlag_OutputsVersionString()
     {
         // Arrange - capture console output
@@ -41,13 +42,12 @@ public class ProgramTests
         try
         {
             using var context = Context.Create(["--version"]);
-
             // Act - run the program with version flag
             Program.Run(context);
 
             // Assert - verify only version is output
             // This test proves that --version flag outputs the version string and nothing else
-            Assert.AreEqual(Program.Version + Environment.NewLine, output.ToString());
+            Assert.Equal(Program.Version + Environment.NewLine, output.ToString());
         }
         finally
         {
@@ -58,7 +58,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with help flag outputs banner and help
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithHelpFlag_OutputsBannerAndHelpText()
     {
         // Arrange - capture console output
@@ -69,7 +69,6 @@ public class ProgramTests
         try
         {
             using var context = Context.Create(["--help"]);
-
             // Act - run the program with help flag
             Program.Run(context);
 
@@ -79,7 +78,7 @@ public class ProgramTests
             Assert.Contains("SonarMark version", outputText);
             Assert.Contains("Usage: sonarmark", outputText);
             Assert.Contains("Options:", outputText);
-            Assert.AreEqual(0, context.ExitCode);
+            Assert.Equal(0, context.ExitCode);
         }
         finally
         {
@@ -90,24 +89,23 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with validate flag runs validation successfully
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithValidateFlag_RunsValidationSuccessfully()
     {
         // Arrange - create context with validate flag
         using var context = Context.Create(["--validate"]);
-
         // Act - run the program with validate flag
         Program.Run(context);
 
         // Assert - verify validation completes successfully
         // This test proves that --validate flag triggers self-validation and completes successfully
-        Assert.AreEqual(0, context.ExitCode);
+        Assert.Equal(0, context.ExitCode);
     }
 
     /// <summary>
     ///     Test that Run method with no flags outputs banner and error for missing server
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithNoArguments_OutputsBannerAndRequiresServerError()
     {
         // Arrange - capture console output (stdout for banner, stderr for error messages)
@@ -121,7 +119,6 @@ public class ProgramTests
         try
         {
             using var context = Context.Create([]);
-
             // Act - run the program with no arguments
             Program.Run(context);
 
@@ -129,7 +126,7 @@ public class ProgramTests
             // This test proves that running without required parameters shows appropriate error
             Assert.Contains("SonarMark version", output.ToString());
             Assert.Contains("--server parameter is required", errorOutput.ToString());
-            Assert.AreEqual(1, context.ExitCode);
+            Assert.Equal(1, context.ExitCode);
         }
         finally
         {
@@ -141,7 +138,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with server but no project key outputs error
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithServerButNoProjectKey_OutputsProjectKeyRequiredError()
     {
         // Arrange - capture console error output
@@ -152,14 +149,13 @@ public class ProgramTests
         try
         {
             using var context = Context.Create(["--server", "https://sonarcloud.io"]);
-
             // Act - run the program with server but no project key
             Program.Run(context);
 
             // Assert - verify error about missing --project-key parameter
             // This test proves that --server requires --project-key to also be specified
             Assert.Contains("--project-key parameter is required", errorOutput.ToString());
-            Assert.AreEqual(1, context.ExitCode);
+            Assert.Equal(1, context.ExitCode);
         }
         finally
         {
@@ -170,7 +166,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with silent flag suppresses banner
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithSilentFlag_SuppressesBannerOutput()
     {
         // Arrange - capture console output
@@ -181,7 +177,6 @@ public class ProgramTests
         try
         {
             using var context = Context.Create(["--silent"]);
-
             // Act - run the program with silent flag
             Program.Run(context);
 
@@ -199,7 +194,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with enforce flag and failing quality gate returns non-zero exit code
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode()
     {
         // Arrange - create mock HTTP client factory that returns failing quality gate (ERROR status)
@@ -213,13 +208,13 @@ public class ProgramTests
 
         // Assert - verify exit code is 1 (non-zero) because quality gate failed and --enforce was set
         // This test proves that Program returns a non-zero exit code when quality gate fails in enforcement mode
-        Assert.AreEqual(1, context.ExitCode);
+        Assert.Equal(1, context.ExitCode);
     }
 
     /// <summary>
     ///     Test that Run method with --report flag writes a markdown file
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithReportFile_WritesMarkdownToFile()
     {
         // Arrange - create a temporary report file path and a mock HTTP client factory
@@ -237,9 +232,9 @@ public class ProgramTests
 
             // Assert - verify the report file was created and contains markdown content
             // This test proves that --report writes a markdown file to the specified path
-            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            Assert.True(File.Exists(reportPath), $"Expected report file at {reportPath}");
             var content = File.ReadAllText(reportPath);
-            Assert.IsFalse(string.IsNullOrWhiteSpace(content));
+            Assert.False(string.IsNullOrWhiteSpace(content));
             Assert.Contains("test-project", content);
         }
         finally
@@ -255,7 +250,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with --report-depth flag writes a markdown file with the correct heading level.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithReportDepth_WritesReportWithDepthHeadings()
     {
         // Arrange - create a temporary report file path and a mock HTTP client factory
@@ -278,10 +273,10 @@ public class ProgramTests
 
             // Assert - verify the report file uses level-2 headings (##) not level-1 headings (#)
             // This test proves that --report-depth controls the markdown heading level in the output
-            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            Assert.True(File.Exists(reportPath), $"Expected report file at {reportPath}");
             var content = File.ReadAllText(reportPath);
             Assert.Contains("## ", content);
-            Assert.IsFalse(content.StartsWith("# "), "Report must not start with a level-1 heading when --report-depth 2 is used");
+            Assert.False(content.StartsWith("# "), "Report must not start with a level-1 heading when --report-depth 2 is used");
         }
         finally
         {
@@ -296,7 +291,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with --depth flag (primary option) writes a markdown file with the correct heading level.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithDepth_WritesReportWithDepthHeadings()
     {
         // Arrange - create a temporary report file path and a mock HTTP client factory
@@ -318,12 +313,12 @@ public class ProgramTests
             Program.Run(context);
 
             // Assert - the report file must exist and contain level-2 headings
-            Assert.IsTrue(File.Exists(reportPath), $"Expected report file at {reportPath}");
+            Assert.True(File.Exists(reportPath), $"Expected report file at {reportPath}");
             var content = File.ReadAllText(reportPath);
             Assert.Contains("## ", content);
 
             // This test proves that --depth controls the markdown heading level in the output
-            Assert.IsFalse(content.StartsWith("# "), "Report must not start with a level-1 heading when --depth 2 is used");
+            Assert.False(content.StartsWith("# "), "Report must not start with a level-1 heading when --depth 2 is used");
         }
         finally
         {
@@ -338,7 +333,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with a token passes an Authorization header to server requests.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithToken_AddsAuthorizationHeaderToServerRequests()
     {
         // Arrange - create a capturing mock handler so we can inspect outgoing request headers
@@ -372,10 +367,10 @@ public class ProgramTests
 
         // Assert - verify that all captured requests included a Basic Authorization header,
         // proving that --token causes authentication to be forwarded to server requests
-        Assert.IsTrue(
+        Assert.True(
             capturingHandler.CapturedRequests.Count > 0,
             "Expected at least one request to be made to the server");
-        Assert.IsTrue(
+        Assert.True(
             capturingHandler.CapturedRequests.All(r =>
                 r.Authorization != null && r.Authorization.StartsWith("Basic ", StringComparison.Ordinal)),
             "Expected all server requests to include a Basic Authorization header");
@@ -384,7 +379,7 @@ public class ProgramTests
     /// <summary>
     ///     Test that Run method with a branch flag includes the branch in server requests.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void Program_Run_WithBranchFlag_IncludesBranchInServerRequest()
     {
         // Arrange - create a capturing mock handler so we can inspect outgoing request URIs
@@ -406,10 +401,46 @@ public class ProgramTests
 
         // Assert - verify that at least one request included the branch as a query parameter,
         // proving that --branch is forwarded to the SonarQube API requests
-        Assert.IsTrue(
+        Assert.True(
             capturingHandler.CapturedRequests.Any(
                 r => r.Uri != null && r.Uri.Contains("branch=feature-test", StringComparison.Ordinal)),
             "Expected at least one request URI to include the branch query parameter");
+    }
+
+    /// <summary>
+    ///     Test that Run method with a server fetch failure routes the error and returns non-zero exit code
+    /// </summary>
+    [Fact]
+    public void Program_Run_WithServerFetchFailure_OutputsErrorAndReturnsNonZeroExitCode()
+    {
+        // Arrange - create mock factory with a handler that throws InvalidOperationException on every request
+        var mockFactory = (string? _) => new SonarQubeClient(new HttpClient(new ThrowingMockHandler()), false);
+        var originalOut = Console.Out;
+        var originalError = Console.Error;
+        using var output = new StringWriter();
+        using var errorOutput = new StringWriter();
+        Console.SetOut(output);
+        Console.SetError(errorOutput);
+
+        try
+        {
+            using var context = Context.Create(
+                ["--server", "https://mock.sonarqube.example", "--project-key", "test-project"],
+                mockFactory);
+
+            // Act - run the program; the fetch will throw InvalidOperationException
+            Program.Run(context);
+
+            // Assert - verify error is routed to context.WriteError (stderr) and exit code is non-zero
+            // This test proves that Program handles SonarQube fetch failures gracefully without crashing
+            Assert.Contains("Failed to get quality results", errorOutput.ToString());
+            Assert.NotEqual(0, context.ExitCode);
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+            Console.SetError(originalError);
+        }
     }
 
     /// <summary>
@@ -419,6 +450,22 @@ public class ProgramTests
     private static HttpClient CreateMockFailingQualityGateHttpClient()
     {
         return new HttpClient(new FailingQualityGateMockHandler());
+    }
+
+    /// <summary>
+    ///     Mock HTTP handler that always throws <see cref="InvalidOperationException"/> to simulate a
+    ///     server fetch failure, proving that <see cref="Program"/> routes the error to the context
+    ///     and does not crash the process.
+    /// </summary>
+    private sealed class ThrowingMockHandler : HttpMessageHandler
+    {
+        /// <inheritdoc/>
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            throw new InvalidOperationException("Simulated server fetch failure");
+        }
     }
 
     /// <summary>

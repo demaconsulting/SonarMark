@@ -36,7 +36,12 @@ submission, not during normal development.
 
 - **markdownlint MD013 (line length)**: Wrap long lines at natural break points,
   after commas, before conjunctions, or at sentence boundaries. Do not break
-  in the middle of a code span or URL.
+  in the middle of a code span or URL. **Pipe-tables that cannot be wrapped
+  without breaking structure** are a special case - convert them to a bullet
+  list if the data reads naturally that way, or rewrite as a
+  [grid table](https://pandoc.org/MANUAL.html#tables) if a tabular layout is
+  essential. Do not get stuck trying to squeeze a wide pipe-table into 120
+  characters.
 
 - **markdownlint other rules**: Apply the specific fix indicated in the output
   (e.g., missing blank lines, heading levels, code fence languages).

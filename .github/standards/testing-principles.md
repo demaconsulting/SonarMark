@@ -3,11 +3,6 @@ name: Testing Principles
 description: Follow these standards when developing any software tests.
 ---
 
-# Testing Principles Standards
-
-This document defines universal testing principles and quality standards for test development within
-Continuous Compliance environments.
-
 # Test Dependency Boundaries (MANDATORY)
 
 Respect software item hierarchy boundaries to ensure review-sets can validate proper architectural scope.

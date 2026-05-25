@@ -20,19 +20,19 @@
 
 using DemaConsulting.SonarMark.ReportGeneration;
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.ReportGeneration;
 
 /// <summary>
 ///     Subsystem tests for the ReportGeneration subsystem (SonarQualityResult integrating issues, hot-spots, and quality gate).
 /// </summary>
-[TestClass]
 public class ReportGenerationTests
 {
     /// <summary>
     ///     Test that the subsystem renders a quality gate section including status and conditions.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void ReportGeneration_QualityGateReport_IncludesStatusAndConditions()
     {
         // Arrange - create a quality result with ERROR gate status and one failing condition
@@ -60,7 +60,7 @@ public class ReportGenerationTests
         var markdown = result.ToMarkdown(1);
 
         // Assert - quality gate status and condition must appear in the rendered report
-        Assert.IsNotNull(markdown);
+        Assert.NotNull(markdown);
         Assert.Contains("ERROR", markdown);
         Assert.Contains("Coverage on New Code", markdown);
     }
@@ -68,7 +68,7 @@ public class ReportGenerationTests
     /// <summary>
     ///     Test that the subsystem renders an issues section categorized by type and severity.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void ReportGeneration_IssuesReport_CategorizesByTypeAndSeverity()
     {
         // Arrange - create a quality result with one bug issue
@@ -95,15 +95,16 @@ public class ReportGenerationTests
         var markdown = result.ToMarkdown(1);
 
         // Assert - issue details must appear in the rendered report
-        Assert.IsNotNull(markdown);
+        Assert.NotNull(markdown);
         Assert.Contains("Fix this issue", markdown);
         Assert.Contains("MAJOR", markdown);
+        Assert.Contains("BUG", markdown);
     }
 
     /// <summary>
     ///     Test that the subsystem renders a hot-spots section including priority and category.
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void ReportGeneration_HotSpotsReport_IncludesPriorityAndCategory()
     {
         // Arrange - create a quality result with one HIGH priority hot-spot
@@ -129,9 +130,33 @@ public class ReportGenerationTests
         var markdown = result.ToMarkdown(1);
 
         // Assert - hot-spot vulnerability probability, category, and security category must appear in the rendered report
-        Assert.IsNotNull(markdown);
+        Assert.NotNull(markdown);
         Assert.Contains("Review this security hot-spot", markdown);
         Assert.Contains("HIGH", markdown);
         Assert.Contains("xss", markdown);
     }
+
+    /// <summary>
+    ///     Test that ToMarkdown throws ArgumentOutOfRangeException for invalid depth values.
+    /// </summary>
+    [Fact]
+    public void ReportGeneration_ToMarkdown_InvalidDepth_ThrowsArgumentOutOfRangeException()
+    {
+        // Arrange - create a minimal quality result
+        var result = new SonarQualityResult(
+            "https://sonarcloud.io",
+            "test_project",
+            "Test Project",
+            "OK",
+            [],
+            new Dictionary<string, string>(),
+            [],
+            []);
+
+        // Act / Assert - depth values outside [1, 6] must throw ArgumentOutOfRangeException
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
+        Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(-1));
+    }
 }
+

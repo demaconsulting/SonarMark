@@ -54,6 +54,7 @@ internal static class Validation
     ///     Runs self-validation tests and optionally writes results to a file.
     /// </summary>
     /// <param name="context">The context containing command line arguments and program state.</param>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="context"/> is null.</exception>
     public static void Run(Context context)
     {
         // Validate that context is not null
@@ -599,6 +600,9 @@ internal static class Validation
         /// <summary>
         ///     Initializes a new instance of the <see cref="TemporaryDirectory"/> class.
         /// </summary>
+        /// <exception cref="InvalidOperationException">
+        ///     Thrown when the temporary directory cannot be created due to an I/O or access error.
+        /// </exception>
         public TemporaryDirectory()
         {
             DirectoryPath = Path.Combine(Path.GetTempPath(), $"sonarmark_validation_{Guid.NewGuid()}");

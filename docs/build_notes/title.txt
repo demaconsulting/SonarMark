@@ -1,13 +1,12 @@
 ---
-title: SonarMark Tool
-subtitle: Build Notes
-author: DEMA Consulting
-description: Build notes for the SonarMark Tool for creating code quality reports
+title: "SonarMark Build Notes"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Build Notes for SonarMark"
 lang: en-US
 keywords:
-  - SonarMark
   - Build Notes
-  - Release Notes
+  - SonarMark
   - C#
   - .NET
   - Code Quality

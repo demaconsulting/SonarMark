@@ -1,29 +1,46 @@
-# SonarIssue
+### SonarIssue
 
-## Overview
+#### Purpose
 
-`SonarIssue` is an immutable record type that represents a single code quality
-issue returned by the SonarQube/SonarCloud API. It holds the fields needed to
-render a compiler-style issue entry in the markdown report.
+`SonarIssue` is an immutable positional record that represents a single code quality issue
+returned by the SonarQube/SonarCloud API. It holds the fields needed to render a
+compiler-style issue entry in the markdown report.
 
-## Design Decisions
+#### Data Model
 
-### Record Type
+**Key**: `string` — unique identifier for the issue as returned by the API.
 
-`SonarIssue` is declared as a `record` (positional record) for the same reasons
-as `SonarHotSpot`: value-based equality, concise syntax, and suitability as a
-data-transfer object.
+**Rule**: `string` — rule key that triggered the issue (e.g., `csharpsquid:S1135`).
 
-### Severity and Rule Fields
+**Severity**: `string` — severity level as returned by the API
+(e.g., `BLOCKER`, `CRITICAL`, `MAJOR`, `MINOR`, `INFO`).
 
-The `Severity` and `Rule` fields are included because the markdown report groups
-and labels issues by severity. The `Component` and `Line` fields provide the
-source location needed for compiler-style output.
+**Component**: `string` — fully-qualified component path including the project key prefix
+(e.g., `my-project:src/Foo.cs`).
 
-## Satisfies Requirements
+**Line**: `int?` — source line number; `null` when the issue has no line association.
 
-- `SonarMark-Issue-Record` — holds the data for one issue fetched from the server
-- `SonarMark-Issue-OptionalLine` — captures the optional line number field
-- `SonarMark-Issue-Severity` — captures the severity level for severity-based categorization
-- `SonarMark-Server-Issues` — holds the data for one issue fetched from the server
-- `SonarMark-Report-Issues` — provides the fields rendered in the issues section of the report
+**Message**: `string` — human-readable description of the issue.
+
+**Type**: `string` — issue type as returned by the API (e.g., `BUG`, `VULNERABILITY`,
+`CODE_SMELL`).
+
+#### Key Methods
+
+N/A - `SonarIssue` is a positional record with no defined methods beyond the
+compiler-generated constructor, `Equals`, `GetHashCode`, and `ToString`.
+
+#### Error Handling
+
+N/A - `SonarIssue` is a passive data record. All field values are provided by the caller
+(`SonarQubeClient.ParseIssue`) and no validation is performed on construction.
+
+#### Dependencies
+
+N/A - `SonarIssue` has no dependencies beyond the .NET runtime.
+
+#### Callers
+
+- **SonarQubeClient** — creates `SonarIssue` records in `ParseIssue` from the API response.
+- **SonarQualityResult** — holds and renders the `IReadOnlyList<SonarIssue>` in
+  `AppendIssuesSection`.

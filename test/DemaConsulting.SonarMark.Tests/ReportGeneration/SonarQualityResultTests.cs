@@ -20,19 +20,19 @@
 
 using DemaConsulting.SonarMark.ReportGeneration;
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.ReportGeneration;
 
 /// <summary>
 ///     Tests for SonarQualityResult class
 /// </summary>
-[TestClass]
 public class SonarQualityResultTests
 {
     /// <summary>
     ///     Test that SonarQualityResult can be created with all required properties
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_Constructor_AllProperties_CreatesInstance()
     {
         // Arrange & Act - create quality result with primary constructor
@@ -53,18 +53,18 @@ public class SonarQualityResultTests
             [],
             []);
         // Assert - verify all properties are set correctly
-        Assert.AreEqual("https://sonarcloud.io", result.ServerUrl);
-        Assert.AreEqual("test_project", result.ProjectKey);
-        Assert.AreEqual("Test Project Name", result.ProjectName);
-        Assert.AreEqual("ERROR", result.QualityGateStatus);
-        Assert.HasCount(1, result.Conditions);
-        Assert.HasCount(1, result.MetricNames);
+        Assert.Equal("https://sonarcloud.io", result.ServerUrl);
+        Assert.Equal("test_project", result.ProjectKey);
+        Assert.Equal("Test Project Name", result.ProjectName);
+        Assert.Equal("ERROR", result.QualityGateStatus);
+        Assert.Single(result.Conditions);
+        Assert.Single(result.MetricNames);
     }
 
     /// <summary>
     ///     Test ToMarkdown with depth 1 produces correct output
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput()
     {
         // Arrange
@@ -94,7 +94,7 @@ public class SonarQualityResultTests
         var markdown = result.ToMarkdown(1);
 
         // Assert - verify the markdown contains expected elements
-        Assert.IsNotNull(markdown);
+        Assert.NotNull(markdown);
         Assert.Contains("# Test Project Sonar Analysis", markdown);
         Assert.Contains("**Dashboard:**", markdown);
         Assert.Contains("https://sonarcloud.io/dashboard?id=test_project", markdown);
@@ -111,7 +111,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with depth 3 uses correct heading levels
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_Depth3_UsesCorrectHeadingLevels()
     {
         // Arrange
@@ -135,12 +135,14 @@ public class SonarQualityResultTests
         // Assert - verify heading levels
         Assert.Contains("### Test Project Sonar Analysis", markdown);
         Assert.Contains("#### Conditions", markdown);
+        Assert.Contains("#### Issues", markdown);
+        Assert.Contains("#### Security Hot-Spots", markdown);
     }
 
     /// <summary>
     ///     Test ToMarkdown with empty conditions list
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_NoConditions_ExcludesConditionsSection()
     {
         // Arrange
@@ -172,8 +174,8 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with null threshold and actual values
     /// </summary>
-    [TestMethod]
-    public void SonarQualityResult_ToMarkdown_NullThresholdAndActual_ExcludesNullValues()
+    [Fact]
+    public void SonarQualityResult_ToMarkdown_NullThresholdAndActual_RendersEmptyCells()
     {
         // Arrange
         IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", null, null, "OK")];
@@ -201,7 +203,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with depth less than 1 throws exception
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_DepthLessThan1_ThrowsArgumentOutOfRangeException()
     {
         // Arrange
@@ -218,15 +220,15 @@ public class SonarQualityResultTests
             []);
 
         // Act & Assert
-        var ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
-        Assert.AreEqual("depth", ex.ParamName);
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
+        Assert.Equal("depth", ex.ParamName);
         Assert.Contains("Depth must be between 1 and 6", ex.Message);
     }
 
     /// <summary>
     ///     Test ToMarkdown with depth greater than 6 throws exception
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_DepthGreaterThan6_ThrowsArgumentOutOfRangeException()
     {
         // Arrange
@@ -243,15 +245,15 @@ public class SonarQualityResultTests
             []);
 
         // Act & Assert
-        var ex = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
-        Assert.AreEqual("depth", ex.ParamName);
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
+        Assert.Equal("depth", ex.ParamName);
         Assert.Contains("Depth must be between 1 and 6", ex.Message);
     }
 
     /// <summary>
     ///     Test ToMarkdown with maximum depth of 6
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_Depth6_ProducesCorrectOutput()
     {
         // Arrange
@@ -280,7 +282,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with WARN status
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput()
     {
         // Arrange
@@ -310,7 +312,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown uses friendly metric names when available
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_WithFriendlyNames_UsesFriendlyNames()
     {
         // Arrange
@@ -347,7 +349,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with issues produces compiler-style output and cleans component paths
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_WithIssues_ProducesCompilerStyleOutput()
     {
         // Arrange
@@ -382,7 +384,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with hot-spots produces compiler-style output and cleans component paths
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput()
     {
         // Arrange
@@ -417,7 +419,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with singular counts shows correct text
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_WithSingularCounts_ShowsCorrectText()
     {
         // Arrange
@@ -454,8 +456,8 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with multiple issues includes line breaks between items
     /// </summary>
-    [TestMethod]
-    public void SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesBlankLinesBetweenItems()
+    [Fact]
+    public void SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesLineBreaksBetweenItems()
     {
         // Arrange
         IReadOnlyList<SonarIssue> issues =
@@ -487,8 +489,8 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test ToMarkdown with multiple hot-spots includes line breaks between items
     /// </summary>
-    [TestMethod]
-    public void SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesBlankLinesBetweenItems()
+    [Fact]
+    public void SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesLineBreaksBetweenItems()
     {
         // Arrange
         IReadOnlyList<SonarHotSpot> hotSpots =
@@ -520,7 +522,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test CleanComponent fall-through path where component has no project key prefix
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityResult_ToMarkdown_ComponentWithoutProjectKeyPrefix_PassesThroughUnchanged()
     {
         // Arrange - component does not start with "{ProjectKey}:"
@@ -549,7 +551,7 @@ public class SonarQualityResultTests
     /// <summary>
     ///     Test SonarQualityCondition can be created with all properties
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarQualityCondition_Constructor_AllProperties_CreatesInstance()
     {
         // Arrange & Act
@@ -561,10 +563,10 @@ public class SonarQualityResultTests
             "ERROR");
 
         // Assert
-        Assert.AreEqual("new_coverage", condition.Metric);
-        Assert.AreEqual("LT", condition.Comparator);
-        Assert.AreEqual("80", condition.ErrorThreshold);
-        Assert.AreEqual("75.5", condition.ActualValue);
-        Assert.AreEqual("ERROR", condition.Status);
+        Assert.Equal("new_coverage", condition.Metric);
+        Assert.Equal("LT", condition.Comparator);
+        Assert.Equal("80", condition.ErrorThreshold);
+        Assert.Equal("75.5", condition.ActualValue);
+        Assert.Equal("ERROR", condition.Status);
     }
 }

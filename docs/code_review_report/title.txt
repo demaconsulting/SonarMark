@@ -1,13 +1,12 @@
 ---
-title: SonarMark Review Report
-subtitle: File Review Report for SonarMark
+title: SonarMark Code Review Report
+subtitle: Code Quality Reporting Tool for SonarQube/SonarCloud
 author: DEMA Consulting
-description: File Review Report for SonarMark
+description: Code Review Report for SonarMark
 lang: en-US
 keywords:
   - SonarMark
-  - Review Report
-  - File Reviews
+  - Code Review
   - .NET
   - Tool
 ---

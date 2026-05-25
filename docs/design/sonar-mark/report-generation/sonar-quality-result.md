@@ -1,57 +1,85 @@
-# SonarQualityResult
+### SonarQualityResult
 
-## Overview
+#### Purpose
 
-`SonarQualityResult` is an immutable record that aggregates the full quality
-analysis result for a SonarQube/SonarCloud project: the quality gate status,
-the list of gate conditions, all issues, and all security hot-spots. It also
-contains the `ToMarkdown` method that converts the result into a formatted
-markdown report.
+`SonarQualityResult` is an immutable record that aggregates the full quality analysis result
+for a SonarQube/SonarCloud project and renders it as a formatted markdown report via
+`ToMarkdown`. It is the single hand-off point between the SonarIntegration and
+ReportGeneration subsystems.
 
-## Design Decisions
+#### Data Model
 
-### Record with ToMarkdown Method
+**ServerUrl**: `string` — base URL of the SonarQube/SonarCloud server; used to construct
+the dashboard link in the report header.
 
-`SonarQualityResult` is a record for immutability and concise construction, but
-also carries the `ToMarkdown` behavior method. This co-locates the data and its
-primary transformation, making the class self-contained and easy to test in
-isolation without requiring a separate formatter class.
+**ProjectKey**: `string` — project key; used in the dashboard URL and to strip the project
+key prefix from component paths in the rendered output.
 
-### Configurable Depth
+**ProjectName**: `string` — human-readable project name fetched from the API; used as the
+report heading.
 
-`ToMarkdown` accepts a `depth` parameter (defaulting to 1) that controls the
-markdown heading level. This allows callers to embed the report as a sub-section
-of a larger document without heading-level conflicts.
+**QualityGateStatus**: `string` — overall quality gate status from the API (`OK`, `WARN`,
+`ERROR`, or `NONE`).
 
-### Friendly Names for Metrics
+**Conditions**: `IReadOnlyList<SonarQualityCondition>` — quality gate conditions; empty when
+no conditions are defined. Each `SonarQualityCondition` record holds `Metric` (metric key),
+`Comparator` (e.g., `LT`, `GT`), `ErrorThreshold` (`string?`), `ActualValue` (`string?`),
+and `Status` (e.g., `OK`, `WARN`, `ERROR`).
 
-The `ToMarkdown` implementation maps internal metric key names (e.g.,
-`new_reliability_rating`) to human-readable labels (e.g., `Reliability Rating`).
-This improves report readability without requiring the API to return display names.
+**MetricNames**: `IReadOnlyDictionary<string, string>` — maps internal metric keys (e.g.,
+`new_coverage`) to human-readable display names (e.g., `Coverage on New Code`); used in the
+conditions table to improve readability.
 
-### Compiler-Style Issue Output
+**Issues**: `IReadOnlyList<SonarIssue>` — code quality issues; empty when none are found.
 
-Issues and hot-spots are rendered in compiler-style format
-(`component:line: severity: message`) so that they can be read alongside build
-output and parsed by tools that understand that format.
+**HotSpots**: `IReadOnlyList<SonarHotSpot>` — security hot-spots; empty when none are found.
 
-## SonarQualityCondition
+**SonarQualityCondition**: An immutable data record modelling a single quality gate condition as
+returned by the SonarQube/SonarCloud API, with five individually-accessible fields:
 
-`SonarQualityCondition` is an immutable positional record declared in the same
-file as `SonarQualityResult`. It represents one quality gate condition returned
-by the `/api/qualitygates/project_status` endpoint.
+- `Metric` (`string`) — the internal metric key (e.g., `new_coverage`, `new_bugs`).
+- `Comparator` (`string`) — the comparison operator (e.g., `LT`, `GT`).
+- `ErrorThreshold` (`string?`) — the configured error threshold value; nullable when not set.
+- `ActualValue` (`string?`) — the actual measured value from the analysis; nullable when unavailable.
+- `Status` (`string`) — the per-condition gate status (`OK`, `WARN`, `ERROR`).
 
-| Parameter | C# Type | Description |
-| :---------- | :-------- | :------------ |
-| `Metric` | `string` | Metric key as returned by the API (e.g., `new_coverage`, `new_bugs`) |
-| `Comparator` | `string` | Comparison operator (e.g., `LT`, `GT`) |
-| `ErrorThreshold` | `string?` | Threshold value that triggers an error; `null` when not set |
-| `ActualValue` | `string?` | Actual metric value from the analysis; `null` when not available |
-| `Status` | `string` | Condition status returned by the API (e.g., `OK`, `WARN`, `ERROR`) |
+`SonarQualityCondition` records are carried in the `Conditions` list, rendered as rows in the
+conditions table by `AppendConditionsSection`, and individually tested for rendering correctness.
 
-## Satisfies Requirements
+#### Key Methods
 
-- `SonarMark-Report-QualityGate` — quality gate status and conditions are included in the report
-- `SonarMark-Report-Issues` — issues are categorized and rendered in the report
-- `SonarMark-Report-HotSpots` — hot-spots are rendered in the report
-- `SonarMark-Report-DepthValidation` — `ToMarkdown` validates depth is in the range 1–6
+**ToMarkdown**: Converts the quality result to a markdown string.
+
+- *Parameters*: `int depth` — heading depth for the report title (1–6).
+- *Returns*: `string` — complete GitHub-flavoured markdown report.
+- *Preconditions*: `depth` must be in the range 1–6.
+- *Postconditions*: Returned string contains all four sections (header, conditions, issues,
+  hot-spots); the conditions section is omitted when `Conditions` is empty.
+
+Computes the heading prefix (`#` × depth) and sub-heading prefix (`#` × min(depth+1, 6)),
+then delegates to `AppendHeader`, `AppendConditionsSection`, `AppendIssuesSection`, and
+`AppendHotSpotsSection`. Issues and hot-spots sections always appear with a count line;
+individual items are listed only when the count is greater than zero. Component paths are
+cleaned by stripping the `{ProjectKey}:` prefix so consumers see relative paths. Metric keys
+in the conditions table are resolved to display names via `MetricNames`; the raw key is used
+as a fallback when a key is absent.
+
+#### Error Handling
+
+`ToMarkdown` throws `ArgumentOutOfRangeException` when `depth` is outside 1–6. No other
+error conditions exist; the record is fully populated before `ToMarkdown` is called.
+
+#### Dependencies
+
+- **SonarIssue** — items in the `Issues` list, rendered in `AppendIssuesSection`.
+- **SonarHotSpot** — items in the `HotSpots` list, rendered in `AppendHotSpotsSection`.
+- **SonarQualityCondition** — items in the `Conditions` list, rendered in
+  `AppendConditionsSection`.
+
+#### Callers
+
+- **SonarQubeClient.GetQualityResultByBranchAsync** — constructs and returns the
+  `SonarQualityResult` instance.
+- **Program.ProcessSonarAnalysis** — calls `ToMarkdown` and writes the result to disk.
+- **Validation.RunMarkdownReportGenerationTest** — exercises the full pipeline including
+  `ToMarkdown` to validate the rendered output.

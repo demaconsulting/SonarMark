@@ -1,8 +1,5 @@
 ---
-# SarifMark OTS Software Requirements
-#
-# Requirements for the SarifMark SARIF report processing tool functionality.
-
+# SarifMark OTS requirements
 sections:
   - title: OTS Software Requirements
     sections:

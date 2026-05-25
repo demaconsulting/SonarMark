@@ -19,20 +19,21 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.Cli;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.Cli;
 
 /// <summary>
 ///     Subsystem tests for the CLI subsystem (Context + Program working together).
 /// </summary>
-[TestClass]
+[Collection("NonParallelTests")]
 public class CliTests
 {
     /// <summary>
     ///     Test that --version is dispatched correctly through the CLI subsystem and outputs the version string.
     /// </summary>
-    [TestMethod]
-    public void Cli_VersionDispatch_OutputsVersionString()
+    [Fact]
+    public void Cli_VersionDispatch_WithVersionFlag_OutputsVersionString()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -47,7 +48,7 @@ public class CliTests
 
             // Assert - output must contain the version string produced by the CLI subsystem
             var outputText = output.ToString();
-            Assert.IsFalse(string.IsNullOrWhiteSpace(outputText));
+            Assert.False(string.IsNullOrWhiteSpace(outputText));
             Assert.Contains(Program.Version, outputText);
         }
         finally
@@ -59,8 +60,8 @@ public class CliTests
     /// <summary>
     ///     Test that --help is dispatched correctly through the CLI subsystem and outputs help text.
     /// </summary>
-    [TestMethod]
-    public void Cli_HelpDispatch_OutputsHelpText()
+    [Fact]
+    public void Cli_HelpDispatch_WithHelpFlag_OutputsHelpText()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -76,7 +77,7 @@ public class CliTests
             // Assert - output must contain usage/help information
             var outputText = output.ToString();
             Assert.Contains("Usage:", outputText);
-            Assert.AreEqual(0, context.ExitCode);
+            Assert.Equal(0, context.ExitCode);
         }
         finally
         {
@@ -87,8 +88,8 @@ public class CliTests
     /// <summary>
     ///     Test that --silent mode suppresses output through the CLI subsystem.
     /// </summary>
-    [TestMethod]
-    public void Cli_SilentMode_SuppressesOutput()
+    [Fact]
+    public void Cli_SilentMode_WithSilentFlag_SuppressesOutput()
     {
         // Arrange - capture console output
         var originalOut = Console.Out;
@@ -103,7 +104,7 @@ public class CliTests
 
             // Assert - silent mode must suppress all standard output
             var outputText = output.ToString();
-            Assert.IsTrue(string.IsNullOrWhiteSpace(outputText));
+            Assert.True(string.IsNullOrWhiteSpace(outputText));
         }
         finally
         {
@@ -114,8 +115,8 @@ public class CliTests
     /// <summary>
     ///     Test that --enforce is parsed and the flag is exposed through the CLI subsystem after dispatch.
     /// </summary>
-    [TestMethod]
-    public void Cli_EnforceMode_SetsEnforceFlag()
+    [Fact]
+    public void Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag()
     {
         // Arrange - create context with --enforce and --server so dispatch reaches the project-key check
         using var context = Context.Create(["--enforce", "--server", "https://mock.example.com"]);
@@ -125,7 +126,18 @@ public class CliTests
         Program.Run(context);
 
         // Assert - the Enforce flag must be set to true and dispatch must have been attempted
-        Assert.IsTrue(context.Enforce);
-        Assert.AreEqual(1, context.ExitCode);
+        Assert.True(context.Enforce);
+        Assert.Equal(1, context.ExitCode);
+    }
+
+    /// <summary>
+    ///     Test that an unrecognized argument throws ArgumentException.
+    /// </summary>
+    [Fact]
+    public void Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException()
+    {
+        // Act / Assert - unsupported flag must throw ArgumentException before any dispatch occurs
+        Assert.Throws<ArgumentException>(() => Context.Create(["--unknown-flag"]));
     }
 }
+

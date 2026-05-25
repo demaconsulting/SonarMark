@@ -19,19 +19,19 @@
 // SOFTWARE.
 
 using DemaConsulting.SonarMark.SonarIntegration;
+using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.SonarIntegration;
 
 /// <summary>
 ///     Tests for SonarHotSpot class
 /// </summary>
-[TestClass]
 public class SonarHotSpotTests
 {
     /// <summary>
     ///     Test that SonarHotSpot can be created with all properties
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarHotSpot_Constructor_AllProperties_CreatesInstance()
     {
         // Arrange & Act
@@ -44,18 +44,18 @@ public class SonarHotSpotTests
             "HIGH");
 
         // Assert
-        Assert.AreEqual("hs-key-123", hotSpot.Key);
-        Assert.AreEqual("test_project:src/File.cs", hotSpot.Component);
-        Assert.AreEqual(42, hotSpot.Line);
-        Assert.AreEqual("Security vulnerability detected", hotSpot.Message);
-        Assert.AreEqual("sql-injection", hotSpot.SecurityCategory);
-        Assert.AreEqual("HIGH", hotSpot.VulnerabilityProbability);
+        Assert.Equal("hs-key-123", hotSpot.Key);
+        Assert.Equal("test_project:src/File.cs", hotSpot.Component);
+        Assert.Equal(42, hotSpot.Line);
+        Assert.Equal("Security vulnerability detected", hotSpot.Message);
+        Assert.Equal("sql-injection", hotSpot.SecurityCategory);
+        Assert.Equal("HIGH", hotSpot.VulnerabilityProbability);
     }
 
     /// <summary>
     ///     Test that SonarHotSpot can be created with null line number
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarHotSpot_Constructor_NullLine_CreatesInstance()
     {
         // Arrange & Act
@@ -68,18 +68,18 @@ public class SonarHotSpotTests
             "MEDIUM");
 
         // Assert
-        Assert.AreEqual("hs-key-456", hotSpot.Key);
-        Assert.AreEqual("test_project:src/Global.cs", hotSpot.Component);
-        Assert.IsNull(hotSpot.Line);
-        Assert.AreEqual("Global security issue", hotSpot.Message);
-        Assert.AreEqual("weak-cryptography", hotSpot.SecurityCategory);
-        Assert.AreEqual("MEDIUM", hotSpot.VulnerabilityProbability);
+        Assert.Equal("hs-key-456", hotSpot.Key);
+        Assert.Equal("test_project:src/Global.cs", hotSpot.Component);
+        Assert.Null(hotSpot.Line);
+        Assert.Equal("Global security issue", hotSpot.Message);
+        Assert.Equal("weak-cryptography", hotSpot.SecurityCategory);
+        Assert.Equal("MEDIUM", hotSpot.VulnerabilityProbability);
     }
 
     /// <summary>
     ///     Test that SonarHotSpot supports LOW vulnerability probability
     /// </summary>
-    [TestMethod]
+    [Fact]
     public void SonarHotSpot_Constructor_LowProbability_CreatesInstance()
     {
         // Arrange & Act
@@ -92,11 +92,12 @@ public class SonarHotSpotTests
             "LOW");
 
         // Assert
-        Assert.AreEqual("hs-key-789", hotSpot.Key);
-        Assert.AreEqual("test_project:src/Helper.cs", hotSpot.Component);
-        Assert.AreEqual(10, hotSpot.Line);
-        Assert.AreEqual("Potential security issue", hotSpot.Message);
-        Assert.AreEqual("xss", hotSpot.SecurityCategory);
-        Assert.AreEqual("LOW", hotSpot.VulnerabilityProbability);
+        Assert.Equal("hs-key-789", hotSpot.Key);
+        Assert.Equal("test_project:src/Helper.cs", hotSpot.Component);
+        Assert.Equal(10, hotSpot.Line);
+        Assert.Equal("Potential security issue", hotSpot.Message);
+        Assert.Equal("xss", hotSpot.SecurityCategory);
+        Assert.Equal("LOW", hotSpot.VulnerabilityProbability);
     }
 }
+

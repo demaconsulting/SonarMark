@@ -1,10 +1,16 @@
-# Visual Studio
-.vs/
-*.suo
+# .gitignore
+# Covers C# and common tools used in this project.
+
+# Build outputs
+bin/
+obj/
+artifacts/
+
+# .NET
 *.user
-*.userosscache
-*.sln.docstates
-*.userprefs
+*.suo
+.vs/
+*.slnx.user
 
 # Visual Studio Code
 .vscode/*
@@ -17,54 +23,38 @@
 .idea/
 *.sln.iml
 
-# Build results
-bin/
-obj/
+# Test results
 TestResults/
+*.trx
 
-# Code coverage reports
+# Code coverage
 coverage/
 *.coverage
 *.coveragexml
 *.opencover.xml
 
-# Test results
-*.trx
+# Python virtual environment
+.venv/
+
+# Node
+node_modules/
+package-lock.json
+
+# Generated compliance documents (build outputs — never committed)
+**/generated/
+
+# Agent logs
+.agent-logs/
+AGENT_REPORT_*.md
+
+# VersionMark captures (generated during CI/CD)
+versionmark-*.json
 
 # Temporary files
 *.tmp
 *.bak
-.DS_Store
 *~
 
-# Node.js dependencies
-node_modules/
-package-lock.json
-
-# Python virtual environment
-.venv/
-
-# Agent communication files
-AGENT_REPORT_*.md
-.agent-logs/
-
-# Generated documentation
-docs/*.pdf
-docs/guide/*.html
-docs/requirements_doc/requirements.md
-docs/requirements_doc/justifications.md
-docs/requirements_doc/*.html
-docs/requirements_report/trace_matrix.md
-docs/requirements_report/*.html
-docs/code_quality/codeql-quality.md
-docs/code_quality/sonar-quality.md
-docs/code_quality/*.html
-docs/build_notes.md
-docs/build_notes/versions.md
-docs/code_review_plan/plan.md
-docs/code_review_plan/*.html
-docs/code_review_report/report.md
-docs/code_review_report/*.html
-
-# VersionMark captures (generated during CI/CD)
-versionmark-*.json
+# OS
+.DS_Store
+Thumbs.db

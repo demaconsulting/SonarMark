@@ -1,63 +1,100 @@
-# Program
+## Program
 
-## Overview
+### Purpose
 
-`Program` is the static entry point for the SonarMark application. It contains
-`Main`, which wires up the `Context` from command-line arguments and calls the
-`Run` method. `Run` dispatches to the appropriate subsystem based on the flags
-present in the context.
+`Program` is the static entry point for the SonarMark application. It contains `Main`, which
+constructs a `Context` from command-line arguments and calls `Run`. `Run` dispatches to the
+appropriate subsystem based on the flags present in the context.
 
-## Design Decisions
+### Data Model
 
-### Priority-Based Dispatch
+N/A - `Program` is a static class with no instance fields or properties.
 
-`Run` uses an explicit priority order: version first, then help, then
-self-validation, then SonarQube analysis. This ensures that lightweight informational
-flags (version, help) are handled immediately without requiring any server connectivity,
-and that the validate flag takes precedence over a potentially incomplete set of server
-parameters.
+### Key Methods
 
-### Banner Printed Before Help
+**Version**: Public static property exposing the tool's version string.
 
-The application banner (version and copyright) is printed before the help text so that
-users always see which version of the tool they are running, even when they request help.
+- *Returns*: `string` — the version string, resolved via a three-step fallback chain: (1)
+  `AssemblyInformationalVersionAttribute` (set by the SDK from the project version on publish),
+  (2) `Assembly.GetName().Version.ToString()` as a fallback for development builds, (3) the
+  literal `"0.0.0"` as a last-resort sentinel so callers never receive null or an empty string.
 
-### Exception Handling in Main
+**Main**: Application entry point.
 
-`Main` catches `ArgumentException` (from argument parsing) and
-`InvalidOperationException` (from runtime errors such as failed file opens) and prints
-their messages without a stack trace. Truly unexpected exceptions are re-thrown after
-printing, so that the operating system or CI runner can produce an event log entry.
+- *Parameters*: `string[] args` — raw command-line arguments from the host environment.
+- *Returns*: `int` — exit code; 0 on success, 1 on handled error, non-zero re-throw on
+  unexpected exception.
+- *Preconditions*: None.
+- *Postconditions*: All resources opened by `Context` are disposed before return.
 
-### ProcessSonarAnalysis Validation
+Creates a `Context` via `Context.Create(args)`, calls `Run`, and returns `context.ExitCode`.
+Catches `ArgumentException` (invalid arguments) and `InvalidOperationException` (runtime
+failures such as a failed file open) and prints their messages to stderr without a stack
+trace. Truly unexpected exceptions are printed to stderr and re-thrown so the OS or CI runner
+can produce an event log entry.
 
-`ProcessSonarAnalysis` validates that `--server` and `--project-key` are present
-before attempting any network call. Missing required parameters are reported via
-`context.WriteError`, which sets the error flag and drives the non-zero exit code.
+**PrintBanner**: Private method that writes the application banner (version string and copyright
+notice) to the output stream.
 
-### HttpClientFactory Injection
+- *Parameters*: `Context context` — routes all output; no direct writes to `Console`.
+- *Returns*: `void`.
 
-`ProcessSonarAnalysis` obtains its `SonarQubeClient` instance through
-`context.HttpClientFactory`, a `Func<string?, SonarQubeClient>` delegate held on
-`Context`. This delegate is the testability seam: integration tests supply a factory
-that returns a mock client pre-loaded with canned responses, while production code
-leaves the property `null`.
+All output is routed through the `context` parameter rather than written directly to `Console`,
+preserving the silent-mode contract so callers running with `--silent` suppress banner output.
 
-When `HttpClientFactory` is `null` (the normal production path), the method falls back
-to `new SonarQubeClient(context.Token)`, which creates a real HTTP client authenticated
-with the provided token. This design keeps `Program` free of any direct reference to the
-test infrastructure and avoids the need to sub-class or wrap `SonarQubeClient` for
-testing purposes.
+**PrintHelp**: Private method that writes the full usage and options reference to the output
+stream.
 
-## Satisfies Requirements
+- *Parameters*: `Context context` — routes all output; no direct writes to `Console`.
+- *Returns*: `void`.
 
-- `SonarMark-Cli-Interface` — `Main` is the CLI entry point
-- `SonarMark-Cli-Version` — `Run` prints the version string and returns when `context.Version` is true
-- `SonarMark-Cli-Help` — `Run` prints help and returns when `context.Help` is true
-- `SonarMark-Server-Connect` — `ProcessSonarAnalysis` validates the `--server` parameter
-- `SonarMark-Server-Auth` — `SonarQubeClient` is created with the token from context
-- `SonarMark-Server-ProjectKey` — `ProcessSonarAnalysis` validates the `--project-key` parameter
-- `SonarMark-Server-Branch` — branch is passed through to `GetQualityResultByBranchAsync`
-- `SonarMark-Report-Markdown` — `File.WriteAllText` writes the markdown report when `--report` is set
-- `SonarMark-Report-Depth` — `context.Depth` is passed to `ToMarkdown` and shown in help text
-- `SonarMark-Enforce-ExitCode` — `context.ExitCode` is returned from `Main`
+All output is routed through the `context` parameter rather than written directly to `Console`,
+preserving the silent-mode contract so callers running with `--silent` suppress help output.
+
+**Run**: Dispatches to the appropriate subsystem based on context flags.
+
+- *Parameters*: `Context context` — the parsed context.
+- *Returns*: `void`.
+- *Preconditions*: `context` is not null.
+- *Postconditions*: Exactly one subsystem path (version, help, validation, or analysis) has
+  been executed.
+
+Applies a fixed priority order: (1) version — prints the version string and returns
+immediately without a banner, enabling scripts to consume it; (2) banner then help — prints
+the application banner followed by help text; (3) self-validation — calls `Validation.Run`;
+(4) SonarQube analysis — calls `ProcessSonarAnalysis`.
+
+**ProcessSonarAnalysis**: Validates required parameters, fetches analysis results, and writes
+the report.
+
+- *Parameters*: `Context context` — the parsed context.
+- *Returns*: `void`.
+- *Preconditions*: `context.Server` and `context.ProjectKey` may be null; the method validates
+  them and writes errors via `context.WriteError` if missing.
+- *Postconditions*: If validation passes, a `SonarQualityResult` has been fetched; if
+  `--report` was specified, the markdown file has been written or an error has been recorded.
+
+When `context.HttpClientFactory` is non-null, invokes it to obtain a `SonarQubeClient` (the
+test injection path). When null, falls back to `new SonarQubeClient(context.Token)`. On
+`--enforce`, writes an error if the quality gate status is `ERROR`.
+
+### Error Handling
+
+`Main` catches `ArgumentException` and `InvalidOperationException` and returns exit code 1.
+Unexpected exceptions are printed to stderr and re-thrown. Inside `ProcessSonarAnalysis`,
+missing required parameters are reported via `context.WriteError` and the method returns
+early. `SonarQubeClient` fetch failures (`InvalidOperationException`) are caught and reported
+via `context.WriteError`. Report-write failures are caught with a generic `catch (Exception)`
+block and reported via `context.WriteError` — justified as a top-level I/O error handler to
+prevent crashing the process when the report cannot be written.
+
+### Dependencies
+
+- **Context** — provides parsed arguments and all output routing.
+- **SonarQubeClient** — created by `ProcessSonarAnalysis` to fetch quality results.
+- **SonarQualityResult** — produced by `SonarQubeClient`; rendered to markdown by `ToMarkdown`.
+- **Validation** — invoked by `Run` when `context.Validate` is true.
+
+### Callers
+
+N/A - entry point, called by the host environment.

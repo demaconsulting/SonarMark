@@ -1,29 +1,21 @@
 # Introduction
 
-This document contains the requirements for the SonarMark project.
+This document lists all requirements for SonarMark.
 
 ## Purpose
 
-SonarMark is a .NET command-line tool that generates comprehensive markdown reports from
-SonarQube/SonarCloud analysis results. It fetches quality gate status, issues, and security
-hot-spots directly from the SonarQube/SonarCloud API.
+To provide a complete, traceable record of all requirements for SonarMark, including requirements at the
+system, subsystem, and unit levels, plus OTS and Shared Package requirements.
 
 ## Scope
 
-This requirements document covers:
+This document covers all requirements defined in `docs/reqstream/` for SonarMark.
 
-- Command-line interface and options
-- SonarQube/SonarCloud integration
-- Report generation capabilities
-- Validation and testing features
-- Quality enforcement
-- Platform support
+## References
 
-## Audience
-
-This document is intended for:
-
-- Software developers working on SonarMark
-- Quality assurance teams validating requirements
-- Project stakeholders reviewing project scope
-- Users understanding the tool's capabilities
+- [SonarQube Documentation](https://docs.sonarqube.org/latest/) — SonarQube REST API and quality gate
+  specification
+- [SonarCloud Documentation](https://docs.sonarcloud.io/) — SonarCloud REST API and quality gate
+  specification
+- [SonarMark releases](https://github.com/demaconsulting/SonarMark/releases) — compiled project documents
+  including design specification and user guide

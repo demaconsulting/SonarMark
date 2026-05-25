@@ -1,33 +1,24 @@
 # Introduction
 
-This document contains the software design specification for the SonarMark project.
+This document contains the software design specification for the SonarMark system. SonarMark
+is a single .NET CLI tool organized into one system with four subsystems — Cli, SonarIntegration,
+ReportGeneration, and SelfTest — plus a top-level unit, Program, that serves as the entry point.
 
 ## Purpose
 
-SonarMark is a .NET command-line tool that generates comprehensive markdown reports from
-SonarQube/SonarCloud analysis results. This design document describes the internal structure
-of each software unit, explaining the design decisions and implementation approach for each
-class in the codebase.
+This document defines the design for each software item in SonarMark — full architectural and
+detailed design for all local items (system, subsystems, and units). A reviewer should be able
+to understand how each item satisfies its requirements without reading source code.
 
 ## Scope
 
-This design document covers the software units that make up SonarMark. It
-describes the source code under `src/DemaConsulting.SonarMark/` only. Test
-projects, test infrastructure, and build scripts are explicitly out of scope
-and are not described here.
+Local items:
 
-## Audience
+- **SonarMark**: system, subsystem, and unit design.
 
-This document is intended for:
-
-- Software developers working on SonarMark
-- Quality assurance teams validating the implementation against requirements
-- Reviewers performing formal code reviews
+Out of scope: test projects, build pipeline scripts, and CI configuration.
 
 ## Software Structure
-
-The following tree shows how the SonarMark software items are organized across the
-system, subsystem, and unit levels:
 
 ```text
 SonarMark (System)
@@ -39,51 +30,48 @@ SonarMark (System)
 │   ├── SonarHotSpot (Unit)
 │   └── SonarIssue (Unit)
 ├── ReportGeneration (Subsystem)
-│   └── SonarQualityResult (Unit)
+│   ├── SonarQualityResult (Unit)
+│   └── SonarQualityCondition (Unit)
 └── SelfTest (Subsystem)
     └── Validation (Unit)
 ```
 
-Each unit is described in detail in its own chapter within this document.
-
 ## Folder Layout
-
-The source code folder structure mirrors the top-level subsystem breakdown above, giving
-reviewers an explicit navigation aid from design to code:
 
 ```text
 src/DemaConsulting.SonarMark/
 ├── Program.cs                      — entry point, dispatch, parameter validation, report writing
 ├── Cli/
-│   └── Context.cs                  — argument parsing, output, log-file, enforce, results-file
+│   └── Context.cs                  — argument parsing (ArgumentParser internal class), output, log-file, enforce, results-file
 ├── SonarIntegration/
 │   ├── SonarQubeClient.cs          — HTTP API client, fetches quality gate, issues, and hot-spots
 │   ├── SonarHotSpot.cs             — data record representing a SonarQube security hot-spot
 │   └── SonarIssue.cs               — data record representing a SonarQube issue
 ├── ReportGeneration/
-│   └── SonarQualityResult.cs       — aggregates results and renders the markdown report
+│   └── SonarQualityResult.cs       — aggregates results and renders the markdown report; contains SonarQualityCondition data record
 └── SelfTest/
     └── Validation.cs               — self-validation runner, writes TRX and JUnit result files
+
+test/DemaConsulting.SonarMark.Tests/
+└── (integration and unit tests)
 ```
 
-The design documentation mirrors the same structure under `docs/design/sonar-mark/`:
+## Companion Artifact Structure
 
-```text
-docs/design/sonar-mark/
-├── sonar-mark.md                   — system-level design documentation
-├── program.md                      — entry point unit design
-├── cli/
-│   ├── cli.md                      — CLI subsystem overview
-│   └── context.md                  — Context unit design
-├── sonar-integration/
-│   ├── sonar-integration.md        — SonarQube integration subsystem overview
-│   ├── sonar-qube-client.md        — SonarQubeClient unit design
-│   ├── sonar-hot-spot.md           — SonarHotSpot unit design
-│   └── sonar-issue.md              — SonarIssue unit design
-├── report-generation/
-│   ├── report-generation.md        — report generation subsystem overview
-│   └── sonar-quality-result.md     — SonarQualityResult unit design
-└── self-test/
-    ├── self-test.md                — self-test subsystem overview
-    └── validation.md               — Validation unit design
-```
+Each local software item has corresponding artifacts in parallel directory trees:
+
+- Requirements: `docs/reqstream/sonar-mark/sonar-mark.yaml`,
+  `docs/reqstream/sonar-mark[/{subsystem-name}...]/{item}.yaml`
+- Design: `docs/design/sonar-mark.md`,
+  `docs/design/sonar-mark[/{subsystem-name}...]/{item}.md`
+- Verification: `docs/verification/sonar-mark.md`,
+  `docs/verification/sonar-mark[/{subsystem-name}...]/{item}.md`
+- Source: `src/DemaConsulting.SonarMark[/{SubsystemName}...]/{Item}.cs`
+- Tests: `test/DemaConsulting.SonarMark.Tests[/{SubsystemName}...]/{Item}Tests.cs`
+
+Review-sets: defined in `.reviewmark.yaml`
+
+## References
+
+- [SonarQube Web API Documentation](https://next.sonarqube.com/sonarqube/web_api)
+- [SonarCloud Web API Documentation](https://sonarcloud.io/web_api)

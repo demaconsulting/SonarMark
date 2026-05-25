@@ -33,7 +33,8 @@ body:
     attributes:
       label: Alternatives Considered
       description: Describe any alternative solutions or features you've considered
-      placeholder: A clear and concise description of any alternative solutions or features
+      placeholder: A clear and concise description of any alternative solutions or
+        features
 
   - type: textarea
     id: examples
@@ -85,7 +86,8 @@ body:
     id: additional-context
     attributes:
       label: Additional Context
-      description: Add any other context, screenshots, or links about the feature request here
+      description: Add any other context, screenshots, or links about the feature
+        request here
       placeholder: Any additional information...
 
   - type: checkboxes

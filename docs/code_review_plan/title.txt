@@ -1,13 +1,13 @@
 ---
-title: SonarMark Review Plan
-subtitle: File Review Plan for SonarMark
-author: DEMA Consulting
-description: File Review Plan for SonarMark
+title: "SonarMark Code Review Plan"
+subtitle: "Code Quality Reporting Tool for SonarQube/SonarCloud"
+author: "DEMA Consulting"
+description: "Code Review Plan for SonarMark"
 lang: en-US
 keywords:
+  - Code Review
   - SonarMark
-  - Review Plan
-  - File Reviews
   - .NET
-  - Tool
+  - SonarQube
+  - SonarCloud
 ---

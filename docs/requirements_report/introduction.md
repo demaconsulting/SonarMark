@@ -1,20 +1,26 @@
 # Introduction
 
-This document contains the requirements trace matrix for the SonarMark project.
+This document provides the requirements Trace Matrix for SonarMark,
+mapping each requirement to its corresponding test evidence.
 
 ## Purpose
 
-The trace matrix links requirements to their corresponding test cases, ensuring complete
-test coverage and traceability from requirements to implementation.
+To demonstrate that every requirement is covered by at least one passing test,
+providing compliance evidence for SonarMark.
 
 ## Scope
 
-This trace matrix document covers:
+This document covers all requirements in `docs/reqstream/` and their test evidence,
+including:
 
 - Linkage between requirements and test cases
 - Test coverage status for each requirement
 - Both unit/integration tests and self-validation tests
-- Platform-specific test execution results
+- Platform-specific test execution results across Windows, Linux, and macOS
+
+## References
+
+N/A
 
 ## Test Sources
 

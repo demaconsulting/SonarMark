@@ -11,17 +11,17 @@ resource-path:
 input-files:
   - docs/design/title.txt
   - docs/design/introduction.md
-  - docs/design/sonar-mark/sonar-mark.md
+  - docs/design/sonar-mark.md
   - docs/design/sonar-mark/program.md
-  - docs/design/sonar-mark/cli/cli.md
+  - docs/design/sonar-mark/cli.md
   - docs/design/sonar-mark/cli/context.md
-  - docs/design/sonar-mark/sonar-integration/sonar-integration.md
+  - docs/design/sonar-mark/sonar-integration.md
   - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md
   - docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md
   - docs/design/sonar-mark/sonar-integration/sonar-issue.md
-  - docs/design/sonar-mark/report-generation/report-generation.md
+  - docs/design/sonar-mark/report-generation.md
   - docs/design/sonar-mark/report-generation/sonar-quality-result.md
-  - docs/design/sonar-mark/self-test/self-test.md
+  - docs/design/sonar-mark/self-test.md
   - docs/design/sonar-mark/self-test/validation.md
 template: template.html
 table-of-contents: true
