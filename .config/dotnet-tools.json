@@ -15,13 +15,13 @@
       ]
     },
     "demaconsulting.pandoctool": {
-      "version": "3.9.0.2",
+      "version": "3.10.0",
       "commands": [
         "pandoc"
       ]
     },
     "demaconsulting.weasyprinttool": {
-      "version": "68.1.0",
+      "version": "69.0.0",
       "commands": [
         "weasyprint"
       ]
