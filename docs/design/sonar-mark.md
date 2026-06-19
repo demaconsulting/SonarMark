@@ -102,8 +102,8 @@ When invoked for SonarQube analysis, data moves through the system in the follow
 
 ## Design Constraints
 
-- Platform: targets net8.0, net9.0, and net10.0; runs natively on Windows, Linux, and macOS
-  with no platform-specific code paths.
+- Platform: targets multiple .NET versions (supported .NET LTS and current releases); runs
+  natively on Windows, Linux, and macOS with no platform-specific code paths.
 - Architecture: single-process; no inter-process communication, microservices, or
   shared-memory coordination.
 - Output format: plain GitHub-flavoured markdown; no binary output formats.

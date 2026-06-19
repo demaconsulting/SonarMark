@@ -119,6 +119,7 @@ internal sealed class Context : IDisposable
     /// </summary>
     /// <param name="args">Command-line arguments.</param>
     /// <returns>A new Context instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="args"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     /// <remarks>
     ///     This factory method is the primary public entry point for creating a <see cref="Context" />.
@@ -141,6 +142,7 @@ internal sealed class Context : IDisposable
     /// <param name="args">Command-line arguments.</param>
     /// <param name="httpClientFactory">Optional HTTP client factory for testing.</param>
     /// <returns>A new Context instance.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when <paramref name="args"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when arguments are invalid.</exception>
     /// <remarks>
     ///     This overload supports test injection of a mock <see cref="SonarQubeClient" /> without

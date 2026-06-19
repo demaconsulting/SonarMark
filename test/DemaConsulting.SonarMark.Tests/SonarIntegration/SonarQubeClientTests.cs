@@ -344,6 +344,11 @@ public class SonarQubeClientTests
         Assert.Equal("Coverage", result.MetricNames["coverage"]);
     }
 
+    /// <summary>
+    ///     Creates an <see cref="HttpResponseMessage"/> with HTTP 200 OK and JSON body content.
+    /// </summary>
+    /// <param name="json">JSON string to use as response body.</param>
+    /// <returns>Configured HTTP response message with <c>application/json</c> content type.</returns>
     private static HttpResponseMessage OkJson(string json) =>
         SonarIntegrationTestHelpers.OkJson(json);
 

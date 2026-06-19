@@ -57,6 +57,8 @@ reviews:
       - docs/design/introduction.md
       - docs/design/sonar-mark.md
       - docs/design/sonar-mark/**/*.md
+      - docs/design/ots.md
+      - docs/design/ots/**/*.md
 
   # SonarMark-Verification Review (one per system)
   - id: SonarMark-Verification

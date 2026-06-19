@@ -175,3 +175,41 @@ sections:
                 tests:
                   - Context_Create_Branch_SetsBranchProperty
                   - Context_Create_MissingBranch_ThrowsException
+
+              - id: SonarMark-Cli-Context-ExitCode
+                title: The Context unit shall return exit code 0 when no errors have
+                  been reported, and exit code 1 when WriteError has been called at
+                  least once.
+                justification: |
+                  CI/CD pipelines use the exit code to detect failure; the Context accumulates error
+                  state across the run. A clean separation between zero (success) and non-zero
+                  (failure) exit codes ensures that pipelines can reliably detect when any error
+                  occurred during the run without inspecting console output.
+                tests:
+                  - Context_Create_NoArguments_ReturnsDefaultContext
+                  - Context_WriteError_NormalMode_WritesToConsole
+
+              - id: SonarMark-Cli-Context-ConsoleRouting
+                title: The Context unit shall write normal output to stdout and error
+                  output to stderr in red; both shall be suppressed from the console
+                  when Silent is true.
+                justification: |
+                  Separating output streams and supporting silent mode allows callers to capture only
+                  error output and suppress all noise in CI/CD environments. Writing error output in
+                  red makes it visually distinct when the console is not redirected.
+                tests:
+                  - Context_WriteLine_NormalMode_WritesToConsole
+                  - Context_WriteLine_SilentMode_DoesNotWriteToConsole
+                  - Context_WriteError_NormalMode_WritesToConsole
+                  - Context_WriteError_SilentMode_DoesNotWriteToConsole
+
+              - id: SonarMark-Cli-Context-LogFile
+                title: The Context unit shall open a log file at creation when --log
+                  is specified, write all WriteLine and WriteError output to it regardless
+                  of Silent mode, and close it on Dispose.
+                justification: |
+                  Log files provide a persistent diagnostic record independent of console verbosity
+                  settings. Writing all output to the log regardless of Silent mode ensures that
+                  full diagnostic information is always captured even when console output is suppressed.
+                tests:
+                  - Context_Create_WithLogFile_WritesToLogFile

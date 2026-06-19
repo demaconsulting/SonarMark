@@ -93,6 +93,7 @@ sections:
           - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
+          - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
 
       - id: SonarMark-Core-Help
         title: The system shall display usage help text when invoked with --help.

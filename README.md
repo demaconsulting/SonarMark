@@ -29,7 +29,7 @@ documentation workflows.
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
 
-### Project Quality Practices
+### Repository Practices
 
 - 🔍 **Linting Enforcement** - markdownlint, cspell, and yamllint enforced on every CI run
 - 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following

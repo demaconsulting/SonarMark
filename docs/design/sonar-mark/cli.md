@@ -29,7 +29,10 @@ and keeps `Context.Create` as a thin factory method.
 2. If a `--log` path was parsed, `Context.Create` opens the log-file stream writer before
    returning.
 3. The resulting `Context` is passed to `Program.Run`, which reads the boolean flag properties
-   (`Version`, `Help`, `Validate`, `Enforce`) to determine the dispatch path.
+   (`Version`, `Help`, `Validate`) to determine the dispatch path. `Enforce` is not used to
+   select a dispatch path; instead, it is evaluated by `Program.ProcessSonarAnalysis` after
+   the analysis fetch completes, and causes a non-zero exit code when the quality gate status
+   is `ERROR`.
 4. All subsystems that produce output call `context.WriteLine` or `context.WriteError`; neither
    caller needs to check the `Silent` flag directly.
 5. When `Program.Main` returns `context.ExitCode`, the `using` block disposes the context and

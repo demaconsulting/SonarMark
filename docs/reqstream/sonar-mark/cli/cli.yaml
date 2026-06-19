@@ -6,10 +6,10 @@ sections:
       - title: Cli Requirements
         requirements:
           - id: SonarMark-Cli-Orchestrate
-            title: The CLI subsystem shall parse command-line arguments and dispatch
-              to the appropriate functionality.
+            title: The CLI subsystem shall accept SonarMark's supported command-line
+              arguments and route execution to the corresponding operation.
             justification: |
-              The CLI subsystem is the entry point for SonarMark. It must correctly parse all
+              The CLI subsystem is the entry point for SonarMark. It must correctly accept all
               supported command-line arguments and route execution to the appropriate handler
               (version, help, validation, or analysis) based on the parsed context.
             children:

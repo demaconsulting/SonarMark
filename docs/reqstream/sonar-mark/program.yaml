@@ -112,3 +112,14 @@ sections:
               is functional and intact before it is used in production analysis workflows.
             tests:
               - Program_Run_WithValidateFlag_RunsValidationSuccessfully
+
+          - id: SonarMark-Program-Silent
+            title: The Program unit shall suppress banner and console output when
+              the silent flag is set.
+            justification: |
+              Silent mode is required for CI/CD pipelines where stdout must remain clean and
+              free of diagnostic output. Suppressing the banner and all normal output when
+              --silent is passed prevents noise in automated scripts and log parsers that
+              consume only the tool's exit code.
+            tests:
+              - Program_Run_WithSilentFlag_SuppressesBannerOutput
