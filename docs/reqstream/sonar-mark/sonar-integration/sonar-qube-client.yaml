@@ -79,3 +79,4 @@ sections:
                   pull-request and feature-branch quality gate workflows.
                 tests:
                   - Program_Run_WithBranchFlag_IncludesBranchInServerRequest
+                  - SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests

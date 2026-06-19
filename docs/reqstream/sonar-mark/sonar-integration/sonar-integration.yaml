@@ -49,6 +49,7 @@ sections:
               a complete conditions table without making additional API calls.
             tests:
               - SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus
+              - SonarQubeClient_GetQualityResultByBranchAsync_WithConditions_ReturnsConditionsInResult
 
           - id: SonarMark-SonarIntegration-MetricMapping
             title: >-

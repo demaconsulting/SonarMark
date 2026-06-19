@@ -402,5 +402,118 @@ public class SonarQubeClientTests
         await Assert.ThrowsAsync<ArgumentException>(
             async () => await client.GetQualityResultByBranchAsync("https://sonar.example.com", "   ", cancellationToken: TestContext.Current.CancellationToken));
     }
+
+    /// <summary>
+    ///     Test that when a branch is specified all HTTP requests include the branch query parameter
+    /// </summary>
+    [Fact]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests()
+    {
+        // Arrange - build mock handler that serves all required API responses
+        var handler = new MockHttpMessageHandler();
+
+        // Component show response
+        handler.EnqueueResponse(OkJson("""
+            {"component":{"key":"my-project","name":"My Project"}}
+            """));
+
+        // Quality gate status response — no conditions
+        handler.EnqueueResponse(OkJson("""
+            {"projectStatus":{"status":"OK","conditions":[]}}
+            """));
+
+        // Metrics search response
+        handler.EnqueueResponse(OkJson("""
+            {"metrics":[]}
+            """));
+
+        // Issues — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"issues":[]}
+            """));
+
+        // Hot-spots — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"hotspots":[]}
+            """));
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act - call with an explicit branch name
+        await client.GetQualityResultByBranchAsync(
+            "https://sonar.example.com",
+            "my-project",
+            branch: "feature-branch",
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert - all five requests were made
+        Assert.Equal(5, handler.CapturedRequests.Count);
+
+        // The branch parameter is applicable to the quality gate (index 1), issues (index 3),
+        // and hot-spots (index 4) endpoints; the component show (index 0) and metrics (index 2)
+        // endpoints do not accept a branch parameter
+        var applicableIndices = new[] { 1, 3, 4 };
+        foreach (var idx in applicableIndices)
+        {
+            var uri = handler.CapturedRequests[idx];
+            Assert.NotNull(uri);
+            Assert.Contains("branch=feature-branch", uri!.Query);
+        }
+    }
+
+    /// <summary>
+    ///     Test that quality gate conditions are present in the result with all fields correctly mapped
+    /// </summary>
+    [Fact]
+    public async Task SonarQubeClient_GetQualityResultByBranchAsync_WithConditions_ReturnsConditionsInResult()
+    {
+        // Arrange - build mock handler that serves all required API responses
+        var handler = new MockHttpMessageHandler();
+
+        // Component show response
+        handler.EnqueueResponse(OkJson("""
+            {"component":{"key":"my-project","name":"My Project"}}
+            """));
+
+        // Quality gate status response — one failing condition
+        handler.EnqueueResponse(OkJson("""
+            {"projectStatus":{"status":"ERROR","conditions":[{"metricKey":"coverage","comparator":"LT","errorThreshold":"80","actualValue":"65","status":"ERROR"}]}}
+            """));
+
+        // Metrics search response
+        handler.EnqueueResponse(OkJson("""
+            {"metrics":[]}
+            """));
+
+        // Issues — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"issues":[]}
+            """));
+
+        // Hot-spots — none
+        handler.EnqueueResponse(OkJson("""
+            {"paging":{"pageIndex":1,"pageSize":100,"total":0},"hotspots":[]}
+            """));
+
+        using var httpClient = new HttpClient(handler);
+        using var client = new SonarQubeClient(httpClient, false);
+
+        // Act - fetch quality result which includes quality gate conditions
+        var result = await client.GetQualityResultByBranchAsync(
+            "https://sonar.example.com",
+            "my-project",
+            cancellationToken: TestContext.Current.CancellationToken);
+
+        // Assert - the single condition must be present with all fields mapped correctly
+        Assert.NotNull(result.Conditions);
+        Assert.Single(result.Conditions);
+        var condition = result.Conditions[0];
+        Assert.Equal("coverage", condition.Metric);
+        Assert.Equal("LT", condition.Comparator);
+        Assert.Equal("80", condition.ErrorThreshold);
+        Assert.Equal("65", condition.ActualValue);
+        Assert.Equal("ERROR", condition.Status);
+    }
 }
 

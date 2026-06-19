@@ -88,3 +88,18 @@ This scenario is tested by
 throws `ArgumentException`, confirming that empty project keys are rejected before any HTTP call is made.
 This scenario is tested by
 `SonarQubeClient_GetQualityResultByBranchAsync_WhitespaceProjectKey_ThrowsArgumentException`.
+
+**WithBranchIncludesBranchInAllRequests**: When `GetQualityResultByBranchAsync` is called with a
+non-null branch name, all five outgoing HTTP requests include the `branch` query parameter, confirming
+that branch scoping is applied consistently across every API endpoint (component show, quality gate,
+metrics, issues, and hot-spots).
+This scenario is tested by
+`SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests`.
+
+**WithConditionsReturnsConditionsInResult**: When the quality gate API response contains a condition
+entry, `GetQualityResultByBranchAsync` returns a `SonarQualityResult` whose `Conditions` list has
+exactly one entry with all five fields (`Metric`, `Comparator`, `ErrorThreshold`, `ActualValue`,
+`Status`) correctly mapped from the JSON response, confirming that condition data is parsed and
+propagated without loss.
+This scenario is tested by
+`SonarQubeClient_GetQualityResultByBranchAsync_WithConditions_ReturnsConditionsInResult`.
