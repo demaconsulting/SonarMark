@@ -16,45 +16,42 @@ Local items:
 
 - **SonarMark**: system, subsystem, and unit design.
 
+OTS items:
+
+- **DemaConsulting.TestResults**: integration and usage design.
+
 Out of scope: test projects, build pipeline scripts, and CI configuration.
 
 ## Software Structure
 
-```text
-SonarMark (System)
-├── Program (Unit)
-├── Cli (Subsystem)
-│   └── Context (Unit)
-├── SonarIntegration (Subsystem)
-│   ├── SonarQubeClient (Unit)
-│   ├── SonarHotSpot (Unit)
-│   └── SonarIssue (Unit)
-├── ReportGeneration (Subsystem)
-│   ├── SonarQualityResult (Unit)
-│   └── SonarQualityCondition (Unit)
-└── SelfTest (Subsystem)
-    └── Validation (Unit)
-```
+- **SonarMark** (System) - .NET CLI tool for generating markdown reports from SonarQube/SonarCloud analysis results
+  - **Program** (Unit) - entry point, dispatch, parameter validation, and report writing
+  - **Cli** (Subsystem) - command-line interface and argument parsing
+    - **Context** (Unit) - argument parsing, output, log-file, enforce, and results-file handling
+  - **SonarIntegration** (Subsystem) - SonarQube/SonarCloud API integration
+    - **SonarQubeClient** (Unit) - HTTP API client, fetches quality gate, issues, and hot-spots
+    - **SonarHotSpot** (Unit) - data record representing a SonarQube security hot-spot
+    - **SonarIssue** (Unit) - data record representing a SonarQube issue
+  - **ReportGeneration** (Subsystem) - markdown report generation
+    - **SonarQualityResult** (Unit) - aggregates results and renders the markdown report
+    - **SonarQualityCondition** (Unit) - data record representing a quality condition
+  - **SelfTest** (Subsystem) - self-validation runner
+    - **Validation** (Unit) - self-validation runner, writes TRX and JUnit result files
+
+**OTS Dependencies:**
+
+- **DemaConsulting.TestResults** (OTS) - test result collection and serialization (TRX/JUnit XML)
 
 ## Folder Layout
 
-```text
-src/DemaConsulting.SonarMark/
-├── Program.cs                      — entry point, dispatch, parameter validation, report writing
-├── Cli/
-│   └── Context.cs                  — argument parsing (ArgumentParser internal class), output, log-file, enforce, results-file
-├── SonarIntegration/
-│   ├── SonarQubeClient.cs          — HTTP API client, fetches quality gate, issues, and hot-spots
-│   ├── SonarHotSpot.cs             — data record representing a SonarQube security hot-spot
-│   └── SonarIssue.cs               — data record representing a SonarQube issue
-├── ReportGeneration/
-│   └── SonarQualityResult.cs       — aggregates results and renders the markdown report; contains SonarQualityCondition data record
-└── SelfTest/
-    └── Validation.cs               — self-validation runner, writes TRX and JUnit result files
-
-test/DemaConsulting.SonarMark.Tests/
-└── (integration and unit tests)
-```
+- **src/** - source files and projects
+  - **DemaConsulting.SonarMark/** - main CLI application
+    - **Cli/** - command-line interface subsystem
+    - **SonarIntegration/** - SonarQube/SonarCloud API integration subsystem
+    - **ReportGeneration/** - markdown report generation subsystem
+    - **SelfTest/** - self-validation subsystem
+- **test/** - test projects
+  - **DemaConsulting.SonarMark.Tests/** - integration and unit tests
 
 ## Companion Artifact Structure
 
@@ -68,6 +65,12 @@ Each local software item has corresponding artifacts in parallel directory trees
   `docs/verification/sonar-mark[/{subsystem-name}...]/{item}.md`
 - Source: `src/DemaConsulting.SonarMark[/{SubsystemName}...]/{Item}.cs`
 - Tests: `test/DemaConsulting.SonarMark.Tests[/{SubsystemName}...]/{Item}Tests.cs`
+
+OTS items have integration/usage design documentation parallel to system folders:
+
+- Requirements: `docs/reqstream/ots/{ots-name}.yaml`
+- Design: `docs/design/ots/{ots-name}.md`
+- Verification: `docs/verification/ots/{ots-name}.md`
 
 Review-sets: defined in `.reviewmark.yaml`
 
