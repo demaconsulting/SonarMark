@@ -93,3 +93,94 @@ sections:
           - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
+
+      - id: SonarMark-Core-Help
+        title: The system shall display usage help text when invoked with --help.
+        justification: |
+          Help text is the primary self-documentation mechanism for command-line tools and reduces
+          the learning curve for new users. Verifying this end-to-end confirms that the CLI argument
+          is correctly recognized and the Program dispatch writes usage information to the console.
+        children:
+          - SonarMark-Cli-DisplayHelp
+        tests:
+          - IntegrationTest_HelpFlag_OutputsUsageInformation
+
+      - id: SonarMark-Core-Version
+        title: The system shall display the tool version when invoked with --version.
+        justification: |
+          Version display allows users and CI pipelines to confirm which release of SonarMark is
+          installed, which is critical for troubleshooting, compatibility checking, and audit trails.
+          Verifying this end-to-end confirms that the version string is correctly emitted by the full
+          system.
+        children:
+          - SonarMark-Cli-DisplayVersion
+        tests:
+          - IntegrationTest_VersionFlag_OutputsVersion
+
+      - id: SonarMark-Core-Silent
+        title: The system shall suppress console output when invoked with --silent.
+        justification: |
+          Silent mode is essential for automated scripts and CI environments where console output
+          would interfere with log parsing or pipeline tooling. Verifying this end-to-end confirms
+          that the flag is correctly parsed and all standard output is suppressed throughout the
+          full execution path.
+        children:
+          - SonarMark-Cli-SilentMode
+        tests:
+          - IntegrationTest_SilentFlag_SuppressesOutput
+
+      - id: SonarMark-Core-Token
+        title: The system shall accept the --token flag to supply an authentication
+          token.
+        justification: |
+          An authentication token is required to access private SonarQube/SonarCloud instances and
+          projects. Verifying end-to-end that the flag is accepted without errors confirms that the
+          token argument is recognized and does not interfere with subsequent argument processing.
+        children:
+          - SonarMark-Cli-Context-Token
+          - SonarMark-Cli-Context-TokenEnv
+        tests:
+          - IntegrationTest_TokenParameter_IsAccepted
+
+      - id: SonarMark-Core-Branch
+        title: The system shall accept the --branch flag to specify the analysis branch.
+        justification: |
+          Branch-level analysis is essential for multi-branch development workflows, enabling
+          quality gate checks on feature branches and pull requests. Verifying end-to-end that the
+          flag is accepted confirms that branch selection is correctly parsed and forwarded.
+        children:
+          - SonarMark-Cli-Context-Branch
+        tests:
+          - IntegrationTest_BranchParameter_IsAccepted
+
+      - id: SonarMark-Core-ReportFile
+        title: The system shall accept the --report flag to specify the output report
+          file path.
+        justification: |
+          Writing the generated markdown to a named file allows the report to be committed to
+          version control or published as a build artifact. Verifying end-to-end that the flag is
+          accepted confirms that the report path argument is correctly parsed and does not cause
+          an unrecognized-argument error.
+        children:
+          - SonarMark-Cli-Context-Report
+        tests:
+          - IntegrationTest_ReportParameter_IsAccepted
+
+      - id: SonarMark-Core-ReportDepth
+        title: The system shall accept --depth and --report-depth flags to control
+          the markdown heading depth of the generated report, and shall reject invalid
+          values with an error.
+        justification: |
+          The heading depth flag controls how the report integrates into larger documents. Both
+          --depth (primary) and --report-depth (deprecated alias) must be accepted. Invalid or
+          out-of-range values must produce a clear error message rather than silently generating
+          malformed markdown output.
+        children:
+          - SonarMark-Cli-Context-Depth
+        tests:
+          - IntegrationTest_ReportDepthWithoutValue_ShowsError
+          - IntegrationTest_ReportDepthWithInvalidValue_ShowsError
+          - IntegrationTest_ReportDepthWithZero_ShowsError
+          - IntegrationTest_DepthWithoutValue_ShowsError
+          - IntegrationTest_DepthWithInvalidValue_ShowsError
+          - IntegrationTest_DepthWithZero_ShowsError

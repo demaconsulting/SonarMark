@@ -6,6 +6,7 @@ resource-path:
   - docs/verification/sonar-mark/sonar-integration
   - docs/verification/sonar-mark/report-generation
   - docs/verification/sonar-mark/self-test
+  - docs/verification/ots
   - docs/template
 
 input-files:
@@ -23,6 +24,8 @@ input-files:
   - docs/verification/sonar-mark/report-generation/sonar-quality-result.md
   - docs/verification/sonar-mark/self-test.md
   - docs/verification/sonar-mark/self-test/validation.md
+  - docs/verification/ots.md
+  - docs/verification/ots/test-results.md
 template: template.html
 table-of-contents: true
 number-sections: true

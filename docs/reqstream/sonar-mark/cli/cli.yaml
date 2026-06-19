@@ -34,3 +34,35 @@ sections:
               - Cli_SilentMode_WithSilentFlag_SuppressesOutput
               - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
               - Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException
+
+          - id: SonarMark-Cli-DisplayHelp
+            title: The CLI subsystem shall display usage help text when --help is
+              supplied.
+            justification: |
+              Help text provides users with a quick reference for all available options without
+              requiring external documentation. The CLI subsystem must dispatch to the help display
+              path and write the usage text to the console so the behavior can be verified at
+              the subsystem boundary.
+            tests:
+              - Cli_HelpDispatch_WithHelpFlag_OutputsHelpText
+
+          - id: SonarMark-Cli-DisplayVersion
+            title: The CLI subsystem shall display the tool version string when --version
+              is supplied.
+            justification: |
+              Version display allows users and CI pipelines to confirm which release of SonarMark is
+              installed. The CLI subsystem must dispatch to the version display path and write the
+              version string to the console so the behavior can be verified at the subsystem boundary.
+            tests:
+              - Cli_VersionDispatch_WithVersionFlag_OutputsVersionString
+
+          - id: SonarMark-Cli-SilentMode
+            title: The CLI subsystem shall suppress console output when --silent is
+              supplied.
+            justification: |
+              Silent mode is required in automated scripts and CI environments where console output
+              must not interfere with log parsing or other tooling. The CLI subsystem must propagate
+              the silent flag through the dispatch path so that all standard output is suppressed
+              during execution.
+            tests:
+              - Cli_SilentMode_WithSilentFlag_SuppressesOutput

@@ -46,7 +46,9 @@ appropriate subsystem based on the flags present in `Context`.
   enforcement failure.
 - *Constraints*: `--server` and `--project-key` are required when running analysis. `--depth`
   must be an integer in the range 1–6. `--report-depth` is a deprecated alias for `--depth`
-  and also accepts the range 1–6.
+  and also accepts the range 1–6. When `--token` is not supplied on the command line, the
+  `SONAR_TOKEN` environment variable is read as a fallback; the explicit `--token` flag always
+  takes priority over the environment variable.
 
 **SonarQube/SonarCloud REST API**: The HTTP API exposed by the remote server.
 

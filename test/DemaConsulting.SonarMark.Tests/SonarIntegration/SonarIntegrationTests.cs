@@ -187,7 +187,7 @@ public class SonarIntegrationTests
         using var client = new SonarQubeClient(httpClient, false);
 
         // Act / Assert - null server URL must throw before any HTTP call is made
-        await Assert.ThrowsAnyAsync<ArgumentException>(
+        await Assert.ThrowsAsync<ArgumentNullException>(
             async () => await client.GetQualityResultByBranchAsync(null!, "test-project", cancellationToken: TestContext.Current.CancellationToken));
     }
 

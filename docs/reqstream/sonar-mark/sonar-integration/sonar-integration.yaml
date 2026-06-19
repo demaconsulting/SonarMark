@@ -18,6 +18,9 @@ sections:
               - SonarMark-Server-QualityGate
               - SonarMark-Server-Issues
               - SonarMark-Server-HotSpots
+              - SonarMark-Server-MetricNames
+              - SonarMark-SonarIntegration-Conditions
+              - SonarMark-SonarIntegration-MetricMapping
               - SonarMark-HotSpot-Record
               - SonarMark-HotSpot-OptionalLine
               - SonarMark-HotSpot-VulnerabilityProbability
@@ -31,3 +34,31 @@ sections:
               - SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException
               - SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException
               - SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException
+
+          - id: SonarMark-SonarIntegration-Conditions
+            title: >-
+              The SonarIntegration subsystem shall return the set of quality-gate
+              conditions including metric key, comparator, threshold, actual value,
+              and
+              status as part of the result.
+            justification: |
+              Quality-gate conditions provide the granular detail behind a pass or fail decision.
+              Each condition carries the metric being measured, the comparator and threshold
+              configured in the quality gate, the actual value recorded during analysis, and the
+              resulting status. Returning all five fields allows the report generator to produce
+              a complete conditions table without making additional API calls.
+            tests:
+              - SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus
+
+          - id: SonarMark-SonarIntegration-MetricMapping
+            title: >-
+              The SonarIntegration subsystem shall map raw SonarQube metric keys to
+              human-readable display names in the result.
+            justification: |
+              Metric keys returned by the quality gate API are internal identifiers (e.g.,
+              new_coverage) that are not suitable for display in reports. Fetching the metric name
+              dictionary from the metrics endpoint and including it in the result allows the report
+              generator to show friendly labels without hardcoding a mapping, keeping the subsystem
+              compatible with any server configuration or custom metric definitions.
+            tests:
+              - SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames

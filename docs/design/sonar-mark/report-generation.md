@@ -12,7 +12,7 @@ conditions, metric name dictionary, issues list, and hot-spots list, and exposes
 
 **SonarQualityResult.ToMarkdown**: Renders the full markdown report.
 
-- *Type*: In-process .NET public API.
+- *Type*: In-process .NET internal API (accessible to the test assembly via `InternalsVisibleTo`).
 - *Role*: Provider — called by `Program.ProcessSonarAnalysis`.
 - *Contract*: Accepts `int depth` (1–6). Returns a `string` containing the complete
   GitHub-flavoured markdown report including a project header with dashboard link, quality

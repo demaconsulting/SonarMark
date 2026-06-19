@@ -24,6 +24,7 @@ input-files:
   - docs/design/sonar-mark/report-generation/sonar-quality-result.md
   - docs/design/sonar-mark/self-test.md
   - docs/design/sonar-mark/self-test/validation.md
+  - docs/design/ots.md
   - docs/design/ots/test-results.md
 template: template.html
 table-of-contents: true

@@ -34,7 +34,6 @@ Out of scope: test projects, build pipeline scripts, and CI configuration.
     - **SonarIssue** (Unit) - data record representing a SonarQube issue
   - **ReportGeneration** (Subsystem) - markdown report generation
     - **SonarQualityResult** (Unit) - aggregates results and renders the markdown report
-    - **SonarQualityCondition** (Unit) - data record representing a quality condition
   - **SelfTest** (Subsystem) - self-validation runner
     - **Validation** (Unit) - self-validation runner, writes TRX and JUnit result files
 
