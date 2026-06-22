@@ -59,13 +59,8 @@ public sealed class SelfTestTests : IDisposable
     [Fact]
     public void SelfTest_RunValidation_NullContext_ThrowsArgumentNullException()
     {
-        // Arrange - no setup required
-
-        // Act
-        var ex = Assert.Throws<ArgumentNullException>(() => Validation.Run(null!));
-
-        // Assert - passing a null context must throw ArgumentNullException before any validation work
-        Assert.NotNull(ex);
+        // Act / Assert - passing a null context must throw ArgumentNullException before any validation work
+        Assert.Throws<ArgumentNullException>(() => Validation.Run(null!));
     }
 
     /// <summary>
