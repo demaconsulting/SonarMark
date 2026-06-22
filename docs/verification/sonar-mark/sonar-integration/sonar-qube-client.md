@@ -90,9 +90,9 @@ This scenario is tested by
 `SonarQubeClient_GetQualityResultByBranchAsync_WhitespaceProjectKey_ThrowsArgumentException`.
 
 **WithBranchIncludesBranchInAllRequests**: When `GetQualityResultByBranchAsync` is called with a
-non-null branch name, all five outgoing HTTP requests include the `branch` query parameter, confirming
-that branch scoping is applied consistently across every API endpoint (component show, quality gate,
-metrics, issues, and hot-spots).
+non-null branch name, the branch-scoped endpoints (quality gate, issues, and hot-spots) include the
+`branch` query parameter. The component show and metrics search endpoints are branch-agnostic and do
+not receive the parameter.
 This scenario is tested by
 `SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests`.
 

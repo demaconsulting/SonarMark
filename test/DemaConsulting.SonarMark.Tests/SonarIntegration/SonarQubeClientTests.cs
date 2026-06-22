@@ -409,7 +409,7 @@ public class SonarQubeClientTests
     }
 
     /// <summary>
-    ///     Test that when a branch is specified all HTTP requests include the branch query parameter
+    ///     Test that when a branch is specified the branch-scoped endpoints include the branch query parameter
     /// </summary>
     [Fact]
     public async Task SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests()
