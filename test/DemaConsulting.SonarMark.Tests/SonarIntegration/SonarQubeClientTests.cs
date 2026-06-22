@@ -455,16 +455,24 @@ public class SonarQubeClientTests
         // Assert - all five requests were made
         Assert.Equal(5, handler.CapturedRequests.Count);
 
-        // The branch parameter is applicable to the quality gate (index 1), issues (index 3),
-        // and hot-spots (index 4) endpoints; the component show (index 0) and metrics (index 2)
-        // endpoints do not accept a branch parameter
-        var applicableIndices = new[] { 1, 3, 4 };
-        foreach (var idx in applicableIndices)
+        // The branch parameter is applicable to the quality gate, issues, and hot-spots endpoints.
+        static Uri FindRequest(IReadOnlyList<Uri?> requests, string pathFragment)
         {
-            var uri = handler.CapturedRequests[idx];
-            Assert.NotNull(uri);
-            Assert.Contains("branch=feature-branch", uri!.Query);
+            foreach (var requestUri in requests)
+            {
+                if (requestUri != null &&
+                    requestUri.AbsolutePath.Contains(pathFragment, StringComparison.Ordinal))
+                {
+                    return requestUri;
+                }
+            }
+
+            throw new InvalidOperationException($"Expected request for '{pathFragment}' was not sent.");
         }
+
+        Assert.Contains("branch=feature-branch", FindRequest(handler.CapturedRequests, "/api/qualitygates/project_status").Query, StringComparison.Ordinal);
+        Assert.Contains("branch=feature-branch", FindRequest(handler.CapturedRequests, "/api/issues/search").Query, StringComparison.Ordinal);
+        Assert.Contains("branch=feature-branch", FindRequest(handler.CapturedRequests, "/api/hotspots/search").Query, StringComparison.Ordinal);
     }
 
     /// <summary>
