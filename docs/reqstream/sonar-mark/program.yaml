@@ -41,7 +41,7 @@ sections:
               capability, the tool cannot fulfill its primary purpose of integrating Sonar analysis into
               development workflows.
             tests:
-              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
 
           - id: SonarMark-Program-Auth
             title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
@@ -99,7 +99,7 @@ sections:
               indicating failure in command-line tools and CI/CD systems. This allows build systems
               to automatically detect and halt builds when quality standards are not met.
             tests:
-              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
 
           - id: SonarMark-Program-Validate
             title: The program shall provide a self-validation mode when invoked with
