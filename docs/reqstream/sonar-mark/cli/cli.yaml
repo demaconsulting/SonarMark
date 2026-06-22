@@ -5,13 +5,13 @@ sections:
     sections:
       - title: Cli Requirements
         requirements:
-          - id: SonarMark-Cli-Orchestrate
-            title: The CLI subsystem shall accept SonarMark's supported command-line
-              arguments and route execution to the corresponding operation.
+          - id: SonarMark-Cli-Parse
+            title: The CLI subsystem shall parse SonarMark's supported command-line
+              arguments and expose them via Context.
             justification: |
-              The CLI subsystem is the entry point for SonarMark. It must correctly accept all
-              supported command-line arguments and route execution to the appropriate handler
-              (version, help, validation, or analysis) based on the parsed context.
+              The CLI subsystem is the entry point for SonarMark. It must correctly parse all
+              supported command-line arguments and expose the resulting state through the
+              Context object so that Program can dispatch to the appropriate operation.
             children:
               - SonarMark-Cli-Context-Silent
               - SonarMark-Cli-Context-Log
@@ -66,3 +66,35 @@ sections:
               during execution.
             tests:
               - Cli_SilentMode_WithSilentFlag_SuppressesOutput
+
+          - id: SonarMark-Cli-Output
+            title: The CLI subsystem shall write normal output to stdout, error output
+              to stderr, support silent suppression of console output, persist all
+              output to a log file when requested, and report a non-zero exit code
+              when errors occur.
+            justification: |
+              CI/CD pipelines depend on structured output (stdout/stderr separation), silent mode
+              suppression, log file persistence independent of silent mode, and a meaningful process
+              exit code to drive automated build decisions. Grouping these output-contract behaviors
+              in a dedicated subsystem requirement makes the CLI output guarantee explicit and
+              directs reviewers to the Context unit that implements it.
+            children:
+              - SonarMark-Cli-Context-ConsoleOutput
+              - SonarMark-Cli-Context-LogFile
+              - SonarMark-Cli-Context-ExitCode
+            tests:
+              - Cli_SilentMode_WithSilentFlag_SuppressesOutput
+              - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
+
+          - id: SonarMark-Cli-Testability
+            title: The CLI subsystem shall support injection of a mock HTTP client
+              factory to enable test isolation without real network calls.
+            justification: |
+              Deterministic automated testing of the full CLI dispatch path requires that network
+              calls to SonarQube/SonarCloud can be replaced with a mock. Accepting a factory
+              delegate through Context.Create allows tests to inject a controlled SonarQubeClient
+              and verify behavior at the subsystem boundary without a live server.
+            children:
+              - SonarMark-Cli-Context-HttpFactory
+            tests:
+              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode

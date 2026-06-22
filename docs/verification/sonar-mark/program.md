@@ -37,7 +37,8 @@ the expected content.
 This scenario is tested by `Program_Run_WithHelpFlag_OutputsBannerAndHelpText`.
 
 **ValidateFlagRunsValidationSuccessfully**: When run with `--validate`, `Program.Run` executes the
-self-validation suite and exits with code 0, confirming that the validate dispatch path reaches the
+self-validation suite, outputs the `"DEMA Consulting SonarMark"` header, reports `"Passed: 4"` for all
+four internal scenarios, and exits with code 0, confirming that the validate dispatch path reaches the
 `Validation` subsystem.
 This scenario is tested by `Program_Run_WithValidateFlag_RunsValidationSuccessfully`.
 

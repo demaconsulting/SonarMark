@@ -189,7 +189,7 @@ sections:
                   - Context_Create_NoArguments_ReturnsDefaultContext
                   - Context_WriteError_NormalMode_WritesToConsole
 
-              - id: SonarMark-Cli-Context-ConsoleRouting
+              - id: SonarMark-Cli-Context-ConsoleOutput
                 title: The Context unit shall write normal output to stdout and error
                   output to stderr in red; both shall be suppressed from the console
                   when Silent is true.
@@ -213,3 +213,15 @@ sections:
                   full diagnostic information is always captured even when console output is suppressed.
                 tests:
                   - Context_Create_WithLogFile_WritesToLogFile
+
+              - id: SonarMark-Cli-Context-HttpFactory
+                title: The Context unit shall accept and expose an optional HTTP client
+                  factory for injecting test doubles.
+                justification: |
+                  Test isolation requires that the Context unit can carry a factory delegate that
+                  Program.ProcessSonarAnalysis uses in place of constructing a real SonarQubeClient.
+                  Storing the factory on Context keeps it co-located with all other configuration
+                  state parsed from the command line, and the internal visibility of the property
+                  ensures production code cannot inject a mock accidentally.
+                tests:
+                  - Context_Create_WithHttpClientFactory_ExposesFactory

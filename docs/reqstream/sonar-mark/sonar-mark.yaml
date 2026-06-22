@@ -61,7 +61,7 @@ sections:
           that all system components - CLI argument handling, server communication, data aggregation,
           and markdown rendering - operate correctly as an integrated whole.
         children:
-          - SonarMark-Cli-Orchestrate
+          - SonarMark-Cli-Parse
           - SonarMark-SonarIntegration-Orchestrate
           - SonarMark-ReportGeneration-Orchestrate
         tests:
@@ -89,7 +89,7 @@ sections:
           this end-to-end confirms that the --enforce flag is correctly parsed, propagated to the
           report generation layer, and results in an appropriate process exit code.
         children:
-          - SonarMark-Cli-Orchestrate
+          - SonarMark-Cli-Parse
           - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted

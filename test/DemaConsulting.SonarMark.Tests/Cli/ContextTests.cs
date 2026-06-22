@@ -20,6 +20,7 @@
 
 using DemaConsulting.SonarMark.Cli;
 using DemaConsulting.SonarMark.SonarIntegration;
+using DemaConsulting.SonarMark.Tests.SonarIntegration;
 using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.Cli;
@@ -732,5 +733,22 @@ public sealed class ContextTests : IDisposable
 
         // Assert
         Assert.Contains("--result requires a results filename argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context with an HTTP client factory exposes the factory.
+    /// </summary>
+    [Fact]
+    public void Context_Create_WithHttpClientFactory_ExposesFactory()
+    {
+        // Arrange
+        Func<string?, SonarQubeClient> factory = _ =>
+            new SonarQubeClient(new HttpClient(new MockHttpMessageHandler()), false);
+
+        // Act
+        using var context = Context.Create([], factory);
+
+        // Assert
+        Assert.Same(factory, context.HttpClientFactory);
     }
 }

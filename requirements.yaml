@@ -34,6 +34,8 @@ includes:
   - docs/reqstream/sonar-mark/sonar-mark.yaml
   # Platform support requirements
   - docs/reqstream/sonar-mark/platform-requirements.yaml
+  # Shared Package requirements (one per package)
+  - docs/reqstream/shared/sonar-mark.yaml
   # OTS software requirements (one per component)
   - docs/reqstream/ots/xunit.yaml
   - docs/reqstream/ots/reqstream.yaml

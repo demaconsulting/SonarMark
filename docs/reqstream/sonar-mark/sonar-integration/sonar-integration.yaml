@@ -19,6 +19,9 @@ sections:
               - SonarMark-Server-Issues
               - SonarMark-Server-HotSpots
               - SonarMark-Server-MetricNames
+              - SonarMark-Server-AuthToken
+              - SonarMark-Server-BranchQuery
+              - SonarMark-Server-ProjectName
               - SonarMark-SonarIntegration-Conditions
               - SonarMark-SonarIntegration-MetricMapping
               - SonarMark-HotSpot-Record
@@ -31,7 +34,7 @@ sections:
               - SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus
               - SonarIntegration_FetchQualityResult_MockedIssueInResponse_ReturnsIssues
               - SonarIntegration_FetchQualityResult_MockedHotSpotInResponse_ReturnsHotSpots
-              - SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException
+              - SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentNullException
               - SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException
               - SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException
 

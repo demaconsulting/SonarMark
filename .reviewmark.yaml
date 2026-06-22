@@ -59,6 +59,8 @@ reviews:
       - docs/design/sonar-mark/**/*.md
       - docs/design/ots.md
       - docs/design/ots/**/*.md
+      - docs/design/shared.md
+      - docs/design/shared/**/*.md
 
   # SonarMark-Verification Review (one per system)
   - id: SonarMark-Verification
@@ -67,6 +69,9 @@ reviews:
       - docs/reqstream/sonar-mark/sonar-mark.yaml
       - docs/verification/introduction.md
       - docs/verification/sonar-mark.md
+      - docs/verification/sonar-mark/**/*.md
+      - docs/verification/ots.md
+      - docs/verification/shared.md
 
   # SonarMark-AllRequirements Review (one per system)
   - id: SonarMark-AllRequirements
@@ -81,6 +86,7 @@ reviews:
     paths:
       - docs/reqstream/sonar-mark/cli/cli.yaml
       - docs/design/sonar-mark/cli.md
+      - docs/verification/sonar-mark/cli.md
       - test/**/Cli/CliTests.cs
 
   - id: SonarMark-SonarIntegration
@@ -88,6 +94,7 @@ reviews:
     paths:
       - docs/reqstream/sonar-mark/sonar-integration/sonar-integration.yaml
       - docs/design/sonar-mark/sonar-integration.md
+      - docs/verification/sonar-mark/sonar-integration.md
       - test/**/SonarIntegration/SonarIntegrationTests.cs
       - test/**/SonarIntegration/SonarIntegrationTestHelpers.cs
 
@@ -96,6 +103,7 @@ reviews:
     paths:
       - docs/reqstream/sonar-mark/report-generation/report-generation.yaml
       - docs/design/sonar-mark/report-generation.md
+      - docs/verification/sonar-mark/report-generation.md
       - test/**/ReportGeneration/ReportGenerationTests.cs
 
   - id: SonarMark-SelfTest
@@ -103,6 +111,7 @@ reviews:
     paths:
       - docs/reqstream/sonar-mark/self-test/self-test.yaml
       - docs/design/sonar-mark/self-test.md
+      - docs/verification/sonar-mark/self-test.md
       - test/**/SelfTest/SelfTestTests.cs
 
   # Unit reviews -- include actual source code + unit tests
@@ -163,3 +172,17 @@ reviews:
       - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md
       - src/**/SonarQubeClient.cs
       - test/**/SonarQubeClientTests.cs
+
+  # Shared Package reviews -- shared req + design + verification only (no local source)
+  - id: SonarMark-Shared
+    title: Review of SonarMark Shared Package Section
+    paths:
+      - docs/design/shared.md
+      - docs/verification/shared.md
+
+  - id: SonarMark-Shared-SonarMark
+    title: Review that SonarMark Provides Required Features
+    paths:
+      - docs/reqstream/shared/sonar-mark.yaml
+      - docs/design/shared/sonar-mark.md
+      - docs/verification/shared/sonar-mark.md

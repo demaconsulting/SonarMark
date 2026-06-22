@@ -51,7 +51,7 @@ conditions table by `AppendConditionsSection`, and individually tested for rende
 **ToMarkdown**: Converts the quality result to a markdown string.
 
 - *Parameters*: `int depth` — heading depth for the report title (1–6).
-- *Returns*: `string` — complete GitHub-flavoured markdown report.
+- *Returns*: `string` — complete GitHub-flavored markdown report.
 - *Preconditions*: `depth` must be in the range 1–6.
 - *Postconditions*: Returned string contains all four sections (header, conditions, issues,
   hot-spots); the conditions section is omitted when `Conditions` is empty.

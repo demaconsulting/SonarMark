@@ -20,6 +20,10 @@ OTS items:
 
 - **DemaConsulting.TestResults**: integration and usage design.
 
+Shared Packages:
+
+- **SonarMark (released)**: integration and usage design.
+
 Out of scope: test projects, build pipeline scripts, and CI configuration.
 
 ## Software Structure
@@ -40,6 +44,11 @@ Out of scope: test projects, build pipeline scripts, and CI configuration.
 **OTS Dependencies:**
 
 - **DemaConsulting.TestResults** (OTS) - test result collection and serialization (TRX/JUnit XML)
+
+**Shared Package Dependencies:**
+
+- **SonarMark** (Shared Package) - released SonarMark tool used in `build-docs` for self-validation
+  and SonarCloud quality report generation
 
 ## Folder Layout
 
@@ -70,6 +79,12 @@ OTS items have integration/usage design documentation parallel to system folders
 - Requirements: `docs/reqstream/ots/{ots-name}.yaml`
 - Design: `docs/design/ots/{ots-name}.md`
 - Verification: `docs/verification/ots/{ots-name}.md`
+
+Shared Packages have integration/usage design documentation parallel to system and OTS folders:
+
+- Requirements: `docs/reqstream/shared/{package-name}.yaml`
+- Design: `docs/design/shared/{package-name}.md`
+- Verification: `docs/verification/shared/{package-name}.md`
 
 Review-sets: defined in `.reviewmark.yaml`
 

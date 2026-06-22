@@ -1,0 +1,39 @@
+---
+# SonarMark Shared Package requirements
+sections:
+  - title: Shared Package Requirements
+    sections:
+      - title: SonarMark (Shared Package) Requirements
+        requirements:
+          - id: SonarMark-Shared-SonarMark-SelfValidation
+            title: The released SonarMark tool shall execute its built-in self-validation
+              suite and report each scenario outcome when invoked with --validate.
+            justification: |
+              The build-docs CI job runs the released SonarMark with --validate to confirm
+              the tool functions correctly in the build environment. The self-validation
+              suite exercises four internal validation scenarios and produces a pass/fail
+              outcome for each, providing verifiable evidence that the released binary is
+              operational.
+            tags: [shared]
+            tests:
+              - SonarMark_QualityGateRetrieval
+              - SonarMark_IssuesRetrieval
+              - SonarMark_HotSpotsRetrieval
+              - SonarMark_MarkdownReportGeneration
+
+          - id: SonarMark-Shared-SonarMark-ReportGeneration
+            title: The released SonarMark tool shall retrieve SonarQube/SonarCloud
+              project analysis results and write a markdown report when invoked with
+              --server, --project-key, and --report.
+            justification: |
+              The build-docs CI job uses the released SonarMark to generate the SonarCloud
+              quality report published in the SonarMark documentation. This feature provides
+              a single command that retrieves quality gate status, issues, and hot-spots from
+              the SonarCloud API and renders them as a structured markdown document, replacing
+              any need for custom retrieval scripting.
+            tags: [shared]
+            tests:
+              - SonarMark_QualityGateRetrieval
+              - SonarMark_IssuesRetrieval
+              - SonarMark_HotSpotsRetrieval
+              - SonarMark_MarkdownReportGeneration

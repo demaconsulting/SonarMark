@@ -92,14 +92,28 @@ public class ProgramTests
     [Fact]
     public void Program_Run_WithValidateFlag_RunsValidationSuccessfully()
     {
-        // Arrange - create context with validate flag
-        using var context = Context.Create(["--validate"]);
-        // Act - run the program with validate flag
-        Program.Run(context);
+        // Arrange - capture console output to verify the pass count
+        var originalOut = Console.Out;
+        using var output = new StringWriter();
+        Console.SetOut(output);
 
-        // Assert - verify validation completes successfully
-        // This test proves that --validate flag triggers self-validation and completes successfully
-        Assert.Equal(0, context.ExitCode);
+        try
+        {
+            using var context = Context.Create(["--validate"]);
+
+            // Act - run the program with validate flag
+            Program.Run(context);
+
+            // Assert - verify validation completes successfully and all 4 internal tests pass
+            // This test proves that --validate flag triggers self-validation and all 4 scenarios pass
+            Assert.Equal(0, context.ExitCode);
+            Assert.Contains("DEMA Consulting SonarMark", output.ToString());
+            Assert.Contains("Passed: 4", output.ToString());
+        }
+        finally
+        {
+            Console.SetOut(originalOut);
+        }
     }
 
     /// <summary>
