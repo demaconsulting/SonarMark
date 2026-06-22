@@ -123,6 +123,9 @@ the caller uncaught. All exceptions propagate to `Program.ProcessSonarAnalysis`,
 #### Dependencies
 
 - **SonarQualityResult** — constructed and returned by `GetQualityResultByBranchAsync`.
+- **SonarQualityCondition** — constructed and returned in the quality gate conditions flow
+  within `GetQualityGateStatusByBranchAsync`; collected into the `Conditions` list of
+  `SonarQualityResult`.
 - **SonarIssue** — populated from paginated issues responses.
 - **SonarHotSpot** — populated from paginated hot-spots responses.
 - **System.Net.Http.HttpClient** — .NET runtime HTTP client.

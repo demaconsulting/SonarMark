@@ -35,7 +35,7 @@ public class SonarQualityResultTests
     [Fact]
     public void SonarQualityResult_Constructor_AllProperties_CreatesInstance()
     {
-        // Arrange & Act - create quality result with primary constructor
+        // Arrange
         IReadOnlyList<SonarQualityCondition> conditions = [new("new_coverage", "LT", "80", "75.5", "ERROR")];
 
         var metricNames = new Dictionary<string, string>
@@ -43,6 +43,7 @@ public class SonarQualityResultTests
             { "new_coverage", "Coverage on New Code" }
         };
 
+        // Act
         var result = new SonarQualityResult(
             "https://sonarcloud.io",
             "test_project",
@@ -219,7 +220,7 @@ public class SonarQualityResultTests
             [],
             []);
 
-        // Act & Assert
+        // Act / Assert: depth 0 must throw ArgumentOutOfRangeException
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(0));
         Assert.Equal("depth", ex.ParamName);
         Assert.Contains("Depth must be between 1 and 6", ex.Message);
@@ -244,7 +245,7 @@ public class SonarQualityResultTests
             [],
             []);
 
-        // Act & Assert
+        // Act / Assert: depth 7 must throw ArgumentOutOfRangeException
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => result.ToMarkdown(7));
         Assert.Equal("depth", ex.ParamName);
         Assert.Contains("Depth must be between 1 and 6", ex.Message);
@@ -554,7 +555,9 @@ public class SonarQualityResultTests
     [Fact]
     public void SonarQualityCondition_Constructor_AllProperties_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var condition = new SonarQualityCondition(
             "new_coverage",
             "LT",

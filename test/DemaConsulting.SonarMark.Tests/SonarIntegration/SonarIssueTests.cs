@@ -35,7 +35,9 @@ public class SonarIssueTests
     [Fact]
     public void SonarIssue_Constructor_AllProperties_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var issue = new SonarIssue(
             "issue-key-123",
             "csharpsquid:S1234",
@@ -61,7 +63,9 @@ public class SonarIssueTests
     [Fact]
     public void SonarIssue_Constructor_NullLine_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var issue = new SonarIssue(
             "issue-key-456",
             "csharpsquid:S5678",
@@ -87,7 +91,9 @@ public class SonarIssueTests
     [Fact]
     public void SonarIssue_Constructor_BlockerSeverity_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var issue = new SonarIssue(
             "issue-key-789",
             "csharpsquid:S9999",
@@ -113,7 +119,9 @@ public class SonarIssueTests
     [Fact]
     public void SonarIssue_Constructor_CriticalSeverity_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var issue = new SonarIssue(
             "issue-key-abc",
             "csharpsquid:S8888",
@@ -139,7 +147,9 @@ public class SonarIssueTests
     [Fact]
     public void SonarIssue_Constructor_InfoSeverity_CreatesInstance()
     {
-        // Arrange & Act
+        // Arrange - no setup required
+
+        // Act
         var issue = new SonarIssue(
             "issue-key-def",
             "csharpsquid:S7777",

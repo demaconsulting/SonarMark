@@ -41,3 +41,18 @@ This scenario is tested by `SonarIntegration_FetchQualityResult_ReturnsIssues`.
 handler returns a `SonarQualityResult` containing the hot-spots defined in the canned API response,
 confirming that security hot-spot parsing and assembly work correctly within the subsystem.
 This scenario is tested by `SonarIntegration_FetchQualityResult_ReturnsHotSpots`.
+
+**ConditionsReturnedInQualityResult**: When the quality gate API response includes a condition entry,
+`SonarQubeClient.GetQualityResultByBranchAsync` returns a `SonarQualityResult` whose `Conditions` list
+contains all five fields — `Metric`, `Comparator`, `ErrorThreshold`, `ActualValue`, and `Status` —
+correctly mapped from the JSON response, confirming that condition data is parsed and propagated without
+loss through the subsystem data path.
+This scenario is tested by
+`SonarQubeClient_GetQualityResultByBranchAsync_WithConditions_ReturnsConditionsInResult`.
+
+**MetricKeysMappedToFriendlyNames**: When the metrics API response includes a key-to-name entry,
+`SonarQubeClient.GetQualityResultByBranchAsync` returns a `SonarQualityResult` whose `MetricNames`
+dictionary maps the internal metric key to its human-readable display name, confirming that the metric
+lookup call is made and its results are included in the result without hardcoding the mapping.
+This scenario is tested by
+`SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames`.

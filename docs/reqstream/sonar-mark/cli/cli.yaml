@@ -5,13 +5,12 @@ sections:
     sections:
       - title: Cli Requirements
         requirements:
-          - id: SonarMark-Cli-Orchestrate
-            title: The CLI subsystem shall parse command-line arguments and dispatch
-              to the appropriate functionality.
+          - id: SonarMark-Cli-Parse
+            title: The CLI subsystem shall parse SonarMark's supported command-line arguments and expose them via Context.
             justification: |
               The CLI subsystem is the entry point for SonarMark. It must correctly parse all
-              supported command-line arguments and route execution to the appropriate handler
-              (version, help, validation, or analysis) based on the parsed context.
+              supported command-line arguments and expose the resulting state through the
+              Context object so that Program can dispatch to the appropriate operation.
             children:
               - SonarMark-Cli-Context-Silent
               - SonarMark-Cli-Context-Log
@@ -34,3 +33,60 @@ sections:
               - Cli_SilentMode_WithSilentFlag_SuppressesOutput
               - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
               - Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException
+
+          - id: SonarMark-Cli-DisplayHelp
+            title: The CLI subsystem shall display usage help text when --help is supplied.
+            justification: |
+              Help text provides users with a quick reference for all available options without
+              requiring external documentation. The CLI subsystem must dispatch to the help display
+              path and write the usage text to the console so the behavior can be verified at
+              the subsystem boundary.
+            tests:
+              - Cli_HelpDispatch_WithHelpFlag_OutputsHelpText
+
+          - id: SonarMark-Cli-DisplayVersion
+            title: The CLI subsystem shall display the tool version string when --version is supplied.
+            justification: |
+              Version display allows users and CI pipelines to confirm which release of SonarMark is
+              installed. The CLI subsystem must dispatch to the version display path and write the
+              version string to the console so the behavior can be verified at the subsystem boundary.
+            tests:
+              - Cli_VersionDispatch_WithVersionFlag_OutputsVersionString
+
+          - id: SonarMark-Cli-SilentMode
+            title: The CLI subsystem shall suppress console output when --silent is supplied.
+            justification: |
+              Silent mode is required in automated scripts and CI environments where console output
+              must not interfere with log parsing or other tooling. The CLI subsystem must propagate
+              the silent flag through the dispatch path so that all standard output is suppressed
+              during execution.
+            tests:
+              - Cli_SilentMode_WithSilentFlag_SuppressesOutput
+
+          - id: SonarMark-Cli-Output
+            title: The CLI subsystem shall write normal output to stdout, error output to stderr, support silent suppression of console output, persist all output to a log file when requested, and report a non-zero exit code when errors occur.
+            justification: |
+              CI/CD pipelines depend on structured output (stdout/stderr separation), silent mode
+              suppression, log file persistence independent of silent mode, and a meaningful process
+              exit code to drive automated build decisions. Grouping these output-contract behaviors
+              in a dedicated subsystem requirement makes the CLI output guarantee explicit and
+              directs reviewers to the Context unit that implements it.
+            children:
+              - SonarMark-Cli-Context-ConsoleOutput
+              - SonarMark-Cli-Context-LogFile
+              - SonarMark-Cli-Context-ExitCode
+            tests:
+              - Cli_SilentMode_WithSilentFlag_SuppressesOutput
+              - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
+
+          - id: SonarMark-Cli-Testability
+            title: The CLI subsystem shall support injection of a mock HTTP client factory to enable test isolation without real network calls.
+            justification: |
+              Deterministic automated testing of the full CLI dispatch path requires that network
+              calls to SonarQube/SonarCloud can be replaced with a mock. Accepting a factory
+              delegate through Context.Create allows tests to inject a controlled SonarQubeClient
+              and verify behavior at the subsystem boundary without a live server.
+            children:
+              - SonarMark-Cli-Context-HttpFactory
+            tests:
+              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode

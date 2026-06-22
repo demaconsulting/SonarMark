@@ -46,7 +46,9 @@ appropriate subsystem based on the flags present in `Context`.
   enforcement failure.
 - *Constraints*: `--server` and `--project-key` are required when running analysis. `--depth`
   must be an integer in the range 1–6. `--report-depth` is a deprecated alias for `--depth`
-  and also accepts the range 1–6.
+  and also accepts the range 1–6. When `--token` is not supplied on the command line, the
+  `SONAR_TOKEN` environment variable is read as a fallback; the explicit `--token` flag always
+  takes priority over the environment variable.
 
 **SonarQube/SonarCloud REST API**: The HTTP API exposed by the remote server.
 
@@ -62,7 +64,7 @@ appropriate subsystem based on the flags present in `Context`.
 
 - *Type*: File
 - *Role*: Provider — SonarMark writes this file for downstream tools.
-- *Contract*: GitHub-flavoured markdown containing a project header with dashboard link,
+- *Contract*: GitHub-flavored markdown containing a project header with dashboard link,
   quality gate status, a conditions table, an issues list, and a security hot-spots list.
 - *Constraints*: The `--depth` flag controls the top-level heading depth (1–6).
 
@@ -100,11 +102,11 @@ When invoked for SonarQube analysis, data moves through the system in the follow
 
 ## Design Constraints
 
-- Platform: targets net8.0, net9.0, and net10.0; runs natively on Windows, Linux, and macOS
-  with no platform-specific code paths.
+- Platform: targets multiple .NET versions (supported .NET LTS and current releases); runs
+  natively on Windows, Linux, and macOS with no platform-specific code paths.
 - Architecture: single-process; no inter-process communication, microservices, or
   shared-memory coordination.
-- Output format: plain GitHub-flavoured markdown; no binary output formats.
+- Output format: plain GitHub-flavored markdown; no binary output formats.
 - Network: all SonarQube/SonarCloud calls are asynchronous (async/await); the orchestration
   layer in `Program` performs a deliberate sync-over-async bridge.
 - Self-test: validation runs inside the same process and binary as the analysis path,

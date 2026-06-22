@@ -36,8 +36,7 @@ sections:
                   - Context_Create_EnforceFlag_SetsEnforceProperty
 
               - id: SonarMark-Cli-Context-ResultsFile
-                title: The tool shall accept the --results flag and expose the results
-                  file path for the validation pipeline.
+                title: The tool shall accept the --results flag and expose the results file path for the validation pipeline.
                 justification: |
                   The Context unit must parse the --results argument and store the file path so that the
                   validation pipeline can write test results to the specified file. Separating argument
@@ -48,8 +47,7 @@ sections:
                   - Context_Create_MissingResultsFilename_ThrowsException
 
               - id: SonarMark-Cli-Context-ResultAlias
-                title: The tool shall accept --result as a legacy alias for --results
-                  to preserve backward compatibility.
+                title: The tool shall accept --result as a legacy alias for --results to preserve backward compatibility.
                 justification: |
                   Existing automation scripts and CI pipelines may use --result (without the trailing 's') from
                   before the canonical --results spelling was established. Accepting the alias prevents breakage
@@ -60,8 +58,7 @@ sections:
                   - Context_Create_MissingResultAliasFilename_ThrowsException
 
               - id: SonarMark-Cli-Context-Depth
-                title: The tool shall accept --depth as the primary depth option,
-                  with --report-depth as a deprecated alias.
+                title: The tool shall accept --depth as the primary depth option, with --report-depth as a deprecated alias.
                 justification: |
                   The --depth flag is the canonical spelling for configuring the markdown header depth of the
                   generated report. The --report-depth spelling is retained as a deprecated alias so that
@@ -75,8 +72,7 @@ sections:
                   - Context_Create_ReportDepthAlias_SetsDepthProperty
 
               - id: SonarMark-Cli-Context-Version
-                title: The tool shall accept the --version flag and expose it so that
-                  Program can print the version string and exit.
+                title: The tool shall accept the --version flag and expose it so that Program can print the version string and exit.
                 justification: |
                   Users and CI systems need a lightweight way to confirm which version of SonarMark is
                   installed. Parsing the flag in Context keeps the version-output logic in Program and
@@ -85,8 +81,7 @@ sections:
                   - Context_Create_VersionFlag_SetsVersionProperty
 
               - id: SonarMark-Cli-Context-Help
-                title: The tool shall accept the --help flag and expose it so that
-                  Program can print usage information and exit.
+                title: The tool shall accept the --help flag and expose it so that Program can print usage information and exit.
                 justification: |
                   Help text is the primary self-documentation mechanism for command-line tools.
                   Parsing the flag in Context and acting on it in Program keeps each unit focused on
@@ -95,8 +90,7 @@ sections:
                   - Context_Create_HelpFlags_SetsHelpProperty
 
               - id: SonarMark-Cli-Context-Validate
-                title: The tool shall accept the --validate flag and expose it so
-                  that Program can invoke the self-validation pipeline.
+                title: The tool shall accept the --validate flag and expose it so that Program can invoke the self-validation pipeline.
                 justification: |
                   The --validate flag triggers the internal self-test suite, providing confidence that
                   the installed binary is intact. Parsing the flag in Context keeps the dispatch logic
@@ -106,8 +100,7 @@ sections:
                   - Context_Create_ValidateFlag_SetsValidateProperty
 
               - id: SonarMark-Cli-Context-Report
-                title: The tool shall accept the --report flag with a required filename
-                  argument and expose the path for the report-generation pipeline.
+                title: The tool shall accept the --report flag with a required filename argument and expose the path for the report-generation pipeline.
                 justification: |
                   Writing the generated markdown report to a file rather than stdout allows the output
                   to be committed to version control or published as a build artifact. Parsing the flag
@@ -118,8 +111,7 @@ sections:
                   - Context_Create_MissingReportFilename_ThrowsException
 
               - id: SonarMark-Cli-Context-Token
-                title: The tool shall accept the --token flag with a required value
-                  and expose the PAT for use by the SonarQube HTTP client.
+                title: The tool shall accept the --token flag with a required value and expose the PAT for use by the SonarQube HTTP client.
                 justification: |
                   SonarCloud and private SonarQube instances require bearer-token authentication for
                   most API calls. Parsing the token in Context and forwarding it to the HTTP client
@@ -130,8 +122,7 @@ sections:
                   - Context_Create_MissingToken_ThrowsException
 
               - id: SonarMark-Cli-Context-TokenEnv
-                title: The tool shall fall back to the SONAR_TOKEN environment variable
-                  when --token is not supplied on the command line.
+                title: The tool shall fall back to the SONAR_TOKEN environment variable when --token is not supplied on the command line.
                 justification: |
                   CI/CD systems commonly inject secrets via environment variables rather than
                   command-line arguments to avoid exposing tokens in process listings and shell
@@ -142,8 +133,7 @@ sections:
                   - Context_Create_WithTokenEnvVar_ReturnsTokenFromEnvironment
 
               - id: SonarMark-Cli-Context-Server
-                title: The tool shall accept the --server flag with a required URL
-                  value and expose it for use by the SonarQube HTTP client.
+                title: The tool shall accept the --server flag with a required URL value and expose it for use by the SonarQube HTTP client.
                 justification: |
                   The server URL is the primary connection parameter; without it the tool cannot
                   perform any analysis. Parsing it in Context ensures every subsystem that needs the
@@ -154,8 +144,7 @@ sections:
                   - Context_Create_MissingServer_ThrowsException
 
               - id: SonarMark-Cli-Context-ProjectKey
-                title: The tool shall accept the --project-key flag with a required
-                  value and expose it for use by the SonarQube HTTP client.
+                title: The tool shall accept the --project-key flag with a required value and expose it for use by the SonarQube HTTP client.
                 justification: |
                   The project key uniquely identifies the project on the SonarQube/SonarCloud server.
                   Parsing it in Context ensures the key is validated and available to all subsystems
@@ -165,8 +154,7 @@ sections:
                   - Context_Create_MissingProjectKey_ThrowsException
 
               - id: SonarMark-Cli-Context-Branch
-                title: The tool shall accept the --branch flag with a required value
-                  and expose it for use by the SonarQube HTTP client.
+                title: The tool shall accept the --branch flag with a required value and expose it for use by the SonarQube HTTP client.
                 justification: |
                   Branch-level analysis is essential for pull-request and feature-branch quality gates.
                   Parsing the branch name in Context and forwarding it to the HTTP client keeps branch
@@ -175,3 +163,46 @@ sections:
                 tests:
                   - Context_Create_Branch_SetsBranchProperty
                   - Context_Create_MissingBranch_ThrowsException
+
+              - id: SonarMark-Cli-Context-ExitCode
+                title: The Context unit shall return exit code 0 when no errors have been reported, and exit code 1 when WriteError has been called at least once.
+                justification: |
+                  CI/CD pipelines use the exit code to detect failure; the Context accumulates error
+                  state across the run. A clean separation between zero (success) and non-zero
+                  (failure) exit codes ensures that pipelines can reliably detect when any error
+                  occurred during the run without inspecting console output.
+                tests:
+                  - Context_Create_NoArguments_ReturnsDefaultContext
+                  - Context_WriteError_NormalMode_WritesToConsole
+
+              - id: SonarMark-Cli-Context-ConsoleOutput
+                title: The Context unit shall write normal output to stdout and error output to stderr in red; both shall be suppressed from the console when Silent is true.
+                justification: |
+                  Separating output streams and supporting silent mode allows callers to capture only
+                  error output and suppress all noise in CI/CD environments. Writing error output in
+                  red makes it visually distinct when the console is not redirected.
+                tests:
+                  - Context_WriteLine_NormalMode_WritesToConsole
+                  - Context_WriteLine_SilentMode_DoesNotWriteToConsole
+                  - Context_WriteError_NormalMode_WritesToConsole
+                  - Context_WriteError_SilentMode_DoesNotWriteToConsole
+
+              - id: SonarMark-Cli-Context-LogFile
+                title: The Context unit shall open a log file at creation when --log is specified, write all WriteLine and WriteError output to it regardless of Silent mode, and close it on Dispose.
+                justification: |
+                  Log files provide a persistent diagnostic record independent of console verbosity
+                  settings. Writing all output to the log regardless of Silent mode ensures that
+                  full diagnostic information is always captured even when console output is suppressed.
+                tests:
+                  - Context_Create_WithLogFile_WritesToLogFile
+
+              - id: SonarMark-Cli-Context-HttpFactory
+                title: The Context unit shall accept and expose an optional HTTP client factory for injecting test doubles.
+                justification: |
+                  Test isolation requires that the Context unit can carry a factory delegate that
+                  Program.ProcessSonarAnalysis uses in place of constructing a real SonarQubeClient.
+                  Storing the factory on Context keeps it co-located with all other configuration
+                  state parsed from the command line, and the internal visibility of the property
+                  ensures production code cannot inject a mock accidentally.
+                tests:
+                  - Context_Create_WithHttpClientFactory_ExposesFactory

@@ -50,6 +50,11 @@ internal sealed class MockHttpMessageHandler : HttpMessageHandler
     private readonly Queue<HttpResponseMessage> _responses = new();
 
     /// <summary>
+    ///     List of request URIs captured in the order they were received.
+    /// </summary>
+    public List<Uri?> CapturedRequests { get; } = [];
+
+    /// <summary>
     ///     Enqueues a response to be returned by the next HTTP request.
     /// </summary>
     /// <param name="response">Response to enqueue.</param>
@@ -67,6 +72,9 @@ internal sealed class MockHttpMessageHandler : HttpMessageHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
+        // Record the request URI for later inspection by tests
+        CapturedRequests.Add(request.RequestUri);
+
         // Dequeue and return the next pre-configured response
         if (_responses.Count == 0)
         {

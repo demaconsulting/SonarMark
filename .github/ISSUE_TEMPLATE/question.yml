@@ -25,8 +25,7 @@ body:
     id: what-tried
     attributes:
       label: What Have You Tried?
-      description: Describe what you have already attempted, including any code or
-        configuration you have used.
+      description: Describe what you have already attempted, including any code or configuration you have used.
       placeholder: |
         ```bash
         sonarmark --server https://sonarcloud.io --project-key my-project
@@ -37,8 +36,7 @@ body:
     id: expected
     attributes:
       label: Expected Outcome
-      description: A clear and concise description of what you expected to happen
-        or what you are trying to achieve.
+      description: A clear and concise description of what you expected to happen or what you are trying to achieve.
       placeholder: Describe the outcome you are looking for...
     validations:
       required: true
@@ -69,8 +67,7 @@ body:
     id: additional-context
     attributes:
       label: Additional Context
-      description: Add any other context, screenshots, or links that may help answer
-        your question.
+      description: Add any other context, screenshots, or links that may help answer your question.
       placeholder: Any additional information...
 
   - type: checkboxes
@@ -79,8 +76,7 @@ body:
       label: Checklist
       description: Please confirm the following
       options:
-        - label: I have searched existing issues and discussions to ensure this has
-            not been answered before
+        - label: I have searched existing issues and discussions to ensure this has not been answered before
           required: true
         - label: I have provided a clear description of my question
           required: true

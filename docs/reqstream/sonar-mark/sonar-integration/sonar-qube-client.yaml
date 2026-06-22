@@ -55,3 +55,26 @@ sections:
                   any server configuration or custom metric definitions.
                 tests:
                   - SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames
+
+              - id: SonarMark-Server-AuthToken
+                title: When an authentication token is supplied, the HTTP client shall include a Basic Authorization header on all API requests.
+                justification: |
+                  SonarQube and SonarCloud use HTTP Basic authentication with the PAT as the username
+                  and an empty password. Setting the Authorization header on the shared HttpClient
+                  instance ensures every API call within a single analysis run is authenticated
+                  consistently, without requiring each call site to manage credentials independently.
+                tests:
+                  - SonarQubeClient_Constructor_WithToken_SetsAuthorizationHeader
+                  - SonarQubeClient_Constructor_WithoutToken_NoAuthorizationHeader
+
+              - id: SonarMark-Server-BranchQuery
+                title: When a branch is specified, the HTTP client shall include it as a branch query parameter on all applicable API requests.
+                justification: |
+                  SonarQube and SonarCloud expose branch-level analysis data through an optional
+                  branch query parameter on multiple endpoints. Including the branch parameter on
+                  the quality gate, issues, and hot-spots endpoints ensures that results reflect
+                  the requested branch rather than the default branch, which is essential for
+                  pull-request and feature-branch quality gate workflows.
+                tests:
+                  - Program_Run_WithBranchFlag_IncludesBranchInServerRequest
+                  - SonarQubeClient_GetQualityResultByBranchAsync_WithBranch_IncludesBranchInAllRequests

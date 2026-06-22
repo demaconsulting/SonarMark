@@ -13,15 +13,16 @@ instance. The subsystem contains three units: `SonarQubeClient` (the HTTP client
 
 **SonarQubeClient.GetQualityResultByBranchAsync**: Primary analysis retrieval method.
 
-- *Type*: In-process .NET public API.
+- *Type*: In-process .NET internal API.
 - *Role*: Provider — called by `Program.ProcessSonarAnalysis`.
 - *Contract*: Accepts `serverUrl`, `projectKey`, optional `branch`, and an optional
   `CancellationToken`. Performs five sequential HTTP API calls and returns a
-  `SonarQualityResult` containing the gate status, conditions, metric name dictionary,
-  issues list, and hot-spots list.
+  `SonarQualityResult` containing the project name, gate status, conditions, metric name
+  dictionary, issues list, and hot-spots list.
 - *Constraints*: `serverUrl` and `projectKey` must not be null or whitespace; throws
-  `ArgumentException` otherwise. Non-2xx HTTP responses raise `InvalidOperationException`.
-  Malformed JSON raises `JsonException`. Both propagate to the caller.
+  `ArgumentNullException` for null, `ArgumentException` for empty or whitespace.
+  Non-2xx HTTP responses raise `InvalidOperationException`. Malformed JSON raises
+  `JsonException`. Both propagate to the caller.
 
 **SonarQubeClient constructor**: Creates a client with optional token-based authentication.
 

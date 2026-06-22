@@ -20,6 +20,7 @@
 
 using DemaConsulting.SonarMark.Cli;
 using DemaConsulting.SonarMark.SonarIntegration;
+using DemaConsulting.SonarMark.Tests.SonarIntegration;
 using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.Cli;
@@ -61,6 +62,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_NoArguments_ReturnsDefaultContext()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create([]);
 
@@ -86,12 +89,19 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_VersionFlag_SetsVersionProperty()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         using var context1 = Context.Create(["-v"]);
+
+        // Assert
         Assert.True(context1.Version);
         Assert.Equal(0, context1.ExitCode);
 
+        // Act
         using var context2 = Context.Create(["--version"]);
+
+        // Assert
         Assert.True(context2.Version);
         Assert.Equal(0, context2.ExitCode);
     }
@@ -102,16 +112,26 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_HelpFlags_SetsHelpProperty()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         using var context1 = Context.Create(["-?"]);
+
+        // Assert
         Assert.True(context1.Help);
         Assert.Equal(0, context1.ExitCode);
 
+        // Act
         using var context2 = Context.Create(["-h"]);
+
+        // Assert
         Assert.True(context2.Help);
         Assert.Equal(0, context2.ExitCode);
 
+        // Act
         using var context3 = Context.Create(["--help"]);
+
+        // Assert
         Assert.True(context3.Help);
         Assert.Equal(0, context3.ExitCode);
     }
@@ -122,6 +142,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_SilentFlag_SetsSilentProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--silent"]);
 
@@ -136,6 +158,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_ValidateFlag_SetsValidateProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--validate"]);
 
@@ -150,6 +174,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_EnforceFlag_SetsEnforceProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--enforce"]);
 
@@ -164,6 +190,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_ReportFile_SetsReportProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--report", "report.md"]);
 
@@ -178,8 +206,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingReportFilename_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--report"]));
+
+        // Assert
         Assert.Contains("--report requires a filename argument", ex.Message);
     }
 
@@ -192,6 +224,8 @@ public sealed class ContextTests : IDisposable
     [InlineData("6", 6)]
     public void Context_Create_ReportDepthAlias_SetsDepthProperty(string depthArg, int expectedDepth)
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--report-depth", depthArg]);
 
@@ -206,8 +240,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingReportDepth_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--report-depth"]));
+
+        // Assert
         Assert.Contains("--report-depth requires a depth argument", ex.Message);
     }
 
@@ -217,17 +255,30 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_InvalidReportDepth_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex1 = Assert.Throws<ArgumentException>(() => Context.Create(["--report-depth", "invalid"]));
+
+        // Assert
         Assert.Contains("--report-depth requires a depth between 1 and 6", ex1.Message);
 
+        // Act
         var ex2 = Assert.Throws<ArgumentException>(() => Context.Create(["--report-depth", "0"]));
+
+        // Assert
         Assert.Contains("--report-depth requires a depth between 1 and 6", ex2.Message);
 
+        // Act
         var ex3 = Assert.Throws<ArgumentException>(() => Context.Create(["--report-depth", "-1"]));
+
+        // Assert
         Assert.Contains("--report-depth requires a depth between 1 and 6", ex3.Message);
 
+        // Act
         var ex4 = Assert.Throws<ArgumentException>(() => Context.Create(["--report-depth", "7"]));
+
+        // Assert
         Assert.Contains("--report-depth requires a depth between 1 and 6", ex4.Message);
     }
 
@@ -237,6 +288,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_Depth_SetsDepthProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--depth", "3"]);
 
@@ -251,8 +304,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingDepth_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--depth"]));
+
+        // Assert
         Assert.Contains("--depth requires a depth argument", ex.Message);
     }
 
@@ -262,17 +319,30 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_InvalidDepth_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex1 = Assert.Throws<ArgumentException>(() => Context.Create(["--depth", "invalid"]));
+
+        // Assert
         Assert.Contains("--depth requires a depth between 1 and 6", ex1.Message);
 
+        // Act
         var ex2 = Assert.Throws<ArgumentException>(() => Context.Create(["--depth", "0"]));
+
+        // Assert
         Assert.Contains("--depth requires a depth between 1 and 6", ex2.Message);
 
+        // Act
         var ex3 = Assert.Throws<ArgumentException>(() => Context.Create(["--depth", "-1"]));
+
+        // Assert
         Assert.Contains("--depth requires a depth between 1 and 6", ex3.Message);
 
+        // Act
         var ex4 = Assert.Throws<ArgumentException>(() => Context.Create(["--depth", "7"]));
+
+        // Assert
         Assert.Contains("--depth requires a depth between 1 and 6", ex4.Message);
     }
 
@@ -282,6 +352,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_Token_SetsTokenProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--token", "test-token-123"]);
 
@@ -321,8 +393,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingToken_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--token"]));
+
+        // Assert
         Assert.Contains("--token requires a token argument", ex.Message);
     }
 
@@ -332,6 +408,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_Server_SetsServerProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--server", "https://sonarcloud.io"]);
 
@@ -346,8 +424,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingServer_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--server"]));
+
+        // Assert
         Assert.Contains("--server requires a server URL argument", ex.Message);
     }
 
@@ -357,6 +439,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_ProjectKey_SetsProjectKeyProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--project-key", "my-project"]);
 
@@ -371,8 +455,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingProjectKey_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--project-key"]));
+
+        // Assert
         Assert.Contains("--project-key requires a project key argument", ex.Message);
     }
 
@@ -382,6 +470,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_Branch_SetsBranchProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--branch", "main"]);
 
@@ -396,8 +486,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingBranch_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--branch"]));
+
+        // Assert
         Assert.Contains("--branch requires a branch name argument", ex.Message);
     }
 
@@ -407,8 +501,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingLogFilename_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--log"]));
+
+        // Assert
         Assert.Contains("--log requires a filename argument", ex.Message);
     }
 
@@ -418,8 +516,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_UnsupportedArgument_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--unsupported"]));
+
+        // Assert
         Assert.Contains("Unsupported argument '--unsupported'", ex.Message);
     }
 
@@ -564,8 +666,10 @@ public sealed class ContextTests : IDisposable
             Path.GetTempPath(),
             new string(Path.GetInvalidFileNameChars()[0], 5) + ".log");
 
-        // Act/Assert
+        // Act
         var ex = Assert.Throws<InvalidOperationException>(() => Context.Create(["--log", invalidPath]));
+
+        // Assert
         Assert.Contains("Failed to open log file", ex.Message);
     }
 
@@ -575,6 +679,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_ResultsFile_SetsResultsProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--results", "results.trx"]);
 
@@ -589,8 +695,12 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingResultsFilename_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--results"]));
+
+        // Assert
         Assert.Contains("--results requires a results filename argument", ex.Message);
     }
 
@@ -600,6 +710,8 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_ResultAlias_SetsResultsProperty()
     {
+        // Arrange - no setup required
+
         // Act
         using var context = Context.Create(["--result", "results.trx"]);
 
@@ -614,8 +726,29 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_MissingResultAliasFilename_ThrowsException()
     {
-        // Act/Assert
+        // Arrange - no setup required
+
+        // Act
         var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--result"]));
+
+        // Assert
         Assert.Contains("--result requires a results filename argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context with an HTTP client factory exposes the factory.
+    /// </summary>
+    [Fact]
+    public void Context_Create_WithHttpClientFactory_ExposesFactory()
+    {
+        // Arrange
+        Func<string?, SonarQubeClient> factory = _ =>
+            new SonarQubeClient(new HttpClient(new MockHttpMessageHandler()), false);
+
+        // Act
+        using var context = Context.Create([], factory);
+
+        // Assert
+        Assert.Same(factory, context.HttpClientFactory);
     }
 }

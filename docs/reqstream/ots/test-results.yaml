@@ -1,0 +1,39 @@
+---
+# DemaConsulting.TestResults OTS requirements
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: DemaConsulting.TestResults Requirements
+        requirements:
+          - id: SonarMark-OTS-TestResults-Collect
+            title: DemaConsulting.TestResults shall accumulate test results during a validation run.
+            justification: |
+              The SelfTest subsystem must record the outcome of each self-validation scenario.
+              The TestResults collection type provides a mutable accumulator that each scenario
+              appends to, so results can be serialized in a single step after all scenarios
+              complete. Using this package avoids implementing a custom accumulation mechanism.
+            tags: [ots]
+            tests:
+              - SelfTest_RunValidation_AllTestsPass
+
+          - id: SonarMark-OTS-TestResults-WriteTrx
+            title: DemaConsulting.TestResults shall serialize test results to TRX format when the output file has a .trx extension.
+            justification: |
+              TRX is the standard MSTest/Azure DevOps test result format consumed by Azure
+              DevOps pipelines and other CI systems. Writing TRX output lets SonarMark
+              validation results be published as native test artifacts in those environments
+              without requiring additional conversion tools.
+            tags: [ots]
+            tests:
+              - SelfTest_RunValidation_ProducesResultsFile
+
+          - id: SonarMark-OTS-TestResults-WriteJUnit
+            title: DemaConsulting.TestResults shall serialize test results to JUnit XML format when the output file has a .xml extension.
+            justification: |
+              JUnit XML is the de-facto standard test result format consumed by Jenkins,
+              GitHub Actions test summaries, and many other CI systems. Writing JUnit XML
+              output lets SonarMark validation results be published as native test artifacts
+              in those environments without requiring additional conversion tools.
+            tags: [ots]
+            tests:
+              - SelfTest_RunValidation_WithJUnitResultsPath_ProducesJUnitResultsFile

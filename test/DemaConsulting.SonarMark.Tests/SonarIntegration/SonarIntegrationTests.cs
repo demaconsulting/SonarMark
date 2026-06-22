@@ -176,10 +176,10 @@ public class SonarIntegrationTests
     }
 
     /// <summary>
-    ///     Test that a null/empty server URL causes ArgumentException before any HTTP call.
+    ///     Test that a null server URL causes ArgumentNullException before any HTTP call.
     /// </summary>
     [Fact]
-    public async Task SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentException()
+    public async Task SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentNullException()
     {
         // Arrange - mock handler is never called because validation happens first
         var handler = new MockHttpMessageHandler();
@@ -187,7 +187,7 @@ public class SonarIntegrationTests
         using var client = new SonarQubeClient(httpClient, false);
 
         // Act / Assert - null server URL must throw before any HTTP call is made
-        await Assert.ThrowsAnyAsync<ArgumentException>(
+        await Assert.ThrowsAsync<ArgumentNullException>(
             async () => await client.GetQualityResultByBranchAsync(null!, "test-project", cancellationToken: TestContext.Current.CancellationToken));
     }
 

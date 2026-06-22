@@ -16,8 +16,8 @@ N/A - `Program` is a static class with no instance fields or properties.
 
 - *Returns*: `string` — the version string, resolved via a three-step fallback chain: (1)
   `AssemblyInformationalVersionAttribute` (set by the SDK from the project version on publish),
-  (2) `Assembly.GetName().Version.ToString()` as a fallback for development builds, (3) the
-  literal `"0.0.0"` as a last-resort sentinel so callers never receive null or an empty string.
+  (2) `Assembly.GetName().Version.ToString()` as a fallback for development builds, (3) a
+  zero-version sentinel string as a last-resort so callers never receive null or an empty string.
 
 **Main**: Application entry point.
 

@@ -6,8 +6,7 @@ sections:
       - title: BuildMark Requirements
         requirements:
           - id: SonarMark-OTS-BuildMark
-            title: BuildMark shall generate build-notes documentation from GitHub
-              Actions metadata.
+            title: BuildMark shall generate build-notes documentation from GitHub Actions metadata.
             justification: |
               DemaConsulting.BuildMark queries the GitHub API to capture workflow run details and
               renders them as a markdown build-notes document included in the release artifacts.

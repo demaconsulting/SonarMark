@@ -2,15 +2,23 @@
 
 ### Purpose
 
-`DemaConsulting.TestResults` is a shared NuGet package produced by the DEMA Consulting program. It
-provides a lightweight, format-agnostic model for collecting and serializing test results inside a
-running process. SonarMark uses it in the SelfTest subsystem to record the outcomes of its four
+`DemaConsulting.TestResults` is a NuGet package produced by DEMA Consulting. It provides a
+lightweight, format-agnostic model for collecting and serializing test results inside a running
+process. SonarMark uses it in the SelfTest subsystem to record the outcomes of its four
 self-validation scenarios and to write those outcomes to TRX or JUnit XML files when the user
 supplies the `--results` flag alongside `--validate`.
 
 The package was chosen because it produces the TRX and JUnit XML formats that standard CI/CD
 result consumers (Azure DevOps, GitHub Actions, Jenkins) expect, without introducing a dependency
 on a full test framework.
+
+### Classification
+
+Although `DemaConsulting.TestResults` is produced by DEMA Consulting — the same organization that
+produces SonarMark — it is an independently developed and separately released package with its own
+requirements, versioning, and release lifecycle. It is not part of the SonarMark product and its
+internal design requirements do not drive SonarMark requirements. It is therefore classified as an
+OTS software item.
 
 ### Features Used
 

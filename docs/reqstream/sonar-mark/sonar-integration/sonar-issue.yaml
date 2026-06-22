@@ -21,8 +21,7 @@ sections:
                   - SonarIssue_Constructor_AllProperties_CreatesInstance
 
               - id: SonarMark-SonarIntegration-SonarIssue-OptionalLine
-                title: The SonarIssue shall support an optional line number for issues
-                  not associated with a specific line.
+                title: The SonarIssue shall support an optional line number for issues not associated with a specific line.
                 justification: |
                   Some SonarQube issues are reported at file level rather than on a specific line. The
                   line number must therefore be nullable so the record accurately represents both line-level
@@ -31,8 +30,7 @@ sections:
                   - SonarIssue_Constructor_NullLine_CreatesInstance
 
               - id: SonarMark-SonarIntegration-SonarIssue-Severity
-                title: The SonarIssue shall capture the severity level to enable severity-based
-                  categorization in reports.
+                title: The SonarIssue shall capture the severity level to enable severity-based categorization in reports.
                 justification: |
                   Issue severity (BLOCKER, CRITICAL, MAJOR, MINOR, INFO) indicates the impact of the
                   issue on the codebase. Capturing this value enables the report to group and display

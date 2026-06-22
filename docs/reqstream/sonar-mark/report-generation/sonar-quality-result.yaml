@@ -41,8 +41,7 @@ sections:
                   - SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput
 
               - id: SonarMark-Report-DepthValidation
-                title: The tool shall throw ArgumentOutOfRangeException when report
-                  depth is outside the range 1 to 6.
+                title: The tool shall throw ArgumentOutOfRangeException when report depth is outside the range 1 to 6.
                 justification: |
                   Markdown supports heading levels 1 through 6 only. Accepting values outside this range would
                   produce malformed markdown output. Validating depth at the method boundary provides a clear
@@ -50,19 +49,20 @@ sections:
                 tests:
                   - SonarQualityResult_ToMarkdown_DepthLessThan1_ThrowsArgumentOutOfRangeException
                   - SonarQualityResult_ToMarkdown_DepthGreaterThan6_ThrowsArgumentOutOfRangeException
-                  - ReportGeneration_ToMarkdown_InvalidDepth_ThrowsArgumentOutOfRangeException
 
               - id: SonarMark-Report-QualityCondition
                 title: >-
-                  The tool shall represent each quality gate condition with individually-accessible
-                  metric key, comparator, error threshold, actual value, and status
-                  fields.
+                  The tool shall render each quality gate condition in the generated
+                  report showing
+                  its metric name, comparison operator, error threshold, actual value,
+                  and
+                  pass/fail status.
                 justification: |
-                  Quality gate conditions returned by the SonarQube/SonarCloud API carry multiple distinct
-                  attributes that must each be independently accessible for accurate and readable report
-                  rendering. Keeping these fields individually addressable ensures the report can display
-                  each attribute in the correct column of the conditions table, and that the rendering logic
-                  can be tested for each field in isolation.
+                  Quality gate conditions provide the granular evidence behind a pass or fail decision.
+                  Rendering each condition as a report row with all five attributes allows stakeholders
+                  to determine exactly which metrics failed and by how much without consulting the
+                  SonarQube/SonarCloud dashboard. The observable test output — the rendered markdown
+                  table — directly proves that the tool satisfies this requirement.
                 tests:
                   - SonarQualityResult_ToMarkdown_Depth1_ProducesCorrectOutput
                   - SonarQualityResult_ToMarkdown_WarnStatus_ProducesCorrectOutput

@@ -11,7 +11,7 @@ a mock HTTP client and optionally writes the results to a TRX or JUnit XML file.
 
 **Validation.Run**: Entry point for the self-validation mode.
 
-- *Type*: In-process .NET public API.
+- *Type*: In-process .NET internal static method.
 - *Role*: Provider — called by `Program.Run` when `--validate` is supplied.
 - *Contract*: Accepts a `Context`. Prints a validation header using `context.Depth` for the
   heading level, runs four test scenarios (`SonarMark_QualityGateRetrieval`,

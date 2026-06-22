@@ -6,8 +6,7 @@ sections:
       - title: SelfTest Requirements
         requirements:
           - id: SonarMark-SelfTest-Orchestrate
-            title: The SelfTest subsystem shall verify tool functionality using mock
-              data without a live server.
+            title: The SelfTest subsystem shall verify tool functionality using mock data without a live server.
             justification: |
               The SelfTest subsystem must be able to exercise the full analysis and reporting
               pipeline using mock HTTP responses, proving that the tool works correctly in an

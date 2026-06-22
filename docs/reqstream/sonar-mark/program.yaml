@@ -92,8 +92,7 @@ sections:
               - Program_Run_WithDepth_WritesReportWithDepthHeadings
 
           - id: SonarMark-Program-ExitCode
-            title: The tool shall return non-zero exit code when quality gate fails
-              in enforcement mode.
+            title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
             justification: |
               Returning a non-zero exit code on quality gate failure is the standard mechanism for
               indicating failure in command-line tools and CI/CD systems. This allows build systems
@@ -102,7 +101,22 @@ sections:
               - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
 
           - id: SonarMark-Program-Validate
-            title: The program shall provide a self-validation mode when invoked with
-              the validate command.
+            title: The program shall provide a self-validation mode when invoked with the `--validate` flag.
+            justification: |
+              Self-validation mode enables CI pipelines to verify that the tool is correctly
+              configured and can execute its internal scenarios without requiring a live
+              SonarQube/SonarCloud server. This supports automated compliance verification
+              by providing repeatable, server-independent evidence that the shipped binary
+              is functional and intact before it is used in production analysis workflows.
             tests:
               - Program_Run_WithValidateFlag_RunsValidationSuccessfully
+
+          - id: SonarMark-Program-Silent
+            title: The Program unit shall suppress banner and console output when the silent flag is set.
+            justification: |
+              Silent mode is required for CI/CD pipelines where stdout must remain clean and
+              free of diagnostic output. Suppressing the banner and all normal output when
+              --silent is passed prevents noise in automated scripts and log parsers that
+              consume only the tool's exit code.
+            tests:
+              - Program_Run_WithSilentFlag_SuppressesBannerOutput

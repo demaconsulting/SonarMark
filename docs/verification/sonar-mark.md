@@ -21,7 +21,8 @@ System requirements traceability is maintained via the ReqStream trace matrix in
 
 Tests require:
 
-- .NET 8 SDK or later (net8.0, net9.0, and net10.0 targets are all exercised in CI).
+- .NET 8 SDK or later (multiple .NET versions including net8.0, net9.0, and net10.0 are all
+  exercised in CI across Windows, Linux, and macOS platforms).
 - The compiled `DemaConsulting.SonarMark.dll` present in the test output directory (produced automatically
   because the test project references the main project).
 - No external network access; all HTTP calls in the test layer are intercepted by a mock handler.
@@ -64,3 +65,46 @@ This scenario is tested by `IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
 as an unknown argument, confirming that the enforcement argument is recognized and does not produce an
 "Unsupported argument" error.
 This scenario is tested by `IntegrationTest_EnforceFlag_IsAccepted`.
+
+**EnforceFlag_FailingQualityGate_ReturnsNonZeroExitCode**: When invoked with `--enforce` and the
+SonarQube/SonarCloud quality gate status is `ERROR`, the system returns a non-zero exit code,
+confirming that enforcement mode correctly signals build failure to the CI/CD pipeline.
+This scenario is tested by `Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode`.
+
+**SonarMark-Core-Help**: When invoked with `--help`, the system displays usage help text including
+all available options, confirming that the CLI argument is correctly recognized and the Program
+dispatch writes usage information to the console.
+This scenario is tested by `IntegrationTest_HelpFlag_OutputsUsageInformation`.
+
+**SonarMark-Core-Version**: When invoked with `--version`, the system displays the tool version
+string, confirming that the version string is correctly emitted by the full system.
+This scenario is tested by `IntegrationTest_VersionFlag_OutputsVersion`.
+
+**SonarMark-Core-Silent**: When invoked with `--silent`, the system suppresses console output
+(including the banner), confirming that the flag is correctly parsed and all standard output is
+suppressed throughout the full execution path.
+This scenario is tested by `IntegrationTest_SilentFlag_SuppressesOutput`.
+
+**SonarMark-Core-Token**: When invoked with `--token`, the system accepts the flag without
+treating it as an unknown argument, confirming that the token argument is recognized and does
+not interfere with subsequent argument processing.
+This scenario is tested by `IntegrationTest_TokenParameter_IsAccepted`.
+
+**SonarMark-Core-Branch**: When invoked with `--branch`, the system accepts the flag without
+treating it as an unknown argument, confirming that branch selection is correctly parsed.
+This scenario is tested by `IntegrationTest_BranchParameter_IsAccepted`.
+
+**SonarMark-Core-ReportFile**: When invoked with `--report`, the system accepts the flag
+without treating it as an unknown argument, confirming that the report path argument is
+correctly parsed and does not cause an unrecognized-argument error.
+This scenario is tested by `IntegrationTest_ReportParameter_IsAccepted`.
+
+**SonarMark-Core-ReportDepth**: When invoked with `--depth` or `--report-depth` and invalid
+or out-of-range values, the system rejects them with a clear error message, confirming that
+both flags are accepted and that invalid values are correctly validated.
+This scenario is tested by `IntegrationTest_ReportDepthWithoutValue_ShowsError`,
+`IntegrationTest_ReportDepthWithInvalidValue_ShowsError`,
+`IntegrationTest_ReportDepthWithZero_ShowsError`,
+`IntegrationTest_DepthWithoutValue_ShowsError`,
+`IntegrationTest_DepthWithInvalidValue_ShowsError`, and
+`IntegrationTest_DepthWithZero_ShowsError`.
