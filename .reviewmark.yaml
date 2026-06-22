@@ -158,8 +158,7 @@ reviews:
       - test/**/SonarIssueTests.cs
 
   - id: SonarMark-ReportGeneration-SonarQualityResult
-    title: Review that SonarMark ReportGeneration SonarQualityResult Implementation
-      is Correct
+    title: Review that SonarMark ReportGeneration SonarQualityResult Implementation is Correct
     paths:
       - docs/reqstream/sonar-mark/report-generation/sonar-quality-result.yaml
       - docs/design/sonar-mark/report-generation/sonar-quality-result.md
@@ -167,8 +166,7 @@ reviews:
       - test/**/SonarQualityResultTests.cs
 
   - id: SonarMark-SonarIntegration-SonarQubeClient
-    title: Review that SonarMark SonarIntegration SonarQubeClient Implementation is
-      Correct
+    title: Review that SonarMark SonarIntegration SonarQubeClient Implementation is Correct
     paths:
       - docs/reqstream/sonar-mark/sonar-integration/sonar-qube-client.yaml
       - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md

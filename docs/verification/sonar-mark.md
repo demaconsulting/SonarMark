@@ -69,7 +69,7 @@ This scenario is tested by `IntegrationTest_EnforceFlag_IsAccepted`.
 **EnforceFlag_FailingQualityGate_ReturnsNonZeroExitCode**: When invoked with `--enforce` and the
 SonarQube/SonarCloud quality gate status is `ERROR`, the system returns a non-zero exit code,
 confirming that enforcement mode correctly signals build failure to the CI/CD pipeline.
-This scenario is tested by `Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode`.
+This scenario is tested by `Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode`.
 
 **SonarMark-Core-Help**: When invoked with `--help`, the system displays usage help text including
 all available options, confirming that the CLI argument is correctly recognized and the Program

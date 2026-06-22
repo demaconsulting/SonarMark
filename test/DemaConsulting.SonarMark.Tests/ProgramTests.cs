@@ -442,7 +442,7 @@ public class ProgramTests
     ///     This variant also verifies the error message text written when enforcement triggers.
     /// </summary>
     [Fact]
-    public void Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode()
+    public void Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode()
     {
         // Arrange - capture stderr to verify the enforcement error message text
         var originalError = Console.Error;

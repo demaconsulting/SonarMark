@@ -4,8 +4,7 @@ sections:
   - title: SonarMark Requirements
     requirements:
       - id: SonarMark-Core-QualityGate
-        title: The system shall retrieve quality gate status from SonarQube/SonarCloud
-          and include it in the report.
+        title: The system shall retrieve quality gate status from SonarQube/SonarCloud and include it in the report.
         justification: |
           Quality gate status is the primary outcome of a SonarQube/SonarCloud analysis and the most
           important metric for CI/CD enforcement decisions. Verifying end-to-end retrieval and reporting
@@ -21,8 +20,7 @@ sections:
           - SonarMark_QualityGateRetrieval
 
       - id: SonarMark-Core-Issues
-        title: The system shall retrieve issues from SonarQube/SonarCloud and include
-          them in the report.
+        title: The system shall retrieve issues from SonarQube/SonarCloud and include them in the report.
         justification: |
           Issues represent code quality defects identified by Sonar analysis. Verifying end-to-end
           retrieval and reporting confirms that all pagination, data mapping, and rendering components
@@ -37,8 +35,7 @@ sections:
           - SonarMark_IssuesRetrieval
 
       - id: SonarMark-Core-HotSpots
-        title: The system shall retrieve security hot-spots from SonarQube/SonarCloud
-          and include them in the report.
+        title: The system shall retrieve security hot-spots from SonarQube/SonarCloud and include them in the report.
         justification: |
           Security hot-spots require manual security review and must be reported separately from
           standard issues. Verifying end-to-end retrieval and reporting confirms that the security
@@ -53,8 +50,7 @@ sections:
           - SonarMark_HotSpotsRetrieval
 
       - id: SonarMark-Core-Report
-        title: The system shall generate a complete markdown report combining all
-          retrieved analysis data.
+        title: The system shall generate a complete markdown report combining all retrieved analysis data.
         justification: |
           The primary deliverable of SonarMark is a comprehensive markdown report that combines
           quality gate status, issues, and security hot-spots. Verifying this end-to-end confirms
@@ -68,8 +64,7 @@ sections:
           - SonarMark_MarkdownReportGeneration
 
       - id: SonarMark-Core-Validation
-        title: The system shall run self-validation tests and report results when
-          --validate is supplied.
+        title: The system shall run self-validation tests and report results when --validate is supplied.
         justification: |
           Self-validation mode lets users verify that SonarMark is functioning correctly without
           requiring a live SonarQube/SonarCloud server. Verifying this end-to-end confirms that the
@@ -81,8 +76,7 @@ sections:
           - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
 
       - id: SonarMark-Core-Enforce
-        title: The system shall return a non-zero exit code when --enforce is supplied
-          and the quality gate fails.
+        title: The system shall return a non-zero exit code when --enforce is supplied and the quality gate fails.
         justification: |
           Enforcement mode allows SonarMark to act as a build quality gate in CI/CD pipelines,
           failing the build automatically when the Sonar quality gate status is not passing. Verifying
@@ -93,7 +87,7 @@ sections:
           - SonarMark-ReportGeneration-Orchestrate
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
-          - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
+          - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
 
       - id: SonarMark-Core-Help
         title: The system shall display usage help text when invoked with --help.
@@ -131,8 +125,7 @@ sections:
           - IntegrationTest_SilentFlag_SuppressesOutput
 
       - id: SonarMark-Core-Token
-        title: The system shall accept the --token flag to supply an authentication
-          token.
+        title: The system shall accept the --token flag to supply an authentication token.
         justification: |
           An authentication token is required to access private SonarQube/SonarCloud instances and
           projects. Verifying end-to-end that the flag is accepted without errors confirms that the
@@ -155,8 +148,7 @@ sections:
           - IntegrationTest_BranchParameter_IsAccepted
 
       - id: SonarMark-Core-ReportFile
-        title: The system shall accept the --report flag to specify the output report
-          file path.
+        title: The system shall accept the --report flag to specify the output report file path.
         justification: |
           Writing the generated markdown to a named file allows the report to be committed to
           version control or published as a build artifact. Verifying end-to-end that the flag is
@@ -168,9 +160,7 @@ sections:
           - IntegrationTest_ReportParameter_IsAccepted
 
       - id: SonarMark-Core-ReportDepth
-        title: The system shall accept --depth and --report-depth flags to control
-          the markdown heading depth of the generated report, and shall reject invalid
-          values with an error.
+        title: The system shall accept --depth and --report-depth flags to control the markdown heading depth of the generated report, and shall reject invalid values with an error.
         justification: |
           The heading depth flag controls how the report integrates into larger documents. Both
           --depth (primary) and --report-depth (deprecated alias) must be accepted. Invalid or

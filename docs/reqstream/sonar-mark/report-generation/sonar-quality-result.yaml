@@ -41,8 +41,7 @@ sections:
                   - SonarQualityResult_ToMarkdown_WithHotSpots_ProducesCompilerStyleOutput
 
               - id: SonarMark-Report-DepthValidation
-                title: The tool shall throw ArgumentOutOfRangeException when report
-                  depth is outside the range 1 to 6.
+                title: The tool shall throw ArgumentOutOfRangeException when report depth is outside the range 1 to 6.
                 justification: |
                   Markdown supports heading levels 1 through 6 only. Accepting values outside this range would
                   produce malformed markdown output. Validating depth at the method boundary provides a clear

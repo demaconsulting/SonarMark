@@ -6,8 +6,7 @@ sections:
       - title: SonarMark (Shared Package) Requirements
         requirements:
           - id: SonarMark-Shared-SonarMark-SelfValidation
-            title: The released SonarMark tool shall execute its built-in self-validation
-              suite and report each scenario outcome when invoked with --validate.
+            title: The released SonarMark tool shall execute its built-in self-validation suite and report each scenario outcome when invoked with --validate.
             justification: |
               The build-docs CI job runs the released SonarMark with --validate to confirm
               the tool functions correctly in the build environment. The self-validation
@@ -22,9 +21,7 @@ sections:
               - SonarMark_MarkdownReportGeneration
 
           - id: SonarMark-Shared-SonarMark-ReportGeneration
-            title: The released SonarMark tool shall retrieve SonarQube/SonarCloud
-              project analysis results and write a markdown report when invoked with
-              --server, --project-key, and --report.
+            title: The released SonarMark tool shall retrieve SonarQube/SonarCloud project analysis results and write a markdown report when invoked with --server, --project-key, and --report.
             justification: |
               The build-docs CI job uses the released SonarMark to generate the SonarCloud
               quality report published in the SonarMark documentation. This feature provides

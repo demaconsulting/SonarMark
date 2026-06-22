@@ -20,8 +20,7 @@ sections:
                   - Validation_Run_FourInternalTests_ReportsFourPassedTests
 
               - id: SonarMark-Validation-Depth
-                title: The self-validation report shall respect the configured report
-                  depth.
+                title: The self-validation report shall respect the configured report depth.
                 justification: |
                   When the user specifies a report depth via --depth, the self-validation report header
                   should use the appropriate markdown heading level. This ensures consistency between

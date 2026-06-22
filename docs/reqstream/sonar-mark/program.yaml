@@ -41,7 +41,7 @@ sections:
               capability, the tool cannot fulfill its primary purpose of integrating Sonar analysis into
               development workflows.
             tests:
-              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
 
           - id: SonarMark-Program-Auth
             title: The tool shall authenticate with SonarQube/SonarCloud using tokens.
@@ -92,18 +92,16 @@ sections:
               - Program_Run_WithDepth_WritesReportWithDepthHeadings
 
           - id: SonarMark-Program-ExitCode
-            title: The tool shall return non-zero exit code when quality gate fails
-              in enforcement mode.
+            title: The tool shall return non-zero exit code when quality gate fails in enforcement mode.
             justification: |
               Returning a non-zero exit code on quality gate failure is the standard mechanism for
               indicating failure in command-line tools and CI/CD systems. This allows build systems
               to automatically detect and halt builds when quality standards are not met.
             tests:
-              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
 
           - id: SonarMark-Program-Validate
-            title: The program shall provide a self-validation mode when invoked with
-              the `--validate` flag.
+            title: The program shall provide a self-validation mode when invoked with the `--validate` flag.
             justification: |
               Self-validation mode enables CI pipelines to verify that the tool is correctly
               configured and can execute its internal scenarios without requiring a live
@@ -114,8 +112,7 @@ sections:
               - Program_Run_WithValidateFlag_RunsValidationSuccessfully
 
           - id: SonarMark-Program-Silent
-            title: The Program unit shall suppress banner and console output when
-              the silent flag is set.
+            title: The Program unit shall suppress banner and console output when the silent flag is set.
             justification: |
               Silent mode is required for CI/CD pipelines where stdout must remain clean and
               free of diagnostic output. Suppressing the banner and all normal output when

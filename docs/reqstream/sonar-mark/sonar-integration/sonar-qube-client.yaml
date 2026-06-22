@@ -57,8 +57,7 @@ sections:
                   - SonarQubeClient_GetQualityResultByBranchAsync_ValidMetricsResponse_ReturnsFriendlyMetricNames
 
               - id: SonarMark-Server-AuthToken
-                title: When an authentication token is supplied, the HTTP client shall
-                  include a Basic Authorization header on all API requests.
+                title: When an authentication token is supplied, the HTTP client shall include a Basic Authorization header on all API requests.
                 justification: |
                   SonarQube and SonarCloud use HTTP Basic authentication with the PAT as the username
                   and an empty password. Setting the Authorization header on the shared HttpClient
@@ -69,8 +68,7 @@ sections:
                   - SonarQubeClient_Constructor_WithoutToken_NoAuthorizationHeader
 
               - id: SonarMark-Server-BranchQuery
-                title: When a branch is specified, the HTTP client shall include it
-                  as a branch query parameter on all applicable API requests.
+                title: When a branch is specified, the HTTP client shall include it as a branch query parameter on all applicable API requests.
                 justification: |
                   SonarQube and SonarCloud expose branch-level analysis data through an optional
                   branch query parameter on multiple endpoints. Including the branch parameter on

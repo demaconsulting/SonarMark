@@ -6,8 +6,7 @@ sections:
       - title: Cli Requirements
         requirements:
           - id: SonarMark-Cli-Parse
-            title: The CLI subsystem shall parse SonarMark's supported command-line
-              arguments and expose them via Context.
+            title: The CLI subsystem shall parse SonarMark's supported command-line arguments and expose them via Context.
             justification: |
               The CLI subsystem is the entry point for SonarMark. It must correctly parse all
               supported command-line arguments and expose the resulting state through the
@@ -36,8 +35,7 @@ sections:
               - Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException
 
           - id: SonarMark-Cli-DisplayHelp
-            title: The CLI subsystem shall display usage help text when --help is
-              supplied.
+            title: The CLI subsystem shall display usage help text when --help is supplied.
             justification: |
               Help text provides users with a quick reference for all available options without
               requiring external documentation. The CLI subsystem must dispatch to the help display
@@ -47,8 +45,7 @@ sections:
               - Cli_HelpDispatch_WithHelpFlag_OutputsHelpText
 
           - id: SonarMark-Cli-DisplayVersion
-            title: The CLI subsystem shall display the tool version string when --version
-              is supplied.
+            title: The CLI subsystem shall display the tool version string when --version is supplied.
             justification: |
               Version display allows users and CI pipelines to confirm which release of SonarMark is
               installed. The CLI subsystem must dispatch to the version display path and write the
@@ -57,8 +54,7 @@ sections:
               - Cli_VersionDispatch_WithVersionFlag_OutputsVersionString
 
           - id: SonarMark-Cli-SilentMode
-            title: The CLI subsystem shall suppress console output when --silent is
-              supplied.
+            title: The CLI subsystem shall suppress console output when --silent is supplied.
             justification: |
               Silent mode is required in automated scripts and CI environments where console output
               must not interfere with log parsing or other tooling. The CLI subsystem must propagate
@@ -68,10 +64,7 @@ sections:
               - Cli_SilentMode_WithSilentFlag_SuppressesOutput
 
           - id: SonarMark-Cli-Output
-            title: The CLI subsystem shall write normal output to stdout, error output
-              to stderr, support silent suppression of console output, persist all
-              output to a log file when requested, and report a non-zero exit code
-              when errors occur.
+            title: The CLI subsystem shall write normal output to stdout, error output to stderr, support silent suppression of console output, persist all output to a log file when requested, and report a non-zero exit code when errors occur.
             justification: |
               CI/CD pipelines depend on structured output (stdout/stderr separation), silent mode
               suppression, log file persistence independent of silent mode, and a meaningful process
@@ -87,8 +80,7 @@ sections:
               - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
 
           - id: SonarMark-Cli-Testability
-            title: The CLI subsystem shall support injection of a mock HTTP client
-              factory to enable test isolation without real network calls.
+            title: The CLI subsystem shall support injection of a mock HTTP client factory to enable test isolation without real network calls.
             justification: |
               Deterministic automated testing of the full CLI dispatch path requires that network
               calls to SonarQube/SonarCloud can be replaced with a mock. Accepting a factory
@@ -97,4 +89,4 @@ sections:
             children:
               - SonarMark-Cli-Context-HttpFactory
             tests:
-              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
