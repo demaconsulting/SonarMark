@@ -206,26 +206,6 @@ public class ProgramTests
     }
 
     /// <summary>
-    ///     Test that Run method with enforce flag and failing quality gate returns non-zero exit code
-    /// </summary>
-    [Fact]
-    public void Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode()
-    {
-        // Arrange - create mock HTTP client factory that returns failing quality gate (ERROR status)
-        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
-        using var context = Context.Create(
-            ["--server", "https://mock.sonarqube.example", "--project-key", "test-project", "--enforce"],
-            mockFactory);
-
-        // Act - run the program with enforce flag and a server that reports quality gate ERROR
-        Program.Run(context);
-
-        // Assert - verify exit code is 1 (non-zero) because quality gate failed and --enforce was set
-        // This test proves that Program returns a non-zero exit code when quality gate fails in enforcement mode
-        Assert.Equal(1, context.ExitCode);
-    }
-
-    /// <summary>
     ///     Test that Run method with --report flag writes a markdown file
     /// </summary>
     [Fact]

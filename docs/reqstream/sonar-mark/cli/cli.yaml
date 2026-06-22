@@ -97,4 +97,4 @@ sections:
             children:
               - SonarMark-Cli-Context-HttpFactory
             tests:
-              - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
+              - Program_Run_WithEnforceFlag_AndFailingQualityGate_ReturnsNonZeroExitCode

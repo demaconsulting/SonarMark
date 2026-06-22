@@ -3,9 +3,10 @@
 ### Verification Approach
 
 `DemaConsulting.TestResults` is verified through integration tests in the SonarMark test suite
-that exercise the package through the SelfTest subsystem. No mocking is applied; the verification
-calls the real serialization code to produce actual TRX and JUnit XML files. The resulting files
-are then inspected to confirm the expected content is present.
+that exercise the package through the SelfTest subsystem. HTTP calls to SonarQube are replaced
+by a mock handler to keep tests in-process and offline; the serialization code itself
+(`TestResultsIO.WriteTrx`, `TestResultsIO.WriteJUnit`) is exercised against real output paths.
+The resulting files are then inspected to confirm the expected content is present.
 
 The tests verify that:
 
