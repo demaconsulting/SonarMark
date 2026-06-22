@@ -71,7 +71,9 @@ reviews:
       - docs/verification/sonar-mark.md
       - docs/verification/sonar-mark/**/*.md
       - docs/verification/ots.md
+      - docs/verification/ots/**/*.md
       - docs/verification/shared.md
+      - docs/verification/shared/**/*.md
 
   # SonarMark-AllRequirements Review (one per system)
   - id: SonarMark-AllRequirements
