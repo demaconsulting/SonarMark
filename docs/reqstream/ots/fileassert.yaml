@@ -15,5 +15,5 @@ sections:
               proves the tool itself is operational before ReqStream consumes the results.
             tags: [ots]
             tests:
-              - FileAssert_Exists
-              - FileAssert_Contains
+              - FileAssert_File
+              - FileAssert_Text
