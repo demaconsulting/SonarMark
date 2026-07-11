@@ -1,5 +1,7 @@
 ## SelfTest
 
+![SelfTest Structure](SelfTestView.svg)
+
 ### Overview
 
 The SelfTest subsystem provides a built-in self-validation mode that verifies the tool's

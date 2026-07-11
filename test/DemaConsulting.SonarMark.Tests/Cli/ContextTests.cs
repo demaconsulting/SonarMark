@@ -62,25 +62,36 @@ public sealed class ContextTests : IDisposable
     [Fact]
     public void Context_Create_NoArguments_ReturnsDefaultContext()
     {
-        // Arrange - no setup required
+        // Arrange - save and clear SONAR_TOKEN so the default-token assertion is deterministic
+        // regardless of the ambient environment
+        var previous = Environment.GetEnvironmentVariable("SONAR_TOKEN");
+        Environment.SetEnvironmentVariable("SONAR_TOKEN", null);
 
-        // Act
-        using var context = Context.Create([]);
+        try
+        {
+            // Act
+            using var context = Context.Create([]);
 
-        // Assert
-        Assert.False(context.Version);
-        Assert.False(context.Help);
-        Assert.False(context.Silent);
-        Assert.False(context.Validate);
-        Assert.False(context.Enforce);
-        Assert.Null(context.ReportFile);
-        Assert.Equal(1, context.Depth);
-        Assert.Null(context.Token);
-        Assert.Null(context.Server);
-        Assert.Null(context.ProjectKey);
-        Assert.Null(context.Branch);
-        Assert.Null(context.ResultsFile);
-        Assert.Equal(0, context.ExitCode);
+            // Assert
+            Assert.False(context.Version);
+            Assert.False(context.Help);
+            Assert.False(context.Silent);
+            Assert.False(context.Validate);
+            Assert.False(context.Enforce);
+            Assert.Null(context.ReportFile);
+            Assert.Equal(1, context.Depth);
+            Assert.Null(context.Token);
+            Assert.Null(context.Server);
+            Assert.Null(context.ProjectKey);
+            Assert.Null(context.Branch);
+            Assert.Null(context.ResultsFile);
+            Assert.Equal(0, context.ExitCode);
+        }
+        finally
+        {
+            // Restore the previous environment variable value
+            Environment.SetEnvironmentVariable("SONAR_TOKEN", previous);
+        }
     }
 
     /// <summary>
@@ -400,6 +411,47 @@ public sealed class ContextTests : IDisposable
 
         // Assert
         Assert.Contains("--token requires a token argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context where a string-valued flag is immediately followed by another
+    ///     recognized flag instead of a value. The missing value must be detected rather than the
+    ///     following flag being consumed as the value.
+    /// </summary>
+    [Fact]
+    public void Context_Create_TokenFollowedByFlag_ThrowsException()
+    {
+        // Arrange - no setup required
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => Context.Create(["--token", "--server", "foo"]));
+
+        // Assert
+        Assert.Contains("--token requires a token argument", ex.Message);
+    }
+
+    /// <summary>
+    ///     Test creating a context for every string-valued flag immediately followed by another
+    ///     recognized flag instead of a value, proving the general fix rather than a single case.
+    /// </summary>
+    [Theory]
+    [InlineData("--token", "--token requires a token argument")]
+    [InlineData("--server", "--server requires a server URL argument")]
+    [InlineData("--project-key", "--project-key requires a project key argument")]
+    [InlineData("--branch", "--branch requires a branch name argument")]
+    [InlineData("--report", "--report requires a filename argument")]
+    [InlineData("--results", "--results requires a results filename argument")]
+    [InlineData("--result", "--result requires a results filename argument")]
+    [InlineData("--log", "--log requires a filename argument")]
+    public void Context_Create_StringFlagFollowedByFlag_ThrowsException(string flag, string expectedMessage)
+    {
+        // Arrange - no setup required
+
+        // Act
+        var ex = Assert.Throws<ArgumentException>(() => Context.Create([flag, "--silent"]));
+
+        // Assert
+        Assert.Contains(expectedMessage, ex.Message);
     }
 
     /// <summary>

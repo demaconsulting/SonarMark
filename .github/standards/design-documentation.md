@@ -8,6 +8,8 @@ globs: ["docs/design/**/*.md"]
 
 - **`technical-documentation.md`** - General technical documentation standards
 - **`software-items.md`** - Software categorization (System/Subsystem/Unit/OTS/Shared Package)
+- **`sysml2-modeling.md`** - SysML2 model and view conventions feeding the Software Structure
+  section
 
 # Folder Structure
 
@@ -30,7 +32,6 @@ docs/design/
 
 All sections in every file are mandatory; write "N/A - {justification}" rather than removing any.
 Determine subsystem vs. unit classification from `docs/design/introduction.md` — folder depth does not determine classification.
-Do not record version numbers anywhere in design documentation — version information is managed in SBOMs.
 
 # introduction.md (MANDATORY)
 
@@ -38,7 +39,8 @@ Must include:
 
 - **Purpose**: audience and compliance drivers
 - **Scope**: items covered and explicitly excluded (no test projects)
-- **Software Structure**: text tree showing all Systems/Subsystems/Units/OTS/Shared items
+- **Software Structure**: diagram(s) rendered from the SysML2 model under `docs/sysml2/`,
+  per `sysml2-modeling.md` — not a hand-maintained text tree
 - **Folder Layout**: text tree showing source folder structure
 - **Companion Artifact Structure**: parallel paths for requirements, design, verification, source, tests
 - **References** _(if applicable)_: external standards or specifications - only in `introduction.md`
@@ -98,6 +100,12 @@ For each Shared Package, create `docs/design/shared/{package-name}.md` (`##` hea
 - Use Mermaid diagrams to supplement (not replace) text
 - Use verbal cross-references ("see _Parser Design_") - not markdown hyperlinks (break in PDF)
 - Provide sufficient detail for formal code review
+- Do not record version numbers in design documentation — they go stale with dependency updates and
+  are managed in SBOMs. Version numbers are pinned release versions (e.g., `1.2.3`, `v2.0.1`).
+  The following are **not** version numbers and are permitted:
+  - Language/platform standards: `netstandard2.0`, `net10.0`, `C++20`, `C# 12` (stable standard identifiers)
+  - Protocol standards: `TLS 1.3`, `HTTP/2` (stable specifications)
+  - Placeholders: `0.0.0` (signals "not yet assigned")
 
 # Quality Checks
 

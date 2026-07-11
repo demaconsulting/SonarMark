@@ -19,6 +19,7 @@ Local items:
 OTS items:
 
 - **DemaConsulting.TestResults**: integration and usage design.
+- **SysML2Tools**: integration and usage design.
 
 Shared Packages:
 
@@ -28,27 +29,12 @@ Out of scope: test projects, build pipeline scripts, and CI configuration.
 
 ## Software Structure
 
-- **SonarMark** (System) - .NET CLI tool for generating markdown reports from SonarQube/SonarCloud analysis results
-  - **Program** (Unit) - entry point, dispatch, parameter validation, and report writing
-  - **Cli** (Subsystem) - command-line interface and argument parsing
-    - **Context** (Unit) - argument parsing, output, log-file, enforce, and results-file handling
-  - **SonarIntegration** (Subsystem) - SonarQube/SonarCloud API integration
-    - **SonarQubeClient** (Unit) - HTTP API client, fetches quality gate, issues, and hot-spots
-    - **SonarHotSpot** (Unit) - data record representing a SonarQube security hot-spot
-    - **SonarIssue** (Unit) - data record representing a SonarQube issue
-  - **ReportGeneration** (Subsystem) - markdown report generation
-    - **SonarQualityResult** (Unit) - aggregates results and renders the markdown report
-  - **SelfTest** (Subsystem) - self-validation runner
-    - **Validation** (Unit) - self-validation runner, writes TRX and JUnit result files
+The software structure is modeled in SysML2 under `docs/sysml2/` and rendered to the
+diagram below by SysML2Tools as part of the build pipeline. AI agents should query the
+SysML2 model directly (see the `sysml2tools-query` skill) rather than parsing this
+diagram or the prose below.
 
-**OTS Dependencies:**
-
-- **DemaConsulting.TestResults** (OTS) - test result collection and serialization (TRX/JUnit XML)
-
-**Shared Package Dependencies:**
-
-- **SonarMark** (Shared Package) - released SonarMark tool used in `build-docs` for self-validation
-  and SonarCloud quality report generation
+![Software Structure](SoftwareStructureView.svg)
 
 ## Folder Layout
 

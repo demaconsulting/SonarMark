@@ -1,5 +1,7 @@
 ## Program
 
+![SonarMark Structure](SonarMarkView.svg)
+
 ### Purpose
 
 `Program` is the static entry point for the SonarMark application. It contains `Main`, which

@@ -1,5 +1,7 @@
 ### SonarHotSpot
 
+![SonarIntegration Structure](SonarIntegrationView.svg)
+
 #### Purpose
 
 `SonarHotSpot` is an immutable positional record that represents a single security hot-spot

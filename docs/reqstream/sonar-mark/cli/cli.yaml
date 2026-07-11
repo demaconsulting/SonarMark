@@ -66,26 +66,23 @@ sections:
           - id: SonarMark-Cli-Output
             title: The CLI subsystem shall write normal output to stdout, error output to stderr, support silent suppression of console output, persist all output to a log file when requested, and report a non-zero exit code when errors occur.
             justification: |
-              CI/CD pipelines depend on structured output (stdout/stderr separation), silent mode
-              suppression, log file persistence independent of silent mode, and a meaningful process
-              exit code to drive automated build decisions. Grouping these output-contract behaviors
-              in a dedicated subsystem requirement makes the CLI output guarantee explicit and
-              directs reviewers to the Context unit that implements it.
+              Composite requirement covering the CLI subsystem's output contract: console
+              stream separation with silent suppression, log-file persistence, and exit-code
+              reporting. This is a non-requirement grouping node; verification evidence is
+              carried by the atomic child requirements, each of which covers one observable
+              output behavior.
             children:
               - SonarMark-Cli-Context-ConsoleOutput
               - SonarMark-Cli-Context-LogFile
               - SonarMark-Cli-Context-ExitCode
-            tests:
-              - Cli_SilentMode_WithSilentFlag_SuppressesOutput
-              - Cli_EnforceMode_WithEnforceFlag_SetsEnforceFlag
 
-          - id: SonarMark-Cli-Testability
-            title: The CLI subsystem shall support injection of a mock HTTP client factory to enable test isolation without real network calls.
+          - id: SonarMark-Cli-HttpTransport
+            title: The CLI subsystem shall use an externally supplied HTTP client for SonarQube/SonarCloud communication when one is provided, instead of always constructing one internally.
             justification: |
-              Deterministic automated testing of the full CLI dispatch path requires that network
-              calls to SonarQube/SonarCloud can be replaced with a mock. Accepting a factory
-              delegate through Context.Create allows tests to inject a controlled SonarQubeClient
-              and verify behavior at the subsystem boundary without a live server.
+              Decoupling the CLI subsystem's analysis execution from a concrete network
+              transport allows the enforce-mode exit-code decision to be driven by any HTTP
+              client the caller supplies, including a controlled SonarQubeClient response,
+              without requiring a live server.
             children:
               - SonarMark-Cli-Context-HttpFactory
             tests:

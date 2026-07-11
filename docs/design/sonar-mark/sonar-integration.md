@@ -1,5 +1,7 @@
 ## SonarIntegration
 
+![SonarIntegration Structure](SonarIntegrationView.svg)
+
 ### Overview
 
 The SonarIntegration subsystem is responsible for communicating with SonarQube/SonarCloud

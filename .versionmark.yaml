@@ -73,3 +73,8 @@ tools:
   fileassert:
     command: dotnet tool list
     regex: '(?i)demaconsulting\.fileassert\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
+
+  # sysml2tools (DemaConsulting.Sysml2Tools.Tool from dotnet tool list)
+  sysml2tools:
+    command: dotnet tool list
+    regex: '(?i)demaconsulting\.sysml2tools\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'

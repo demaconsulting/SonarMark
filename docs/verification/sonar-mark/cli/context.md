@@ -19,6 +19,10 @@ N/A - standard test environment.
   `Silent=false`, `Validate=false`, `Depth=1`, and `ExitCode=0`.
 - Invalid or missing argument values throw `ArgumentException` with a descriptive message.
 - `WriteError` always sets `ExitCode` to 1 regardless of silent mode.
+- The `SONAR_TOKEN` environment variable is used as a fallback for the authentication token when
+  `--token` is not supplied on the command line.
+- An optional HTTP client factory supplied to `Context.Create` is exposed unchanged via
+  `context.HttpClientFactory`.
 
 #### Test Scenarios
 
@@ -59,9 +63,23 @@ This scenario is tested by `Context_Create_MissingReportFilename_ThrowsException
 deprecated `--report-depth` alias is still accepted and maps to the same property.
 This scenario is tested by `Context_Create_ReportDepthAlias_SetsDepthProperty`.
 
+**MissingReportDepthThrowsException**: `--report-depth` without a following value throws
+`ArgumentException` containing the flag name, confirming that the deprecated alias validates its
+required value the same as the canonical `--depth` flag.
+This scenario is tested by `Context_Create_MissingReportDepth_ThrowsException`.
+
+**InvalidReportDepthThrowsException**: `--report-depth` with a non-integer value, zero, a negative
+value, or a value outside 1–6 throws `ArgumentException`, confirming that the deprecated alias enforces
+the same depth validation range as `--depth`.
+This scenario is tested by `Context_Create_InvalidReportDepth_ThrowsException`.
+
 **DepthSetsDepthProperty**: `--depth 3` sets `context.Depth = 3`, confirming that the canonical
 `--depth` flag is parsed correctly.
 This scenario is tested by `Context_Create_Depth_SetsDepthProperty`.
+
+**MissingDepthThrowsException**: `--depth` without a following value throws `ArgumentException`
+containing the flag name, confirming that the canonical flag validates its required value.
+This scenario is tested by `Context_Create_MissingDepth_ThrowsException`.
 
 **InvalidDepthThrowsException**: `--depth` with a non-integer value, zero, or a value outside 1–6
 throws `ArgumentException`, confirming that the depth validation range is enforced for both spellings.
@@ -71,17 +89,40 @@ This scenario is tested by `Context_Create_InvalidDepth_ThrowsException`.
 that the authentication token is parsed and made available to downstream HTTP calls.
 This scenario is tested by `Context_Create_Token_SetsTokenProperty`.
 
+**WithTokenEnvVarReturnsTokenFromEnvironment**: When `--token` is not supplied on the command line but
+the `SONAR_TOKEN` environment variable is set, `context.Token` is populated from the environment
+variable, confirming that the fallback path allows CI/CD systems to inject the token without a
+command-line argument.
+This scenario is tested by `Context_Create_WithTokenEnvVar_ReturnsTokenFromEnvironment`.
+
+**MissingTokenThrowsException**: `--token` without a following value throws `ArgumentException`
+containing the flag name, confirming that the factory method validates the required token value.
+This scenario is tested by `Context_Create_MissingToken_ThrowsException`.
+
 **ServerSetsServerProperty**: `--server https://sonarcloud.io` stores the URL in `context.Server`,
 confirming that the server base URL is parsed and available for `SonarQubeClient` construction.
 This scenario is tested by `Context_Create_Server_SetsServerProperty`.
+
+**MissingServerThrowsException**: `--server` without a following value throws `ArgumentException`
+containing the flag name, confirming that the factory method validates the required server URL value.
+This scenario is tested by `Context_Create_MissingServer_ThrowsException`.
 
 **ProjectKeySetsProjectKeyProperty**: `--project-key my-project` stores the key in
 `context.ProjectKey`, confirming that the project identifier is parsed and available for API calls.
 This scenario is tested by `Context_Create_ProjectKey_SetsProjectKeyProperty`.
 
+**MissingProjectKeyThrowsException**: `--project-key` without a following value throws
+`ArgumentException` containing the flag name, confirming that the factory method validates the
+required project key value.
+This scenario is tested by `Context_Create_MissingProjectKey_ThrowsException`.
+
 **BranchSetsBranchProperty**: `--branch main` stores the branch name in `context.Branch`, confirming
 that branch filtering is parsed and available for API calls.
 This scenario is tested by `Context_Create_Branch_SetsBranchProperty`.
+
+**MissingBranchThrowsException**: `--branch` without a following value throws `ArgumentException`
+containing the flag name, confirming that the factory method validates the required branch value.
+This scenario is tested by `Context_Create_MissingBranch_ThrowsException`.
 
 **UnsupportedArgumentThrowsException**: An unrecognized flag such as `--unsupported` throws
 `ArgumentException` containing the flag name, confirming that unknown flags are rejected early.
@@ -108,6 +149,10 @@ This scenario is tested by `Context_WriteError_SilentMode_DoesNotWriteToConsole`
 messages are mirrored to the log file, confirming that log-file mirroring works regardless of silent mode.
 This scenario is tested by `Context_Create_WithLogFile_WritesToLogFile`.
 
+**MissingLogFilenameThrowsException**: `--log` without a following filename throws `ArgumentException`
+containing the flag name, confirming that the factory method validates the required log filename value.
+This scenario is tested by `Context_Create_MissingLogFilename_ThrowsException`.
+
 **InvalidLogFilePathThrowsException**: `--log` with a path in a non-existent directory throws
 `InvalidOperationException` containing "Failed to open log file", confirming that file-open failures are
 surfaced as a typed exception.
@@ -117,6 +162,22 @@ This scenario is tested by `Context_Create_InvalidLogFilePath_ThrowsException`.
 confirming that the validation results file is parsed and available for the `Validation` subsystem.
 This scenario is tested by `Context_Create_ResultsFile_SetsResultsProperty`.
 
+**MissingResultsFilenameThrowsException**: `--results` without a following filename throws
+`ArgumentException` containing the flag name, confirming that the factory method validates the
+required results filename value.
+This scenario is tested by `Context_Create_MissingResultsFilename_ThrowsException`.
+
 **ResultAliasSetsResultsProperty**: `--result results.trx` (legacy alias) stores the same value in
 `context.ResultsFile`, confirming that the legacy spelling is accepted for backward compatibility.
 This scenario is tested by `Context_Create_ResultAlias_SetsResultsProperty`.
+
+**MissingResultAliasFilenameThrowsException**: `--result` (legacy alias) without a following filename
+throws `ArgumentException` containing the flag name, confirming that the legacy spelling validates its
+required value the same as the canonical `--results` flag.
+This scenario is tested by `Context_Create_MissingResultAliasFilename_ThrowsException`.
+
+**WithHttpClientFactoryExposesFactory**: `Context.Create` called with an optional HTTP client factory
+delegate exposes the same delegate via `context.HttpClientFactory`, confirming that callers can supply
+the HTTP client used for SonarQube/SonarCloud communication instead of it always being constructed
+internally.
+This scenario is tested by `Context_Create_WithHttpClientFactory_ExposesFactory`.

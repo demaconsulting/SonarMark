@@ -175,34 +175,91 @@ sections:
                   - Context_Create_NoArguments_ReturnsDefaultContext
                   - Context_WriteError_NormalMode_WritesToConsole
 
+              - id: SonarMark-Cli-Context-ConsoleOutput-Stdout
+                title: The Context unit shall write normal output to stdout when Silent is false.
+                justification: |
+                  Normal (non-error) output must reach stdout so callers and CI systems can capture
+                  informational messages produced during a run.
+                tests:
+                  - Context_WriteLine_NormalMode_WritesToConsole
+
+              - id: SonarMark-Cli-Context-ConsoleOutput-StderrRed
+                title: The Context unit shall write error output to stderr in red when Silent is false.
+                justification: |
+                  Routing error output to stderr keeps it separable from normal output for callers
+                  that redirect the two streams independently, and rendering it in red makes errors
+                  visually distinct when the console is not redirected.
+                tests:
+                  - Context_WriteError_NormalMode_WritesToConsole
+
+              - id: SonarMark-Cli-Context-ConsoleOutput-Silent
+                title: The Context unit shall suppress both normal and error console output when Silent is true.
+                justification: |
+                  Silent mode must suppress all console output, not just normal output, so that
+                  automated environments can rely on the console being completely quiet regardless of
+                  which output method is used.
+                tests:
+                  - Context_WriteLine_SilentMode_DoesNotWriteToConsole
+                  - Context_WriteError_SilentMode_DoesNotWriteToConsole
+
               - id: SonarMark-Cli-Context-ConsoleOutput
                 title: The Context unit shall write normal output to stdout and error output to stderr in red; both shall be suppressed from the console when Silent is true.
                 justification: |
-                  Separating output streams and supporting silent mode allows callers to capture only
-                  error output and suppress all noise in CI/CD environments. Writing error output in
-                  red makes it visually distinct when the console is not redirected.
+                  Composite requirement covering stdout writing, stderr coloring, and silent-mode
+                  suppression. This is a non-requirement grouping node; verification evidence is
+                  carried by the atomic child requirements, each of which covers one observable
+                  behavior.
+                children:
+                  - SonarMark-Cli-Context-ConsoleOutput-Stdout
+                  - SonarMark-Cli-Context-ConsoleOutput-StderrRed
+                  - SonarMark-Cli-Context-ConsoleOutput-Silent
+
+              - id: SonarMark-Cli-Context-LogFile-Open
+                title: The Context unit shall open a log file at creation when --log is specified.
+                justification: |
+                  Opening the log file eagerly at creation, rather than lazily on first write,
+                  ensures that a misconfigured log path is reported immediately as a startup error
+                  rather than surfacing later during the run.
                 tests:
-                  - Context_WriteLine_NormalMode_WritesToConsole
-                  - Context_WriteLine_SilentMode_DoesNotWriteToConsole
-                  - Context_WriteError_NormalMode_WritesToConsole
-                  - Context_WriteError_SilentMode_DoesNotWriteToConsole
+                  - Context_Create_WithLogFile_WritesToLogFile
+
+              - id: SonarMark-Cli-Context-LogFile-WriteRegardlessSilent
+                title: The Context unit shall write all WriteLine and WriteError output to the log file regardless of Silent mode.
+                justification: |
+                  Log files provide a persistent diagnostic record independent of console verbosity
+                  settings, so full diagnostic information must always be captured in the log even
+                  when console output is suppressed.
+                tests:
+                  - Context_Create_WithLogFile_WritesToLogFile
+
+              - id: SonarMark-Cli-Context-LogFile-CloseOnDispose
+                title: The Context unit shall close the log file when Dispose is called.
+                justification: |
+                  Closing the log file on Dispose flushes buffered writes and releases the file
+                  handle so the log file is fully readable and not left locked once the Context is
+                  no longer in use.
+                tests:
+                  - Context_Create_WithLogFile_WritesToLogFile
 
               - id: SonarMark-Cli-Context-LogFile
                 title: The Context unit shall open a log file at creation when --log is specified, write all WriteLine and WriteError output to it regardless of Silent mode, and close it on Dispose.
                 justification: |
-                  Log files provide a persistent diagnostic record independent of console verbosity
-                  settings. Writing all output to the log regardless of Silent mode ensures that
-                  full diagnostic information is always captured even when console output is suppressed.
-                tests:
-                  - Context_Create_WithLogFile_WritesToLogFile
+                  Composite requirement covering log-file open, unconditional write, and disposal
+                  behaviors. This is a non-requirement grouping node; verification evidence is
+                  carried by the atomic child requirements, each of which covers one observable
+                  behavior.
+                children:
+                  - SonarMark-Cli-Context-LogFile-Open
+                  - SonarMark-Cli-Context-LogFile-WriteRegardlessSilent
+                  - SonarMark-Cli-Context-LogFile-CloseOnDispose
 
               - id: SonarMark-Cli-Context-HttpFactory
-                title: The Context unit shall accept and expose an optional HTTP client factory for injecting test doubles.
+                title: The Context unit shall accept and expose an optional HTTP client factory so that callers can supply the HTTP client used for SonarQube/SonarCloud communication instead of it always being constructed internally.
                 justification: |
-                  Test isolation requires that the Context unit can carry a factory delegate that
-                  Program.ProcessSonarAnalysis uses in place of constructing a real SonarQubeClient.
-                  Storing the factory on Context keeps it co-located with all other configuration
-                  state parsed from the command line, and the internal visibility of the property
-                  ensures production code cannot inject a mock accidentally.
+                  Allowing the HTTP client to be supplied externally decouples analysis execution
+                  from a concrete network transport, keeping the factory co-located with all other
+                  configuration state parsed from the command line. The internal visibility of the
+                  property ensures production code cannot substitute a non-standard client
+                  accidentally.
                 tests:
                   - Context_Create_WithHttpClientFactory_ExposesFactory

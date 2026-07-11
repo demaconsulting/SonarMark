@@ -1,0 +1,38 @@
+---
+# SysML2Tools OTS Software Requirements
+#
+# Requirements for the SysML2Tools architecture modeling tool functionality.
+
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: SysML2Tools Requirements
+        requirements:
+          - id: SonarMark-OTS-SysML2Tools-Lint
+            title: SysML2Tools shall validate the SysML2 model for syntax and reference errors.
+            justification: |
+              Linting the model in CI catches broken references and syntax errors in the
+              architecture model before they reach the generated documentation.
+            tags: [ots]
+            tests:
+              - SysML2Tools_LintSelfTest
+
+          - id: SonarMark-OTS-SysML2Tools-Render
+            title: SysML2Tools shall render the declared views to SVG diagrams.
+            justification: |
+              The rendered diagrams are embedded in the design documentation, so a failure to
+              render must fail the build rather than silently omit a diagram.
+            tags: [ots]
+            tests:
+              - SysML2Tools_RenderSvgSelfTest
+
+          - id: SonarMark-OTS-SysML2Tools
+            title: SysML2Tools shall validate the SysML2 model and render its declared views to SVG diagrams.
+            justification: |
+              Composite requirement covering lint and render behaviors. This is a non-requirement
+              grouping node; verification evidence is carried by the atomic child requirements,
+              each of which covers one behavior (lint and render).
+            tags: [ots]
+            children:
+              - SonarMark-OTS-SysML2Tools-Lint
+              - SonarMark-OTS-SysML2Tools-Render

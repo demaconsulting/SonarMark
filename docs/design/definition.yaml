@@ -27,6 +27,7 @@ input-files:
   - docs/design/sonar-mark/self-test/validation.md
   - docs/design/ots.md
   - docs/design/ots/test-results.md
+  - docs/design/ots/sysml2tools.md
   - docs/design/shared.md
   - docs/design/shared/sonar-mark.md
 template: template.html
