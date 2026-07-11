@@ -23,6 +23,11 @@ N/A - standard test environment.
   `/api/issues/search` response.
 - `GetQualityResultByBranchAsync` returns a `SonarQualityResult` containing all hot-spots from the
   mocked `/api/hotspots/search` response.
+- `GetQualityResultByBranchAsync` throws `ArgumentNullException` when the server URL is null, before
+  any HTTP call is made.
+- `GetQualityResultByBranchAsync` throws `InvalidOperationException` when the server returns a
+  non-2xx HTTP response.
+- `GetQualityResultByBranchAsync` throws `JsonException` when the server returns a malformed JSON body.
 
 ### Test Scenarios
 
@@ -30,17 +35,33 @@ N/A - standard test environment.
 mock HTTP handler returns a `SonarQualityResult` whose quality gate status matches the status value in
 the canned API response, confirming that the full subsystem data path from HTTP response to result object
 is wired correctly.
-This scenario is tested by `SonarIntegration_FetchQualityResult_ReturnsQualityGateStatus`.
+This scenario is tested by `SonarIntegration_FetchQualityResult_MockedOkResponse_ReturnsQualityGateStatus`.
 
 **FetchQualityResultReturnsIssues**: `SonarQubeClient.GetQualityResultByBranchAsync` with a mock HTTP
 handler returns a `SonarQualityResult` containing the issues defined in the canned API response,
 confirming that issue parsing and assembly work correctly within the subsystem.
-This scenario is tested by `SonarIntegration_FetchQualityResult_ReturnsIssues`.
+This scenario is tested by `SonarIntegration_FetchQualityResult_MockedIssueInResponse_ReturnsIssues`.
 
 **FetchQualityResultReturnsHotSpots**: `SonarQubeClient.GetQualityResultByBranchAsync` with a mock HTTP
 handler returns a `SonarQualityResult` containing the hot-spots defined in the canned API response,
 confirming that security hot-spot parsing and assembly work correctly within the subsystem.
-This scenario is tested by `SonarIntegration_FetchQualityResult_ReturnsHotSpots`.
+This scenario is tested by `SonarIntegration_FetchQualityResult_MockedHotSpotInResponse_ReturnsHotSpots`.
+
+**GetQualityResultNullServerUrlThrowsArgumentNullException**: `SonarQubeClient.GetQualityResultByBranchAsync`
+called with a null server URL throws `ArgumentNullException` before any HTTP call is made, confirming
+that input validation happens up front within the subsystem.
+This scenario is tested by `SonarIntegration_GetQualityResult_NullServerUrl_ThrowsArgumentNullException`.
+
+**GetQualityResultHttpServerErrorThrowsInvalidOperationException**: `SonarQubeClient.GetQualityResultByBranchAsync`
+with a mock HTTP handler that returns an HTTP 500 response throws `InvalidOperationException`, confirming
+that non-success HTTP responses are surfaced as subsystem errors rather than being silently ignored.
+This scenario is tested by `SonarIntegration_GetQualityResult_HttpServerError_ThrowsInvalidOperationException`.
+
+**GetQualityResultMalformedJsonBodyThrowsJsonException**: `SonarQubeClient.GetQualityResultByBranchAsync`
+with a mock HTTP handler that returns an HTTP 200 response with a malformed JSON body throws
+`JsonException`, confirming that JSON parsing failures propagate to the caller rather than being
+swallowed.
+This scenario is tested by `SonarIntegration_GetQualityResult_MalformedJsonBody_ThrowsJsonException`.
 
 **ConditionsReturnedInQualityResult**: When the quality gate API response includes a condition entry,
 `SonarQubeClient.GetQualityResultByBranchAsync` returns a `SonarQualityResult` whose `Conditions` list

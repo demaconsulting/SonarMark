@@ -1,5 +1,7 @@
 ### SonarQubeClient
 
+![SonarIntegration Structure](SonarIntegrationView.svg)
+
 #### Purpose
 
 `SonarQubeClient` is the HTTP client responsible for communicating with the
@@ -28,7 +30,7 @@ while any async operation is outstanding.
   name; `CancellationToken cancellationToken` — optional cancellation.
 - *Returns*: `Task<SonarQualityResult>` — assembled quality result.
 - *Preconditions*: `serverUrl` and `projectKey` must not be null or whitespace; throws
-  `ArgumentException` otherwise.
+  `ArgumentNullException` for null, `ArgumentException` for empty or whitespace.
 - *Postconditions*: Returns a fully populated `SonarQualityResult` on success.
 
 Calls `GetProjectNameByKeyAsync`, `GetQualityGateStatusByBranchAsync`,

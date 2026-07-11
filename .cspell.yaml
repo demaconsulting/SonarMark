@@ -75,6 +75,9 @@ words:
   - sonarscanner
   - spdx
   - spdxtool
+  - sysml
+  - sysml2tools
+  - SysML2Tools
   - testname
   - trx
   - vbproj

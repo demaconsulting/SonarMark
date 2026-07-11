@@ -1,5 +1,7 @@
 ### SonarIssue
 
+![SonarIntegration Structure](SonarIntegrationView.svg)
+
 #### Purpose
 
 `SonarIssue` is an immutable positional record that represents a single code quality issue

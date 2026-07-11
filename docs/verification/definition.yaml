@@ -27,6 +27,7 @@ input-files:
   - docs/verification/sonar-mark/self-test/validation.md
   - docs/verification/ots.md
   - docs/verification/ots/test-results.md
+  - docs/verification/ots/sysml2tools.md
   - docs/verification/shared.md
   - docs/verification/shared/sonar-mark.md
 template: template.html

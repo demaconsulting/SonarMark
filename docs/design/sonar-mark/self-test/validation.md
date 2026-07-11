@@ -1,5 +1,7 @@
 ### Validation
 
+![SelfTest Structure](SelfTestView.svg)
+
 #### Purpose
 
 `Validation` provides the self-validation capability of SonarMark. When the tool is invoked

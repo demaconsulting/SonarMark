@@ -1,5 +1,7 @@
 ## ReportGeneration
 
+![ReportGeneration Structure](ReportGenerationView.svg)
+
 ### Overview
 
 The ReportGeneration subsystem aggregates the quality analysis results returned by the

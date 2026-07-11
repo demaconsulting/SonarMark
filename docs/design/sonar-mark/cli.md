@@ -1,5 +1,7 @@
 ## Cli
 
+![Cli Structure](CliView.svg)
+
 ### Overview
 
 The Cli subsystem handles command-line argument parsing and program output routing for the

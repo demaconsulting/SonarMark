@@ -47,7 +47,7 @@ This scenario is tested by `SonarQualityResult_ToMarkdown_NoConditions_ExcludesC
 **NullThresholdAndActualExcludesNullValues**: When a `SonarQualityCondition` has `null`
 `ErrorThreshold` and `ActualValue`, those columns are omitted from the rendered row, confirming that
 optional condition fields are handled without null-reference errors or empty column output.
-This scenario is tested by `SonarQualityResult_ToMarkdown_NullThresholdAndActual_ExcludesNullValues`.
+This scenario is tested by `SonarQualityResult_ToMarkdown_NullThresholdAndActual_RendersEmptyCells`.
 
 **DepthLessThan1ThrowsArgumentOutOfRangeException**: `ToMarkdown(0)` throws
 `ArgumentOutOfRangeException`, confirming that the lower boundary is enforced.
@@ -82,13 +82,13 @@ This scenario is tested by `SonarQualityResult_ToMarkdown_WithSingularCounts_Sho
 
 **WithMultipleIssuesIncludesBlankLinesBetweenItems**: When multiple issues are rendered, a blank line
 separates each item in the output, confirming that the inter-item spacing rule is applied correctly.
-This scenario is tested by `SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesBlankLinesBetweenItems`.
+This scenario is tested by `SonarQualityResult_ToMarkdown_WithMultipleIssues_IncludesLineBreaksBetweenItems`.
 
 **WithMultipleHotSpotsIncludesBlankLinesBetweenItems**: When multiple hot-spots are rendered, a blank
 line separates each item in the output, confirming that the inter-item spacing rule is applied to
 hot-spots as well as issues.
 This scenario is tested by
-`SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesBlankLinesBetweenItems`.
+`SonarQualityResult_ToMarkdown_WithMultipleHotSpots_IncludesLineBreaksBetweenItems`.
 
 **ComponentWithoutProjectKeyPrefixPassesThroughUnchanged**: When a component path does not begin with
 the project key prefix, it is included unchanged in the rendered output, confirming that the prefix

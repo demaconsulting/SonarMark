@@ -1,5 +1,7 @@
 # SonarMark
 
+![SonarMark Structure](SonarMarkView.svg)
+
 ## Architecture
 
 SonarMark operates as a single-process .NET CLI tool. The four subsystems collaborate in

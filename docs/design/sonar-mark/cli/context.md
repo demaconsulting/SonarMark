@@ -1,5 +1,7 @@
 ### Context
 
+![Cli Structure](CliView.svg)
+
 #### Purpose
 
 `Context` parses command-line arguments, manages console output (including silent mode and

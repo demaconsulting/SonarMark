@@ -1,5 +1,7 @@
 ### SonarQualityResult
 
+![ReportGeneration Structure](ReportGenerationView.svg)
+
 #### Purpose
 
 `SonarQualityResult` is an immutable record that aggregates the full quality analysis result

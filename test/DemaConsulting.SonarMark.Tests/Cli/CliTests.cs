@@ -18,7 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System.Net;
+using System.Text;
 using DemaConsulting.SonarMark.Cli;
+using DemaConsulting.SonarMark.SonarIntegration;
 using Xunit;
 
 namespace DemaConsulting.SonarMark.Tests.Cli;
@@ -91,10 +94,13 @@ public class CliTests
     [Fact]
     public void Cli_SilentMode_WithSilentFlag_SuppressesOutput()
     {
-        // Arrange - capture console output
+        // Arrange - capture console output (stdout and stderr)
         var originalOut = Console.Out;
+        var originalError = Console.Error;
         using var output = new StringWriter();
+        using var errorOutput = new StringWriter();
         Console.SetOut(output);
+        Console.SetError(errorOutput);
 
         try
         {
@@ -102,13 +108,16 @@ public class CliTests
             using var context = Context.Create(["--silent"]);
             Program.Run(context);
 
-            // Assert - silent mode must suppress all standard output
+            // Assert - silent mode must suppress all standard output and all error output
             var outputText = output.ToString();
+            var errorText = errorOutput.ToString();
             Assert.True(string.IsNullOrWhiteSpace(outputText));
+            Assert.True(string.IsNullOrWhiteSpace(errorText));
         }
         finally
         {
             Console.SetOut(originalOut);
+            Console.SetError(originalError);
         }
     }
 
@@ -131,6 +140,27 @@ public class CliTests
     }
 
     /// <summary>
+    ///     Test that --enforce causes a non-zero exit code when the quality gate fails, exercising the
+    ///     documented quality-gate failure path rather than only flag parsing.
+    /// </summary>
+    [Fact]
+    public void Cli_EnforceMode_WithFailingQualityGate_ReturnsNonZeroExitCode()
+    {
+        // Arrange - mock HTTP client factory that returns a failing (ERROR) quality gate status
+        var mockFactory = (string? _) => new SonarQubeClient(CreateMockFailingQualityGateHttpClient(), false);
+        using var context = Context.Create(
+            ["--server", "https://mock.sonarqube.example", "--project-key", "test-project", "--enforce"],
+            mockFactory);
+
+        // Act - run through Program dispatch with the mocked failing quality gate
+        Program.Run(context);
+
+        // Assert - the non-zero exit code proves --enforce affects the exit code when the
+        // quality gate fails, not just that the flag is parsed
+        Assert.Equal(1, context.ExitCode);
+    }
+
+    /// <summary>
     ///     Test that an unrecognized argument throws ArgumentException.
     /// </summary>
     [Fact]
@@ -138,6 +168,78 @@ public class CliTests
     {
         // Act / Assert - unsupported flag must throw ArgumentException before any dispatch occurs
         Assert.Throws<ArgumentException>(() => Context.Create(["--unknown-flag"]));
+    }
+
+    /// <summary>
+    ///     Creates a mock HttpClient that reports a failing quality gate result, for use in
+    ///     enforcement-mode testing.
+    /// </summary>
+    /// <returns>Mock HttpClient for enforcement testing.</returns>
+    private static HttpClient CreateMockFailingQualityGateHttpClient()
+    {
+        return new HttpClient(new FailingQualityGateMockHandler());
+    }
+
+    /// <summary>
+    ///     Mock HTTP handler that returns a failing (ERROR) quality gate status, so that CLI
+    ///     subsystem tests can prove --enforce affects the exit code without a real SonarQube server.
+    /// </summary>
+    private sealed class FailingQualityGateMockHandler : HttpMessageHandler
+    {
+        /// <inheritdoc/>
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
+        {
+            var requestUri = request.RequestUri?.ToString() ?? string.Empty;
+
+            if (requestUri.Contains("/api/components/show"))
+            {
+                var json = """{"component": {"key": "test-project", "name": "Test Project"}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/qualitygates/project_status"))
+            {
+                var json = """{"projectStatus": {"status": "ERROR", "conditions": []}}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/issues/search"))
+            {
+                var json = """{"issues": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/hotspots/search"))
+            {
+                var json = """{"hotspots": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            if (requestUri.Contains("/api/metrics/search"))
+            {
+                var json = """{"metrics": []}""";
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                });
+            }
+
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+        }
     }
 }
 

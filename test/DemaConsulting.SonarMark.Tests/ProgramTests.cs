@@ -473,6 +473,10 @@ public class ProgramTests
     }
 
 
+    /// <summary>
+    ///     Creates a mock HttpClient that reports a failing quality gate result, for use in
+    ///     enforcement-mode testing.
+    /// </summary>
     /// <returns>Mock HttpClient for enforcement testing.</returns>
     private static HttpClient CreateMockFailingQualityGateHttpClient()
     {

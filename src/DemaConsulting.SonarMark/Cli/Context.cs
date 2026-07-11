@@ -384,6 +384,32 @@ internal sealed class Context : IDisposable
         }
 
         /// <summary>
+        ///     Recognized flag tokens, used to detect a missing value when the next token on
+        ///     the command line is itself another recognized flag (e.g. <c>--token --server foo</c>).
+        /// </summary>
+        private static readonly HashSet<string> KnownFlags =
+        [
+            "-v",
+            "--version",
+            "-?",
+            "-h",
+            "--help",
+            "--silent",
+            "--validate",
+            "--enforce",
+            "--log",
+            "--report",
+            "--depth",
+            "--report-depth",
+            "--token",
+            "--server",
+            "--project-key",
+            "--branch",
+            "--result",
+            "--results"
+        ];
+
+        /// <summary>
         ///     Gets a required string argument value
         /// </summary>
         /// <param name="arg">Argument name</param>
@@ -393,11 +419,12 @@ internal sealed class Context : IDisposable
         /// <returns>Argument value</returns>
         /// <exception cref="ArgumentException">
         ///     Thrown when no value follows the argument (i.e., <paramref name="index" /> is
-        ///     beyond the end of <paramref name="args" />).
+        ///     beyond the end of <paramref name="args" />), or when the next token is itself a
+        ///     recognized flag rather than a value.
         /// </exception>
         private static string GetRequiredStringArgument(string arg, string[] args, int index, string description)
         {
-            if (index >= args.Length)
+            if (index >= args.Length || KnownFlags.Contains(args[index]))
             {
                 throw new ArgumentException($"{arg} requires {description}", nameof(args));
             }

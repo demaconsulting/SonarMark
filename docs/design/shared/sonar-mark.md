@@ -20,7 +20,7 @@ a prior released version of the same tool consumed as a dependency by its own bu
 Per the software-items standard, a software package produced within the same program and
 consumed as a dependency is classified as a Shared Package.
 
-### Features Used
+### Advertised Features Consumed
 
 - **Self-Validation (`--validate`)** — runs SonarMark's four built-in self-validation
   scenarios (quality gate retrieval, issues retrieval, hot-spots retrieval, and markdown
@@ -38,3 +38,22 @@ The released SonarMark is listed as `demaconsulting.sonarmark` in
 `.config/dotnet-tools.json` and is installed with `dotnet tool restore`. No additional
 initialization or configuration is required; both features are invoked directly from
 `build-docs` CI job steps using the `dotnet sonarmark` command.
+
+### Assumptions
+
+The `build-docs` job makes the following assumptions about the released SonarMark binary
+pinned in `.config/dotnet-tools.json`:
+
+- **Stable CLI contract** — the `--validate`, `--server`, `--project-key`, and `--report`
+  flags, and their accepted argument formats, remain stable for the pinned version; no
+  flag renames or removed options occur without a corresponding update to the pinned version.
+- **Stable exit-code contract** — the released binary returns a zero exit code on success and
+  a non-zero exit code on failure (self-validation failure or report-generation failure), so
+  the `build-docs` job can detect failures reliably.
+- **Well-formed markdown output** — the `--report` output is valid, well-formed Markdown that
+  can be embedded in `docs/code_quality/generated/sonar-quality.md` without further
+  post-processing or repair.
+- **Deterministic self-validation** — the four `--validate` scenarios (quality gate retrieval,
+  issues retrieval, hot-spots retrieval, and markdown report generation) exercise the same
+  SonarQube/SonarCloud REST API surface used by report generation, so a passing
+  self-validation is a reliable predictor that report generation will also succeed.
