@@ -69,7 +69,7 @@
       ]
     },
     "demaconsulting.sysml2tools.tool": {
-      "version": "0.1.0-beta.7",
+      "version": "0.1.0-beta.14",
       "commands": [
         "sysml2tools"
       ]
