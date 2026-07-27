@@ -66,7 +66,7 @@ public class SonarQubeClientTests
 
         // Assert - the Authorization header must be set and use Basic scheme
         Assert.NotNull(httpClient.DefaultRequestHeaders.Authorization);
-        Assert.Equal("Basic", httpClient.DefaultRequestHeaders.Authorization!.Scheme);
+        Assert.Equal("Basic", httpClient.DefaultRequestHeaders.Authorization.Scheme);
     }
 
     /// <summary>
