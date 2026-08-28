@@ -1,9 +1,9 @@
 {
   "private": true,
   "devDependencies": {
-    "@mermaid-js/mermaid-cli": "11.12.0",
-    "cspell": "9.7.0",
-    "markdownlint-cli2": "0.21.0",
+    "@mermaid-js/mermaid-cli": "11.16.0",
+    "cspell": "10.1.1",
+    "markdownlint-cli2": "0.23.2",
     "mermaid-filter": "1.4.7"
   }
 }
