@@ -250,7 +250,7 @@ jobs:
           fetch-depth: 0
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.37.8
+        uses: github/codeql-action/init@v4.37.9
         with:
           languages: csharp
           build-mode: manual
@@ -285,7 +285,7 @@ jobs:
           --property:Version=${{ inputs.version }}
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.37.8
+        uses: github/codeql-action/analyze@v4.37.9
         with:
           category: "/language:csharp"
           output: artifacts
