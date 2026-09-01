@@ -13,9 +13,12 @@ sections:
           Note: this requirement intentionally combines retrieval and reporting into one statement because
           the combined behavior is the single observable end-to-end outcome that matters for system
           integration; reviewers should not split this into two separate requirements.
+        tags: [system]
         children:
           - SonarMark-SonarIntegration-Orchestrate
           - SonarMark-ReportGeneration-Orchestrate
+          - SonarMark-Program-Connect
+          - SonarMark-Program-ProjectKey
         tests:
           - SonarMark_QualityGateRetrieval
 
@@ -28,6 +31,7 @@ sections:
           Note: this requirement intentionally combines retrieval and reporting into one statement because
           the combined behavior is the single observable end-to-end outcome that matters for system
           integration; reviewers should not split this into two separate requirements.
+        tags: [system]
         children:
           - SonarMark-SonarIntegration-Orchestrate
           - SonarMark-ReportGeneration-Orchestrate
@@ -43,6 +47,7 @@ sections:
           Note: this requirement intentionally combines retrieval and reporting into one statement because
           the combined behavior is the single observable end-to-end outcome that matters for system
           integration; reviewers should not split this into two separate requirements.
+        tags: [system]
         children:
           - SonarMark-SonarIntegration-Orchestrate
           - SonarMark-ReportGeneration-Orchestrate
@@ -56,6 +61,7 @@ sections:
           quality gate status, issues, and security hot-spots. Verifying this end-to-end confirms
           that all system components - CLI argument handling, server communication, data aggregation,
           and markdown rendering - operate correctly as an integrated whole.
+        tags: [system]
         children:
           - SonarMark-Cli-Parse
           - SonarMark-SonarIntegration-Orchestrate
@@ -70,8 +76,10 @@ sections:
           requiring a live SonarQube/SonarCloud server. Verifying this end-to-end confirms that the
           CLI dispatch, self-test runner, and result reporting all integrate correctly and that the
           shipped binary is fully testable in isolated environments.
+        tags: [system]
         children:
           - SonarMark-SelfTest-Orchestrate
+          - SonarMark-Program-Validate
         tests:
           - IntegrationTest_ValidateFlag_OutputsHeaderAndSummary
 
@@ -82,9 +90,12 @@ sections:
           failing the build automatically when the Sonar quality gate status is not passing. Verifying
           this end-to-end confirms that the --enforce flag is correctly parsed, propagated to the
           report generation layer, and results in an appropriate process exit code.
+        tags: [system]
         children:
           - SonarMark-Cli-Parse
           - SonarMark-ReportGeneration-Orchestrate
+          - SonarMark-Cli-HttpTransport
+          - SonarMark-Program-ExitCode
         tests:
           - IntegrationTest_EnforceFlag_IsAccepted
           - Program_Run_WithEnforceFlagAndFailingQualityGate_ReturnsNonZeroExitCode
@@ -95,8 +106,11 @@ sections:
           Help text is the primary self-documentation mechanism for command-line tools and reduces
           the learning curve for new users. Verifying this end-to-end confirms that the CLI argument
           is correctly recognized and the Program dispatch writes usage information to the console.
+        tags: [system]
         children:
           - SonarMark-Cli-DisplayHelp
+          - SonarMark-Program-Interface
+          - SonarMark-Program-Help
         tests:
           - IntegrationTest_HelpFlag_OutputsUsageInformation
 
@@ -107,8 +121,11 @@ sections:
           installed, which is critical for troubleshooting, compatibility checking, and audit trails.
           Verifying this end-to-end confirms that the version string is correctly emitted by the full
           system.
+        tags: [system]
         children:
           - SonarMark-Cli-DisplayVersion
+          - SonarMark-Program-Version
+          - SonarMark-Program-Interface
         tests:
           - IntegrationTest_VersionFlag_OutputsVersion
 
@@ -119,8 +136,11 @@ sections:
           would interfere with log parsing or pipeline tooling. Verifying this end-to-end confirms
           that the flag is correctly parsed and all standard output is suppressed throughout the
           full execution path.
+        tags: [system]
         children:
           - SonarMark-Cli-SilentMode
+          - SonarMark-Cli-Output
+          - SonarMark-Program-Silent
         tests:
           - IntegrationTest_SilentFlag_SuppressesOutput
 
@@ -130,9 +150,11 @@ sections:
           An authentication token is required to access private SonarQube/SonarCloud instances and
           projects. Verifying end-to-end that the flag is accepted without errors confirms that the
           token argument is recognized and does not interfere with subsequent argument processing.
+        tags: [system]
         children:
           - SonarMark-Cli-Context-Token
           - SonarMark-Cli-Context-TokenEnv
+          - SonarMark-Program-Auth
         tests:
           - IntegrationTest_TokenParameter_IsAccepted
 
@@ -142,8 +164,10 @@ sections:
           Branch-level analysis is essential for multi-branch development workflows, enabling
           quality gate checks on feature branches and pull requests. Verifying end-to-end that the
           flag is accepted confirms that branch selection is correctly parsed and forwarded.
+        tags: [system]
         children:
           - SonarMark-Cli-Context-Branch
+          - SonarMark-Program-Branch
         tests:
           - IntegrationTest_BranchParameter_IsAccepted
 
@@ -154,8 +178,10 @@ sections:
           version control or published as a build artifact. Verifying end-to-end that the flag is
           accepted confirms that the report path argument is correctly parsed and does not cause
           an unrecognized-argument error.
+        tags: [system]
         children:
           - SonarMark-Cli-Context-Report
+          - SonarMark-Program-Markdown
         tests:
           - IntegrationTest_ReportParameter_IsAccepted
 
@@ -166,8 +192,10 @@ sections:
           --depth (primary) and --report-depth (deprecated alias) must be accepted. Invalid or
           out-of-range values must produce a clear error message rather than silently generating
           malformed markdown output.
+        tags: [system]
         children:
           - SonarMark-Cli-Context-Depth
+          - SonarMark-Program-Depth
         tests:
           - IntegrationTest_ReportDepthWithoutValue_ShowsError
           - IntegrationTest_ReportDepthWithInvalidValue_ShowsError

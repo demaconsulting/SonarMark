@@ -1,0 +1,164 @@
+---
+# Repository quality requirements
+#
+# These requirements express repository/process-level quality outcomes that are
+# satisfied through the CI pipeline's use of off-the-shelf compliance and
+# documentation tools. They are distinct from the SonarMark product requirements
+# in sonar-mark.yaml: each requirement here states WHAT quality outcome the
+# repository needs (e.g. "changes are peer reviewed"), never HOW that outcome is
+# currently achieved. The OTS tool that currently satisfies each outcome is
+# recorded only as a `children` link, never in the requirement title or
+# justification, so that satisfying the outcome by different or additional means
+# in the future would not require rewriting the requirement itself.
+sections:
+  - title: Repository Quality Requirements
+    requirements:
+      - id: SonarMark-Quality-BuildIntegrity
+        title: >-
+          Every release shall carry a documented record of the CI build that
+          produced it, captured automatically from pipeline metadata.
+        justification: |
+          Regulated and quality-conscious consumers of SonarMark require assurance that
+          each release artifact was produced by a specific, auditable build rather than
+          an ad-hoc or undocumented process. Capturing build provenance (workflow run
+          identity, commit, timestamp) automatically as part of the CI pipeline, rather
+          than relying on manual record-keeping, ensures the record is always present,
+          accurate, and resistant to after-the-fact tampering.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-BuildMark
+
+      - id: SonarMark-Quality-TraceableVersions
+        title: >-
+          Every release shall have version information traceable to its source
+          commit and build.
+        justification: |
+          Consumers and auditors need to know exactly which tool and dependency
+          versions produced a given release artifact, to reproduce builds, diagnose
+          defects, and confirm license and security compliance. Capturing version
+          information automatically as part of the release pipeline prevents version
+          drift and the manual record-keeping errors that would otherwise undermine
+          traceability.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-VersionMark
+
+      - id: SonarMark-Quality-StaticAnalysis
+        title: >-
+          Code shall be automatically scanned for defects, vulnerabilities, and
+          quality regressions before merge.
+        justification: |
+          Manual code review alone cannot reliably catch every security vulnerability,
+          code smell, or quality regression introduced by a change. Automated static
+          analysis on every pull request, with results captured as auditable reports,
+          provides continuous, objective quality and security assurance that scales
+          with the size of the codebase and does not depend solely on reviewer
+          attentiveness. Because this repository builds a static-analysis tool itself,
+          an earlier released version of that tool is used in CI to retrieve and
+          report on the repository's own analysis results, since a project cannot
+          treat its own package as an off-the-shelf dependency.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-SarifMark
+          - SonarMark-Shared-SonarMark-SelfValidation
+          - SonarMark-Shared-SonarMark-ReportGeneration
+
+      - id: SonarMark-Quality-PeerReview
+        title: >-
+          Every change shall receive documented, enforced peer review evidence
+          before merge.
+        justification: |
+          Peer review is a core defense against defects and unintended behavior
+          reaching production, but review activity that is not tracked cannot be
+          audited or enforced. Generating a review plan identifying the reviews
+          required for a change, and a review report documenting the reviews actually
+          completed, provides objective, auditable evidence that the review process
+          was followed, supporting compliance and quality assurance activities.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-ReviewMark
+
+      - id: SonarMark-Quality-DocumentationGeneration
+        title: >-
+          Repository documentation shall be generated in reviewable and
+          distributable formats and validated before release.
+        justification: |
+          Design, verification, review, and user-guide documentation authored in
+          Markdown must be converted into distributable formats (HTML for review,
+          PDF for archival and distribution) as part of the release pipeline, and
+          each generated document must be validated to confirm it exists, is
+          well-formed, and contains the expected content, so that a broken
+          conversion step cannot silently ship incomplete or corrupt compliance
+          documentation.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-Pandoc
+          - SonarMark-OTS-WeasyPrint
+          - SonarMark-OTS-FileAssert
+
+      - id: SonarMark-Quality-TestInfrastructure
+        title: >-
+          The project's own developer test suite shall execute automatically
+          and report results in every CI run.
+        justification: |
+          Requirements traceability depends on evidence that tests actually executed
+          and passed; that evidence has no value unless the test framework reliably
+          discovers, runs, and reports every test method on every CI run, across all
+          supported platforms and .NET versions, without manual intervention.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-XUnit
+
+      - id: SonarMark-Quality-RequirementsTraceability
+        title: >-
+          Every requirement shall be linked to passing tests and enforced as part
+          of the release pipeline.
+        justification: |
+          Requirements that are not linked to verifying tests, or whose tests are not
+          checked as part of the pipeline, provide no real assurance that the software
+          behaves as documented. Automatically enforcing requirements-to-test
+          traceability on every CI run ensures untested or orphaned requirements are
+          caught before release rather than discovered later.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-ReqStream
+
+      - id: SonarMark-Quality-ArchitectureTraceability
+        title: >-
+          The project's software structure shall be modeled, validated, and
+          rendered independent of source code, so its architecture can be
+          queried and reviewed without reading implementation.
+        justification: |
+          Reviewers, auditors, and automated agents need to understand system
+          structure and responsibilities without reading through source code line by
+          line. Maintaining an explicit architecture model that is automatically
+          validated for structural correctness and rendered as diagrams embedded in
+          design documentation ensures the documented architecture remains
+          internally consistent and stays usable as a standalone reference.
+          This requirement is satisfied by its children: it is a non-atomic (grouping)
+          requirement, and verification evidence is carried by each atomic child
+          requirement's tests.
+        tags: [quality]
+        children:
+          - SonarMark-OTS-SysML2Tools

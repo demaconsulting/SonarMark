@@ -26,6 +26,7 @@ sections:
               which are common in enterprise .NET development shops.
             # Test source pattern "windows@" ensures these tests ran on Windows.
             # This filtering is necessary to prove Windows OS functionality.
+            tags: [system]
             tests:
               - windows@IntegrationTest_VersionFlag_OutputsVersion
               - windows@IntegrationTest_HelpFlag_OutputsUsageInformation
@@ -43,6 +44,7 @@ sections:
               and popular CI platforms like GitHub Actions, GitLab CI, and Jenkins.
             # Test source pattern "ubuntu@" ensures these tests ran on Linux.
             # This filtering is necessary to prove Linux OS functionality.
+            tags: [system]
             tests:
               - ubuntu@IntegrationTest_VersionFlag_OutputsVersion
               - ubuntu@IntegrationTest_HelpFlag_OutputsUsageInformation
@@ -60,6 +62,7 @@ sections:
               broadening the tool's reach across all major desktop development platforms.
             # Test source pattern "macos@" ensures these tests ran on macOS.
             # This filtering is necessary to prove macOS functionality.
+            tags: [system]
             tests:
               - macos@IntegrationTest_VersionFlag_OutputsVersion
               - macos@IntegrationTest_HelpFlag_OutputsUsageInformation
@@ -77,6 +80,7 @@ sections:
               releases for stability and long-term support guarantees.
             # Test source pattern "dotnet8.x@" ensures these tests ran on .NET 8.0.
             # This filtering is necessary to prove .NET 8.0 runtime support.
+            tags: [system]
             tests:
               - dotnet8.x@SonarMark_QualityGateRetrieval
               - dotnet8.x@SonarMark_IssuesRetrieval
@@ -91,6 +95,7 @@ sections:
               versions to use the tool without compatibility concerns.
             # Test source pattern "dotnet9.x@" ensures these tests ran on .NET 9.0.
             # This filtering is necessary to prove .NET 9.0 runtime support.
+            tags: [system]
             tests:
               - dotnet9.x@SonarMark_QualityGateRetrieval
               - dotnet9.x@SonarMark_IssuesRetrieval
@@ -105,6 +110,7 @@ sections:
               with a future-proof solution and access to the newest platform capabilities.
             # Test source pattern "dotnet10.x@" ensures these tests ran on .NET 10.0.
             # This filtering is necessary to prove .NET 10.0 runtime support.
+            tags: [system]
             tests:
               - dotnet10.x@SonarMark_QualityGateRetrieval
               - dotnet10.x@SonarMark_IssuesRetrieval
