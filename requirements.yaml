@@ -12,6 +12,14 @@
 # Platform-specific requirements require test results from CI/CD runs across
 # the full OS and runtime matrix.
 #
+# root-tags identifies the tags that mark "root" requirements - product-facing
+# system requirements and quality/process requirements that exist for their own
+# sake and don't need a further parent. Every other requirement must trace up
+# (via children links) to at least one root-tagged requirement, or it is
+# reported as orphaned by "reqstream --root-tags" - a requirement implemented,
+# tested, and documented but never connected to anything a user or the
+# repository's compliance process actually needs.
+root-tags: [system, quality]
 
 includes:
   # CLI subsystem
@@ -36,6 +44,8 @@ includes:
   - docs/reqstream/sonar-mark/platform-requirements.yaml
   # Shared Package requirements (one per package)
   - docs/reqstream/shared/sonar-mark.yaml
+  # Repository quality/process requirements
+  - docs/reqstream/quality.yaml
   # OTS software requirements (one per component)
   - docs/reqstream/ots/xunit.yaml
   - docs/reqstream/ots/reqstream.yaml

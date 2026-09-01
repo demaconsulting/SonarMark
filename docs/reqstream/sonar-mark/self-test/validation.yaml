@@ -35,6 +35,8 @@ sections:
                   Writing validation results to test result files allows integration with standard testing
                   frameworks and CI/CD tools. This enables validation outcomes to be tracked, reported, and
                   integrated into build pipelines alongside other test results.
+                children:
+                  - SonarMark-OTS-TestResults-Collect
                 tests:
                   - Validation_Run_WithTrxResultsFile_WritesTrxFile
                   - Validation_Run_WithXmlResultsFile_WritesJUnitFile
@@ -45,6 +47,8 @@ sections:
                   TRX (Test Results XML) is the native test results format for Microsoft testing tools and
                   Visual Studio. Supporting this format ensures compatibility with .NET development workflows
                   and enables seamless integration with Azure DevOps and other Microsoft-based CI/CD systems.
+                children:
+                  - SonarMark-OTS-TestResults-WriteTrx
                 tests:
                   - Validation_Run_WithTrxResultsFile_WritesTrxFile
 
@@ -54,5 +58,7 @@ sections:
                   JUnit format is a widely-supported standard for test results across many platforms and tools,
                   including Jenkins, GitLab CI, and GitHub Actions. Supporting this format ensures broad
                   compatibility with diverse CI/CD environments beyond Microsoft ecosystems.
+                children:
+                  - SonarMark-OTS-TestResults-WriteJUnit
                 tests:
                   - Validation_Run_WithXmlResultsFile_WritesJUnitFile
