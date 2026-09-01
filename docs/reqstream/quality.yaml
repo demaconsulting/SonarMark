@@ -59,11 +59,10 @@ sections:
           analysis on every pull request, with results captured as auditable reports,
           provides continuous, objective quality and security assurance that scales
           with the size of the codebase and does not depend solely on reviewer
-          attentiveness. Because this repository builds SonarMark itself, an earlier
-          released version of the tool is used in CI to retrieve and report on this
-          repository's own SonarCloud analysis (a project cannot treat its own package
-          as OTS), and SarifMark converts the repository's own CodeQL analysis output
-          into a reviewable markdown report.
+          attentiveness. Because this repository builds a static-analysis tool itself,
+          an earlier released version of that tool is used in CI to retrieve and
+          report on the repository's own analysis results, since a project cannot
+          treat its own package as an off-the-shelf dependency.
           This requirement is satisfied by its children: it is a non-atomic (grouping)
           requirement, and verification evidence is carried by each atomic child
           requirement's tests.

@@ -16,9 +16,11 @@
 # system requirements and quality/process requirements that exist for their own
 # sake and don't need a further parent. Every other requirement must trace up
 # (via children links) to at least one root-tagged requirement, or it is
-# reported as orphaned by "reqstream --root-tags" - a requirement implemented,
-# tested, and documented but never connected to anything a user or the
-# repository's compliance process actually needs.
+# reported as orphaned - a requirement implemented, tested, and documented but
+# never connected to anything a user or the repository's compliance process
+# actually needs. Because root-tags is configured here, orphan checking runs
+# automatically on every "reqstream" invocation (including --lint and
+# --enforce) without needing a --root-tags command-line flag.
 root-tags: [system, quality]
 
 includes:
