@@ -9,13 +9,13 @@
       ]
     },
     "demaconsulting.spdxtool": {
-      "version": "2.10.0",
+      "version": "2.10.1",
       "commands": [
         "spdx-tool"
       ]
     },
     "demaconsulting.pandoctool": {
-      "version": "3.11.0",
+      "version": "3.12.0",
       "commands": [
         "pandoc"
       ]
@@ -39,7 +39,7 @@
       ]
     },
     "demaconsulting.reqstream": {
-      "version": "1.11.0",
+      "version": "1.12.0",
       "commands": [
         "reqstream"
       ]
