@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="510" viewBox="0 0 900 510" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="14" y="16" width="875" height="485" rx="28" fill="#d5dce6"/>
+  <rect x="10" y="10" width="875" height="485" rx="28" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+
+  <g transform="translate(30,30)">
+    <rect x="150" y="0" width="460" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+    <text x="380" y="31" font-size="16" font-family="Consolas, monospace" font-weight="600" fill="#92400e" text-anchor="middle">sonarmark (Program)</text>
+    <text x="380" y="53" font-size="13" fill="#92400e" text-anchor="middle">command-line tool run by you or your CI pipeline</text>
+    <line x1="380" y1="74" x2="380" y2="118" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+    <text x="392" y="100" font-size="12" fill="#334155">--server, --project-key, --report ...</text>
+
+    <rect x="150" y="122" width="460" height="318" rx="14" fill="#f8fafc" stroke="#2563eb" stroke-width="2" stroke-dasharray="8 5"/>
+    <text x="166" y="148" font-size="14" font-weight="600" fill="#2563eb">DemaConsulting.SonarMark</text>
+
+    <rect x="170" y="162" width="420" height="52" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="380" y="185" font-size="16" font-weight="600" fill="#166534" text-anchor="middle">Cli</text>
+    <text x="380" y="204" font-size="12" fill="#166534" text-anchor="middle">Parses flags into a Context that owns the output streams</text>
+
+    <rect x="170" y="230" width="200" height="100" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="270" y="256" font-size="16" font-weight="600" fill="#4c1d95" text-anchor="middle">SonarIntegration</text>
+    <text x="270" y="278" font-size="12" fill="#5b21b6" text-anchor="middle">Fetches the quality gate,</text>
+    <text x="270" y="294" font-size="12" fill="#5b21b6" text-anchor="middle">issues, and hot-spots</text>
+    <text x="270" y="310" font-size="12" fill="#5b21b6" text-anchor="middle">from the REST API</text>
+    <rect x="390" y="230" width="200" height="100" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="490" y="256" font-size="16" font-weight="600" fill="#4c1d95" text-anchor="middle">ReportGeneration</text>
+    <text x="490" y="278" font-size="12" fill="#5b21b6" text-anchor="middle">Aggregates the results</text>
+    <text x="490" y="294" font-size="12" fill="#5b21b6" text-anchor="middle">and renders a markdown</text>
+    <text x="490" y="310" font-size="12" fill="#5b21b6" text-anchor="middle">report</text>
+    <line x1="374" y1="280" x2="386" y2="280" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+
+    <rect x="170" y="346" width="420" height="72" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="380" y="372" font-size="15" font-weight="600" fill="#1e3a8a" text-anchor="middle">SelfTest</text>
+    <text x="380" y="392" font-size="12" fill="#1e40af" text-anchor="middle">With --validate, runs the</text>
+    <text x="380" y="407" font-size="12" fill="#1e40af" text-anchor="middle">tool's built-in checks</text>
+
+    <text x="60" y="256" font-size="13" font-weight="600" fill="#475569" text-anchor="middle">Input</text>
+    <rect x="0" y="270" width="120" height="66" rx="6" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+    <text x="60" y="297" font-size="15" font-weight="600" fill="#334155" text-anchor="middle">Sonar server</text>
+    <text x="60" y="318" font-size="12" fill="#475569" text-anchor="middle">(REST API)</text>
+    <line x1="124" y1="303" x2="166" y2="303" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+
+    <rect x="650" y="252" width="165" height="102" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="732" y="278" font-size="16" font-weight="600" fill="#166534" text-anchor="middle">Outputs</text>
+    <g font-size="13" fill="#14532d" text-anchor="middle">
+      <rect x="664" y="290" width="137" height="26" rx="5" fill="#ffffff" stroke="#16a34a"/>
+      <text x="732" y="308">Markdown report</text>
+      <rect x="664" y="320" width="137" height="26" rx="5" fill="#ffffff" stroke="#16a34a"/>
+      <text x="732" y="338">Exit code</text>
+    </g>
+    <line x1="594" y1="280" x2="646" y2="280" stroke="#475569" stroke-width="2" marker-end="url(#a)"/>
+  </g>
+</svg>

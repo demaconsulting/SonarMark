@@ -9,6 +9,11 @@ SonarQube/SonarCloud analysis results. It fetches quality gate status, issues, a
 hot-spots directly from the SonarQube/SonarCloud API, making it straightforward to integrate
 code quality reporting into CI/CD pipelines and documentation workflows.
 
+The following diagram shows how SonarMark turns Sonar results into a report:
+
+![SonarMark architecture: the Program entry point uses SonarIntegration to fetch results from a Sonar server
+and ReportGeneration to turn them into a markdown report and an exit code.](architecture.svg)
+
 SonarMark follows the [Continuous Compliance][continuous-compliance] methodology, ensuring
 compliance evidence is generated automatically on every CI run. Requirements are linked to
 passing tests, and a trace matrix is auto-generated on each release.
