@@ -15,6 +15,7 @@ language: en
 # Project-specific technical terms and tool names
 words:
   - buildmark
+  - canvasnet
   - BuildMark
   - buildtransitive
   - CodeQL

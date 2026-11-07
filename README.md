@@ -18,6 +18,8 @@ analysis results. It fetches quality gate status, issues, and security hot-spots
 SonarQube/SonarCloud API, making it easy to integrate code quality reporting into your CI/CD pipelines and
 documentation workflows.
 
+![SonarMark architecture: SonarIntegration fetches results from a Sonar server and ReportGeneration renders a markdown report][architecture]
+
 ## Features
 
 - 📊 **Quality Gate Reports** - Retrieve and report quality gate status with detailed conditions
@@ -283,6 +285,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
+[architecture]: https://raw.githubusercontent.com/demaconsulting/SonarMark/main/docs/images/architecture.png
 [link-guide]: https://github.com/demaconsulting/SonarMark/releases
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
 [link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors
