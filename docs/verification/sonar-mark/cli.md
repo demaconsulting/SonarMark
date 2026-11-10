@@ -38,7 +38,7 @@ correctly through `Program.Run`.
 This scenario is tested by `Cli_HelpDispatch_WithHelpFlag_OutputsHelpText`.
 
 **SilentModeSuppressesOutput**: When the CLI receives `--silent`, no content is written to the console
-even when an error condition is detected, confirming that the silent flag is honoured across the entire
+even when an error condition is detected, confirming that the silent flag is honored across the entire
 output path.
 This scenario is tested by `Cli_SilentMode_WithSilentFlag_SuppressesOutput`.
 

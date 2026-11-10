@@ -1,4 +1,6 @@
 package SonarMark {
+    private import SoftwareItemMetadata::*;
+
     import OtsDependencies::*;
     import SharedDependencies::*;
 
@@ -11,10 +13,13 @@ package SonarMark {
     part def SonarMarkSystem {
         doc /* The SonarMark system as a whole. */
 
-        comment testRef /* Test: test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs */
-        comment designRef /* Design: docs/design/sonar-mark.md */
-        comment verificationRef /* Verification: docs/verification/sonar-mark.md */
-        comment reqRef /* Requirements: docs/reqstream/sonar-mark/sonar-mark.yaml */
+        metadata info : SoftwareInfo {
+            description = "The SonarMark system as a whole.";
+            testFiles = ("test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs");
+            designFiles = ("docs/design/sonar-mark.md");
+            verificationFiles = ("docs/verification/sonar-mark.md");
+            requirementFiles = ("docs/reqstream/sonar-mark/sonar-mark.yaml");
+        }
 
         part program : Program;
         part cli : CliSubsystem;

@@ -227,7 +227,7 @@ All markdown files must follow these rules (enforced by markdownlint):
 
 ### Spell Checking
 
-All files are spell-checked using cspell. Add project-specific terms to `.cspell.yaml`:
+All files are spell-checked using TextLint. Add project-specific terms to `.textlint.yaml`:
 
 ```yaml
 words:

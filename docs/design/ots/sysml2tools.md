@@ -6,7 +6,8 @@ and renders its declared views to SVG diagrams consumed by the design documentat
 ### Purpose
 
 SysML2Tools provides the toolchain that keeps SonarMark's architecture model
-(`docs/sysml2/model/**/*.sysml`) and its declared views (`docs/sysml2/views/design-views.sysml`)
+(`docs/sysml2/model/**/*.sysml`), its shared metadata definitions
+(`docs/sysml2/common/**/*.sysml`) and its declared views (`docs/sysml2/views/design-views.sysml`)
 consistent with the design documentation. It validates the model for syntax and reference errors,
 and renders each declared view to an SVG diagram embedded directly in the corresponding design
 document (for example `docs/design/introduction.md` embeds `SoftwareStructureView.svg`). AI agents
@@ -22,7 +23,9 @@ dotnet-tool restore and CI pipeline used by the other pipeline tools.
 - Model validation via `dotnet sysml2tools lint 'docs/sysml2/**/*.sysml'`, which reports syntax
   errors and unresolved references without producing output files.
 - View rendering via
-  `dotnet sysml2tools render --output docs/design/generated --format svg 'docs/sysml2/model/**/*.sysml' 'docs/sysml2/views/design-views.sysml'`,
+  `dotnet sysml2tools render --output docs/design/generated --format svg
+  'docs/sysml2/common/**/*.sysml' 'docs/sysml2/model/**/*.sysml'
+  'docs/sysml2/views/design-views.sysml'`,
   which renders every `view` declared in `design-views.sysml` to an SVG file named after the view
   (for example `SoftwareStructureView.svg`).
 - Model querying via the `sysml2tools-query` skill, used by AI agents to answer structural and

@@ -76,7 +76,7 @@ sections:
                 justification: |
                   Users and CI systems need a lightweight way to confirm which version of SonarMark is
                   installed. Parsing the flag in Context keeps the version-output logic in Program and
-                  the argument-parsing logic in Context, honouring the single-responsibility principle.
+                  the argument-parsing logic in Context, honoring the single-responsibility principle.
                 tests:
                   - Context_Create_VersionFlag_SetsVersionProperty
 
