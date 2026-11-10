@@ -52,7 +52,7 @@ validation guards network calls.
 This scenario is tested by `Program_Run_WithServerButNoProjectKey_OutputsProjectKeyRequiredError`.
 
 **SilentFlagSuppressesBannerOutput**: When run with `--silent`, the banner is not written to standard
-output, confirming that silent mode is honoured before any output is produced.
+output, confirming that silent mode is honored before any output is produced.
 This scenario is tested by `Program_Run_WithSilentFlag_SuppressesBannerOutput`.
 
 **EnforceFlagWithFailingQualityGateReturnsNonZeroExitCode**: When run with `--enforce` and a mock client

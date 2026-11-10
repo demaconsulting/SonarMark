@@ -36,7 +36,7 @@ conditions table to improve readability.
 
 **HotSpots**: `IReadOnlyList<SonarHotSpot>` — security hot-spots; empty when none are found.
 
-**SonarQualityCondition**: An immutable data record modelling a single quality gate condition as
+**SonarQualityCondition**: An immutable data record modeling a single quality gate condition as
 returned by the SonarQube/SonarCloud API, with five individually-accessible fields:
 
 - `Metric` (`string`) — the internal metric key (e.g., `new_coverage`, `new_bugs`).

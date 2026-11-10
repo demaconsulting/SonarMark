@@ -33,7 +33,7 @@ documentation workflows.
 
 ### Repository Practices
 
-- 🔍 **Linting Enforcement** - markdownlint, cspell, and yamllint enforced on every CI run
+- 🔍 **Linting Enforcement** - markdownlint, TextLint, and yamllint enforced on every CI run
 - 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following
   the [Continuous Compliance][link-continuous-compliance] methodology
 - 🗂️ **Requirements Traceability** - Requirements linked to passing tests with auto-generated trace matrix
@@ -264,7 +264,7 @@ By contributing to this project, you agree that your contributions will be licen
 For security concerns and vulnerability reporting, please see our
 [Security Policy](https://github.com/demaconsulting/SonarMark/blob/main/SECURITY.md).
 
-## Acknowledgements
+## Acknowledgments
 
 SonarMark is built with the following open-source projects:
 

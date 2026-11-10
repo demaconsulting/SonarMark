@@ -133,7 +133,7 @@ to standard output, confirming that output routing works correctly when silent m
 This scenario is tested by `Context_WriteLine_NormalMode_WritesToConsole`.
 
 **WriteLineSilentModeDoesNotWriteToConsole**: `context.WriteLine("message")` in silent mode produces no
-console output, confirming that the silent flag is honoured by the output routing logic.
+console output, confirming that the silent flag is honored by the output routing logic.
 This scenario is tested by `Context_WriteLine_SilentMode_DoesNotWriteToConsole`.
 
 **WriteErrorNormalModeWritesToConsoleAndSetsExitCode**: `context.WriteError("Error message")` writes to
