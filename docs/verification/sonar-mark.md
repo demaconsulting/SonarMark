@@ -21,8 +21,8 @@ System requirements traceability is maintained via the ReqStream trace matrix in
 
 Tests require:
 
-- .NET 8 SDK or later (multiple .NET versions including net8.0, net9.0, and net10.0 are all
-  exercised in CI across Windows, Linux, and macOS platforms).
+- .NET 10 and .NET 11 SDKs (both net10.0 and net11.0 are exercised in CI across Windows, Linux,
+  and macOS platforms).
 - The compiled `DemaConsulting.SonarMark.dll` present in the test output directory (produced automatically
   because the test project references the main project).
 - No external network access; all HTTP calls in the test layer are intercepted by a mock handler.

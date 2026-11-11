@@ -36,6 +36,15 @@ diagram or the prose below.
 
 ![Software Structure](SoftwareStructureView.svg)
 
+The diagram below complements the structure view by showing how data flows at run time:
+command-line flags are parsed by the Cli subsystem, SonarIntegration fetches the quality gate,
+issues, and hot-spots from the Sonar server, ReportGeneration formats them as markdown, and
+the tool writes the markdown report and returns the exit code; SelfTest runs the built-in checks.
+
+![SonarMark architecture: the sonarmark Program entry point passes flags to the Cli subsystem,
+SonarIntegration fetches results from a Sonar server, ReportGeneration formats them as markdown,
+and the tool produces a markdown report and an exit code, with SelfTest providing built-in checks](architecture.svg)
+
 ## Folder Layout
 
 - **src/** - source files and projects

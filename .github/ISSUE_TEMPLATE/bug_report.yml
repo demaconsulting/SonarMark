@@ -80,9 +80,8 @@ body:
       label: .NET Version
       description: What version of .NET are you using?
       options:
-        - ".NET 8"
-        - ".NET 9"
         - ".NET 10"
+        - ".NET 11"
         - Other (please specify in additional context)
     validations:
       required: true

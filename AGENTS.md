@@ -8,7 +8,7 @@
   hot-spots directly from the SonarQube/SonarCloud API, making it easy to integrate code quality
   reporting into CI/CD pipelines and documentation workflows.
 - **languages**: `C#`
-- **technologies**: `.NET`, `SonarQube`, `SonarCloud`
+- **technologies**: `.NET 10/11`, `SonarQube`, `SonarCloud`
 
 # Project Structure
 

@@ -16,7 +16,7 @@ Key practices include:
 
 ## Prerequisites
 
-- [.NET SDK][dotnet-download] 8.0, 9.0, or 10.0
+- [.NET SDK][dotnet-download] 10.0 or 11.0
 
 ## Global Installation
 
