@@ -196,7 +196,7 @@ Self-validation tests execute in CI and validate the complete packaged tool:
 
 Platform-specific tests execute across multiple OS and .NET runtime combinations:
 
-- **Scope**: Windows/Linux compatibility, .NET 10/11 support
+- **Scope**: Windows/Linux/macOS compatibility, .NET 10/11 support
 - **Execution**: Runs in the integration-test job matrix
 - **Requirements Coverage**: Validates requirements PLT-001 through PLT-005
 
