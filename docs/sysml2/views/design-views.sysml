@@ -5,7 +5,8 @@
 // 'render' - is what scopes the rendered diagram content.
 package SonarMark {
     view SoftwareStructureView {
-        expose SonarMark;
+        expose SonarMark::**;
+        render asInterconnectionDiagram;
     }
 
     view SonarMarkView {
