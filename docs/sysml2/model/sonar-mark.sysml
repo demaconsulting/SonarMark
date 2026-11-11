@@ -14,7 +14,6 @@ package SonarMark {
         doc /* The SonarMark system as a whole. */
 
         metadata info : SoftwareInfo {
-            description = "The SonarMark system as a whole.";
             testFiles = ("test/DemaConsulting.SonarMark.Tests/IntegrationTests.cs");
             designFiles = ("docs/design/sonar-mark.md");
             verificationFiles = ("docs/verification/sonar-mark.md");

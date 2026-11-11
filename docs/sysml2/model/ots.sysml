@@ -7,7 +7,6 @@ package OtsDependencies {
         doc /* OTS: DemaConsulting.TestResults. */
 
         metadata info : SoftwareInfo {
-            description = "OTS: DemaConsulting.TestResults.";
             designFiles = ("docs/design/ots/test-results.md");
             verificationFiles = ("docs/verification/ots/test-results.md");
             requirementFiles = ("docs/reqstream/ots/test-results.yaml");

@@ -5,7 +5,6 @@ package SonarMark {
         doc /* Aggregates SonarQube data into a structured markdown quality report. */
 
         metadata info : SoftwareInfo {
-            description = "Aggregates SonarQube data into a structured markdown quality report.";
             testFiles = ("test/DemaConsulting.SonarMark.Tests/ReportGeneration/ReportGenerationTests.cs");
             designFiles = ("docs/design/sonar-mark/report-generation.md");
             verificationFiles = ("docs/verification/sonar-mark/report-generation.md");
