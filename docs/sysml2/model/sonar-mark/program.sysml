@@ -5,7 +5,6 @@ package SonarMark {
         doc /* Entry point and execution orchestrator. */
 
         metadata info : SoftwareInfo {
-            description = "Entry point and execution orchestrator.";
             sourceFiles = ("src/DemaConsulting.SonarMark/Program.cs");
             testFiles = ("test/DemaConsulting.SonarMark.Tests/ProgramTests.cs");
             designFiles = ("docs/design/sonar-mark/program.md");

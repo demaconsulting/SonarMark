@@ -5,7 +5,6 @@ package SonarMark {
         doc /* Command-line argument parser and I/O owner for SonarMark. */
 
         metadata info : SoftwareInfo {
-            description = "Command-line argument parser and I/O owner for SonarMark.";
             sourceFiles = ("src/DemaConsulting.SonarMark/Cli/Context.cs");
             testFiles = ("test/DemaConsulting.SonarMark.Tests/Cli/ContextTests.cs");
             designFiles = ("docs/design/sonar-mark/cli/context.md");
