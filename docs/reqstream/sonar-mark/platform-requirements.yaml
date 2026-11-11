@@ -9,9 +9,8 @@
 #   windows@TestName    - proves the test passed on a Windows platform
 #   ubuntu@TestName     - proves the test passed on a Linux (Ubuntu) platform
 #   macos@TestName      - proves the test passed on a macOS platform
-#   dotnet8.x@TestName  - proves the self-validation test ran with .NET 8.x runtime
-#   dotnet9.x@TestName  - proves the self-validation test ran with .NET 9.x runtime
 #   dotnet10.x@TestName - proves the self-validation test ran with .NET 10.x runtime
+#   dotnet11.x@TestName - proves the self-validation test ran with .NET 11.x runtime
 #
 sections:
   - title: SonarMark Requirements
@@ -72,42 +71,11 @@ sections:
               - macos@SonarMark_HotSpotsRetrieval
               - macos@SonarMark_MarkdownReportGeneration
 
-          - id: SonarMark-Platform-Net8
-            title: The tool shall support .NET 8.0 runtime.
-            justification: |
-              .NET 8.0 is a Long-Term Support (LTS) release with support until November 2026. Supporting
-              this version ensures compatibility with enterprise environments that standardize on LTS
-              releases for stability and long-term support guarantees.
-            # Test source pattern "dotnet8.x@" ensures these tests ran on .NET 8.0.
-            # This filtering is necessary to prove .NET 8.0 runtime support.
-            tags: [system]
-            tests:
-              - dotnet8.x@SonarMark_QualityGateRetrieval
-              - dotnet8.x@SonarMark_IssuesRetrieval
-              - dotnet8.x@SonarMark_HotSpotsRetrieval
-              - dotnet8.x@SonarMark_MarkdownReportGeneration
-
-          - id: SonarMark-Platform-Net9
-            title: The tool shall support .NET 9.0 runtime.
-            justification: |
-              .NET 9.0 is a Standard Term Support (STS) release providing access to the latest features
-              and performance improvements. Supporting this version allows users who adopt newer .NET
-              versions to use the tool without compatibility concerns.
-            # Test source pattern "dotnet9.x@" ensures these tests ran on .NET 9.0.
-            # This filtering is necessary to prove .NET 9.0 runtime support.
-            tags: [system]
-            tests:
-              - dotnet9.x@SonarMark_QualityGateRetrieval
-              - dotnet9.x@SonarMark_IssuesRetrieval
-              - dotnet9.x@SonarMark_HotSpotsRetrieval
-              - dotnet9.x@SonarMark_MarkdownReportGeneration
-
           - id: SonarMark-Platform-Net10
             title: The tool shall support .NET 10.0 runtime.
             justification: |
-              .NET 10.0 is the next Long-Term Support (LTS) release scheduled for November 2025. Supporting
-              this version ensures the tool remains compatible with the latest LTS release, providing users
-              with a future-proof solution and access to the newest platform capabilities.
+              .NET 10.0 is a Long-Term Support (LTS) release and the oldest supported .NET runtime,
+              providing long-term stability and support for enterprise users.
             # Test source pattern "dotnet10.x@" ensures these tests ran on .NET 10.0.
             # This filtering is necessary to prove .NET 10.0 runtime support.
             tags: [system]
@@ -116,3 +84,17 @@ sections:
               - dotnet10.x@SonarMark_IssuesRetrieval
               - dotnet10.x@SonarMark_HotSpotsRetrieval
               - dotnet10.x@SonarMark_MarkdownReportGeneration
+
+          - id: SonarMark-Platform-Net11
+            title: The tool shall support .NET 11.0 runtime.
+            justification: |
+              .NET 11.0 support enables users to leverage the latest .NET features and performance
+              improvements.
+            # Test source pattern "dotnet11.x@" ensures these tests ran on .NET 11.0.
+            # This filtering is necessary to prove .NET 11.0 runtime support.
+            tags: [system]
+            tests:
+              - dotnet11.x@SonarMark_QualityGateRetrieval
+              - dotnet11.x@SonarMark_IssuesRetrieval
+              - dotnet11.x@SonarMark_HotSpotsRetrieval
+              - dotnet11.x@SonarMark_MarkdownReportGeneration

@@ -18,7 +18,14 @@ analysis results. It fetches quality gate status, issues, and security hot-spots
 SonarQube/SonarCloud API, making it easy to integrate code quality reporting into your CI/CD pipelines and
 documentation workflows.
 
-![SonarMark architecture: SonarIntegration fetches results from a Sonar server and ReportGeneration renders a markdown report][architecture]
+The workflow below shows how to use it: analyze your project with SonarCloud or SonarQube, run SonarMark from the
+command line or a CI pipeline, and use the generated quality report and exit code as a quality gate and compliance
+evidence.
+
+![SonarMark workflow: analyze your project with SonarCloud or SonarQube, run sonarmark with the server, project key,
+branch, and token options, get a markdown quality report with the quality gate status, issues, and security hot-spots
+plus a pass/fail exit code, then use them as a CI quality gate, code quality documents, compliance evidence, or in pull
+request reviews][workflow]
 
 ## Features
 
@@ -27,7 +34,7 @@ documentation workflows.
 - 🔒 **Security Hot-Spots** - Identify and report security vulnerabilities requiring review
 - 📝 **Markdown Output** - Generate human-readable markdown reports for easy sharing
 - 🚀 **CI/CD Integration** - Enforce quality gates and fail builds on quality issues
-- 🌐 **Multi-Platform** - Support for .NET 8, 9, and 10 across Windows, Linux, and macOS
+- 🌐 **Multi-Platform** - Support for .NET 10 and 11 across Windows, Linux, and macOS
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
 
@@ -42,7 +49,7 @@ documentation workflows.
 
 ### Prerequisites
 
-- [.NET SDK](https://dotnet.microsoft.com/download) 8.0, 9.0, or 10.0
+- [.NET SDK](https://dotnet.microsoft.com/download) 10.0 or 11.0
 
 ### Global Installation
 
@@ -285,7 +292,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
-[architecture]: https://raw.githubusercontent.com/demaconsulting/SonarMark/main/docs/images/architecture.png
+[workflow]: https://raw.githubusercontent.com/demaconsulting/SonarMark/main/docs/images/workflow.png
 [link-guide]: https://github.com/demaconsulting/SonarMark/releases
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
 [link-contributors]: https://github.com/demaconsulting/SonarMark/graphs/contributors

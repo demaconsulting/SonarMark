@@ -49,6 +49,7 @@ reviews:
       - docs/user_guide/**/*.md
     paths:
       - requirements.yaml  # root requirements file
+      - docs/reqstream/quality.yaml  # repository quality requirements
       - docs/design/introduction.md  # design introduction
       - docs/sysml2/**/*.sysml  # SysML2 model (authoritative structure)
 

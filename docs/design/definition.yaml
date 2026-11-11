@@ -8,6 +8,7 @@ resource-path:
   - docs/design/sonar-mark/self-test
   - docs/design/ots
   - docs/design/shared
+  - docs/images
   - docs/template
 
 input-files:
