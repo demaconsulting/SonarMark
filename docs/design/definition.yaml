@@ -1,6 +1,7 @@
 ---
 resource-path:
   - docs/design
+  - docs/design/generated
   - docs/design/sonar-mark
   - docs/design/sonar-mark/cli
   - docs/design/sonar-mark/sonar-integration
@@ -10,6 +11,7 @@ resource-path:
   - docs/design/shared
   - docs/images
   - docs/template
+embed-resources: true
 
 input-files:
   - docs/design/title.txt
