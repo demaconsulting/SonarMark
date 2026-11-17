@@ -94,13 +94,26 @@
       }
     },
     {
-      "label": "setup python venv",
-      "detail": "Creates .venv and installs pip-requirements.txt, as lint.ps1 and fix.ps1 do",
-      "type": "shell",
-      "command": "python3 -m venv .venv && .venv/bin/pip install -r pip-requirements.txt --quiet --disable-pip-version-check",
+      "label": "create python venv",
+      "detail": "Creates .venv for the Python lint tools, as lint.ps1 and fix.ps1 do",
+      "type": "process",
+      "command": "python3",
       "windows": {
-        "command": "python -m venv .venv; if ($?) { .venv\\Scripts\\pip install -r pip-requirements.txt --quiet --disable-pip-version-check }"
+        "command": "python"
       },
+      "args": ["-m", "venv", ".venv"],
+      "problemMatcher": []
+    },
+    {
+      "label": "setup python venv",
+      "detail": "Installs pip-requirements.txt into .venv, as lint.ps1 and fix.ps1 do",
+      "dependsOn": "create python venv",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "windows": {
+        "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe"
+      },
+      "args": ["-m", "pip", "install", "-r", "pip-requirements.txt", "--quiet", "--disable-pip-version-check"],
       "problemMatcher": []
     },
     {
