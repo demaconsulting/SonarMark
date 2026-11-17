@@ -40,7 +40,7 @@ request reviews][workflow]
 
 ### Repository Practices
 
-- 🔍 **Linting Enforcement** - markdownlint, TextLint, and yamllint enforced on every CI run
+- 🔍 **Linting Enforcement** - LintMark, TextLint, and yamllint enforced on every CI run
 - 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following
   the [Continuous Compliance][link-continuous-compliance] methodology
 - 🗂️ **Requirements Traceability** - Requirements linked to passing tests with auto-generated trace matrix

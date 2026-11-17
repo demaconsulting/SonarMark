@@ -36,10 +36,6 @@ coverage/
 # Python virtual environment
 .venv/
 
-# Node
-node_modules/
-package-lock.json
-
 # Generated compliance documents (build outputs — never committed)
 **/generated/
 
