@@ -40,7 +40,7 @@ request reviews][workflow]
 
 ### Repository Practices
 
-- 🔍 **Linting Enforcement** - markdownlint, TextLint, and yamllint enforced on every CI run
+- 🔍 **Linting Enforcement** - LintMark, TextLint, and yamllint enforced on every CI run
 - 📋 **Continuous Compliance** - Compliance evidence generated automatically on every CI run, following
   the [Continuous Compliance][link-continuous-compliance] methodology
 - 🗂️ **Requirements Traceability** - Requirements linked to passing tests with auto-generated trace matrix
@@ -238,7 +238,8 @@ pwsh ./build.ps1
 
 ## User Guide
 
-The SonarMark User Guide is available on the [SonarMark releases page](https://github.com/demaconsulting/SonarMark/releases).
+The SonarMark User Guide is available on the
+[SonarMark releases page](https://github.com/demaconsulting/SonarMark/releases).
 
 ## Contributing
 

@@ -81,6 +81,13 @@
       ],
       "rollForward": false
     },
+    "demaconsulting.lintmark": {
+      "version": "0.1.0-beta.2",
+      "commands": [
+        "lintmark"
+      ],
+      "rollForward": false
+    },
     "demaconsulting.sysml2tools.tool": {
       "version": "0.3.0-beta.3",
       "commands": [

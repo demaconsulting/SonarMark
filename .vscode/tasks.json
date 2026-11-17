@@ -69,12 +69,10 @@
     },
     {
       "label": "lint markdown",
-      "command": "npx",
+      "command": "dotnet",
       "type": "shell",
       "args": [
-        "markdownlint-cli2",
-        "**/*.md",
-        "#node_modules"
+        "lintmark"
       ],
       "problemMatcher": [],
       "presentation": {
@@ -97,10 +95,13 @@
     },
     {
       "label": "lint yaml",
-      "command": "npx",
+      "command": "${workspaceFolder}/.venv/bin/yamllint",
+      "windows": {
+        "command": "${workspaceFolder}\\.venv\\Scripts\\yamllint.exe"
+      },
+      "detail": "Uses the .venv that lint.ps1 and fix.ps1 create from pip-requirements.txt",
       "type": "shell",
       "args": [
-        "yamllint",
         "."
       ],
       "problemMatcher": [],
