@@ -223,8 +223,8 @@ All markdown files must follow these rules (enforced by LintMark):
 - Lists must be surrounded by blank lines
 - Use reference-style links: `[text][ref]` with `[ref]: url` at document end
 - **Exception**: `README.md` uses absolute URLs (it's included in the NuGet package)
-- **Exception**: Agent markdown files in `.github/agents/*.agent.md` use inline links `[text](url)` for visibility in agent
-  context
+- **Exception**: Agent markdown files in `.github/agents/*.agent.md` use inline links `[text](url)` for visibility in
+  agent context
 
 ### Spell Checking
 

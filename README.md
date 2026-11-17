@@ -238,7 +238,8 @@ pwsh ./build.ps1
 
 ## User Guide
 
-The SonarMark User Guide is available on the [SonarMark releases page](https://github.com/demaconsulting/SonarMark/releases).
+The SonarMark User Guide is available on the
+[SonarMark releases page](https://github.com/demaconsulting/SonarMark/releases).
 
 ## Contributing
 
