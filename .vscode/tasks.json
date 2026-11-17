@@ -95,7 +95,11 @@
     },
     {
       "label": "lint yaml",
-      "command": "yamllint",
+      "command": "${workspaceFolder}/.venv/bin/yamllint",
+      "windows": {
+        "command": "${workspaceFolder}\\.venv\\Scripts\\yamllint.exe"
+      },
+      "detail": "Uses the .venv that lint.ps1 and fix.ps1 create from pip-requirements.txt",
       "type": "shell",
       "args": [
         "."
