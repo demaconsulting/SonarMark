@@ -94,7 +94,31 @@
       }
     },
     {
+      "label": "create python venv",
+      "detail": "Creates .venv for the Python lint tools, as lint.ps1 and fix.ps1 do",
+      "type": "process",
+      "command": "python3",
+      "windows": {
+        "command": "python"
+      },
+      "args": ["-m", "venv", ".venv"],
+      "problemMatcher": []
+    },
+    {
+      "label": "setup python venv",
+      "detail": "Installs pip-requirements.txt into .venv, as lint.ps1 and fix.ps1 do",
+      "dependsOn": "create python venv",
+      "type": "process",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "windows": {
+        "command": "${workspaceFolder}\\.venv\\Scripts\\python.exe"
+      },
+      "args": ["-m", "pip", "install", "-r", "pip-requirements.txt", "--quiet", "--disable-pip-version-check"],
+      "problemMatcher": []
+    },
+    {
       "label": "lint yaml",
+      "dependsOn": "setup python venv",
       "command": "${workspaceFolder}/.venv/bin/yamllint",
       "windows": {
         "command": "${workspaceFolder}\\.venv\\Scripts\\yamllint.exe"
