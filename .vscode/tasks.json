@@ -99,7 +99,7 @@
       "type": "shell",
       "command": "python3 -m venv .venv && .venv/bin/pip install -r pip-requirements.txt --quiet --disable-pip-version-check",
       "windows": {
-        "command": "python -m venv .venv; if ($?) { .venv\\\\Scripts\\\\pip install -r pip-requirements.txt --quiet --disable-pip-version-check }"
+        "command": "python -m venv .venv; if ($?) { .venv\\Scripts\\pip install -r pip-requirements.txt --quiet --disable-pip-version-check }"
       },
       "problemMatcher": []
     },
