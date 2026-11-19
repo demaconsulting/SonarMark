@@ -9,6 +9,14 @@
 [![Security][badge-security]][link-security]
 [![NuGet][badge-nuget]][link-nuget]
 
+![SonarMark banner: the SonarMark name with the tagline 'Every scan, reported. Every gate, enforced.' and the
+command 'sonarmark --project-key app --server $URL --enforce'. A SonarQube or SonarCloud server's web API, the
+project's quality gate with its conditions, its issues tagged bug, code smell, and vulnerability, and its security
+hot-spots to review flow on curved arrows into the sonarmark .NET tool, and arrows lead out to what sonarmark
+produces: a Markdown report with Conditions, Issues, and Hot-Spots sections, an enforced quality gate that exits 0
+when the gate is OK and 1 when it is ERROR, and an analysis.log log file, plus a downstream Pandoc PDF rendered from
+the report][hero]
+
 Code Quality Reporting Tool for SonarQube/SonarCloud
 
 ## Overview
@@ -293,6 +301,7 @@ SonarMark is built with the following open-source projects:
 
 <!-- Link References -->
 [link-forks]: https://github.com/demaconsulting/SonarMark/network/members
+[hero]: https://raw.githubusercontent.com/demaconsulting/SonarMark/main/docs/images/hero.png
 [workflow]: https://raw.githubusercontent.com/demaconsulting/SonarMark/main/docs/images/workflow.png
 [link-guide]: https://github.com/demaconsulting/SonarMark/releases
 [link-stars]: https://github.com/demaconsulting/SonarMark/stargazers
