@@ -13,9 +13,9 @@
 command 'sonarmark --project-key app --server $URL --enforce'. A SonarQube or SonarCloud server's web API, the
 project's quality gate with its conditions, its issues tagged bug, code smell, and vulnerability, and its security
 hot-spots to review flow on curved arrows into the sonarmark .NET tool, and arrows lead out to what sonarmark
-produces: a Markdown report with Conditions, Issues, and Hot-Spots sections, an enforced quality gate that exits 0
-when the gate is OK and 1 when it is ERROR, and an analysis.log log file, plus a downstream Pandoc PDF rendered from
-the report][hero]
+produces: an enforced quality gate that exits 0 when the gate is OK and 1 when it is ERROR, and, when --report and
+--log are given, a Markdown report with Conditions, Issues, and Hot-Spots sections and an analysis.log log file, plus a
+downstream Pandoc PDF rendered from the report][hero]
 
 Code Quality Reporting Tool for SonarQube/SonarCloud
 
