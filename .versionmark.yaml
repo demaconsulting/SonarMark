@@ -74,12 +74,12 @@ tools:
     command: dotnet tool list
     regex: '(?i)demaconsulting\.lintmark\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
 
-  # sysml2tools (DemaConsulting.Sysml2Tools.Tool from dotnet tool list)
+  # SysML2Tools (DemaConsulting.SysML2Tools.Tool from dotnet tool list)
   sysml2tools:
     command: dotnet tool list
     regex: '(?i)demaconsulting\.sysml2tools\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
 
-  # canvasnet (DemaConsulting.CanvasNet.Tool from dotnet tool list)
+  # CanvasNet (DemaConsulting.CanvasNet.Tool from dotnet tool list)
   canvasnet:
     command: dotnet tool list
     regex: '(?i)demaconsulting\.canvasnet\.tool\s+(?<version>\d+\.\d+\.\d+(?:-[a-zA-Z0-9.]+)?)'
