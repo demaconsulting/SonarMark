@@ -1,0 +1,301 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640">
+  <!-- The README hero banner. The quality gate, issues, and security hot-spots of a SonarQube or SonarCloud
+       project flow from its web API into the sonarmark tool and come out as a Markdown quality report, an
+       enforced quality-gate exit code, and a log file; the report then feeds a downstream Pandoc PDF.
+       The definitions and the left panel follow the shared DEMA Consulting hero (CanvasNet and BuildMark).
+       This file is docs/images/hero.svg, beside its rendered docs/images/hero.png (matching base names, per the
+       diagram documentation standard); the files it embeds are in docs/images/hero/. -->
+  <defs>
+    <style>
+      .word { font: bold 92px sans-serif; fill: #ffffff; }
+      .eyebrow { font: bold 25px sans-serif; fill: #a5b4fc; }
+      .tag { font: bold 40px sans-serif; fill: #f8fafc; }
+      .body { font: 25px sans-serif; fill: #cbd5e1; }
+      .cmd { font: 25px monospace; fill: #e2e8f0; }
+      .prompt { fill: #5eead4; }
+      .file { fill: #f9a8d4; }
+      .brandText { fill: url(#brand); }
+      .note { font: italic 25px sans-serif; fill: #94a3b8; }
+      .label { font: bold 25px sans-serif; fill: #f1f5f9; text-anchor: middle; }
+      .engine { font: bold 32px monospace; fill: #ffffff; }
+      .api { font: bold 25px sans-serif; fill: #c4b5fd; }
+      .card { fill: url(#glass); stroke: url(#rim); stroke-width: 1.5; filter: url(#shadow); }
+      .panel { fill: #0a1022; stroke: #ffffff; stroke-opacity: 0.06; }
+      .flow { fill: none; stroke-width: 3; stroke-linecap: round; }
+      .page { fill: #ffffff; filter: url(#paper); }
+    </style>
+
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b1f"/>
+      <stop offset="0.55" stop-color="#130f3b"/>
+      <stop offset="1" stop-color="#071a2e"/>
+    </linearGradient>
+    <radialGradient id="glowViolet" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowCyan" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#06b6d4" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowPink" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#db2777" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#db2777" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="12" cy="12" r="1.2" fill="#a5b4fc" fill-opacity="0.16"/>
+    </pattern>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="0.5" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#f472b6"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.04"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="engineFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e1b4b"/>
+      <stop offset="1" stop-color="#0b1022"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.45"/>
+    </filter>
+    <filter id="paper" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+    <filter id="blur" x="-30%" y="-150%" width="160%" height="400%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <filter id="heat" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+
+    <marker id="headPink" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#f472b6"/>
+    </marker>
+    <marker id="headAmber" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#fbbf24"/>
+    </marker>
+    <marker id="headCyan" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#22d3ee"/>
+    </marker>
+    <marker id="headViolet" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#a78bfa"/>
+    </marker>
+    <marker id="headBlue" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#60a5fa"/>
+    </marker>
+    <marker id="headMint" viewBox="0 0 10 10" refX="2.5" refY="5" markerWidth="4" markerHeight="4" orient="auto">
+      <path d="M0,0 L10,5 L0,10 L2.5,5 z" fill="#5eead4"/>
+    </marker>
+
+    <!-- The text and shapes inside the mini illustrations -->
+    <style>
+      .mini { font: bold 22px sans-serif; }
+      .miniMono { font: bold 22px monospace; }
+      .bar { fill: #cbd5e1; }
+      .ink { fill: #1e293b; }
+    </style>
+  </defs>
+
+  <!-- Background: deep gradient, soft glows, and a dot grid -->
+  <rect width="1600" height="640" fill="url(#bg)"/>
+  <ellipse cx="250" cy="170" rx="420" ry="300" fill="url(#glowViolet)"/>
+  <ellipse cx="1070" cy="294" rx="420" ry="220" fill="url(#glowCyan)"/>
+  <ellipse cx="1480" cy="620" rx="380" ry="260" fill="url(#glowPink)"/>
+  <rect width="1600" height="640" fill="url(#dots)"/>
+
+  <!-- Wordmark and tagline -->
+  <image href="hero/dc-logo-dark.svg" x="46" y="54" width="50" height="50"/>
+  <text class="eyebrow" x="100" y="90">DEMA Consulting</text>
+  <text class="word" x="52" y="176">Sonar</text>
+  <text class="word brandText" x="312.7" y="176">Mark</text>
+  <rect x="58" y="200" width="132" height="6" rx="3" fill="url(#brand)"/>
+  <text class="tag" x="56" y="266">Every scan, reported.</text>
+  <text class="tag brandText" x="56" y="316">Every gate, enforced.</text>
+  <text class="body" x="58" y="368">Pulls the quality gate, issues, and</text>
+  <text class="body" x="58" y="402">hot-spots from SonarQube/SonarCloud</text>
+  <text class="body" x="58" y="436">into a Markdown report and CI gate.</text>
+  <rect x="56" y="468" width="480" height="90" rx="12" fill="#0a1022" fill-opacity="0.8" stroke="#a78bfa" stroke-opacity="0.45" stroke-width="1.5"/>
+  <text class="cmd prompt" x="78" y="503">$</text>
+  <text class="cmd" x="108" y="503">sonarmark --project-key</text>
+  <text class="cmd file" x="468" y="503">app</text>
+  <text class="cmd" x="138" y="539">--server</text>
+  <text class="cmd file" x="273" y="539">$URL</text>
+  <text class="cmd" x="348" y="539">--enforce</text>
+  <text class="note" x="58" y="604">Built for Continuous Compliance.</text>
+
+  <!-- Input cards -->
+  <g>
+    <!-- Input one: the SonarQube or SonarCloud server and its web API -->
+    <rect class="card" x="580" y="40" width="236" height="160" rx="16"/>
+    <rect x="642" y="40" width="112" height="3" rx="1.5" fill="#fbbf24"/>
+    <rect class="panel" x="588" y="48" width="220" height="112" rx="10"/>
+    <g transform="translate(588 48)">
+      <rect x="20" y="16" width="80" height="24" rx="6" fill="#1e293b" stroke="#fbbf24" stroke-opacity="0.7" stroke-width="1.5"/>
+      <rect x="20" y="44" width="80" height="24" rx="6" fill="#1e293b" stroke="#fbbf24" stroke-opacity="0.7" stroke-width="1.5"/>
+      <rect x="20" y="72" width="80" height="24" rx="6" fill="#1e293b" stroke="#fbbf24" stroke-opacity="0.7" stroke-width="1.5"/>
+      <circle cx="34" cy="28" r="4" fill="#4ade80"/>
+      <circle cx="34" cy="56" r="4" fill="#4ade80"/>
+      <circle cx="34" cy="84" r="4" fill="#fbbf24"/>
+      <rect class="bar" x="46" y="25" width="42" height="6" rx="3" fill-opacity="0.75"/>
+      <rect class="bar" x="46" y="53" width="34" height="6" rx="3" fill-opacity="0.75"/>
+      <rect class="bar" x="46" y="81" width="38" height="6" rx="3" fill-opacity="0.75"/>
+      <rect x="114" y="18" width="88" height="32" rx="7" fill="#fbbf24" fill-opacity="0.16" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="miniMono" x="158" y="42" fill="#fde68a" text-anchor="middle">/api</text>
+      <rect class="bar" x="114" y="66" width="88" height="8" rx="4" fill-opacity="0.75"/>
+      <rect class="bar" x="114" y="84" width="60" height="8" rx="4" fill-opacity="0.75"/>
+    </g>
+    <text class="label" x="698" y="190">SonarQube API</text>
+
+    <!-- Input two: the quality gate status and its conditions -->
+    <rect class="card" x="828" y="40" width="236" height="160" rx="16"/>
+    <rect x="890" y="40" width="112" height="3" rx="1.5" fill="#22d3ee"/>
+    <rect class="panel" x="836" y="48" width="220" height="112" rx="10"/>
+    <g transform="translate(836 48)">
+      <circle cx="54" cy="46" r="28" fill="#4ade80" fill-opacity="0.18" stroke="#4ade80" stroke-width="2"/>
+      <path d="M41 46 L51 56 L68 36" fill="none" stroke="#bbf7d0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text class="mini" x="54" y="100" fill="#bbf7d0" text-anchor="middle">OK</text>
+      <circle cx="112" cy="26" r="5" fill="#4ade80"/>
+      <rect class="bar" x="124" y="22" width="76" height="8" rx="4" fill-opacity="0.75"/>
+      <circle cx="112" cy="54" r="5" fill="#4ade80"/>
+      <rect class="bar" x="124" y="50" width="60" height="8" rx="4" fill-opacity="0.75"/>
+      <circle cx="112" cy="82" r="5" fill="#22d3ee"/>
+      <rect class="bar" x="124" y="78" width="68" height="8" rx="4" fill-opacity="0.75"/>
+    </g>
+    <text class="label" x="946" y="190">Quality gate</text>
+
+    <!-- Input three: issues by type and severity -->
+    <rect class="card" x="1076" y="40" width="236" height="160" rx="16"/>
+    <rect x="1138" y="40" width="112" height="3" rx="1.5" fill="#f472b6"/>
+    <rect class="panel" x="1084" y="48" width="220" height="112" rx="10"/>
+    <g transform="translate(1084 48)">
+      <rect x="10" y="10" width="82" height="28" rx="14" fill="#f472b6" fill-opacity="0.18" stroke="#f472b6" stroke-width="1.5"/>
+      <text class="mini" x="51" y="31" fill="#fbcfe8" text-anchor="middle">Bug</text>
+      <rect class="bar" x="104" y="20" width="98" height="8" rx="4" fill-opacity="0.75"/>
+      <rect x="10" y="42" width="82" height="28" rx="14" fill="#fbbf24" fill-opacity="0.18" stroke="#fbbf24" stroke-width="1.5"/>
+      <text class="mini" x="51" y="63" fill="#fde68a" text-anchor="middle">Smell</text>
+      <rect class="bar" x="104" y="52" width="80" height="8" rx="4" fill-opacity="0.75"/>
+      <rect x="10" y="74" width="82" height="28" rx="14" fill="#f472b6" fill-opacity="0.18" stroke="#f472b6" stroke-width="1.5"/>
+      <text class="mini" x="51" y="95" fill="#fbcfe8" text-anchor="middle">Vuln</text>
+      <rect class="bar" x="104" y="84" width="90" height="8" rx="4" fill-opacity="0.75"/>
+    </g>
+    <text class="label" x="1194" y="190">Issues</text>
+
+    <!-- Input four: security hot-spots to review -->
+    <rect class="card" x="1324" y="40" width="236" height="160" rx="16"/>
+    <rect x="1386" y="40" width="112" height="3" rx="1.5" fill="#60a5fa"/>
+    <rect class="panel" x="1332" y="48" width="220" height="112" rx="10"/>
+    <g transform="translate(1332 48)">
+      <path d="M56 12 L90 24 L90 54 C90 78 74 92 56 100 C38 92 22 78 22 54 L22 24 Z" fill="#60a5fa" fill-opacity="0.18" stroke="#60a5fa" stroke-width="2"/>
+      <rect x="52" y="34" width="8" height="34" rx="4" fill="#bfdbfe"/>
+      <circle cx="56" cy="80" r="5" fill="#bfdbfe"/>
+      <rect x="108" y="18" width="98" height="32" rx="7" fill="#60a5fa" fill-opacity="0.16" stroke="#60a5fa" stroke-width="1.5"/>
+      <text class="mini" x="157" y="42" fill="#bfdbfe" text-anchor="middle">Review</text>
+      <rect class="bar" x="108" y="66" width="94" height="8" rx="4" fill-opacity="0.75"/>
+      <rect class="bar" x="108" y="84" width="66" height="8" rx="4" fill-opacity="0.75"/>
+    </g>
+    <text class="label" x="1442" y="190">Hot-spots</text>
+  </g>
+
+  <!-- Flows into the engine -->
+  <g class="flow">
+    <path d="M698,206 C698,236 950,226 950,253" stroke="#fbbf24" marker-end="url(#headAmber)"/>
+    <path d="M946,206 C946,236 1030,226 1030,253" stroke="#22d3ee" marker-end="url(#headCyan)"/>
+    <path d="M1194,206 C1194,236 1110,226 1110,253" stroke="#f472b6" marker-end="url(#headPink)"/>
+    <path d="M1442,206 C1442,236 1190,226 1190,253" stroke="#60a5fa" marker-end="url(#headBlue)"/>
+  </g>
+  <g stroke="#0a1022" stroke-width="2">
+    <circle cx="698" cy="206" r="5" fill="#fbbf24"/>
+    <circle cx="946" cy="206" r="5" fill="#22d3ee"/>
+    <circle cx="1194" cy="206" r="5" fill="#f472b6"/>
+    <circle cx="1442" cy="206" r="5" fill="#60a5fa"/>
+  </g>
+  <!-- The engine -->
+  <rect x="860" y="262" width="420" height="64" rx="32" fill="url(#brand)" opacity="0.55" filter="url(#blur)"/>
+  <rect x="860" y="262" width="420" height="64" rx="32" fill="url(#engineFill)" stroke="url(#brand)" stroke-width="2.5"/>
+  <rect x="884" y="276" width="36" height="36" rx="9" fill="url(#brand)"/>
+  <path d="M893 282 L906 282 L912 288 L912 306 L893 306 Z" fill="#ffffff"/>
+  <g fill="#7c3aed">
+    <rect x="897" y="290" width="11" height="2.5" rx="1.2"/>
+    <rect x="897" y="295" width="11" height="2.5" rx="1.2"/>
+    <rect x="897" y="300" width="7" height="2.5" rx="1.2"/>
+  </g>
+  <text class="engine" x="936" y="305">sonarmark</text>
+  <line x1="1120" y1="278" x2="1120" y2="310" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1.5"/>
+  <text class="api" x="1140" y="303">.NET tool</text>
+
+  <!-- Flows out of the engine -->
+  <g class="flow" stroke="#5eead4">
+    <path d="M980,330 C980,356 728,356 728,381" marker-end="url(#headMint)"/>
+    <path d="M1040,330 C1040,356 999,356 999,381" marker-end="url(#headMint)"/>
+    <path d="M1100,330 C1100,356 1232,356 1232,381" marker-end="url(#headMint)"/>
+    <path d="M1160,330 C1160,356 1457,356 1457,381" marker-end="url(#headMint)"/>
+  </g>
+  <g fill="#5eead4" stroke="#0a1022" stroke-width="2">
+    <circle cx="980" cy="330" r="5"/>
+    <circle cx="1040" cy="330" r="5"/>
+    <circle cx="1100" cy="330" r="5"/>
+    <circle cx="1160" cy="330" r="5"/>
+  </g>
+
+  <!-- Output tiles -->
+  <g>
+    <!-- Output one: the Markdown quality report with its Conditions, Issues, and Security Hot-Spots sections -->
+    <rect class="card" x="580" y="390" width="296" height="210" rx="16"/>
+    <rect class="panel" x="588" y="398" width="280" height="152" rx="10"/>
+    <path class="page" d="M604 406 L834 406 L852 424 L852 542 L604 542 Z"/>
+    <path d="M834 406 L834 424 L852 424 Z" fill="#cbd5e1"/>
+    <text class="mini" x="618" y="433" fill="#7c3aed">##</text>
+    <text class="mini ink" x="652" y="433">Conditions</text>
+    <rect class="bar" x="784" y="424" width="44" height="6" rx="3"/>
+    <text class="mini" x="618" y="477" fill="#7c3aed">##</text>
+    <text class="mini ink" x="652" y="477">Issues</text>
+    <rect class="bar" x="738" y="468" width="80" height="6" rx="3"/>
+    <text class="mini" x="618" y="521" fill="#7c3aed">##</text>
+    <text class="mini ink" x="652" y="521">Hot-Spots</text>
+    <rect class="bar" x="774" y="512" width="50" height="6" rx="3"/>
+    <text class="label" x="728" y="585">Markdown report</text>
+
+    <!-- Output two: the enforced quality gate, a non-zero exit code when the gate fails -->
+    <rect class="card" x="889" y="390" width="220" height="210" rx="16"/>
+    <rect class="panel" x="897" y="398" width="204" height="152" rx="10"/>
+    <rect x="907" y="420" width="96" height="32" rx="16" fill="#4ade80" fill-opacity="0.18" stroke="#4ade80" stroke-width="1.5"/>
+    <text class="mini" x="955" y="443" fill="#bbf7d0" text-anchor="middle">OK</text>
+    <text class="miniMono" x="1013" y="443" fill="#e2e8f0">exit 0</text>
+    <line x1="907" y1="474" x2="1087" y2="474" stroke="#ffffff" stroke-opacity="0.15"/>
+    <rect x="907" y="496" width="96" height="32" rx="16" fill="#f87171" fill-opacity="0.18" stroke="#f87171" stroke-width="1.5"/>
+    <text class="mini" x="955" y="519" fill="#fecaca" text-anchor="middle">ERROR</text>
+    <text class="miniMono" x="1013" y="519" fill="#e2e8f0">exit 1</text>
+    <text class="label" x="999" y="585">Enforced gate</text>
+
+    <!-- Output three: the log file written by the log option -->
+    <rect class="card" x="1122" y="390" width="220" height="210" rx="16"/>
+    <rect class="panel" x="1130" y="398" width="204" height="152" rx="10"/>
+    <text class="miniMono" x="1146" y="434" fill="#5eead4">&gt;</text>
+    <rect class="bar" x="1168" y="424" width="130" height="8" rx="4" fill-opacity="0.75"/>
+    <text class="miniMono" x="1146" y="466" fill="#5eead4">&gt;</text>
+    <rect class="bar" x="1168" y="456" width="104" height="8" rx="4" fill-opacity="0.75"/>
+    <rect x="1142" y="490" width="180" height="38" rx="8" fill="#ffffff" fill-opacity="0.08" stroke="#5eead4" stroke-opacity="0.6" stroke-width="1.5"/>
+    <text class="miniMono" x="1232" y="516" fill="#e2e8f0" text-anchor="middle">analysis.log</text>
+    <text class="label" x="1232" y="585">Log file</text>
+
+    <!-- Output four: downstream, the report rendered into a Pandoc PDF -->
+    <rect class="card" x="1355" y="390" width="205" height="210" rx="16"/>
+    <rect class="panel" x="1363" y="398" width="189" height="152" rx="10"/>
+    <path class="page" d="M1416 408 L1488 408 L1504 424 L1504 542 L1416 542 Z"/>
+    <path d="M1488 408 L1488 424 L1504 424 Z" fill="#cbd5e1"/>
+    <rect x="1428" y="420" width="50" height="8" rx="4" fill="#4f46e5"/>
+    <rect class="bar" x="1428" y="436" width="62" height="5" rx="2.5"/>
+    <rect class="bar" x="1428" y="446" width="50" height="5" rx="2.5"/>
+    <rect class="bar" x="1428" y="456" width="58" height="5" rx="2.5"/>
+    <rect x="1424" y="494" width="72" height="32" rx="7" fill="#dc2626"/>
+    <text class="mini" x="1460" y="518" fill="#ffffff" text-anchor="middle">PDF</text>
+    <text class="label" x="1457" y="585">Pandoc PDF</text>
+  </g>
+</svg>
