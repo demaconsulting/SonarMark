@@ -161,10 +161,31 @@ requires it and the modification preserves the documented design intent:
 
 - `.reviewmark.yaml`, `.textlint.yaml`, `.editorconfig`
 - `.lintmark.yaml`, `.yamllint.yaml`
-- `requirements.yaml`, `fix.ps1`, `lint.ps1`
+- `requirements.yaml`
+
+# Project Scripts
+
+`build.ps1`, `lint.ps1`, and `fix.ps1` belong to the project: extend them as it grows. Add project-specific
+steps, update tool versions, and add optional parameters that focus a run (for example one library in a
+multi-library repository, or headless tests without GUI automation). Two rules keep them trustworthy:
+
+- Run with no arguments, each script still does its full job (CI and the agents rely on that); slow or
+  environment-dependent test tiers may be opt-in switches of `build.ps1`.
+- Never remove or weaken a check to make lint or tests pass.
 
 # Continuous Compliance Overview
 
 This repository follows the [Continuous Compliance](https://github.com/demaconsulting/ContinuousCompliance)
 approach. Tools: **ReqStream** (requirements traceability), **ReviewMark** (file review enforcement),
 **BuildMark** (tool versions), **VersionMark** (version tracking).
+
+# Repository-Specific Standards Exceptions
+
+## SysML2 package structure (legacy layout, migration pending)
+
+The `docs/sysml2/` model predates the `sysml2-modeling.md` Package Structure rules: package `SonarMark` is
+reopened across 13 files (12 under `model/` plus `views/design-views.sysml`), and the shared files use
+`SharedDependencies` (not `SharedPackages`) and the views live in `SonarMark` (not `SonarMarkDesignViews`).
+The Package Structure rules and the `sysml2tools-query` qualified-name examples apply once the model is
+migrated in a dedicated PR; until then, agents use the existing package names and must not partially
+restructure the model.
