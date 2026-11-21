@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640">
   <!-- The README hero banner. The quality gate, issues, and security hot-spots of a SonarQube or SonarCloud
        project flow from its web API into the sonarmark tool and come out as a Markdown quality report, an
-       enforced quality-gate exit code, and a log file; the report then feeds a downstream Pandoc PDF.
+       enforced quality-gate exit code, and a log file. The PDF card is downstream: Pandoc renders it from the report; sonarmark
+       does not write it.
        The definitions and the left panel follow the shared DEMA Consulting hero (CanvasNet and BuildMark).
        This file is docs/images/hero.svg, beside its rendered docs/images/hero.png (matching base names, per the
        diagram documentation standard); the files it embeds are in docs/images/hero/. -->
@@ -285,7 +286,7 @@
     <text class="miniMono" x="1232" y="516" fill="#e2e8f0" text-anchor="middle">analysis.log</text>
     <text class="label" x="1232" y="585">Log file</text>
 
-    <!-- Output four: downstream, the report rendered into a Pandoc PDF -->
+    <!-- Output four: downstream, a PDF rendered from the report by Pandoc (not written by sonarmark) -->
     <rect class="card" x="1355" y="390" width="205" height="210" rx="16"/>
     <rect class="panel" x="1363" y="398" width="189" height="152" rx="10"/>
     <path class="page" d="M1416 408 L1488 408 L1504 424 L1504 542 L1416 542 Z"/>
@@ -296,6 +297,6 @@
     <rect class="bar" x="1428" y="456" width="58" height="5" rx="2.5"/>
     <rect x="1424" y="494" width="72" height="32" rx="7" fill="#dc2626"/>
     <text class="mini" x="1460" y="518" fill="#ffffff" text-anchor="middle">PDF</text>
-    <text class="label" x="1457" y="585">Pandoc PDF</text>
+    <text class="label" x="1457" y="585">PDF via Pandoc</text>
   </g>
 </svg>
