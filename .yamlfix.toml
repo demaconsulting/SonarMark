@@ -9,8 +9,13 @@
 # - line_length is 10000 on purpose: DEMA repositories have no YAML line-length limit (yamllint's
 #   line-length rule is disabled in .yamllint.yaml), and yamlfix has no way to turn its limit off,
 #   so a value no line reaches is the closest equivalent. Do not lower it to wrap YAML text.
+# - comments_require_starting_space is false on purpose: yamlfix's comment pass also matches a '#'
+#   inside block scalar text (for example "PKCS #12" in a requirement's text) and rewrote it to
+#   "PKCS # 12" on every run. yamllint's comments rule still requires a space after '#' in real
+#   comments, so turning yamlfix's rewrite off loses no checking.
 preserve_quotes = true
 sequence_style = "keep_style"
 whitelines = 1
 line_length = 10000
 comments_min_spaces_from_content = 1
+comments_require_starting_space = false
