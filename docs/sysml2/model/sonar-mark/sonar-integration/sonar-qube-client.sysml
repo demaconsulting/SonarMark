@@ -1,4 +1,4 @@
-package SonarMark {
+package SonarMark_SonarQubeClient {
     private import SoftwareItemMetadata::*;
 
     part def SonarQubeClient {

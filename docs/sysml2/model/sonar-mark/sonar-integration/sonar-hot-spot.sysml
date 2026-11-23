@@ -1,4 +1,4 @@
-package SonarMark {
+package SonarMark_SonarHotSpot {
     private import SoftwareItemMetadata::*;
 
     part def SonarHotSpot {

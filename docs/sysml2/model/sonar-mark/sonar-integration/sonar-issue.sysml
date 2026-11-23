@@ -1,4 +1,4 @@
-package SonarMark {
+package SonarMark_SonarIssue {
     private import SoftwareItemMetadata::*;
 
     part def SonarIssue {

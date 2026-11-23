@@ -1,5 +1,6 @@
-package SonarMark {
+package SonarMark_CliSubsystem {
     private import SoftwareItemMetadata::*;
+    public import SonarMark_Context::*;
 
     part def CliSubsystem {
         doc /* Command-line argument parsing and program-output routing. */

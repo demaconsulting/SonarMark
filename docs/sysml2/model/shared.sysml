@@ -1,4 +1,4 @@
-package SharedDependencies {
+package SharedPackages {
     private import SoftwareItemMetadata::*;
 
     doc /* Shared Packages consumed by SonarMark. */

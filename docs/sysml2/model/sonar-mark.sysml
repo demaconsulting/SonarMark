@@ -1,8 +1,13 @@
 package SonarMark {
     private import SoftwareItemMetadata::*;
+    private import OtsDependencies::*;
+    private import SharedPackages::*;
 
-    import OtsDependencies::*;
-    import SharedDependencies::*;
+    public import SonarMark_Program::*;
+    public import SonarMark_CliSubsystem::*;
+    public import SonarMark_SonarIntegrationSubsystem::*;
+    public import SonarMark_ReportGenerationSubsystem::*;
+    public import SonarMark_SelfTestSubsystem::*;
 
     doc
     /*
