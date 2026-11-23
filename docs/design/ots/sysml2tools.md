@@ -20,7 +20,7 @@ dotnet-tool restore and CI pipeline used by the other pipeline tools.
 
 ### Features Used
 
-- Model validation via `dotnet sysml2tools lint 'docs/sysml2/**/*.sysml'`, which reports syntax
+- Model validation via `dotnet sysml2tools lint --strict-unresolved 'docs/sysml2/**/*.sysml'`, which reports syntax
   errors and unresolved references without producing output files.
 - View rendering via
   `dotnet sysml2tools render --output docs/design/generated --format svg
