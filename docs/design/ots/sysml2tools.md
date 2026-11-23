@@ -42,7 +42,7 @@ required.
 It is used in two places in the pipeline:
 
 - **Lint** (`lint.ps1`, all CI jobs and local pre-PR checks): `dotnet sysml2tools lint
-  'docs/sysml2/**/*.sysml'` fails the build if the model contains syntax errors or unresolved
+  --strict-unresolved 'docs/sysml2/**/*.sysml'` fails the build if the model contains syntax errors or unresolved
   references.
 - **Render** (`build.yaml`, build-docs job): `dotnet sysml2tools render` renders each declared view
   to an SVG file in `docs/design/generated/`, immediately before Pandoc compiles the Design
