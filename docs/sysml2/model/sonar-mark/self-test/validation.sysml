@@ -1,4 +1,4 @@
-package SonarMark {
+package SonarMark_Validation {
     private import SoftwareItemMetadata::*;
 
     part def Validation {

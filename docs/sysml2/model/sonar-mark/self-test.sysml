@@ -1,5 +1,6 @@
-package SonarMark {
+package SonarMark_SelfTestSubsystem {
     private import SoftwareItemMetadata::*;
+    public import SonarMark_Validation::*;
 
     part def SelfTestSubsystem {
         doc /* Self-validation test runner exercised at startup for OTS/BuildMark self-check evidence. */

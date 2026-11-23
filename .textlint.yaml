@@ -48,6 +48,7 @@ words:
   - Dema
   - DEMA
   - demaconsulting
+  - distinguishability
   - lintmark
   - myterm
   - ncipollo
@@ -58,10 +59,12 @@ words:
   - sarif
   - Sarif
   - SARIF
+  - Sensmetry
   - shopt
   - slnx
   - snupkg
   - sonarscanner
+  - Syside
   - thirdparty
   - unidirectionality
   - venv

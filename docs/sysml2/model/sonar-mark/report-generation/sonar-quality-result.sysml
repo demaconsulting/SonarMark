@@ -1,4 +1,4 @@
-package SonarMark {
+package SonarMark_SonarQualityResult {
     private import SoftwareItemMetadata::*;
 
     part def SonarQualityResult {

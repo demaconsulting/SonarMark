@@ -1,5 +1,8 @@
-package SonarMark {
+package SonarMark_SonarIntegrationSubsystem {
     private import SoftwareItemMetadata::*;
+    public import SonarMark_SonarQubeClient::*;
+    public import SonarMark_SonarHotSpot::*;
+    public import SonarMark_SonarIssue::*;
 
     part def SonarIntegrationSubsystem {
         doc /* SonarQube/SonarCloud REST API integration and data-model definitions. */

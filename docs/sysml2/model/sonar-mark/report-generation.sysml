@@ -1,5 +1,6 @@
-package SonarMark {
+package SonarMark_ReportGenerationSubsystem {
     private import SoftwareItemMetadata::*;
+    public import SonarMark_SonarQualityResult::*;
 
     part def ReportGenerationSubsystem {
         doc /* Aggregates SonarQube data into a structured markdown quality report. */
