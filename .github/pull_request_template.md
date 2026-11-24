@@ -41,7 +41,7 @@ Before submitting this pull request, ensure you have completed the following:
 
 ### Linting
 
-- [ ] **All linters pass**: `./lint.sh` (Unix/macOS) or `cmd /c lint.bat` / `./lint.bat` (Windows)
+- [ ] **All linters pass**: `pwsh ./lint.ps1 -All`
 
 ### Testing
 

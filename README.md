@@ -231,7 +231,7 @@ src/Database.cs(88): HIGH [sql-injection] Make sure using this SQL query is safe
 ## Building
 
 ```pwsh
-pwsh ./build.ps1
+pwsh ./build.ps1 -All
 ```
 
 ## User Guide

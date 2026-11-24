@@ -237,7 +237,17 @@ words:
 
 ## Quality Checks
 
-Before submitting a pull request, ensure all quality checks pass:
+Before submitting a pull request, ensure all quality checks pass.
+
+While developing, the scripts can limit themselves to what your change affects (compared with `origin/main`,
+including uncommitted files). Each script requires a scope and prints its usage with `-Help`; run the full
+`-All` checks below before submitting:
+
+```pwsh
+pwsh ./build.ps1 -Changed    # build and test only when the changes affect the build
+pwsh ./fix.ps1 -Changed      # auto-fix only the changed file types
+pwsh ./lint.ps1 -Changed     # run only the lint checks whose inputs changed
+```
 
 ### 1. Build and Test
 
@@ -246,16 +256,16 @@ dotnet build --configuration Release
 dotnet test --configuration Release
 ```
 
-All tests must pass with zero warnings.
+All tests must pass with zero warnings. The script equivalent is `pwsh ./build.ps1 -All`.
 
 ### 2. Linting
 
 ```pwsh
 # After making changes: applies dotnet format, markdown, and YAML fixes silently
-pwsh ./fix.ps1
+pwsh ./fix.ps1 -All
 
 # Before submitting a pull request: all linters must pass
-pwsh ./lint.ps1
+pwsh ./lint.ps1 -All
 ```
 
 ### 3. Code Coverage
