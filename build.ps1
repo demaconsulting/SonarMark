@@ -117,19 +117,27 @@ if ($DryRun) { Write-Host "Dry run: would run the full build and all tests."; ex
 
 $buildError = $false
 
+# Each step runs only if the steps before it succeeded, so tests never run against stale binaries
 Write-Host "Restoring dependencies..."
 dotnet restore
 if ($LASTEXITCODE -ne 0) { $buildError = $true }
 
-Write-Host "Building..."
-dotnet build --no-restore --configuration Release
-if ($LASTEXITCODE -ne 0) { $buildError = $true }
+if (-not $buildError) {
+    Write-Host "Building..."
+    dotnet build --no-restore --configuration Release
+    if ($LASTEXITCODE -ne 0) { $buildError = $true }
+}
 
-Write-Host "Running tests..."
-dotnet test --no-build --configuration Release --report-trx --results-directory artifacts/tests
-if ($LASTEXITCODE -ne 0) { $buildError = $true }
+if (-not $buildError) {
+    Write-Host "Running tests..."
+    dotnet test --no-build --configuration Release --report-trx --results-directory artifacts/tests
+    if ($LASTEXITCODE -ne 0) { $buildError = $true }
+} else {
+    Write-Host "Skipping tests: the build failed."
+}
 
 # [PROJECT-SPECIFIC] Add additional build steps here (e.g., packaging, publishing).
+# Guard steps that depend on the build with: if (-not $buildError) { ... }
 
 if (-not $buildError) {
     Write-Host "Build and tests completed successfully!"
