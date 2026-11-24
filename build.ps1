@@ -19,14 +19,19 @@
 #   global.json, .editorconfig, nuget.config, tool manifest, this script, scripts/ProjectScripts.psm1)
 #   runs the full build and tests; other changes the build does not read select nothing.
 #
+#   The test platform is detected from global.json: "test": { "runner": "Microsoft.Testing.Platform" } runs
+#   'dotnet test --report-trx', anything else runs VSTest 'dotnet test --logger trx'; results go to
+#   artifacts/tests either way. Do not customize the arguments per repository.
+#
 # EXTENSION POINTS:
 #   Search for "[PROJECT-SPECIFIC]" comments to find the designated locations
 #   for adding project-specific build or test operations.
 #
-# MODIFICATION POLICY:
-#   Only modify this file to add project-specific operations at the designated
-#   [PROJECT-SPECIFIC] extension points. The reusable scoping logic lives in
-#   scripts/ProjectScripts.psm1, which is shared across repositories and must not be edited here.
+# CUSTOMIZATION:
+#   This script belongs to the project: extend it as the project grows. Add steps at the
+#   [PROJECT-SPECIFIC] points. The reusable scoping logic lives in scripts/ProjectScripts.psm1,
+#   which is delivered by the Agents release zip, is shared across repositories, and must never
+#   be edited here.
 #   With no arguments the script prints the usage text and exits 1; -All must still build and run
 #   the standard test suite (the agents rely on that). Never remove or weaken a test step to make it pass.
 
@@ -52,6 +57,23 @@ Import-Module (Join-Path $PSScriptRoot 'scripts/ProjectScripts.psm1') -Force
 # [PROJECT-SPECIFIC] Repository files that tests read at run time (through the repository root, not through a
 # project item), mapped to the test project that reads them. SonarMark's tests read none.
 $RuntimeReads = [ordered]@{}
+
+# Test platform: global.json selects Microsoft.Testing.Platform with "test": { "runner": "Microsoft.Testing.Platform" };
+# otherwise VSTest is used. The platform decides the 'dotnet test' arguments (see Invoke-DotnetTest).
+$UseTestingPlatform = $false
+if (Test-Path global.json) {
+    try { $UseTestingPlatform = (Get-Content -Raw global.json | ConvertFrom-Json).test.runner -eq 'Microsoft.Testing.Platform' }
+    catch { Write-Host "Warning: global.json could not be read; assuming VSTest." }
+}
+
+function Invoke-DotnetTest {
+    # Runs the tests of the solution against the existing build
+    if ($UseTestingPlatform) {
+        dotnet test --no-build --configuration Release --report-trx --results-directory artifacts/tests
+    } else {
+        dotnet test --no-build --configuration Release --logger trx --results-directory artifacts/tests
+    }
+}
 
 # ==============================================================================
 # USAGE AND SCOPE VALIDATION
@@ -118,20 +140,23 @@ if ($DryRun) { Write-Host "Dry run: would run the full build and all tests."; ex
 $buildError = $false
 
 # Each step runs only if the steps before it succeeded, so tests never run against stale binaries
+$failedStep = $null   # the step that failed first, so the skip message names the real cause
 Write-Host "Restoring dependencies..."
 dotnet restore
-if ($LASTEXITCODE -ne 0) { $buildError = $true }
+if ($LASTEXITCODE -ne 0) { $buildError = $true; $failedStep = 'restore' }
 
 if (-not $buildError) {
     Write-Host "Building..."
     dotnet build --no-restore --configuration Release
-    if ($LASTEXITCODE -ne 0) { $buildError = $true }
+    if ($LASTEXITCODE -ne 0) { $buildError = $true; $failedStep = 'build' }
 }
 
 if (-not $buildError) {
     Write-Host "Running tests..."
-    dotnet test --no-build --configuration Release --report-trx --results-directory artifacts/tests
+    Invoke-DotnetTest
     if ($LASTEXITCODE -ne 0) { $buildError = $true }
+} elseif ($failedStep -eq 'restore') {
+    Write-Host "Skipping build and tests: restore failed."
 } else {
     Write-Host "Skipping tests: the build failed."
 }
