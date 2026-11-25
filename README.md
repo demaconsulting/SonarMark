@@ -35,6 +35,8 @@ request reviews][workflow]
 - 🌐 **Multi-Platform** - Support for .NET 10 and 11 across Windows, Linux, and macOS
 - ✅ **Self-Validation** - Built-in tests to verify functionality without requiring a live server
 - 🔗 **API Integration** - Direct integration with SonarQube and SonarCloud REST APIs
+- 💡 **Built-in Help** - `sonarmark help` serves help topics with runnable examples, search, and JSON output for
+  AI agents
 
 ### Repository Practices
 
@@ -92,6 +94,7 @@ This will display:
 
 ```text
 Usage: sonarmark [options]
+       sonarmark help [topic]
 
 Options:
   -v, --version              Display version information
@@ -108,6 +111,8 @@ Options:
   --report <file>            Export quality results to markdown file
   --depth <depth>            Markdown header depth for report (default: 1)
   --report-depth <depth>     Alias for --depth (deprecated)
+
+Run 'sonarmark help' for topics and examples.
 ```
 
 ### Quick Start Examples
@@ -150,6 +155,13 @@ sonarmark --validate
 
 ```bash
 sonarmark --validate --results validation-results.trx
+```
+
+**List the built-in help topics, then read one:**
+
+```bash
+sonarmark help
+sonarmark help getting-started
 ```
 
 ## Self Validation

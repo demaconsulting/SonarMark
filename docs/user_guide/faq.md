@@ -94,6 +94,7 @@ SonarMark uses the following exit codes:
 
 - `0`: Success (or quality gate passed with `--enforce`)
 - `1`: Error occurred or quality gate failed (with `--enforce`)
+- `2`: Unknown help topic or wrong `help` argument
 
 Use these exit codes in scripts for error handling:
 

@@ -28,6 +28,7 @@ This guide covers:
 
 - Installation and prerequisites for SonarMark
 - Full command-line option reference
+- The built-in `sonarmark help` command
 - Usage examples and common use cases
 - Generated report format and structure
 - Self-validation testing
