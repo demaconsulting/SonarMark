@@ -58,10 +58,11 @@ never logged ([[#bad-log]]).
 **Common messages.**
 
 - `--server parameter is required`, `--project-key parameter is required`:
-  add the option; see [[sonar-server]] and [[#no-server]].
+  add the option; see [[sonar-server]].
 - `HTTP 401 error from server`: the token is missing or wrong.
-- `HTTP 403` or `HTTP 404 error from server`: usually the user of the
-  token cannot see the project, or the project key or branch is wrong.
+- `HTTP 403` or `HTTP 404 error from server`: usually the token is
+  missing or its user cannot see the project, or the project key or
+  branch is wrong.
 - `An invalid request URI was provided`: add `https://` to `--server`
   ([[#no-scheme]]).
 - `Invalid ... response: missing ...`: the address is usually not that of
