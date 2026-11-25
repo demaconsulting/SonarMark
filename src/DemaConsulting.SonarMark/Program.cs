@@ -62,12 +62,19 @@ internal static class Program
     ///     Main entry point for the application.
     /// </summary>
     /// <remarks>
-    ///     Exception handling follows a two-tier strategy: anticipated operational failures
-    ///     (<see cref="ArgumentException"/> for invalid arguments, <see cref="InvalidOperationException"/>
-    ///     for runtime failures such as a failed file open) are caught and reported cleanly so CI runners
-    ///     receive a well-formed exit code. Truly unexpected exceptions are printed to
-    ///     <see cref="Console.Error"/> and re-thrown so the OS or CI event log can capture the full stack
-    ///     trace — swallowing them would make root-cause analysis much harder.
+    ///     <para>
+    ///         The <c>help</c> command is answered first, by <see cref="HelpCommand"/>, before the
+    ///         command-line options are parsed: <c>help</c> is a command and not an option, so
+    ///         <see cref="Context.Create(string[])"/> would reject it. Its exit code is returned as is.
+    ///     </para>
+    ///     <para>
+    ///         Exception handling follows a two-tier strategy: anticipated operational failures
+    ///         (<see cref="ArgumentException"/> for invalid arguments, <see cref="InvalidOperationException"/>
+    ///         for runtime failures such as a failed file open) are caught and reported cleanly so CI runners
+    ///         receive a well-formed exit code. Truly unexpected exceptions are printed to
+    ///         <see cref="Console.Error"/> and re-thrown so the OS or CI event log can capture the full stack
+    ///         trace — swallowing them would make root-cause analysis much harder.
+    ///     </para>
     /// </remarks>
     /// <param name="args">Command line arguments.</param>
     /// <returns>
@@ -79,10 +86,16 @@ internal static class Program
     ///     Re-thrown when an unexpected exception escapes <see cref="Run"/> — only anticipated exception
     ///     types are swallowed; all others propagate so the host environment can log them.
     /// </exception>
-    private static int Main(string[] args)
+    internal static int Main(string[] args)
     {
         try
         {
+            // Answer the help command before the options are parsed
+            if (HelpCommand.Default.TryRun(args, out var helpExitCode))
+            {
+                return helpExitCode;
+            }
+
             // Create context from arguments
             using var context = Context.Create(args);
 
@@ -171,7 +184,7 @@ internal static class Program
     }
 
     /// <summary>
-    ///     Prints usage information.
+    ///     Prints usage information, ending with a pointer to the built-in help topics.
     /// </summary>
     /// <remarks>
     ///     All output is routed through <paramref name="context"/> rather than written directly to
@@ -181,7 +194,8 @@ internal static class Program
     /// <param name="context">The context for output.</param>
     private static void PrintHelp(Context context)
     {
-        context.WriteLine("Usage: sonarmark [options]");
+        context.WriteLine($"Usage: {HelpCommand.ToolName} [options]");
+        context.WriteLine($"       {HelpCommand.ToolName} help [topic]");
         context.WriteLine("");
         context.WriteLine("Options:");
         context.WriteLine("  -v, --version              Display version information");
@@ -198,6 +212,8 @@ internal static class Program
         context.WriteLine("  --report <file>            Export quality results to markdown file");
         context.WriteLine("  --depth <depth>            Markdown header depth for report (default: 1)");
         context.WriteLine("  --report-depth <depth>     Alias for --depth (deprecated)");
+        context.WriteLine("");
+        context.WriteLine(HelpCommand.Default.Footer);
     }
 
     /// <summary>
