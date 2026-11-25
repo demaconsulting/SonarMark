@@ -110,14 +110,15 @@ public class HelpCommandTests
                 Output = output,
                 Error = error
             });
-            cli.TryRun(["help", card.Id], out var exitCode);
-            return (card.Id, ExitCode: exitCode, Width: output.ToString().Split('\n').Max(line => line.TrimEnd('\r').Length));
+            var answered = cli.TryRun(["help", card.Id], out var exitCode);
+            return (card.Id, Answered: answered, ExitCode: exitCode, Width: output.ToString().Split('\n').Max(line => line.TrimEnd('\r').Length));
         }).ToList();
 
-        // Assert: every card printed, and none has a line wider than the maximum
+        // Assert: every card was answered and printed, and none has a line wider than the maximum
         Assert.NotEmpty(widths);
         Assert.All(widths, width =>
         {
+            Assert.True(width.Answered, $"Card '{width.Id}' was not answered.");
             Assert.Equal(0, width.ExitCode);
             Assert.True(
                 width.Width <= MaxLineWidth,

@@ -34,8 +34,8 @@ examples:
     expect: 'Error: --project-key parameter is required'
 ---
 {{tool}} reads the results of one project from a SonarQube server or from
-SonarCloud. Every run other than `--help`, `--version`, and `--validate`
-needs `--server` and `--project-key`; without them the tool stops before
+SonarCloud. Every run other than `help`, `--help`, `--version`, and
+`--validate` needs `--server` and `--project-key`; without them the tool stops before
 it sends any request ([[#missing-key]]).
 
 **Server.** `--server` takes the full address with its scheme, such as
