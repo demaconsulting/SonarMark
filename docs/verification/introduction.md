@@ -17,6 +17,7 @@ Local items covered by this document:
 
 OTS items covered by this document:
 
+- **DemaConsulting.HelpCards**: integration verification.
 - **DemaConsulting.TestResults**: integration verification.
 - **SysML2Tools**: integration verification.
 

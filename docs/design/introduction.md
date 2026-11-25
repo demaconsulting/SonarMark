@@ -18,6 +18,7 @@ Local items:
 
 OTS items:
 
+- **DemaConsulting.HelpCards**: integration and usage design.
 - **DemaConsulting.TestResults**: integration and usage design.
 - **SysML2Tools**: integration and usage design.
 
@@ -49,7 +50,8 @@ and the tool produces a markdown report and an exit code, with SelfTest providin
 
 - **src/** - source files and projects
   - **DemaConsulting.SonarMark/** - main CLI application
-    - **Cli/** - command-line interface subsystem
+    - **Cli/** - command-line interface subsystem and the built-in `help` command
+    - **Help/** - built-in help cards (Markdown with front matter), embedded in the assembly
     - **SonarIntegration/** - SonarQube/SonarCloud API integration subsystem
     - **ReportGeneration/** - markdown report generation subsystem
     - **SelfTest/** - self-validation subsystem

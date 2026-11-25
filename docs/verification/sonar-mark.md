@@ -14,6 +14,13 @@ SonarMark is verified through three complementary test layers, all executed by t
   report generation — are named and surfaced in the TRX/JUnit results file.
 - **Unit and subsystem tests** in the sub-folders below verify individual software items in isolation.
 
+The help examples are verified with the example runner of HelpCards. It saves the source
+examples of each help card to a fresh scratch folder and calls a delegate for each command
+example; the delegate runs the built tool in that folder with `Runner.RunInDirectory`, and the
+runner compares the exit code and the output with the `exit` and `expect` values of the example.
+Examples that need a live SonarQube or SonarCloud server are `snippet` examples, which the runner
+does not run; every command example fails or succeeds before any network request.
+
 System requirements traceability is maintained via the ReqStream trace matrix in
 `docs/reqstream/sonar-mark/sonar-mark.yaml`.
 
@@ -33,6 +40,9 @@ Tests require:
 - The `--validate` flag exits with code 0 and reports four passed tests.
 - The application exits with code 1 when required parameters are missing or a quality gate fails
   under `--enforce`.
+- The `help` command lists the topics with exit code 0, and exits with code 2 for an unknown
+  topic.
+- Every command example in the help cards gives the exit code and output that its card states.
 
 ## Test Scenarios
 
@@ -75,6 +85,19 @@ This scenario is tested by `Program_Run_WithEnforceFlagAndFailingQualityGate_Ret
 all available options, confirming that the CLI argument is correctly recognized and the Program
 dispatch writes usage information to the console.
 This scenario is tested by `IntegrationTest_HelpFlag_OutputsUsageInformation`.
+
+**SonarMark-Core-HelpTopics**: When invoked with the `help` command as the sole argument, the
+system lists every root topic with its command, prints no banner, and exits with code 0.
+This scenario is tested by `IntegrationTest_HelpTopics_HelpVerb_ListsTopics`.
+
+**SonarMark-Core-HelpUnknownTopic**: When invoked with `help no-such-topic`, which names a topic
+that does not exist, the system exits with code 2 and the combined output names the topic.
+This scenario is tested by `IntegrationTest_HelpTopics_UnknownTopic_ReturnsUsageError`.
+
+**SonarMark-Core-HelpExamples**: The catalog that the tool ships is built, and every command
+example of every card is run against the built tool in a scratch folder; each run gives the exit
+code and output fragment that its card states, and at least one command example exists.
+This scenario is tested by `IntegrationTest_HelpExamples_AllCommandExamples_GiveStatedResults`.
 
 **SonarMark-Core-Version**: When invoked with `--version`, the system displays the tool version
 string, confirming that the version string is correctly emitted by the full system.

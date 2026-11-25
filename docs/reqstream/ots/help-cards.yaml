@@ -1,0 +1,35 @@
+---
+# DemaConsulting.HelpCards OTS requirements
+#
+# Requirements for the DemaConsulting.HelpCards library, which serves the built-in help of
+# the tool from Markdown help cards embedded in the tool assembly.
+sections:
+  - title: OTS Software Requirements
+    sections:
+      - title: DemaConsulting.HelpCards Requirements
+        requirements:
+          - id: SonarMark-OTS-HelpCards-Cli
+            title: >-
+              DemaConsulting.HelpCards shall answer the help command of a tool from the help cards
+              embedded in the tool assembly.
+            justification: |
+              The tool serves 'sonarmark help' to people and AI agents through the command-line
+              helper of DemaConsulting.HelpCards, whose build targets embed the cards in the
+              assembly so the tool package needs no loose files.
+            tags: [ots]
+            tests:
+              - HelpCommand_TryRun_HelpVerb_PrintsTopicIndexAndReturnsZero
+              - IntegrationTest_HelpTopics_HelpVerb_ListsTopics
+
+          - id: SonarMark-OTS-HelpCards-Testing
+            title: >-
+              DemaConsulting.HelpCards shall report defects in help cards, and differences between
+              the stated and the actual results of their command examples, to the tests of a tool.
+            justification: |
+              Help that disagrees with the tool is worse than no help. The validator and the example
+              runner of the package let the test suite fail on a defective card or an example that
+              no longer gives the result its card states.
+            tags: [ots]
+            tests:
+              - HelpCommand_CreateOptions_ShippedCatalog_PassesValidation
+              - IntegrationTest_HelpExamples_AllCommandExamples_GiveStatedResults

@@ -12,6 +12,8 @@ supplies a mocked `HttpClientFactory` returning a failing (`ERROR`) quality gate
 that a specific combination of CLI flags results in the correct dispatch, output, and exit code,
 verifying that `Context` and `Program` work together correctly as a subsystem.
 
+The help command is verified through `HelpCommand.Create`, which writes to in-memory writers.
+
 ### Test Environment
 
 N/A - standard test environment.
@@ -24,6 +26,7 @@ N/A - standard test environment.
 - Enforce mode sets the enforce flag that drives the exit code.
 - Enforce mode with a failing quality gate produces a non-zero exit code end-to-end.
 - An unrecognized command-line argument throws `ArgumentException` before any dispatch occurs.
+- The `help` command prints a requested topic from the built-in help cards.
 
 ### Test Scenarios
 
@@ -57,3 +60,8 @@ This scenario is tested by `Cli_EnforceMode_WithFailingQualityGate_ReturnsNonZer
 throws `ArgumentException` before any dispatch occurs, confirming that argument parsing rejects
 unsupported flags up front rather than allowing them to reach `Program.Run`.
 This scenario is tested by `Cli_ArgumentParsing_WithUnknownFlag_ThrowsArgumentException`.
+
+**HelpCommandPrintsRequestedTopic**: When the arguments `["help", "command-line"]` are offered to
+`HelpCommand.TryRun`, it answers with the command-line topic and exit code 0, confirming that the
+subsystem serves topics from the built-in help cards.
+This scenario is tested by `Cli_HelpCommand_TopicRequested_PrintsTopic`.

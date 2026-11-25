@@ -235,6 +235,41 @@ words:
   - myterm
 ```
 
+### Help Cards
+
+The built-in help (`sonarmark help`) is served from Markdown help cards in `src/DemaConsulting.SonarMark/Help/`,
+which the DemaConsulting.HelpCards package embeds in the tool assembly. `Cli/HelpCommand.cs` is the only code that
+uses the package.
+
+- **One file per topic.** The path below `Help/`, without `.md`, is the card id. `_source.md` names the source
+  (`name:`) and sets `schema: 2`.
+- **Front matter.** Every card has a `title`, a `summary` (at most 80 characters for a topic, 100 otherwise), and
+  exactly one purpose tag: `tutorial`, `reference`, or `troubleshooting`. Add `aliases` for topic names that users
+  commonly guess, such as `examples`, so `help <name>` finds the card.
+- **New topics.** Add the id of every new top-level card to `HelpCommand.RootCardIds`, the one list of topics; a
+  missing or extra topic fails the tests.
+- **Examples.** Give every task that can run offline a runnable `command` example, one command per example: no
+  pipes, redirection, or `&&`. Wrap `content` in single quotes and use double quotes inside the command, which
+  bash, PowerShell, and cmd read alike. State the result when it matters with `exit:` (default 0) and `expect:`, a
+  short fragment that must appear somewhere in the console output; `expect` cannot check a file that the command
+  writes. Keep each `description` to about 50 characters.
+- **Server examples.** A command that needs a live SonarQube or SonarCloud server cannot run in the tests. Show it
+  as a `kind: snippet` example with `language: shell` and a `save-as` name such as `report.sh` (a snippet with
+  inline content needs one); the example runner never runs a snippet. Explain the server and token in the prose,
+  never use a real token, and keep runnable examples offline: use `https://sonar.example.com`, and make them stop
+  before any request (for example without `--project-key`).
+- **Input files.** No example reads an input file. Describe the formats that the tool produces (the report, TRX,
+  and JUnit) in prose, and show complete files only for formats that users author.
+- **Width.** A printed card may not be wider than 120 characters. Links print as full commands (`[[#name]]` as
+  about 50 characters) and `{{version}}` of a development build as about 46, so keep body lines near 75 characters
+  with at most one link each.
+- **Text.** Cards are linted and spell-checked like any Markdown file: no body line starting with `#`, no wide
+  tables, and every fenced block names its language.
+
+Run `pwsh ./build.ps1 -Changed` after changing a card. The `HelpCommand` unit tests validate every card, with
+warnings treated as errors, and check its printed width; an integration test runs every command example against
+the built tool and compares the result with the card.
+
 ## Quality Checks
 
 Before submitting a pull request, ensure all quality checks pass.

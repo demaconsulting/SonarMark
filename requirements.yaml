@@ -27,6 +27,7 @@ includes:
   # CLI subsystem
   - docs/reqstream/sonar-mark/cli/cli.yaml
   - docs/reqstream/sonar-mark/cli/context.yaml
+  - docs/reqstream/sonar-mark/cli/help-command.yaml
   # Program unit (top-level unit, not in a subsystem)
   - docs/reqstream/sonar-mark/program.yaml
   # SonarQube Integration subsystem
@@ -59,4 +60,5 @@ includes:
   - docs/reqstream/ots/weasyprint.yaml
   - docs/reqstream/ots/fileassert.yaml
   - docs/reqstream/ots/test-results.yaml
+  - docs/reqstream/ots/help-cards.yaml
   - docs/reqstream/ots/sysml2tools.yaml

@@ -14,6 +14,7 @@ needs-review:
   - docs/design/**/*.md  # Design documents
   - docs/verification/**/*.md  # Verification documents
   - docs/sysml2/**/*.sysml  # SysML2 architecture model
+  - 'src/**/Help/**'  # Built-in help cards
   - '!**/obj/**'                 # Exclude build output
   - '!**/bin/**'                 # Exclude build output
   - '!**/generated/**'           # Exclude generated output
@@ -185,6 +186,22 @@ reviews:
       - src/**/Cli/Context.cs
       - test/**/Cli/ContextTests.cs
 
+  # SonarMark-Cli-HelpCommand Review (one per unit)
+  - id: SonarMark-Cli-HelpCommand
+    title: Review that SonarMark Cli HelpCommand Implementation is Correct
+    context:
+      - docs/design/sonar-mark.md
+      - docs/reqstream/sonar-mark/sonar-mark.yaml
+      - docs/design/sonar-mark/cli.md
+      - docs/reqstream/sonar-mark/cli/cli.yaml
+    paths:
+      - docs/reqstream/sonar-mark/cli/help-command.yaml
+      - docs/design/sonar-mark/cli/help-command.md
+      - docs/verification/sonar-mark/cli/help-command.md
+      - src/**/Cli/HelpCommand.cs
+      - src/**/Help/**
+      - test/**/Cli/HelpCommandTests.cs
+
   # SonarMark-SonarIntegration-SonarQubeClient Review (one per unit)
   - id: SonarMark-SonarIntegration-SonarQubeClient
     title: Review that SonarMark SonarIntegration SonarQubeClient Implementation is Correct
@@ -267,6 +284,14 @@ reviews:
       - docs/reqstream/ots/test-results.yaml  # OTS requirements
       - docs/design/ots/test-results.md  # OTS design
       - docs/verification/ots/test-results.md  # OTS verification
+
+  # OTS-HelpCards Review (one per OTS item)
+  - id: OTS-HelpCards
+    title: Review that HelpCards Provides Required Functionality
+    paths:
+      - docs/reqstream/ots/help-cards.yaml  # OTS requirements
+      - docs/design/ots/help-cards.md  # OTS design
+      - docs/verification/ots/help-cards.md  # OTS verification
 
   # OTS-SysML2Tools Review (one per OTS item)
   - id: OTS-SysML2Tools

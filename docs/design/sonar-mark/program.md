@@ -5,8 +5,9 @@
 ### Purpose
 
 `Program` is the static entry point for the SonarMark application. It contains `Main`, which
-constructs a `Context` from command-line arguments and calls `Run`. `Run` dispatches to the
-appropriate subsystem based on the flags present in the context.
+hands the `help` command to `HelpCommand`, and otherwise constructs a `Context` from
+command-line arguments and calls `Run`. `Run` dispatches to the appropriate subsystem based on
+the flags present in the context.
 
 ### Data Model
 
@@ -25,11 +26,15 @@ N/A - `Program` is a static class with no instance fields or properties.
 
 - *Parameters*: `string[] args` — raw command-line arguments from the host environment.
 - *Returns*: `int` — exit code; 0 on success, 1 on handled error, non-zero re-throw on
-  unexpected exception.
+  unexpected exception; for the `help` command, the exit code of `HelpCommand` (see *Help
+  Command* in the system design).
 - *Preconditions*: None.
 - *Postconditions*: All resources opened by `Context` are disposed before return.
 
-Creates a `Context` via `Context.Create(args)`, calls `Run`, and returns `context.ExitCode`.
+First calls `HelpCommand.Default.TryRun(args, out exitCode)`. The `help` command is not an
+option, so `Context.Create` would reject it; when the help command answers, `Main` returns its
+exit code. Otherwise creates a `Context` via `Context.Create(args)`, calls `Run`, and returns
+`context.ExitCode`.
 Catches `ArgumentException` (invalid arguments) and `InvalidOperationException` (runtime
 failures such as a failed file open) and prints their messages to stderr without a stack
 trace. Truly unexpected exceptions are printed to stderr and re-thrown so the OS or CI runner
@@ -52,6 +57,8 @@ stream.
 
 All output is routed through the `context` parameter rather than written directly to `Console`,
 preserving the silent-mode contract so callers running with `--silent` suppress help output.
+The text is the usage synopsis (including `sonarmark help [topic]`) and the options table, and
+it ends with `HelpCommand.Default.Footer`, the pointer to the help command.
 
 **Run**: Dispatches to the appropriate subsystem based on context flags.
 
@@ -92,6 +99,8 @@ prevent crashing the process when the report cannot be written.
 
 ### Dependencies
 
+- **HelpCommand** — answers the `help` command before the options are parsed, and supplies the
+  footer that ends the usage text.
 - **Context** — provides parsed arguments and all output routing.
 - **SonarQubeClient** — created by `ProcessSonarAnalysis` to fetch quality results.
 - **SonarQualityResult** — produced by `SonarQubeClient`; rendered to markdown by `ToMarkdown`.
