@@ -11,6 +11,7 @@ sequence under the `Program` entry point:
 flowchart TD
     subgraph Cli
         Context
+        HelpCommand
     end
     subgraph SonarIntegration
         SonarQubeClient
@@ -23,6 +24,7 @@ flowchart TD
     subgraph SelfTest
         Validation
     end
+    Program --> HelpCommand
     Program --> Context
     Program --> SonarQubeClient
     Program --> SonarQualityResult
@@ -33,8 +35,10 @@ flowchart TD
     SonarQualityResult --> SonarIssue
 ```
 
-There is no system-level code. `Program` acts as the orchestrator, delegating to the
-appropriate subsystem based on the flags present in `Context`.
+There is no system-level code. `Program` acts as the orchestrator. It first offers the
+arguments to `HelpCommand` (in `Cli`), which answers the `help` command from the built-in help
+cards. Otherwise it delegates to the appropriate subsystem based on the flags present in
+`Context`.
 
 ## External Interfaces
 
@@ -42,7 +46,8 @@ appropriate subsystem based on the flags present in `Context`.
 
 - *Type*: CLI
 - *Role*: Provider — the host environment (shell, CI runner) invokes this interface.
-- *Contract*: Accepts flags `--server`, `--project-key`, `--branch`, `--token`, `--report`,
+- *Contract*: Accepts the `help` command as the first argument (see *Help Command* below), or
+  flags `--server`, `--project-key`, `--branch`, `--token`, `--report`,
   `--depth`, `--report-depth`, `--enforce`, `--validate`, `--results`, `--silent`, `--log`,
   `--version`, and `--help`. Returns exit code 0 on success, 1 on error or quality-gate
   enforcement failure.
@@ -50,7 +55,19 @@ appropriate subsystem based on the flags present in `Context`.
   must be an integer in the range 1–6. `--report-depth` is a deprecated alias for `--depth`
   and also accepts the range 1–6. When `--token` is not supplied on the command line, the
   `SONAR_TOKEN` environment variable is read as a fallback; the explicit `--token` flag always
-  takes priority over the environment variable.
+  takes priority over the environment variable. Argument errors are found before `--silent`
+  and `--log` take effect, so they are always printed and never logged.
+
+**Help Command**: Built-in help, answered from help cards embedded in the tool assembly.
+
+- *Type*: CLI
+- *Role*: Provider — the tool answers the `help` command from the shell.
+- *Contract*: `sonarmark help` prints the topic index and `sonarmark help <topic>` prints a
+  topic card with its examples; HelpCards adds `--example`, `--search`, and `--json`. Returns exit
+  code 0 for success, 2 for a wrong help argument or an unknown topic, and 70 for a defective card
+  catalog.
+- *Constraints*: `help` must be the first argument. It is answered before the options are parsed,
+  so `--silent` and `--log` do not apply and no banner is printed.
 
 **SonarQube/SonarCloud REST API**: The HTTP API exposed by the remote server.
 
@@ -82,6 +99,8 @@ specified alongside `--validate`.
 
 - **DemaConsulting.TestResults**: provides `TestResults`, `TestResult`, `TestOutcome`, and
   `TestResultsIO` types used by the SelfTest subsystem — see *DemaConsulting.TestResults*
+- **DemaConsulting.HelpCards**: used by `HelpCommand` to load, validate, and serve the built-in
+  help cards for the `help` command — see *DemaConsulting.HelpCards*
 
 ## Risk Control Measures
 
@@ -91,15 +110,19 @@ N/A - not a safety-classified software item.
 
 When invoked for SonarQube analysis, data moves through the system in the following steps:
 
-1. `Context.Create` parses CLI flags and provides server, project-key, branch, and
+1. `Program.Main` offers the arguments to `HelpCommand.TryRun`. When the first argument is
+   `help`, the help command builds the card catalog, writes its answer to the console, and
+   `Program.Main` returns its exit code. Any other first argument returns at once without
+   building the catalog.
+2. `Context.Create` parses CLI flags and provides server, project-key, branch, and
    authentication token to the rest of the system.
-2. `Program.ProcessSonarAnalysis` validates that `--server` and `--project-key` are present
+3. `Program.ProcessSonarAnalysis` validates that `--server` and `--project-key` are present
    before any network activity begins.
-3. `SonarQubeClient.GetQualityResultByBranchAsync` issues async HTTP requests to five
+4. `SonarQubeClient.GetQualityResultByBranchAsync` issues async HTTP requests to five
    SonarQube/SonarCloud API endpoints and assembles the results into a `SonarQualityResult`.
-4. `SonarQualityResult.ToMarkdown` renders the aggregated data as a markdown report string.
-5. `File.WriteAllText` writes the rendered markdown to the `--report` path when supplied.
-6. `context.ExitCode` returns 0 on success, or 1 if any error was written via
+5. `SonarQualityResult.ToMarkdown` renders the aggregated data as a markdown report string.
+6. `File.WriteAllText` writes the rendered markdown to the `--report` path when supplied.
+7. `context.ExitCode` returns 0 on success, or 1 if any error was written via
    `context.WriteError`.
 
 ## Design Constraints

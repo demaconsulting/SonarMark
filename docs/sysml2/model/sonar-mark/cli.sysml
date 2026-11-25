@@ -1,9 +1,10 @@
 package SonarMark_CliSubsystem {
     private import SoftwareItemMetadata::*;
     public import SonarMark_Context::*;
+    public import SonarMark_HelpCommand::*;
 
     part def CliSubsystem {
-        doc /* Command-line argument parsing and program-output routing. */
+        doc /* Command-line argument parsing, program-output routing, and the built-in help command. */
 
         metadata info : SoftwareInfo {
             testFiles = ("test/DemaConsulting.SonarMark.Tests/Cli/CliTests.cs");
@@ -13,5 +14,6 @@ package SonarMark_CliSubsystem {
         }
 
         part context : Context;
+        part helpCommand : HelpCommand;
     }
 }

@@ -20,6 +20,7 @@ input-files:
   - docs/design/sonar-mark/program.md
   - docs/design/sonar-mark/cli.md
   - docs/design/sonar-mark/cli/context.md
+  - docs/design/sonar-mark/cli/help-command.md
   - docs/design/sonar-mark/sonar-integration.md
   - docs/design/sonar-mark/sonar-integration/sonar-qube-client.md
   - docs/design/sonar-mark/sonar-integration/sonar-hot-spot.md
@@ -30,6 +31,7 @@ input-files:
   - docs/design/sonar-mark/self-test/validation.md
   - docs/design/ots.md
   - docs/design/ots/test-results.md
+  - docs/design/ots/help-cards.md
   - docs/design/ots/sysml2tools.md
   - docs/design/shared.md
   - docs/design/shared/sonar-mark.md

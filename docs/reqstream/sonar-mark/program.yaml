@@ -33,6 +33,25 @@ sections:
             tests:
               - Program_Run_WithHelpFlag_OutputsBannerAndHelpText
 
+          - id: SonarMark-Program-HelpCommand
+            title: >-
+              The Program unit shall answer the help command before the command-line options are
+              parsed and return its exit code.
+            justification: |
+              The help command is not an option, so the option parser would reject it. Offering the
+              arguments to the help command first lets sonarmark help work while every other run
+              continues to the option parser unchanged.
+            tests:
+              - Program_Main_WithHelpVerb_PrintsHelpIndex
+
+          - id: SonarMark-Program-HelpFooter
+            title: The Program unit shall end its usage information with a pointer to the help command.
+            justification: |
+              The short usage text stays short and still tells a reader where the help topics with
+              worked examples are.
+            tests:
+              - Program_Run_WithHelpFlag_OutputsBannerAndHelpText
+
           - id: SonarMark-Program-Connect
             title: The tool shall connect to SonarQube/SonarCloud servers.
             justification: |

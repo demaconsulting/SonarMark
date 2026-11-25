@@ -17,6 +17,7 @@ input-files:
   - docs/verification/sonar-mark/program.md
   - docs/verification/sonar-mark/cli.md
   - docs/verification/sonar-mark/cli/context.md
+  - docs/verification/sonar-mark/cli/help-command.md
   - docs/verification/sonar-mark/sonar-integration.md
   - docs/verification/sonar-mark/sonar-integration/sonar-qube-client.md
   - docs/verification/sonar-mark/sonar-integration/sonar-hot-spot.md
@@ -27,6 +28,7 @@ input-files:
   - docs/verification/sonar-mark/self-test/validation.md
   - docs/verification/ots.md
   - docs/verification/ots/test-results.md
+  - docs/verification/ots/help-cards.md
   - docs/verification/ots/sysml2tools.md
   - docs/verification/shared.md
   - docs/verification/shared/sonar-mark.md

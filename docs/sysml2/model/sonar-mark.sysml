@@ -32,6 +32,7 @@ package SonarMark {
         part selfTest : SelfTestSubsystem;
 
         part testResults : TestResults;
+        part helpCards : HelpCards;
 
         part sonarMarkSharedPackage : SonarMarkSharedPackage;
     }

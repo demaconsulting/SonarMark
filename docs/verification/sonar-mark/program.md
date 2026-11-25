@@ -7,6 +7,8 @@ constructs a `Context` directly and calls `Program.Run`, capturing console outpu
 or `Console.SetError` redirection. Network dependencies are eliminated by supplying a mock
 `HttpClientFactory` on the context, which returns a pre-configured `SonarQubeClient` backed by a
 `MockHttpMessageHandler` carrying canned JSON responses. The real `HttpClient` stack is never invoked.
+One test, `Program_Main_WithHelpVerb_PrintsHelpIndex`, calls `Program.Main` instead, because the
+`help` command is answered before a `Context` is created.
 
 ### Test Environment
 
@@ -19,6 +21,8 @@ N/A - standard test environment.
 - `Program.Run` with `--help` outputs the banner and full help text and returns exit code 0.
 - `Program.Run` with `--enforce` and a failing quality gate returns exit code 1.
 - `Program.Run` writes a markdown file to the path specified by `--report` when a mock client is injected.
+- `Program.Main` answers the `help` command before the options are parsed, and the usage
+  information ends with the pointer to the help command.
 
 ### Test Scenarios
 
@@ -32,9 +36,15 @@ correctly.
 This scenario is tested by `Program_Run_WithVersionFlag_OutputsVersionString`.
 
 **HelpFlagOutputsBannerAndHelpText**: When run with `--help`, `Program.Run` writes the application banner
-and the full usage/options help text to standard output, confirming that the help dispatch path produces
-the expected content.
+and the full usage/options help text, including the `sonarmark help [topic]` usage line, to standard
+output, and the output ends with the pointer to the help command, confirming that the help dispatch path
+produces the expected content.
 This scenario is tested by `Program_Run_WithHelpFlag_OutputsBannerAndHelpText`.
+
+**HelpVerbPrintsHelpIndex**: When `Program.Main` is invoked with `["help"]`, which is not an option, the
+captured console output contains the help topic index and no banner, and the exit code is 0, confirming
+that the help command is answered before the options are parsed.
+This scenario is tested by `Program_Main_WithHelpVerb_PrintsHelpIndex`.
 
 **ValidateFlagRunsValidationSuccessfully**: When run with `--validate`, `Program.Run` executes the
 self-validation suite, outputs the `"DEMA Consulting SonarMark"` header, reports `"Passed: 4"` for all

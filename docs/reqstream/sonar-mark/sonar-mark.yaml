@@ -114,6 +114,44 @@ sections:
         tests:
           - IntegrationTest_HelpFlag_OutputsUsageInformation
 
+      - id: SonarMark-Core-HelpTopics
+        title: The system shall list its help topics when run with the help command.
+        justification: |
+          Users and AI agents that have only the installed tool must be able to learn how to
+          use it from the tool itself. The short --help usage text points to the topic list,
+          and each topic explains a task with worked examples.
+        tags: [system]
+        children:
+          - SonarMark-Program-HelpCommand
+          - SonarMark-Program-HelpFooter
+          - SonarMark-Cli-HelpTopics
+        tests:
+          - IntegrationTest_HelpTopics_HelpVerb_ListsTopics
+
+      - id: SonarMark-Core-HelpUnknownTopic
+        title: The system shall exit with code 2 when the help command names an unknown topic.
+        justification: |
+          Scripts and AI agents must be able to tell a mistyped topic from a successful answer,
+          and from the exit code 1 of a failed tool run.
+        tags: [system]
+        children:
+          - SonarMark-Program-HelpCommand
+        tests:
+          - IntegrationTest_HelpTopics_UnknownTopic_ReturnsUsageError
+
+      - id: SonarMark-Core-HelpExamples
+        title: The system shall provide help examples that give the result each example states when run.
+        justification: |
+          A worked example in the help is only useful when it works. Running every command
+          example against the built tool, and comparing the exit code and output with what the
+          example states, keeps the help in step with the tool. Examples that need a live
+          SonarQube or SonarCloud server are shown as snippets, which are not run.
+        tags: [system]
+        children:
+          - SonarMark-OTS-HelpCards-Testing
+        tests:
+          - IntegrationTest_HelpExamples_AllCommandExamples_GiveStatedResults
+
       - id: SonarMark-Core-Version
         title: The system shall display the tool version when invoked with --version.
         justification: |
